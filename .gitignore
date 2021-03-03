@@ -1,0 +1,8 @@
+*.tgz
+.eslintcache
+.idea/
+.nyc_output/
+.vscode/
+coverage/
+lib/
+node_modules/

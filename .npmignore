@@ -1,0 +1,10 @@
+# misc
+.*
+/coverage/
+/tsconfig.json
+/CONTRIBUTING.md
+/test/
+/src/
+/yarn.lock
+babel-register.js
+.gitkeep
