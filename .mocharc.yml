@@ -1,0 +1,7 @@
+---
+reporter: 'spec'
+recursive: true
+require: './babel-register'
+extension:
+  - 'js'
+  - 'ts'

@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "chai-friendly",
+    "mocha"
+  ],
+  "extends": [
+    "plugin:mocha/recommended",
+    "plugin:chai-friendly/recommended"
+  ],
+  "env": {
+    "mocha": true
+  }
+}
