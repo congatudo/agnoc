@@ -16,6 +16,7 @@
     "prebuild": "rm -rf ./lib",
     "prepublishOnly": "yarn build",
     "posttest": "npm run check-coverage && npm run validate-coverage",
+    "release": "semantic-release",
     "test": "npm-run-all lint 'test:!(record)'",
     "test:node": "nyc mocha --reporter spec --recursive",
     "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0"
