@@ -1,7 +1,7 @@
 ---
-reporter: 'spec'
+reporter: "spec"
 recursive: true
-require: './babel-register'
+require: "./babel-register"
 extension:
-  - 'js'
-  - 'ts'
+  - "js"
+  - "ts"

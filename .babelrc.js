@@ -1,16 +1,13 @@
 module.exports = {
   presets: [
-    '@babel/typescript',
+    "@babel/typescript",
     [
-      '@babel/preset-env',
+      "@babel/preset-env",
       {
         corejs: 3,
-        useBuiltIns: 'usage',
-        targets: [
-          'node >= 10',
-        ]
-      }
-    ]
-  ]
+        useBuiltIns: "usage",
+        targets: ["node >= 10"],
+      },
+    ],
+  ],
 };
-

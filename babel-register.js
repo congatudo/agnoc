@@ -1,3 +1,3 @@
-require('@babel/register')({
-  extensions: ['.ts', '.js']
+require("@babel/register")({
+  extensions: [".ts", ".js"],
 });
