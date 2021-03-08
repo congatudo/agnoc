@@ -6,7 +6,18 @@ module.exports = {
       {
         corejs: 3,
         useBuiltIns: "usage",
-        targets: ["node >= 10"],
+        targets: ["node >= 12.3"],
+      },
+    ],
+  ],
+  plugins: [
+    "@babel/plugin-proposal-class-properties",
+    [
+      "babel-plugin-module-resolver",
+      {
+        alias: {
+          "^(@agnoc/[^/]+)/(?!lib)(.+)$": "\\1/lib/\\2",
+        },
       },
     ],
   ],

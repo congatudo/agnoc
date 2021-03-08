@@ -1,0 +1,58 @@
+{
+  "name": "@agnoc/cli",
+  "version": "0.0.0",
+  "description": "Agnoc command line.",
+  "keywords": [
+    "agnoc",
+    "cli",
+    "conga",
+    "cecotec",
+    "driver",
+    "reverse",
+    "engineering"
+  ],
+  "homepage": "https://github.com/adrigzr/agnoc",
+  "bugs": {
+    "url": "https://github.com/adrigzr/agnoc/issues"
+  },
+  "license": "MIT",
+  "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
+  "bin": {
+    "agnoc": "./bin/agnoc.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrigzr/agnoc.git",
+    "directory": "packages/cli"
+  },
+  "scripts": {
+    "build": "npm-run-all 'build:*'",
+    "build:js": "NODE_ENV=production babel --config-file ../../.babelrc.js --extensions '.ts,.js' --out-dir lib src",
+    "build:types": "tsc -p ./tsconfig.build.json",
+    "check-coverage": "nyc check-coverage",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel 'lint:*'",
+    "lint:js": "eslint --cache --max-warnings 0 .",
+    "lint:style": "prettier --check .",
+    "lint:types": "tsc",
+    "prebuild": "rm -rf ./lib",
+    "prepublishOnly": "yarn build",
+    "pretest": "npm run build",
+    "posttest": "npm run validate-coverage",
+    "test": "npm-run-all lint 'test:!(record)'",
+    "test:node": "nyc mocha --reporter spec --recursive",
+    "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0"
+  },
+  "dependencies": {
+    "@agnoc/core": "0.0.0",
+    "commander": "^7.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.3",
+    "execa": "^5.0.0",
+    "mocha": "^8.3.1",
+    "mock-fs": "^4.13.0"
+  },
+  "engines": {
+    "node": ">=12.3"
+  }
+}

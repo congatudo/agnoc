@@ -1,9 +1,3 @@
-# compiled output
-/lib/
-
 # dependencies
 /node_modules/
-
-# misc
-/coverage/
 !.*

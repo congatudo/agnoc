@@ -13,8 +13,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@agnoc/cli/*": ["packages/cli/src/*"],
+      "@agnoc/core/*": ["packages/core/src/*"]
+    }
   },
-  "include": ["src", "test"],
-  "typeRoots": ["node_modules/@types", "src/types"]
+  "include": ["packages/**/src", "packages/**/test"],
+  "typeRoots": ["node_modules/@types", "packages/**/src/types"]
 }

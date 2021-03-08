@@ -1,0 +1,10 @@
+# compiled output
+/lib/
+/schemas/
+
+# dependencies
+/node_modules/
+
+# misc
+/coverage/
+!.*

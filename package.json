@@ -1,51 +1,38 @@
 {
   "name": "agnoc",
-  "version": "0.0.0-development",
-  "description": "Agnoc Robot Driver",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "scripts": {
-    "build": "npm-run-all 'build:*'",
-    "build:js": "NODE_ENV=production babel --extensions '.ts,.js' --out-dir lib src",
-    "build:types": "tsc -p tsconfig.build.json",
-    "check-coverage": "nyc check-coverage",
-    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel 'lint:!(fix)'",
-    "lint:js": "eslint --cache --max-warnings 0 .",
-    "lint:js:fix": "eslint --fix .",
-    "lint:style": "prettier --check .",
-    "lint:style:fix": "prettier --write .",
-    "lint:types": "tsc",
-    "prebuild": "rm -rf ./lib",
-    "prepublishOnly": "yarn build",
-    "posttest": "npm run check-coverage && npm run validate-coverage",
-    "release": "semantic-release",
-    "test": "npm-run-all lint 'test:!(record)'",
-    "test:node": "nyc mocha --reporter spec --recursive",
-    "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0"
-  },
-  "author": "Adrián González Rus",
+  "version": "0.0.0",
+  "private": true,
   "license": "MIT",
-  "engines": {
-    "node": ">=10"
+  "type": "commonjs",
+  "scripts": {
+    "build": "lerna run build",
+    "lint": "lerna run lint",
+    "test": "lerna run test"
   },
-  "dependencies": {},
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "devDependencies": {
     "@babel/cli": "^7.12.13",
     "@babel/core": "^7.12.13",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/preset-env": "^7.12.13",
     "@babel/preset-typescript": "^7.12.16",
     "@babel/register": "^7.12.13",
     "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^12.0.1",
-    "@semantic-release/changelog": "^5.0.1",
-    "@semantic-release/git": "^9.0.0",
     "@tsconfig/node14": "^1.0.0",
     "@types/chai": "^4.2.15",
+    "@types/debug": "^4.1.5",
     "@types/mocha": "^8.2.0",
+    "@types/mock-fs": "^4.13.0",
     "@types/node": "^14.14.31",
     "@types/sinon-chai": "^3.2.5",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
+    "babel-plugin-module-resolver": "^4.1.0",
     "chai": "^4.2.0",
     "commitizen": "^4.2.3",
     "core-js": "^3.8.3",
@@ -57,20 +44,28 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-security": "^1.4.0",
+    "execa": "^5.0.0",
     "husky": "^4.3.8",
     "json": "^10.0.0",
+    "lerna": "^4.0.0",
+    "lint-staged": ">=10",
     "mocha": "^8.2.1",
+    "mock-fs": "^4.13.0",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
     "prettier": "2.2.1",
-    "semantic-release": "^17.4.0",
     "sinon": "^9.2.3",
     "sinon-chai": "^3.5.0",
     "typescript": "^4.2.2"
   },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+  "engines": {
+    "node": ">=12.3"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{md,json}": "prettier -w"
   }
 }

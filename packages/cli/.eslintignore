@@ -1,0 +1,6 @@
+# compiled output
+/lib/
+
+# misc
+/coverage/
+!.*
