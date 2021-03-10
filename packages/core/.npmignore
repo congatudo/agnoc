@@ -1,0 +1,7 @@
+.*
+*.tgz
+coverage
+tsconfig.*
+test
+src
+schemas/*.proto

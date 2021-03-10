@@ -1,0 +1,346 @@
+syntax = "proto2";
+
+message DEVICE_ERROR {
+  required int32 result = 1;
+  required string error = 2;
+  required int32 opcode = 3;
+}
+
+message DEVICE_BUSY {
+    required int32 result = 1;
+}
+
+message CLIENT_HEARTBEAT_REQ {}
+
+message CLIENT_HEARTBEAT_RSP {}
+
+message CLIENT_ONLINE_REQ {
+  required string deviceSerialNumber = 1;
+  required bool unk1 = 2;
+  required int32 unk2 = 3;
+}
+
+message CLIENT_ONLINE_RSP {
+  required int32 result = 1;
+  optional string reason = 2;
+}
+
+message DEVICE_REGISTER_REQ {
+  required string softwareVersion = 1;
+  required string hardwareVersion = 2;
+  required string deviceSerialNumber = 3;
+  required string deviceMac = 4;
+  required int32 deviceType = 5;
+  required int32 customerFirmwareId = 6;
+  required string ctrlVersion = 7;
+}
+
+message DEVICE_REGISTER_RSP {
+  message Device {
+    required int32 id = 1;
+  }
+
+  required int32 result = 1;
+  required Device device = 3;
+}
+
+message DEVICE_VERSION_INFO_UPDATE_REQ {
+  required string softwareVersion = 1;
+  required string hardwareVersion = 2;
+}
+
+message DEVICE_VERSION_INFO_UPDATE_RSP {
+  required int32 result = 1;
+}
+
+message PUSH_DEVICE_AGENT_SETTING_REQ {
+  message TaskList {
+    required int32 orderId = 1;
+    required bool enable = 2;
+    required bool repeat = 3;
+    required int32 weekday = 4;
+    required int32 day_time = 5;
+  }
+
+  message Voice {
+    required bool voiceMode = 1;
+    required bool volume = 2;
+  }
+
+  message Config {
+    required bool ecoMode = 1;
+    required bool repeatClean = 2;
+    required bool brokenEnable = 3;
+    required bool carpetTurbo = 4;
+    required bool historyMapEnable = 5;
+  }
+
+  message Status {
+    required bool isOpen = 1;
+    required int32 beginTime = 2;
+    required int32 endTime = 3;
+  }
+
+  required int32 deviceId = 1;
+  required Voice voice = 2;
+  required Config config = 3;
+  required TaskList taskList = 4;
+  required PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ ota = 5;
+  required Status status = 7;
+}
+
+message PUSH_DEVICE_AGENT_SETTING_RSP {
+  required int32 result = 1;
+}
+
+message PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ {
+  required bool newVersion = 1;
+  required string packageSize = 2;
+  required string systemVersion = 3;
+  required string otaPackageVersion = 4;
+  required string remoteUrl = 5;
+  required bool forceupgrade = 6;
+}
+
+message PUSH_DEVICE_PACKAGE_UPGRADE_INFO_RSP {
+  required int32 result = 1;
+}
+
+message PUSH_DEVICE_BATTERY_INFO_REQ {
+  message Battery {
+    required int32 level = 1;
+  }
+
+  required Battery battery = 1;
+}
+
+message PUSH_DEVICE_BATTERY_INFO_RSP {
+  required int32 result = 1;
+}
+
+message DEVICE_SEEK_LOCATION_REQ {}
+
+message DEVICE_SEEK_LOCATION_RSP {}
+
+message DEVICE_STATUS_GETTING_REQ {}
+
+message DEVICE_MAP_ID_WORK_STATUS_PUSH_REQ {
+  required int32 mapHeadId = 1;
+  required int32 areaCleanFlag = 2;
+  required int32 workMode = 3;
+  required int32 battery = 4;
+  required bool chargeStatus = 5;
+  required int32 type = 6;
+  required int32 faultCode = 7;
+  required int32 cleanPreference = 8;
+  required int32 repeatClean = 9;
+  required int32 cleanTime = 10;
+  required int32 cleanSize = 11;
+  required int32 waterLevel = 12;
+  required int32 dustBoxType = 13;
+  required bool mopType = 14;
+}
+
+message DEVICE_SET_CLEAN_PREFERENCE_REQ {
+  required int32 mode = 1;
+}
+
+message DEVICE_SET_CLEAN_PREFERENCE_RSP {
+  required int32 result = 1;
+}
+
+message DEVICE_AUTO_CLEAN_REQ {
+  required int32 mode = 1;
+  required int32 unk1 = 2;
+}
+
+message DEVICE_AUTO_CLEAN_RSP {}
+
+message DEVICE_CHARGE_REQ {
+  required int32 unk1 = 1;
+}
+
+message DEVICE_CHARGE_RSP {
+  required int32 result = 1;
+}
+
+message DEVICE_MAP_ID_GET_GLOBAL_INFO_REQ {
+  required int32 mask = 1;
+}
+
+message DEVICE_MAP_ID_SET_NAVIGATION_REQ {
+  required int32 mapHeadId = 1;
+  required float poseX = 2;
+  required float poseY = 3;
+  required float posePhi = 4;
+  required int32 update = 5;
+}
+
+message DEVICE_MAP_ID_SET_NAVIGATION_RSP {
+  required int32 result = 1;
+  required DEVICE_MAP_ID_SET_NAVIGATION_REQ position = 3;
+}
+
+message DEVICE_WORKSTATUS_REPORT_REQ {
+  required int32 unk1 = 1;
+}
+
+message DEVICE_WORKSTATUS_REPORT_RSP {
+  required int32 result = 1;
+}
+
+message DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ {
+    required int32 unk1 = 1;
+    required string unk2 = 2;
+}
+
+message DEVICE_GET_ALL_GLOBAL_MAP_INFO_RSP {
+    required int32 result = 1;
+}
+
+message DEVICE_GETTIME_REQ {}
+
+message DEVICE_GETTIME_RSP {
+    message Body {
+        required int32 deviceTime = 1;
+        required int32 deviceTimezone = 2;
+    }
+
+    required int32 result = 1;
+    required Body body = 3;
+}
+
+message DEVICE_CONTROL_LOCK_REQ {}
+
+message DEVICE_CONTROL_LOCK_RSP {
+    required int32 result = 1;
+}
+
+/* root: */
+/*     1 <varint> = 1575527664 */
+/*     2 <varint> = 0 */
+/*     3 <varint> = 1 */
+/*     4 <chunk> = message: */
+/*         1 <varint> = 4484492 */
+/*         2 <varint> = 0 */
+/*         3 <varint> = 4 */
+/*         4 <chunk> = message: */
+/*             1 <32bit> = 0x3F658650 / 1063618128 / 0.896581 */
+/*             2 <32bit> = 0xC0033576 / -1073531530 / -2.05014 */
+/*         4 <chunk> = message: */
+/*             1 <32bit> = 0x3F658650 / 1063618128 / 0.896581 */
+/*             2 <32bit> = 0xC044578D / -1069262963 / -3.06784 */
+/*         4 <chunk> = message: */
+/*             1 <32bit> = 0x3FF2C328 / 1072874280 / 1.89658 */
+/*             2 <32bit> = 0xC044578D / -1069262963 / -3.06784 */
+/*         4 <chunk> = message: */
+/*             1 <32bit> = 0x3FF2C328 / 1072874280 / 1.89658 */
+/*             2 <32bit> = 0xC0033576 / -1073531530 / -2.05014 */
+message DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ {
+  message Coordinate {
+    required float x = 1;
+    required float y = 2;
+  }
+
+  message CleanArea {
+    required int32 cleanAreaId = 1;
+    required int32 unk1 = 2;
+    required int32 coordinateLength = 3;
+    repeated Coordinate coordinateList = 4;
+  }
+
+  required int32 mapHeadId = 1;
+  required int32 unk1 = 2;
+  required int32 cleanAreaLength = 3;
+  repeated CleanArea cleanAreaList = 4;
+}
+
+message DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_RSP {
+  required int32 result = 1;
+  required DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ position = 3;
+}
+
+message DEVICE_AREA_CLEAN_REQ {
+  required int32 unk1 = 1;
+}
+
+message DEVICE_AREA_CLEAN_RSP {
+  required int32 result = 1;
+}
+
+message DEVICE_MANUAL_CTRL_REQ {
+  required int32 command = 1;
+}
+
+message DEVICE_MANUAL_CTRL_RSP {
+  required int32 result = 1;
+}
+
+message DEVICE_MAP_ID_SET_SAVE_WAITING_MAP_INFO_REQ {
+  required int32 mode = 1;
+}
+
+message DEVICE_MAP_ID_SET_SAVE_WAITING_MAP_INFO_RSP {
+  required int32 result = 1;
+}
+
+message DEVICE_ORDERLIST_GETTING_REQ {}
+
+message DEVICE_ORDERLIST_GETTING_RSP {
+  message PlanInfo {
+    required int32 planId = 1;
+    required string planName = 2;
+  }
+
+  message MapInfo {
+    required int32 mapId = 1;
+    required string mapName = 2;
+    repeated PlanInfo planInfo = 3;
+  }
+
+  required int32 result = 1;
+  repeated DEVICE_ORDERLIST_SETTING_REQ orderList = 3;
+  repeated MapInfo mapInfoList = 4;
+}
+
+message DEVICE_ORDERLIST_SETTING_REQ {
+  message CleanInfo {
+    required int32 mapHeadId = 1;
+    required int32 planId = 2;
+    required int32 cleanMode = 3;
+    required int32 windPower = 4;
+    required int32 waterLevel = 5;
+    required int32 twiceClean = 6;
+  }
+
+  required int32 orderId = 1;
+  required bool enable = 2;
+  required bool repeat = 3;
+  required int32 weekDay = 4;
+  required int32 dayTime = 5;
+  required CleanInfo cleanInfo = 6;
+}
+
+message DEVICE_ORDERLIST_SETTING_RSP {
+  required int32 orderId = 1;
+  required int32 result = 2;
+}
+
+message DEVICE_ORDERLIST_DELETE_REQ {
+  required int32 orderId = 1;
+  required int32 mode = 2;
+}
+
+message DEVICE_ORDERLIST_DELETE_RSP {
+  required int32 orderId = 1;
+  required int32 result = 2;
+}
+
+message DEVICE_MAP_ID_GET_CONSUMABLES_PARAM_REQ {}
+
+message DEVICE_MAP_ID_GET_CONSUMABLES_PARAM_RSP {
+  required int32 mainBrushTime = 1;
+  required int32 sideBrushTime = 2;
+  required int32 filterTime = 3;
+  required int32 dishclothTime = 4;
+}

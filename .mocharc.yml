@@ -1,7 +1,7 @@
 ---
 reporter: "spec"
 recursive: true
-require: "./babel-register"
+require: "../../scripts/babel-register.js"
 extension:
   - "js"
   - "ts"

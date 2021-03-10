@@ -14,13 +14,17 @@ jobs:
     name: Release
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
-          node-version: 10
+          node-version: 12
       - name: Install dependencies
         run: yarn install
       - name: Release
-        run: yarn release
+        run: |
+          lerna version --conventional-commits --message 'chore(release): release [skip ci]' --yes
+          lerna publish --yes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

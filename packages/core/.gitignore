@@ -1,0 +1,7 @@
+*.tgz
+.nyc_output/
+lib/
+coverage/
+node_modules/
+schemas/*.json
+
