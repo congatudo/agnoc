@@ -1,5 +1,7 @@
 # agnoc
 
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+[![CI](https://github.com/adrigzr/agnoc/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/adrigzr/agnoc/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/@agnoc/core.svg)](https://npmjs.org/package/@agnoc/core)
 [![npm downloads](https://img.shields.io/npm/dm/@agnoc/core.svg)](https://npmjs.org/package/@agnoc/core)
 [![codecov](https://codecov.io/gh/adrigzr/agnoc/branch/master/graph/badge.svg?token=8OLQ4HDMMZ)](https://codecov.io/gh/adrigzr/agnoc)

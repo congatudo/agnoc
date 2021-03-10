@@ -5,7 +5,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # 0.1.0 (2021-03-10)
 
-
 ### Features
 
-* add encode & decode commands ([9c640c7](https://github.com/adrigzr/agnoc/commit/9c640c72eb2e28fb6ff934529aaed202350a3b21))
+- add encode & decode commands ([9c640c7](https://github.com/adrigzr/agnoc/commit/9c640c72eb2e28fb6ff934529aaed202350a3b21))

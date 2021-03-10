@@ -5,9 +5,16 @@
   "license": "MIT",
   "type": "commonjs",
   "scripts": {
-    "build": "lerna run build",
-    "lint": "lerna run lint",
-    "test": "lerna run test"
+    "build": "npm-run-all 'build:*'",
+    "build:packages": "lerna run build",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel 'lint:!(fix)'",
+    "lint:js": "eslint --cache --max-warnings 0 .",
+    "lint:js:fix": "eslint --fix .",
+    "lint:style": "prettier --check .",
+    "lint:style:fix": "prettier --write .",
+    "test": "npm-run-all lint 'test:*'",
+    "test:packages": "lerna run test",
+    "version": "npm-run-all 'lint:*:fix'"
   },
   "config": {
     "commitizen": {
@@ -66,6 +73,6 @@
   ],
   "lint-staged": {
     "*.js": "eslint --cache --fix",
-    "*.{md,json}": "prettier -w"
+    "*.{md,json,yaml,yml}": "prettier -w"
   }
 }
