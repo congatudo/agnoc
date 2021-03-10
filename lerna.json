@@ -1,18 +1,13 @@
 {
   "command": {
     "version": {
-      "allowBranch": "master"
+      "allowBranch": "master",
+      "message": "chore(release): release [skip ci]"
     }
   },
-  "ignoreChanges": [
-    "**/.*",
-    "**/*.md",
-    "**/test/**"
-  ],
+  "ignoreChanges": ["**/.*", "**/*.md", "**/test/**"],
   "npmClient": "yarn",
-  "packages": [
-    "packages/*"
-  ],
+  "packages": ["packages/*"],
   "useWorkspaces": true,
   "version": "0.0.0"
 }
