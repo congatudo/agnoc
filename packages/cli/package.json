@@ -1,6 +1,6 @@
 {
   "name": "@agnoc/cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Agnoc command line.",
   "keywords": [
     "agnoc",
@@ -43,7 +43,7 @@
     "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0"
   },
   "dependencies": {
-    "@agnoc/core": "0.0.0",
+    "@agnoc/core": "^0.1.0",
     "commander": "^7.1.0"
   },
   "devDependencies": {
