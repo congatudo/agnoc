@@ -1,7 +1,7 @@
 import { createReadStream } from "fs";
 import { Duplex, pipeline } from "stream";
-import { JSONTransform } from "@agnoc/core/streams/json-transform.stream";
-import { PacketEncodeTransform } from "@agnoc/core/streams/packet-encode-transform.stream";
+import { JSONTransform } from "@agnoc/cli/streams/json-transform.stream";
+import { PacketEncodeTransform } from "@agnoc/cli/streams/packet-encode-transform.stream";
 
 interface EncodeOptions {
   stdin: Duplex;

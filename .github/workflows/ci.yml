@@ -15,7 +15,10 @@ jobs:
         run: |
           yarn install
       - name: Test
-        run: yarn test
+        run: |
+          yarn build
+          yarn lint
+          yarn test
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

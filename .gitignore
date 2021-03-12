@@ -2,4 +2,5 @@
 .eslintcache
 .idea/
 .vscode/
+.build-cache/
 node_modules/

@@ -1,3 +1,6 @@
+comment:
+  layout: "diff"
+  require_changes: true
 coverage:
   status:
     project:

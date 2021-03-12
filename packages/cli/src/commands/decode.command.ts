@@ -1,8 +1,8 @@
 import { createReadStream } from "fs";
 import { Duplex, pipeline, Transform } from "stream";
-import { Packet } from "@agnoc/core/entities/packet.entity";
-import { ArrayTransform } from "@agnoc/core/streams/array-transform.stream";
-import { PacketDecodeTransform } from "@agnoc/core/streams/packet-decode-transform.stream";
+import { Packet } from "@agnoc/core/value-objects/packet.value-object";
+import { ArrayTransform } from "@agnoc/cli/streams/array-transform.stream";
+import { PacketDecodeTransform } from "@agnoc/cli/streams/packet-decode-transform.stream";
 import { isObject } from "@agnoc/core/utils/is-object.util";
 
 interface DecodeOptions {

@@ -51,7 +51,6 @@ export function readMapInfoList(stream: Readable): MapPlanInfo[] {
     list.push({
       mapHeadId: readWord(stream),
       mapName: readString(stream),
-      currentPlanId: readWord(stream),
     });
   }
 
@@ -142,11 +141,28 @@ export function readCleanPlanList(stream: Readable): CleanPlan[] {
   return list;
 }
 
+function getMask(stream: Readable): number {
+  let mask = readWord(stream);
+
+  if (mask >>> 15 !== 0) {
+    const buf = Buffer.alloc(4);
+
+    buf.writeUInt32LE(mask);
+
+    stream.unshift(buf);
+
+    mask = readShort(stream);
+  }
+
+  return mask;
+}
+
 export function decodeMap(payload: Buffer): MapInfo {
   const buffer = inflateSync(payload);
   const stream = toStream(buffer);
+
   const data: MapInfo = {
-    mask: readWord(stream),
+    mask: getMask(stream),
   };
 
   if (data.mask & 0x1) {
@@ -230,15 +246,15 @@ export function decodeMap(payload: Buffer): MapInfo {
   }
 
   if (data.mask & 0x100) {
-    throw new DomainException("handleMap: unhandled mask 0x100");
+    // throw new DomainException("handleMap: unhandled mask 0x100");
   }
 
   if (data.mask & 0x200) {
-    throw new DomainException("handleMap: unhandled mask 0x200");
+    // throw new DomainException("handleMap: unhandled mask 0x200");
   }
 
   if (data.mask & 0x400) {
-    throw new DomainException("handleMap: unhandled mask 0x400");
+    // throw new DomainException("handleMap: unhandled mask 0x400");
   }
 
   if (data.mask & 0x800) {
@@ -247,6 +263,7 @@ export function decodeMap(payload: Buffer): MapInfo {
 
   if (data.mask & 0x1000) {
     data.mapInfoList = readMapInfoList(stream);
+    data.currentPlanId = readWord(stream);
   }
 
   if (data.mask & 0x2000) {
@@ -265,6 +282,14 @@ export function decodeMap(payload: Buffer): MapInfo {
     if (data.roomEnableInfo.size) {
       throw new DomainException("handleMap: unhandled room enable info");
     }
+  }
+
+  if (data.mask & 0x4000) {
+    // throw new DomainException("handleMap: unhandled mask 0x400");
+  }
+
+  if (stream.readableLength) {
+    // throw new DomainException("handleMap: unread bytes on stream");
   }
 
   return data;

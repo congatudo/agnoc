@@ -83,7 +83,6 @@ export interface CleanPlanInfo {
 export interface MapPlanInfo {
   mapHeadId: number;
   mapName: string;
-  currentPlanId: number;
 }
 
 export interface CleanRoom {
@@ -138,6 +137,7 @@ export interface MapInfo {
   robotPoseInfo?: RobotPoseInfo;
   cleanPlanInfo?: CleanPlanInfo;
   mapInfoList?: MapPlanInfo[];
+  currentPlanId?: number;
   cleanRoomList?: CleanRoom[];
   cleanPlanList?: CleanPlan[];
   totalRooms?: number;

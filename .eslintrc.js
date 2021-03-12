@@ -13,7 +13,7 @@ module.exports = {
   ],
   settings: {
     node: {
-      allowModules: ["@agnoc/core", "@agnoc/cli"],
+      allowModules: ["@agnoc/core", "@agnoc/cli", "tiny-typed-emitter"],
       tryExtensions: [".js", ".ts", ".json"],
     },
   },

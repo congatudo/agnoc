@@ -1,7 +1,8 @@
+import { randomBytes } from "crypto";
 import {
   ValueObject,
   DomainPrimitive,
-} from "../base-classes/value-object.base-class";
+} from "../base-classes/value-object.base";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 
 export type BigNumberSerialized = string;
@@ -27,6 +28,13 @@ export class BigNumber extends ValueObject<bigint> {
     if (typeof props.value !== "bigint") {
       throw new ArgumentInvalidException("Invalid bigint");
     }
+  }
+
+  public static generate(): BigNumber {
+    const str = randomBytes(8).toString("hex");
+    const value = BigInt(`0x${str}`);
+
+    return new BigNumber(value);
   }
 
   public static fromJSON(str: BigNumberSerialized): BigNumber {
