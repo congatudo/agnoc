@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/adrigzr/agnoc/compare/v0.2.1...v0.2.2) (2021-04-02)
+
+### Bug Fixes
+
+- add map handlers ([#5](https://github.com/adrigzr/agnoc/issues/5)) ([f73ab01](https://github.com/adrigzr/agnoc/commit/f73ab01dce9ec44e0d79e463411c8c75d981f41e))
+
 ## [0.2.1](https://github.com/adrigzr/agnoc/compare/v0.2.0...v0.2.1) (2021-04-02)
 
 ### Bug Fixes
