@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/adrigzr/agnoc/compare/v0.2.0...v0.2.1) (2021-04-02)
+
+### Bug Fixes
+
+- add tiny typed emitter to deps ([3a98284](https://github.com/adrigzr/agnoc/commit/3a98284e1bc6627082074c61f248e36afe3bd4c1))
+
 # [0.2.0](https://github.com/adrigzr/agnoc/compare/v0.1.0...v0.2.0) (2021-04-02)
 
 ### Features
