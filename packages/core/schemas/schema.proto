@@ -218,26 +218,6 @@ message DEVICE_CONTROL_LOCK_RSP {
     required uint32 result = 1;
 }
 
-/* root: */
-/*     1 <varint> = 1575527664 */
-/*     2 <varint> = 0 */
-/*     3 <varint> = 1 */
-/*     4 <chunk> = message: */
-/*         1 <varint> = 4484492 */
-/*         2 <varint> = 0 */
-/*         3 <varint> = 4 */
-/*         4 <chunk> = message: */
-/*             1 <32bit> = 0x3F658650 / 1063618128 / 0.896581 */
-/*             2 <32bit> = 0xC0033576 / -1073531530 / -2.05014 */
-/*         4 <chunk> = message: */
-/*             1 <32bit> = 0x3F658650 / 1063618128 / 0.896581 */
-/*             2 <32bit> = 0xC044578D / -1069262963 / -3.06784 */
-/*         4 <chunk> = message: */
-/*             1 <32bit> = 0x3FF2C328 / 1072874280 / 1.89658 */
-/*             2 <32bit> = 0xC044578D / -1069262963 / -3.06784 */
-/*         4 <chunk> = message: */
-/*             1 <32bit> = 0x3FF2C328 / 1072874280 / 1.89658 */
-/*             2 <32bit> = 0xC0033576 / -1073531530 / -2.05014 */
 message DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ {
   message Coordinate {
     required float x = 1;

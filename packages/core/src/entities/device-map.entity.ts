@@ -50,6 +50,14 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     return this.props.charger;
   }
 
+  updateRobot(robot: Position): void {
+    this.props.robot = robot;
+  }
+
+  updateCharger(charger: Position): void {
+    this.props.charger = charger;
+  }
+
   getRelativeCoordinate(pos: Coordinate): Coordinate {
     return new Coordinate({
       x: Math.floor(
