@@ -119,10 +119,12 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
     type,
     workMode,
     chargeStatus,
+    areaCleanFlag,
   }: {
     type: number;
     workMode: number;
     chargeStatus: boolean;
+    areaCleanFlag: boolean;
   }): DeviceState {
     if (![0, 3].includes(type) || [11].includes(workMode)) {
       return DEVICE_STATE.ERROR;
@@ -140,16 +142,16 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       return DEVICE_STATE.RETURNING;
     }
 
-    if ([1, 6, 7, 25, 20, 30].includes(workMode)) {
-      return DEVICE_STATE.CLEANING;
-    }
-
     if ([4, 9, 31].includes(workMode)) {
       return DEVICE_STATE.PAUSED;
     }
 
     if ([0, 23, 29].includes(workMode)) {
       return DEVICE_STATE.IDLE;
+    }
+
+    if (areaCleanFlag || [1, 6, 7, 25, 20, 30].includes(workMode)) {
+      return DEVICE_STATE.CLEANING;
     }
 
     return DEVICE_STATE.UNKNOWN;

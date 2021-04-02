@@ -10,6 +10,7 @@ import { User } from "../entities/user.entity";
 import { debug } from "../utils/debug.util";
 import { DeviceSystemProps } from "../value-objects/device-system.value-object";
 import {
+  IDEVICE_AREA_CLEAN_REQ,
   IDEVICE_AUTO_CLEAN_REQ,
   IDEVICE_CHARGE_REQ,
   IDEVICE_ERROR,
@@ -18,6 +19,7 @@ import {
   IDEVICE_MANUAL_CTRL_REQ,
   IDEVICE_MAP_ID_GET_CONSUMABLES_PARAM_RSP,
   IDEVICE_MAP_ID_GET_GLOBAL_INFO_REQ,
+  IDEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ,
   IDEVICE_MAP_ID_SET_NAVIGATION_REQ,
   IDEVICE_MAP_ID_WORK_STATUS_PUSH_REQ,
   IDEVICE_ORDERLIST_DELETE_REQ,
@@ -44,7 +46,11 @@ import {
   CONSUMABLE_TYPE,
   DeviceConsumable,
 } from "../value-objects/device-consumable.value-object";
-import { MapInfo } from "../interfaces/map.interface";
+import {
+  ChargePoseInfo,
+  MapInfo,
+  RobotPoseInfo,
+} from "../interfaces/map.interface";
 import { DeviceMapProps } from "../entities/device-map.entity";
 import { Coordinate } from "../value-objects/coordinate.value-object";
 import { Position } from "../value-objects/position.value-object";
@@ -87,14 +93,17 @@ export class Robot extends TypedEmitter<RobotEvents> {
   private readonly multiplexer: Multiplexer;
   private debug: Debugger;
   private handlers: Handlers = {
+    CLIENT_HEARTBEAT_REQ: this.handleClientHeartbeat,
+    DEVICE_IN_USE: this.handleDeviceInUse,
+    DEVICE_MAP_ID_GET_GLOBAL_INFO_RSP: this.handleMapUpdate,
+    DEVICE_MAP_ID_PUSH_CHARGE_POSITION_INFO: this.handleUpdateChargePosition,
+    DEVICE_MAP_ID_PUSH_MAP_INFO: this.handleMapUpdate,
+    DEVICE_MAP_ID_PUSH_POSITION_INFO: this.handleUpdateRobotPosition,
+    DEVICE_MAP_ID_WORK_STATUS_PUSH_REQ: this.handleDeviceStatus,
     DEVICE_VERSION_INFO_UPDATE_REQ: this.handleDeviceVersionInfoUpdate,
     PUSH_DEVICE_AGENT_SETTING_REQ: this.handleDeviceAgentSetting,
-    CLIENT_HEARTBEAT_REQ: this.handleClientHeartbeat,
-    PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ: this.handleDevicePackageUpgrade,
-    DEVICE_MAP_ID_WORK_STATUS_PUSH_REQ: this.handleDeviceStatus,
-    DEVICE_MAP_ID_GET_GLOBAL_INFO_RSP: this.handleDeviceGlobalInfo,
-    DEVICE_IN_USE: this.handleDeviceInUse,
     PUSH_DEVICE_BATTERY_INFO_REQ: this.handleDeviceBatteryInfo,
+    PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ: this.handleDevicePackageUpgrade,
   };
 
   constructor({ device, user, multiplexer }: RobotProps) {
@@ -281,6 +290,43 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
   }
 
+  /**
+   * A ┌───┐ D
+   *   │   │
+   * B └───┘ C
+   */
+  async setAreas(areas: Coordinate[][]): Promise<void> {
+    if (!this.device.map) {
+      return;
+    }
+
+    const object: IDEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ = {
+      mapHeadId: this.device.map.id.value,
+      unk1: 0,
+      cleanAreaLength: areas.length,
+      cleanAreaList: areas.map((coords) => {
+        return {
+          cleanAreaId: ID.generate().value,
+          unk1: 0,
+          coordinateLength: coords.length,
+          coordinateList: coords,
+        };
+      }),
+    };
+
+    await this.sendRecv(
+      "DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ",
+      "DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_RSP",
+      object
+    );
+  }
+
+  async cleanAreas(): Promise<void> {
+    await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
+      unk1: 1,
+    } as IDEVICE_AREA_CLEAN_REQ);
+  }
+
   async adquire(): Promise<void> {
     await this.sendRecv("DEVICE_CONTROL_LOCK_REQ", "DEVICE_CONTROL_LOCK_RSP");
 
@@ -334,10 +380,22 @@ export class Robot extends TypedEmitter<RobotEvents> {
   handleDeviceStatus(message: Message): void {
     const object = message.packet.payload
       .object as IDEVICE_MAP_ID_WORK_STATUS_PUSH_REQ;
-    const { battery, type, workMode, chargeStatus, cleanPreference } = object;
+    const {
+      battery,
+      type,
+      workMode,
+      chargeStatus,
+      cleanPreference,
+      areaCleanFlag,
+    } = object;
     const props: DeviceStatusProps = {
       battery: DeviceStatus.getBatteryValue({ battery }),
-      state: DeviceStatus.getStateValue({ type, workMode, chargeStatus }),
+      state: DeviceStatus.getStateValue({
+        type,
+        workMode,
+        chargeStatus,
+        areaCleanFlag,
+      }),
       mode: DeviceStatus.getModeValue({ workMode }),
       fanSpeed: DeviceStatus.getFanSpeedValue({ cleanPreference }),
       currentCleanSize: object.cleanSize,
@@ -349,7 +407,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   @bind
-  handleDeviceGlobalInfo(message: Message): void {
+  handleMapUpdate(message: Message): void {
     const object = message.packet.payload.object as MapInfo;
     const { mapHeadInfo, mapGrid, robotPoseInfo, robotChargeInfo } = object;
     const props: Partial<DeviceMapProps> = {};
@@ -393,6 +451,42 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     this.device.updateMap(props as DeviceMapProps);
+    this.emit("updateMap");
+  }
+
+  @bind
+  handleUpdateRobotPosition(message: Message): void {
+    if (!this.device.map) {
+      return;
+    }
+
+    const object = message.packet.payload.object as RobotPoseInfo;
+
+    this.device.map.updateRobot(
+      new Position({
+        x: object.poseX,
+        y: object.poseY,
+        phi: object.posePhi,
+      })
+    );
+    this.emit("updateMap");
+  }
+
+  @bind
+  handleUpdateChargePosition(message: Message): void {
+    if (!this.device.map) {
+      return;
+    }
+
+    const object = message.packet.payload.object as ChargePoseInfo;
+
+    this.device.map.updateCharger(
+      new Position({
+        x: object.poseX,
+        y: object.poseY,
+        phi: object.posePhi,
+      })
+    );
     this.emit("updateMap");
   }
 
@@ -449,7 +543,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     return this.multiplexer.close();
   }
 
-  private send(opname: OPName, object: unknown = {}): boolean {
+  send(opname: OPName, object: unknown = {}): boolean {
     return this.multiplexer.send({
       opname,
       userId: this.user.id,
@@ -458,7 +552,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
   }
 
-  private sendRecv(
+  sendRecv(
     sendOPName: OPName,
     recvOPName: OPName,
     sendObject: unknown = {}

@@ -29,7 +29,7 @@
     "directory": "packages/cli"
   },
   "scripts": {
-    "build": "make -j4",
+    "build": "make",
     "clean": "make clean",
     "test": "make test"
   },
