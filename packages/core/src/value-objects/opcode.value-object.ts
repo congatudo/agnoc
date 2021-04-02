@@ -1,19 +1,20 @@
 import {
   DomainPrimitive,
   ValueObject,
-} from "../base-classes/value-object.base-class";
+} from "../base-classes/value-object.base";
 import { OPName, OPNAMES, OPCODES } from "../constants/opcodes.constant";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentOutOfRangeException } from "../exceptions/argument-out-of-range.exception";
+import { RequireOnlyOne } from "../types/require-one.type";
 import { hasKey } from "../utils/has-key.util";
 
 const MIN_OPCODE = 0;
 const MAX_OPCODE = 0xffff;
 
-export interface OPCodeSerialized {
+export type OPCodeSerialized = RequireOnlyOne<{
   code: string;
-  name: OPName | undefined;
-}
+  name: OPName;
+}>;
 
 export class OPCode extends ValueObject<number> {
   constructor(value: number) {
@@ -37,10 +38,9 @@ export class OPCode extends ValueObject<number> {
   }
 
   public toJSON(): OPCodeSerialized {
-    return {
-      code: this.code,
-      name: this.name,
-    };
+    const { name, code } = this;
+
+    return name ? { name } : { code };
   }
 
   public static fromJSON(obj: OPCodeSerialized): OPCode {

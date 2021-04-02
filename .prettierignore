@@ -1,2 +1,7 @@
+.nyc_output
+coverage
+lib
 node_modules
-packages
+**/schemas/*.json
+**/schemas/*.js
+**/schemas/*.ts

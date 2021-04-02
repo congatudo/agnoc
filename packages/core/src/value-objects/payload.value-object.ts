@@ -1,7 +1,7 @@
-import { ValueObject } from "../base-classes/value-object.base-class";
+import { ValueObject } from "../base-classes/value-object.base";
 import { OPCode, OPCodeSerialized } from "./opcode.value-object";
 import schema from "../../schemas/schema.json";
-import protobuf from "protobufjs";
+import protobuf from "protobufjs/light";
 import { hasKey } from "../utils/has-key.util";
 import { isObject } from "../utils/is-object.util";
 import { decodeRobotPosition } from "../decoders/robot-position.decoder";
@@ -9,19 +9,20 @@ import { decodeChargePosition } from "../decoders/charge-position.decoder";
 import { decodeMap } from "../decoders/map.decoder";
 import { decodeArea } from "../decoders/area.decoder";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
+import { ObjectLiteral } from "../types/object-literal.type";
 
 export interface PayloadProps {
   opcode: OPCode;
   buffer: Buffer;
-  object: Record<string, unknown> | undefined;
+  object: unknown;
 }
 
 export interface PayloadSerialized {
   opcode: OPCodeSerialized;
-  object: Record<string, unknown> | undefined;
+  object: unknown;
 }
 
-type Decoder = (buffer: Buffer) => Record<string, unknown>;
+type Decoder = (buffer: Buffer) => unknown;
 
 const root = protobuf.Root.fromJSON(schema);
 const decoders = {
@@ -32,17 +33,16 @@ const decoders = {
   DEVICE_MAP_ID_PUSH_ALL_MEMORY_MAP_INFO: decodeArea,
 } as const;
 
-function fromObject(
-  opcode: OPCode,
-  object: Record<string, unknown> | undefined
-): Buffer {
+function fromObject(opcode: OPCode, object: ObjectLiteral): Buffer {
   if (!object) {
     return Buffer.alloc(0);
   }
 
   if (!opcode.name || !hasKey(root, opcode.name)) {
     throw new ArgumentInvalidException(
-      `Unable to create payload from unknown opcode: ${opcode.toString()}`
+      `Unable to create payload from unknown opcode ${opcode.toString()} from object ${JSON.stringify(
+        object
+      )}`
     );
   }
 
@@ -60,10 +60,12 @@ function fromObject(
   return Buffer.from(schema.encode(message).finish());
 }
 
-function fromBuffer(opcode: OPCode, buffer: Buffer): Record<string, unknown> {
+function fromBuffer(opcode: OPCode, buffer: Buffer): unknown {
   if (!opcode.name) {
     throw new ArgumentInvalidException(
-      `Unable to create payload from unknown opcode: ${opcode.toString()}`
+      `Unable to create payload from unknown opcode ${opcode.toString()} from buffer ${buffer.toString(
+        "hex"
+      )}`
     );
   }
 
@@ -81,7 +83,9 @@ function fromBuffer(opcode: OPCode, buffer: Buffer): Record<string, unknown> {
   }
 
   throw new ArgumentInvalidException(
-    `Unable to find decoder for opcode: ${opcode.toString()}`
+    `Unable to find decoder for opcode ${opcode.toString()} with buffer ${buffer.toString(
+      "hex"
+    )}`
   );
 }
 
@@ -110,7 +114,7 @@ export class Payload extends ValueObject<PayloadProps> {
     return this.props.buffer;
   }
 
-  public get object(): Record<string, unknown> | undefined {
+  public get object(): unknown {
     return this.props.object;
   }
 
@@ -131,7 +135,7 @@ export class Payload extends ValueObject<PayloadProps> {
   public static fromJSON(obj: PayloadSerialized): Payload {
     const opcode = OPCode.fromJSON(obj.opcode);
 
-    return this.fromObject(opcode, obj.object);
+    return this.fromObject(opcode, obj.object as ObjectLiteral);
   }
 
   public static fromBuffer(opcode: OPCode, buffer: Buffer): Payload {
@@ -144,10 +148,7 @@ export class Payload extends ValueObject<PayloadProps> {
     });
   }
 
-  public static fromObject(
-    opcode: OPCode,
-    object?: Record<string, unknown>
-  ): Payload {
+  public static fromObject(opcode: OPCode, object: ObjectLiteral): Payload {
     const buffer = fromObject(opcode, object);
 
     return new Payload({

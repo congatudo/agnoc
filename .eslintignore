@@ -1,4 +1,10 @@
+# compiled output
+lib
+schemas
+
 # dependencies
-/node_modules/
-/packages/
+node_modules
+
+# misc
+coverage
 !.*

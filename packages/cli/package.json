@@ -29,24 +29,10 @@
     "directory": "packages/cli"
   },
   "scripts": {
-    "build": "npm-run-all 'build:*'",
-    "build:js": "NODE_ENV=production babel --config-file ../../.babelrc.js --extensions '.ts,.js' --out-dir lib src",
-    "build:types": "tsc -p ./tsconfig.build.json",
-    "check-coverage": "nyc check-coverage",
-    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel 'lint:!(fix)'",
-    "lint:js": "eslint --cache --max-warnings 0 .",
-    "lint:js:fix": "eslint --fix .",
-    "lint:style": "prettier --check .",
-    "lint:style:fix": "prettier --write .",
-    "lint:types": "tsc",
-    "prebuild": "rm -rf ./lib",
+    "build": "make -j4",
+    "clean": "make clean",
     "prepublishOnly": "yarn build",
-    "pretest": "npm run build",
-    "posttest": "npm run validate-coverage",
-    "test": "npm-run-all lint 'test:*'",
-    "test:node": "nyc mocha --reporter spec --recursive",
-    "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
-    "version": "npm-run-all 'lint:*:fix'"
+    "test": "make test"
   },
   "dependencies": {
     "@agnoc/core": "^0.1.0",

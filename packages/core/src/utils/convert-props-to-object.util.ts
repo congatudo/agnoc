@@ -1,4 +1,5 @@
 /* eslint-disable security/detect-object-injection */
+import { ObjectLiteral } from "../types/object-literal.type";
 import { isObject } from "./is-object.util";
 
 function convertToRaw(item: unknown): unknown {
@@ -8,9 +9,13 @@ function convertToRaw(item: unknown): unknown {
   return item;
 }
 
-export function convertPropsToObject(
-  props: Record<string, unknown>
-): Record<string, unknown> {
+export function convertPropsToObject(props: unknown): ObjectLiteral {
+  if (!isObject(props)) {
+    throw new TypeError(
+      `Unable to convert props type <${typeof props}> to object`
+    );
+  }
+
   const propsCopy = { ...props };
 
   for (const prop in propsCopy) {

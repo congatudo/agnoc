@@ -4,4 +4,6 @@ coverage
 tsconfig.*
 test
 src
-schemas/*.proto
+schemas/schema.proto
+schemas/schema.js
+schemas/schema.d.ts

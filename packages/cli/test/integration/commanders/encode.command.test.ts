@@ -16,68 +16,65 @@ declare module "mocha" {
   }
 }
 
-describe("commands", () => {
-  describe("#encode", () => {
-    beforeEach(function () {
-      this.json = JSON.stringify([
-        {
-          ctype: 2,
-          flow: 1,
-          deviceId: 1,
-          userId: 2,
-          sequence: "7a479a0fbb978c12",
-          payload: {
-            opcode: {
-              code: "0x1012",
-              name: "DEVICE_GETTIME_RSP",
-            },
-            object: {
-              result: 0,
-              body: {
-                deviceTime: 1606129555,
-                deviceTimezone: 3600,
-              },
+describe("encode", () => {
+  beforeEach(function () {
+    this.json = JSON.stringify([
+      {
+        ctype: 2,
+        flow: 1,
+        deviceId: 1,
+        userId: 2,
+        sequence: "7a479a0fbb978c12",
+        payload: {
+          opcode: {
+            name: "DEVICE_GETTIME_RSP",
+          },
+          object: {
+            result: 0,
+            body: {
+              deviceTime: 1606129555,
+              deviceTimezone: 3600,
             },
           },
         },
-      ]);
+      },
+    ]);
 
-      this.stdio = {
-        stdin: new PassThrough(),
-        stdout: new PassThrough(),
-        stderr: new PassThrough(),
-      };
+    this.stdio = {
+      stdin: new PassThrough(),
+      stdout: new PassThrough(),
+      stderr: new PassThrough(),
+    };
 
-      mockFS({
-        "example.json": this.json,
-      });
+    mockFS({
+      "example.json": this.json,
     });
+  });
 
-    afterEach(function () {
-      mockFS.restore();
-    });
+  afterEach(function () {
+    mockFS.restore();
+  });
 
-    it("encodes a tcp flow from stdin", async function () {
-      encode("-", { ...this.stdio });
+  it("encodes a tcp flow from stdin", async function () {
+    encode("-", { ...this.stdio });
 
-      this.stdio.stdin.write(this.json);
-      this.stdio.stdin.end();
+    this.stdio.stdin.write(this.json);
+    this.stdio.stdin.end();
 
-      const data = await readStream(this.stdio.stdout, "hex");
+    const data = await readStream(this.stdio.stdout, "hex");
 
-      expect(data).to.be.equal(
-        "2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c"
-      );
-    });
+    expect(data).to.be.equal(
+      "2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c"
+    );
+  });
 
-    it("encodes a tcp flow from file", async function () {
-      encode("example.json", { ...this.stdio });
+  it("encodes a tcp flow from file", async function () {
+    encode("example.json", { ...this.stdio });
 
-      const data = await readStream(this.stdio.stdout, "hex");
+    const data = await readStream(this.stdio.stdout, "hex");
 
-      expect(data).to.be.equal(
-        "2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c"
-      );
-    });
+    expect(data).to.be.equal(
+      "2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c"
+    );
   });
 });

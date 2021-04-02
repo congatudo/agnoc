@@ -3,5 +3,7 @@
 lib/
 coverage/
 node_modules/
-schemas/*.json
+schemas/schema.json
+schemas/schema.js
+schemas/schema.d.ts
 

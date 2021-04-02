@@ -7,14 +7,16 @@
   "scripts": {
     "build": "npm-run-all 'build:*'",
     "build:packages": "lerna run build",
+    "clean": "lerna run clean",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel 'lint:!(fix)'",
     "lint:js": "eslint --cache --max-warnings 0 .",
     "lint:js:fix": "eslint --fix .",
     "lint:style": "prettier --check .",
     "lint:style:fix": "prettier --write .",
-    "test": "npm-run-all lint 'test:*'",
+    "lint:types": "tsc",
+    "test": "npm-run-all 'test:*'",
     "test:packages": "lerna run test",
-    "version": "npm-run-all 'lint:*:fix'"
+    "version": "npm run lint:js:fix && npm run lint:style:fix"
   },
   "config": {
     "commitizen": {
@@ -25,6 +27,7 @@
     "@babel/cli": "^7.12.13",
     "@babel/core": "^7.12.13",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.13.5",
     "@babel/preset-env": "^7.12.13",
     "@babel/preset-typescript": "^7.12.16",
     "@babel/register": "^7.12.13",
@@ -40,7 +43,6 @@
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
     "babel-plugin-module-resolver": "^4.1.0",
-    "chai": "^4.2.0",
     "commitizen": "^4.2.3",
     "core-js": "^3.8.3",
     "cz-conventional-changelog": "^3.3.0",
@@ -51,18 +53,15 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-security": "^1.4.0",
-    "execa": "^5.0.0",
     "husky": "^4.3.8",
+    "hygen": "^6.0.4",
     "json": "^10.0.0",
     "lerna": "^4.0.0",
     "lint-staged": ">=10",
-    "mocha": "^8.2.1",
-    "mock-fs": "^4.13.0",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
+    "prepush-if-changed": "^1.0.8",
     "prettier": "2.2.1",
-    "sinon": "^9.2.3",
-    "sinon-chai": "^3.5.0",
     "typescript": "^4.2.2"
   },
   "engines": {
@@ -71,8 +70,18 @@
   "workspaces": [
     "packages/*"
   ],
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged",
+      "pre-push": "prepush-if-changed"
+    }
+  },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
+    "*.{js,ts}": "eslint --fix",
     "*.{md,json,yaml,yml}": "prettier -w"
+  },
+  "prepush-if-changed": {
+    "packages/**/*.{js,ts,json,proto}": "yarn build && yarn test"
   }
 }
