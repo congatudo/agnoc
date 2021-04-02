@@ -30,12 +30,12 @@
   "scripts": {
     "build": "make",
     "clean": "make clean",
-    "prepublishOnly": "yarn build",
     "test": "make test"
   },
   "dependencies": {
     "debug": "^4.3.1",
-    "protobufjs": "^6.10.2"
+    "protobufjs": "^6.10.2",
+    "tiny-typed-emitter": "^2.0.3"
   },
   "devDependencies": {
     "chai": "^4.3.3",

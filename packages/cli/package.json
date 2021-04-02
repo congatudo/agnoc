@@ -31,7 +31,6 @@
   "scripts": {
     "build": "make -j4",
     "clean": "make clean",
-    "prepublishOnly": "yarn build",
     "test": "make test"
   },
   "dependencies": {

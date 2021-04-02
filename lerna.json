@@ -6,7 +6,6 @@
       "message": "chore(release): release %v [skip ci]"
     }
   },
-  "ignoreChanges": ["**/.*", "**/*.{md,json}", "**/test/**"],
   "npmClient": "yarn",
   "packages": ["packages/*"],
   "useWorkspaces": true,

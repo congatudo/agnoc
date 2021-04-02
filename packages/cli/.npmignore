@@ -4,3 +4,4 @@ coverage
 tsconfig.*
 test
 src
+Makefile
