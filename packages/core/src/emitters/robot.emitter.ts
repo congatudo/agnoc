@@ -80,7 +80,7 @@ interface RobotEvents {
   updateMap: () => void;
 }
 
-enum MANUAL_MODE {
+export enum MANUAL_MODE {
   "forward" = 1,
   "left" = 2,
   "right" = 3,
@@ -89,7 +89,7 @@ enum MANUAL_MODE {
   "init" = 10,
 }
 
-type ManualMode = keyof typeof MANUAL_MODE;
+export type ManualMode = typeof MANUAL_MODE[keyof typeof MANUAL_MODE];
 
 export class Robot extends TypedEmitter<RobotEvents> {
   public readonly device: Device;
@@ -243,13 +243,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
     } as IDEVICE_AUTO_CLEAN_REQ);
   }
 
-  async setManualMode(mode: ManualMode): Promise<void> {
-    if (hasKey(MANUAL_MODE, mode)) {
-      await this.sendRecv("DEVICE_MANUAL_CTRL_REQ", "DEVICE_MANUAL_CTRL_RSP", {
-        // eslint-disable-next-line security/detect-object-injection
-        command: MANUAL_MODE[mode],
-      } as IDEVICE_MANUAL_CTRL_REQ);
-    }
+  async setManualMode(command: ManualMode): Promise<void> {
+    await this.sendRecv("DEVICE_MANUAL_CTRL_REQ", "DEVICE_MANUAL_CTRL_RSP", {
+      command,
+    } as IDEVICE_MANUAL_CTRL_REQ);
   }
 
   async getOrders(): Promise<DeviceOrder[]> {
