@@ -258,11 +258,11 @@ message DEVICE_MANUAL_CTRL_RSP {
   required uint32 result = 1;
 }
 
-message DEVICE_MAPID_SET_SAVE_WAITING_MAP_INFO_REQ {
+message DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ {
   required uint32 mode = 1;
 }
 
-message DEVICE_MAPID_SET_SAVE_WAITING_MAP_INFO_RSP {
+message DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_RSP {
   required uint32 result = 1;
 }
 

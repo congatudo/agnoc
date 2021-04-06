@@ -34,6 +34,7 @@ import {
   IPUSH_DEVICE_BATTERY_INFO_REQ,
   IPUSH_DEVICE_BATTERY_INFO_RSP,
   IPUSH_DEVICE_PACKAGE_UPGRADE_INFO_RSP,
+  IDEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ,
 } from "../../schemas/schema";
 import { hasKey } from "../utils/has-key.util";
 import {
@@ -107,6 +108,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     PUSH_DEVICE_AGENT_SETTING_REQ: this.handleDeviceAgentSetting,
     PUSH_DEVICE_BATTERY_INFO_REQ: this.handleDeviceBatteryInfo,
     PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ: this.handleDevicePackageUpgrade,
+    DEVICE_MAPID_PUSH_HAS_WAITING_BE_SAVED: this.handleWaitingMap,
   };
 
   constructor({ device, user, multiplexer }: RobotProps) {
@@ -336,6 +338,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
     } as IDEVICE_AREA_CLEAN_REQ);
   }
 
+  async discardWaitingMap(): Promise<void> {
+    await this.sendRecv(
+      "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ",
+      "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_RSP",
+      { mode: 0 } as IDEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ
+    );
+  }
+
   async adquire(): Promise<void> {
     await this.sendRecv("DEVICE_CONTROL_LOCK_REQ", "DEVICE_CONTROL_LOCK_RSP");
 
@@ -559,6 +569,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     this.device.updateStatus(props);
     this.emit("updateDevice");
+  }
+
+  @bind
+  handleWaitingMap(): void {
+    // Discard waiting map for now.
+    void this.discardWaitingMap();
   }
 
   addConnection(connection: Connection): void {
