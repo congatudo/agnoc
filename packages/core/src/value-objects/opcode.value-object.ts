@@ -30,7 +30,7 @@ export class OPCode extends ValueObject<number> {
   }
 
   public get name(): OPName | undefined {
-    return OPNAMES[this.value];
+    return OPNAMES[this.value as keyof typeof OPNAMES];
   }
 
   public toString(): string {
