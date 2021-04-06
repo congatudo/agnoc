@@ -26,11 +26,11 @@ type Decoder = (buffer: Buffer) => unknown;
 
 const root = protobuf.Root.fromJSON(schema);
 const decoders = {
-  DEVICE_MAP_ID_PUSH_POSITION_INFO: decodeRobotPosition,
-  DEVICE_MAP_ID_PUSH_CHARGE_POSITION_INFO: decodeChargePosition,
-  DEVICE_MAP_ID_GET_GLOBAL_INFO_RSP: decodeMap,
-  DEVICE_MAP_ID_PUSH_MAP_INFO: decodeMap,
-  DEVICE_MAP_ID_PUSH_ALL_MEMORY_MAP_INFO: decodeArea,
+  DEVICE_MAPID_PUSH_POSITION_INFO: decodeRobotPosition,
+  DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO: decodeChargePosition,
+  DEVICE_MAPID_GET_GLOBAL_INFO_RSP: decodeMap,
+  DEVICE_MAPID_PUSH_MAP_INFO: decodeMap,
+  DEVICE_MAPID_PUSH_ALL_MEMORY_MAP_INFO: decodeArea,
 } as const;
 
 function fromObject(opcode: OPCode, object: ObjectLiteral): Buffer {

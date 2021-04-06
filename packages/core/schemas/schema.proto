@@ -1,14 +1,14 @@
 syntax = "proto2";
 
-message DEVICE_ERROR {
+message COMMON_ERROR_REPLY {
   required uint32 result = 1;
   required string error = 2;
   required uint32 opcode = 3;
 }
 
-message DEVICE_DISCONNECT {}
+message CLIENT_IDLE_TIMEOUT {}
 
-message DEVICE_BUSY {
+message DEVICE_MAPID_PUSH_HAS_WAITING_BE_SAVED {
     required uint32 result = 1;
 }
 
@@ -126,7 +126,7 @@ message DEVICE_SEEK_LOCATION_RSP {}
 
 message DEVICE_STATUS_GETTING_REQ {}
 
-message DEVICE_MAP_ID_WORK_STATUS_PUSH_REQ {
+message DEVICE_MAPID_WORK_STATUS_PUSH_REQ {
   required uint32 mapHeadId = 1;
   required bool areaCleanFlag = 2;
   required uint32 workMode = 3;
@@ -166,11 +166,11 @@ message DEVICE_CHARGE_RSP {
   required uint32 result = 1;
 }
 
-message DEVICE_MAP_ID_GET_GLOBAL_INFO_REQ {
+message DEVICE_MAPID_GET_GLOBAL_INFO_REQ {
   required uint32 mask = 1;
 }
 
-message DEVICE_MAP_ID_SET_NAVIGATION_REQ {
+message DEVICE_MAPID_SET_NAVIGATION_REQ {
   required uint32 mapHeadId = 1;
   required float poseX = 2;
   required float poseY = 3;
@@ -178,9 +178,9 @@ message DEVICE_MAP_ID_SET_NAVIGATION_REQ {
   required bool update = 5;
 }
 
-message DEVICE_MAP_ID_SET_NAVIGATION_RSP {
+message DEVICE_MAPID_SET_NAVIGATION_RSP {
   required uint32 result = 1;
-  required DEVICE_MAP_ID_SET_NAVIGATION_REQ position = 3;
+  required DEVICE_MAPID_SET_NAVIGATION_REQ position = 3;
 }
 
 message DEVICE_WORKSTATUS_REPORT_REQ {
@@ -218,7 +218,7 @@ message DEVICE_CONTROL_LOCK_RSP {
     required uint32 result = 1;
 }
 
-message DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ {
+message DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ {
   message Coordinate {
     required float x = 1;
     required float y = 2;
@@ -237,9 +237,9 @@ message DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ {
   repeated CleanArea cleanAreaList = 4;
 }
 
-message DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_RSP {
+message DEVICE_MAPID_SET_AREA_CLEAN_INFO_RSP {
   required uint32 result = 1;
-  required DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ position = 3;
+  required DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ position = 3;
 }
 
 message DEVICE_AREA_CLEAN_REQ {
@@ -258,11 +258,11 @@ message DEVICE_MANUAL_CTRL_RSP {
   required uint32 result = 1;
 }
 
-message DEVICE_MAP_ID_SET_SAVE_WAITING_MAP_INFO_REQ {
+message DEVICE_MAPID_SET_SAVE_WAITING_MAP_INFO_REQ {
   required uint32 mode = 1;
 }
 
-message DEVICE_MAP_ID_SET_SAVE_WAITING_MAP_INFO_RSP {
+message DEVICE_MAPID_SET_SAVE_WAITING_MAP_INFO_RSP {
   required uint32 result = 1;
 }
 
@@ -318,9 +318,9 @@ message DEVICE_ORDERLIST_DELETE_RSP {
   required uint32 result = 2;
 }
 
-message DEVICE_MAP_ID_GET_CONSUMABLES_PARAM_REQ {}
+message DEVICE_MAPID_GET_CONSUMABLES_PARAM_REQ {}
 
-message DEVICE_MAP_ID_GET_CONSUMABLES_PARAM_RSP {
+message DEVICE_MAPID_GET_CONSUMABLES_PARAM_RSP {
   required uint32 mainBrushTime = 1;
   required uint32 sideBrushTime = 2;
   required uint32 filterTime = 3;
@@ -334,23 +334,23 @@ message DEVICE_EVENT_REPORT_CLEANTASK {
     optional uint32 unk1Unk6 = 6;
   }
 
-  required uint32 unk1 = 1;
-  required uint32 unk2 = 2;
-  required uint32 unk3 = 3;
+  required uint32 cleanId = 1;
+  required uint32 startTime = 2;
+  required uint32 endTime = 3;
   required uint32 unk4 = 4;
   required uint32 unk5 = 5;
   required uint32 unk6 = 6;
   required uint32 unk7 = 7;
   required Unk1 unk8 = 8;
-  optional uint32 unk9 = 9;
+  optional uint32 mapHeadId = 9;
   optional string mapName = 10;
   optional string planName = 11;
 }
 
 message DEVICE_EVENT_REPORT_CLEANMAP {
-  required uint32 unk1 = 1;
-  required bytes unk2 = 2;
-  required string unk3 = 3;
+  required uint32 cleanId = 1;
+  required bytes image = 2;
+  required string cleanName = 3;
   required bytes unk4 = 4;
 }
 
@@ -359,11 +359,11 @@ message DEVICE_CLEAN_MAP_BIN_DATA_REPORT_REQ {
   required bytes unk2 = 2;
 }
 
-message DEVICE_IN_USE {
+message DEVICE_OFFLINE_CMD {
   required uint32 result = 1;
 }
 
-message DEVICE_SETTIME_REQ {
+message DEVICE_TIME_SYNC_RSP {
   message Body {
     required uint32 time = 1;
   }
@@ -371,12 +371,12 @@ message DEVICE_SETTIME_REQ {
   required Body body = 3;
 }
 
-message UNK_1198 {
+message DEVICE_EVENT_REPORT_REQ {
   required uint32 unk1 = 1;
   required uint32 unk2 = 2;
 }
 
-message UNK_1199 {
+message DEVICE_EVENT_REPORT_RSP {
   message Body {
     required uint32 time = 1;
   }
@@ -384,10 +384,12 @@ message UNK_1199 {
   required Body body = 3;
 }
 
-message UNK_11a4 {
+message UNK_11A4 {
   required uint32 unk1 = 1;
 }
 
-message UNK_11a7 {
+message UNK_11A7 {
   required uint32 unk1 = 1;
 }
+
+message UNK_0044 {}
