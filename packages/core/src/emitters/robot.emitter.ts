@@ -619,8 +619,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
     sendObject: unknown = {}
   ): Promise<Packet> {
     return new Promise((resolve) => {
-      this.multiplexer.once(recvOPName, resolve);
-      this.send(sendOPName, sendObject);
+      const ret = this.send(sendOPName, sendObject);
+
+      if (ret) {
+        this.multiplexer.once(recvOPName, resolve);
+      }
     });
   }
 }
