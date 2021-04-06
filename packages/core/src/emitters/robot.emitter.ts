@@ -418,8 +418,39 @@ export class Robot extends TypedEmitter<RobotEvents> {
   @bind
   handleMapUpdate(message: Message): void {
     const object = message.packet.payload.object as MapInfo;
-    const { mapHeadInfo, mapGrid, robotPoseInfo, robotChargeInfo } = object;
+    const {
+      statusInfo,
+      mapHeadInfo,
+      mapGrid,
+      robotPoseInfo,
+      robotChargeInfo,
+    } = object;
     const props: Partial<DeviceMapProps> = {};
+
+    if (statusInfo) {
+      const {
+        batteryPercent: battery,
+        faultType: type,
+        workingMode: workMode,
+        chargeState: chargeStatus,
+        cleanPreference,
+      } = statusInfo;
+
+      this.device.updateStatus({
+        battery: DeviceStatus.getBatteryValue({ battery }),
+        state: DeviceStatus.getStateValue({
+          type,
+          workMode,
+          chargeStatus,
+          areaCleanFlag: false,
+        }),
+        mode: DeviceStatus.getModeValue({ workMode }),
+        fanSpeed: DeviceStatus.getFanSpeedValue({ cleanPreference }),
+        currentCleanSize: statusInfo.cleanSize,
+        currentCleanTime: statusInfo.cleanTime,
+      });
+      this.emit("updateDevice");
+    }
 
     if (mapHeadInfo) {
       Object.assign(props, {
