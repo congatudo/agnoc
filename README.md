@@ -16,6 +16,7 @@ The main goal of this project is to provide a library to read state and control 
 
 The library has been tested against the following models:
 
+- Conga 3090
 - Conga 3490
 
 ## CLI
