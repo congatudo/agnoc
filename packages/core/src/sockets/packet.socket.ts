@@ -1,5 +1,6 @@
 import { AddressInfo, Socket, SocketConnectOpts } from "net";
 import { Duplex } from "stream";
+import { DomainException } from "../exceptions/domain.exception";
 import { Packet } from "../value-objects/packet.value-object";
 
 interface PacketSocketProps {
@@ -114,6 +115,10 @@ export class PacketSocket extends Duplex {
     return this.socket?.address() || {};
   }
 
+  get connecting(): boolean {
+    return Boolean(this.socket?.connecting);
+  }
+
   private wrapSocket(socket: Socket): void {
     this.socket = socket;
     this.socket.on("close", (hadError) => this.emit("close", hadError));
@@ -142,7 +147,7 @@ export class PacketSocket extends Duplex {
       const len = lenBuf.readUInt32LE();
 
       if (len > 2 ** 20) {
-        this.socket.destroy(new Error("Max length exceeded"));
+        this.socket.destroy(new DomainException("Max length exceeded"));
         return;
       }
 
@@ -178,21 +183,29 @@ export class PacketSocket extends Duplex {
 
   _write(packet: Packet, _: BufferEncoding, done: Callback): void {
     if (!this.socket) {
-      done(new Error("Called _write without connection"));
+      done(new DomainException("Called _write without connection"));
       return;
     }
 
     const buffer = packet.toBuffer();
 
-    this.socket.write(buffer, done);
+    try {
+      this.socket.write(buffer, done);
+    } catch (e) {
+      done(e);
+    }
   }
 
   _final(done: Callback): void {
     if (!this.socket) {
-      done(new Error("Called _final without connection"));
+      done(new DomainException("Called _final without connection"));
       return;
     }
 
-    this.socket.end(done);
+    try {
+      this.socket.end(done);
+    } catch (e) {
+      done(e);
+    }
   }
 }

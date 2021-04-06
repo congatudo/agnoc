@@ -48,7 +48,16 @@ export class Multiplexer extends TypedEmitter<MultiplexerEvents> {
   send(props: MultiplexerSendProps): boolean {
     const connection = this.connections[0];
 
-    // TODO: handle no connection.
+    if (!connection) {
+      this.emit(
+        "error",
+        new DomainException(
+          `No valid connection found to send packet ${props.opname}`
+        )
+      );
+
+      return false;
+    }
 
     return connection.send(props);
   }
@@ -77,13 +86,15 @@ export class Multiplexer extends TypedEmitter<MultiplexerEvents> {
   @bind
   private handleError(connection: Connection, err: Error): void {
     this.emit("error", err);
-
-    process.nextTick(() => this.handleClose(connection));
+    this.handleClose(connection);
   }
 
   @bind
   private handleClose(connection: Connection): void {
-    connection.removeAllListeners();
+    // TODO: fix this.
+    // Remove all listeners to prevent mem leaks.
+    // But ensure error handling works...
+    // connection.removeAllListeners();
 
     this.connections = this.connections.filter((conn) => conn !== connection);
     this.debug("removed connection");
