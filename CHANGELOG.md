@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/adrigzr/agnoc/compare/v0.2.2...v0.3.0) (2021-04-06)
+
+### Bug Fixes
+
+- decode more bytes from map ([292b787](https://github.com/adrigzr/agnoc/commit/292b787ea598605c214d4c1afe677f4a4f7fce2c))
+- read status info from map updates ([2c34a98](https://github.com/adrigzr/agnoc/commit/2c34a9889a78930046acc348940c5b3515dafe20))
+
+### Features
+
+- add more opcodes ([332e6b6](https://github.com/adrigzr/agnoc/commit/332e6b60a52cba7f0ae03fb2b2bbcc58be415b4b))
+- handle & discard waiting maps ([f30ce36](https://github.com/adrigzr/agnoc/commit/f30ce36c99115f6357277a1edef54a8d073b07a0))
+- improve error handling ([bba3454](https://github.com/adrigzr/agnoc/commit/bba3454529cefb2de4288597491f525add348625))
+
 ## [0.2.2](https://github.com/adrigzr/agnoc/compare/v0.2.1...v0.2.2) (2021-04-02)
 
 ### Bug Fixes
