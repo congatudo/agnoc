@@ -12,7 +12,28 @@ export interface DeviceSystemProps {
   hardwareVersion: string;
 }
 
+export const DEVICE_MODEL = {
+  C3090: "C3090",
+  C3490: "C3490",
+  UNKNOWN: "unknown",
+} as const;
+
+export type DeviceModel = typeof DEVICE_MODEL[keyof typeof DEVICE_MODEL];
+
+export const DEVICE_TYPE = {
+  3: DEVICE_MODEL.C3090,
+  9: DEVICE_MODEL.C3490,
+} as const;
+
+export type DeviceType = keyof typeof DEVICE_TYPE;
+
 export class DeviceSystem extends ValueObject<DeviceSystemProps> {
+  get model(): DeviceModel {
+    return (
+      DEVICE_TYPE[this.props.deviceType as DeviceType] || DEVICE_MODEL.UNKNOWN
+    );
+  }
+
   protected validate(props: DeviceSystemProps): void {
     if (
       ![
