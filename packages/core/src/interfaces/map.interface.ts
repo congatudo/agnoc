@@ -38,18 +38,6 @@ export interface RobotChargeInfo {
   posePhi: number;
 }
 
-export interface WallListInfo {
-  mapHeadId: number;
-  cleanPlanId: number;
-  areaCount: number;
-}
-
-export interface AreaListInfo {
-  mapHeadId: number;
-  cleanPlanId: number;
-  areaCount: number;
-}
-
 export interface SpotInfo {
   mapHeadId: number;
   ctrlValue: number;
@@ -123,6 +111,34 @@ export interface RoomEnableInfo {
   size: number;
 }
 
+export interface CleanCoordinate {
+  x: number;
+  y: number;
+}
+
+export interface CleanArea {
+  cleanAreaId: number;
+  cleanPlanId: number;
+  coordinateList: CleanCoordinate[];
+}
+
+export interface CleanAreaInfo {
+  mapHeadId: number;
+  cleanPlanId: number;
+  cleanAreaList: CleanArea[];
+}
+
+export interface RoomMask {
+  unk1: number;
+  unk2: number;
+  unk3: number;
+}
+
+export interface RoomUnk {
+  roomId: number;
+  roomMaskList: RoomMask[];
+}
+
 export interface MapInfo {
   mask: number;
   statusInfo?: StatusInfo;
@@ -131,8 +147,8 @@ export interface MapInfo {
   historyHeadInfo?: HistoryHeadInfo;
   pointUnk?: Buffer;
   robotChargeInfo?: RobotChargeInfo;
-  wallListInfo?: WallListInfo;
-  areaListInfo?: AreaListInfo;
+  wallListInfo?: CleanAreaInfo;
+  areaListInfo?: CleanAreaInfo;
   spotInfo?: SpotInfo;
   robotPoseInfo?: RobotPoseInfo;
   cleanPlanInfo?: CleanPlanInfo;
@@ -143,4 +159,6 @@ export interface MapInfo {
   totalRooms?: number;
   unkRooms?: Buffer;
   roomEnableInfo?: RoomEnableInfo;
+  unk1?: Buffer;
+  roomUnkList?: RoomUnk[];
 }

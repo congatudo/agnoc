@@ -10,6 +10,9 @@ import {
 import { Readable } from "stream";
 import {
   AreaInfo,
+  CleanArea,
+  CleanAreaInfo,
+  CleanCoordinate,
   CleanPlan,
   CleanPlanInfo,
   CleanRoom,
@@ -17,6 +20,7 @@ import {
   MapHeadInfo,
   MapInfo,
   MapPlanInfo,
+  RoomUnk,
 } from "../interfaces/map.interface";
 import { DomainException } from "../exceptions/domain.exception";
 
@@ -151,10 +155,81 @@ function getMask(stream: Readable): number {
 
     stream.unshift(buf);
 
-    mask = readShort(stream);
+    // HACK: unknown mask 0x200. Temporary cut to 1 byte.
+    mask = readShort(stream) & 0xff;
   }
 
   return mask;
+}
+
+function readCleanCoordinateList(stream: Readable): CleanCoordinate[] {
+  const count = readWord(stream);
+  const list = [];
+
+  for (let i = 0; i < count; i++) {
+    list.push({
+      x: readFloat(stream),
+      y: readFloat(stream),
+    });
+  }
+
+  // dump unknown bytes.
+  stream.read(3 * count * 4);
+
+  return list;
+}
+
+function readCleanAreaList(stream: Readable): CleanArea[] {
+  const count = readWord(stream);
+  const list = [];
+
+  for (let i = 0; i < count; i++) {
+    list.push({
+      cleanAreaId: readWord(stream),
+      cleanPlanId: readWord(stream),
+      coordinateList: readCleanCoordinateList(stream),
+    });
+  }
+
+  return list;
+}
+
+function readCleanAreaInfo(stream: Readable): CleanAreaInfo {
+  return {
+    mapHeadId: readWord(stream),
+    cleanPlanId: readWord(stream),
+    cleanAreaList: readCleanAreaList(stream),
+  };
+}
+
+function readRoomUnk(stream: Readable): RoomUnk {
+  const list = [];
+  const roomId = readWord(stream);
+  const count = readWord(stream);
+
+  for (let i = 0; i < count; i++) {
+    list.push({
+      unk1: readShort(stream),
+      unk2: readShort(stream),
+      unk3: readByte(stream),
+    });
+  }
+
+  return {
+    roomId,
+    roomMaskList: list,
+  };
+}
+
+function readRoomUnkList(stream: Readable): RoomUnk[] {
+  const count = readWord(stream);
+  const list = [];
+
+  for (let i = 0; i < count; i++) {
+    list.push(readRoomUnk(stream));
+  }
+
+  return list;
 }
 
 export function decodeMap(payload: Buffer): MapInfo {
@@ -209,19 +284,11 @@ export function decodeMap(payload: Buffer): MapInfo {
   }
 
   if (data.mask & 0x10) {
-    data.wallListInfo = {
-      mapHeadId: readWord(stream),
-      cleanPlanId: readWord(stream),
-      areaCount: readWord(stream),
-    };
+    data.wallListInfo = readCleanAreaInfo(stream);
   }
 
   if (data.mask & 0x20) {
-    data.areaListInfo = {
-      mapHeadId: readWord(stream),
-      cleanPlanId: readWord(stream),
-      areaCount: readWord(stream),
-    };
+    data.areaListInfo = readCleanAreaInfo(stream);
   }
 
   if (data.mask & 0x40) {
@@ -246,34 +313,46 @@ export function decodeMap(payload: Buffer): MapInfo {
   }
 
   if (data.mask & 0x100) {
-    // throw new DomainException("handleMap: unhandled mask 0x100");
+    throw new DomainException(
+      `handleMap: unhandled mask 0x100 (${data.mask}) with payload ${
+        (stream.read() as Buffer | null)?.length || 0
+      }`
+    );
   }
 
   if (data.mask & 0x200) {
-    // throw new DomainException("handleMap: unhandled mask 0x200");
+    throw new DomainException(
+      `handleMap: unhandled mask 0x200 (${data.mask}) with payload ${
+        (stream.read() as Buffer | null)?.length || 0
+      }`
+    );
   }
 
   if (data.mask & 0x400) {
-    // throw new DomainException("handleMap: unhandled mask 0x400");
+    throw new DomainException(
+      `handleMap: unhandled mask 0x400 (${data.mask}) with payload ${
+        (stream.read() as Buffer | null)?.length || 0
+      }`
+    );
   }
 
   if (data.mask & 0x800) {
     data.cleanPlanInfo = readCleanPlanInfo(stream);
-  }
-
-  if (data.mask & 0x1000) {
     data.mapInfoList = readMapInfoList(stream);
     data.currentPlanId = readWord(stream);
-  }
-
-  if (data.mask & 0x2000) {
     data.cleanRoomList = readCleanRoomList(stream);
     data.cleanPlanList = readCleanPlanList(stream);
     data.totalRooms = data.cleanRoomList.length;
+  }
 
+  if (data.mask & 0x1000) {
     // dump rooms
-    data.unkRooms = stream.read(data.totalRooms * data.totalRooms) as Buffer;
+    data.unkRooms = stream.read(
+      (data.totalRooms || 0) * (data.totalRooms || 0)
+    ) as Buffer;
+  }
 
+  if (data.mask & 0x2000) {
     data.roomEnableInfo = {
       mapHeadId: readWord(stream),
       size: readByte(stream),
@@ -282,14 +361,17 @@ export function decodeMap(payload: Buffer): MapInfo {
     if (data.roomEnableInfo.size) {
       throw new DomainException("handleMap: unhandled room enable info");
     }
+
+    // dump unknown bytes
+    data.unk1 = stream.read(50) as Buffer;
   }
 
   if (data.mask & 0x4000) {
-    // throw new DomainException("handleMap: unhandled mask 0x400");
+    data.roomUnkList = readRoomUnkList(stream);
   }
 
   if (stream.readableLength) {
-    // throw new DomainException("handleMap: unread bytes on stream");
+    throw new DomainException("handleMap: unread bytes on stream");
   }
 
   return data;

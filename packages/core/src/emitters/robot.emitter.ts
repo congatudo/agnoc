@@ -8,7 +8,10 @@ import { Packet } from "../value-objects/packet.value-object";
 import { Device } from "../entities/device.entity";
 import { User } from "../entities/user.entity";
 import { debug } from "../utils/debug.util";
-import { DeviceSystemProps } from "../value-objects/device-system.value-object";
+import {
+  DeviceSystemProps,
+  DEVICE_MODEL,
+} from "../value-objects/device-system.value-object";
 import {
   IDEVICE_AREA_CLEAN_REQ,
   IDEVICE_AUTO_CLEAN_REQ,
@@ -80,7 +83,7 @@ enum MANUAL_MODE {
   "forward" = 1,
   "left" = 2,
   "right" = 3,
-  "backwarD" = 4,
+  "backward" = 4,
   "stop" = 5,
   "init" = 10,
 }
@@ -208,10 +211,16 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async getMap(): Promise<void> {
+    let mask = 0x78ff;
+
+    if (this.device.system.model === DEVICE_MODEL.C3090) {
+      mask = 0xff;
+    }
+
     await this.sendRecv(
       "DEVICE_MAP_ID_GET_GLOBAL_INFO_REQ",
       "DEVICE_MAP_ID_GET_GLOBAL_INFO_RSP",
-      { mask: 0x78ff } as IDEVICE_MAP_ID_GET_GLOBAL_INFO_REQ
+      { mask } as IDEVICE_MAP_ID_GET_GLOBAL_INFO_REQ
     );
   }
 
@@ -504,6 +513,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
     message.respond("PUSH_DEVICE_BATTERY_INFO_RSP", {
       result: 0,
     } as IPUSH_DEVICE_BATTERY_INFO_RSP);
+
+    // TODO: fix this.
+    if (!this.device.status) {
+      return;
+    }
 
     const object = message.packet.payload
       .object as IPUSH_DEVICE_BATTERY_INFO_REQ;
