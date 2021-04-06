@@ -3,11 +3,11 @@ export interface StatusInfo {
   hasHistoryMap: number;
   workingMode: number;
   batteryPercent: number;
-  chargeState: number;
+  chargeState: boolean;
   faultType: number;
   faultCode: number;
   cleanPreference: number;
-  repeatClean: number;
+  repeatClean: boolean;
   cleanTime: number;
   cleanSize: number;
 }

@@ -246,11 +246,11 @@ export function decodeMap(payload: Buffer): MapInfo {
       hasHistoryMap: readWord(stream),
       workingMode: readWord(stream),
       batteryPercent: readWord(stream),
-      chargeState: readWord(stream),
+      chargeState: Boolean(readWord(stream)),
       faultType: readWord(stream),
       faultCode: readWord(stream),
       cleanPreference: readWord(stream),
-      repeatClean: readWord(stream),
+      repeatClean: Boolean(readWord(stream)),
       cleanTime: readWord(stream),
       cleanSize: readWord(stream),
     };

@@ -16,15 +16,15 @@ import {
   IDEVICE_AREA_CLEAN_REQ,
   IDEVICE_AUTO_CLEAN_REQ,
   IDEVICE_CHARGE_REQ,
-  IDEVICE_ERROR,
+  ICOMMON_ERROR_REPLY,
   IDEVICE_GETTIME_RSP,
   IDEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ,
   IDEVICE_MANUAL_CTRL_REQ,
-  IDEVICE_MAP_ID_GET_CONSUMABLES_PARAM_RSP,
-  IDEVICE_MAP_ID_GET_GLOBAL_INFO_REQ,
-  IDEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ,
-  IDEVICE_MAP_ID_SET_NAVIGATION_REQ,
-  IDEVICE_MAP_ID_WORK_STATUS_PUSH_REQ,
+  IDEVICE_MAPID_GET_CONSUMABLES_PARAM_RSP,
+  IDEVICE_MAPID_GET_GLOBAL_INFO_REQ,
+  IDEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ,
+  IDEVICE_MAPID_SET_NAVIGATION_REQ,
+  IDEVICE_MAPID_WORK_STATUS_PUSH_REQ,
   IDEVICE_ORDERLIST_DELETE_REQ,
   IDEVICE_ORDERLIST_GETTING_RSP,
   IDEVICE_SET_CLEAN_PREFERENCE_REQ,
@@ -97,12 +97,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
   private debug: Debugger;
   private handlers: Handlers = {
     CLIENT_HEARTBEAT_REQ: this.handleClientHeartbeat,
-    DEVICE_IN_USE: this.handleDeviceInUse,
-    DEVICE_MAP_ID_GET_GLOBAL_INFO_RSP: this.handleMapUpdate,
-    DEVICE_MAP_ID_PUSH_CHARGE_POSITION_INFO: this.handleUpdateChargePosition,
-    DEVICE_MAP_ID_PUSH_MAP_INFO: this.handleMapUpdate,
-    DEVICE_MAP_ID_PUSH_POSITION_INFO: this.handleUpdateRobotPosition,
-    DEVICE_MAP_ID_WORK_STATUS_PUSH_REQ: this.handleDeviceStatus,
+    DEVICE_OFFLINE_CMD: this.handleDeviceInUse,
+    DEVICE_MAPID_GET_GLOBAL_INFO_RSP: this.handleMapUpdate,
+    DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO: this.handleUpdateChargePosition,
+    DEVICE_MAPID_PUSH_MAP_INFO: this.handleMapUpdate,
+    DEVICE_MAPID_PUSH_POSITION_INFO: this.handleUpdateRobotPosition,
+    DEVICE_MAPID_WORK_STATUS_PUSH_REQ: this.handleDeviceStatus,
     DEVICE_VERSION_INFO_UPDATE_REQ: this.handleDeviceVersionInfoUpdate,
     PUSH_DEVICE_AGENT_SETTING_REQ: this.handleDeviceAgentSetting,
     PUSH_DEVICE_BATTERY_INFO_REQ: this.handleDeviceBatteryInfo,
@@ -181,11 +181,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async getConsumables(): Promise<DeviceConsumable[]> {
     const packet = await this.sendRecv(
-      "DEVICE_MAP_ID_GET_CONSUMABLES_PARAM_REQ",
-      "DEVICE_MAP_ID_GET_CONSUMABLES_PARAM_RSP"
+      "DEVICE_MAPID_GET_CONSUMABLES_PARAM_REQ",
+      "DEVICE_MAPID_GET_CONSUMABLES_PARAM_RSP"
     );
     const object = packet.payload
-      .object as IDEVICE_MAP_ID_GET_CONSUMABLES_PARAM_RSP;
+      .object as IDEVICE_MAPID_GET_CONSUMABLES_PARAM_RSP;
     const consumables = [
       new DeviceConsumable({
         type: CONSUMABLE_TYPE.MAIN_BRUSH,
@@ -218,9 +218,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     await this.sendRecv(
-      "DEVICE_MAP_ID_GET_GLOBAL_INFO_REQ",
-      "DEVICE_MAP_ID_GET_GLOBAL_INFO_RSP",
-      { mask } as IDEVICE_MAP_ID_GET_GLOBAL_INFO_REQ
+      "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
+      "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
+      { mask } as IDEVICE_MAPID_GET_GLOBAL_INFO_REQ
     );
   }
 
@@ -287,15 +287,15 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     await this.sendRecv(
-      "DEVICE_MAP_ID_SET_NAVIGATION_REQ",
-      "DEVICE_MAP_ID_SET_NAVIGATION_RSP",
+      "DEVICE_MAPID_SET_NAVIGATION_REQ",
+      "DEVICE_MAPID_SET_NAVIGATION_RSP",
       {
         mapHeadId: this.device.map.id.value,
         poseX: position.x,
         poseY: position.y,
         posePhi: position.phi,
         update: true,
-      } as IDEVICE_MAP_ID_SET_NAVIGATION_REQ
+      } as IDEVICE_MAPID_SET_NAVIGATION_REQ
     );
   }
 
@@ -309,7 +309,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       return;
     }
 
-    const object: IDEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ = {
+    const object: IDEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ = {
       mapHeadId: this.device.map.id.value,
       unk1: 0,
       cleanAreaLength: areas.length,
@@ -324,8 +324,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
     };
 
     await this.sendRecv(
-      "DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_REQ",
-      "DEVICE_MAP_ID_SET_AREA_CLEAN_INFO_RSP",
+      "DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ",
+      "DEVICE_MAPID_SET_AREA_CLEAN_INFO_RSP",
       object
     );
   }
@@ -388,7 +388,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   @bind
   handleDeviceStatus(message: Message): void {
     const object = message.packet.payload
-      .object as IDEVICE_MAP_ID_WORK_STATUS_PUSH_REQ;
+      .object as IDEVICE_MAPID_WORK_STATUS_PUSH_REQ;
     const {
       battery,
       type,
@@ -501,11 +501,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   @bind
   handleDeviceInUse(message: Message): void {
-    message.respond("DEVICE_ERROR", {
+    message.respond("COMMON_ERROR_REPLY", {
       result: 11001,
       error: "Target user is offline",
       opcode: message.packet.payload.opcode.value,
-    } as IDEVICE_ERROR);
+    } as ICOMMON_ERROR_REPLY);
   }
 
   @bind

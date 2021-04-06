@@ -13,10 +13,10 @@ import { DeviceSystem } from "../value-objects/device-system.value-object";
 import {
   ICLIENT_ONLINE_REQ,
   ICLIENT_ONLINE_RSP,
-  IDEVICE_ERROR,
+  ICOMMON_ERROR_REPLY,
   IDEVICE_REGISTER_REQ,
   IDEVICE_REGISTER_RSP,
-  IDEVICE_SETTIME_REQ,
+  IDEVICE_TIME_SYNC_RSP,
 } from "../../schemas/schema";
 import { ID } from "../value-objects/id.value-object";
 import { Multiplexer } from "./multiplexer.emitter";
@@ -142,12 +142,12 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
       return;
     }
 
-    message.respond("DEVICE_ERROR", {
+    message.respond("COMMON_ERROR_REPLY", {
       // TODO: type this.
       result: 1,
       opcode: message.packet.payload.opcode.value,
       error: "Device not registered",
-    } as IDEVICE_ERROR);
+    } as ICOMMON_ERROR_REPLY);
   }
 
   @bind
@@ -166,7 +166,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
     const connection = new Connection(socket);
 
     connection.send({
-      opname: "DEVICE_SETTIME_REQ",
+      opname: "DEVICE_TIME_SYNC_RSP",
       userId: new ID(0),
       deviceId: new ID(0),
       object: {
@@ -174,7 +174,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
         body: {
           time: Math.floor(Date.now() / 1000),
         },
-      } as IDEVICE_SETTIME_REQ,
+      } as IDEVICE_TIME_SYNC_RSP,
     });
 
     connection.close();
