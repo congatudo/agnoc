@@ -393,3 +393,15 @@ message UNK_11A7 {
 }
 
 message UNK_0044 {}
+
+message DEVICE_WITHROOMS_CLEAN_REQ {
+  required uint32 mode = 1;
+  required uint32 unk1 = 2;
+  required uint32 roomNumber = 3;
+  repeated uint32 roomId = 4;
+}
+
+message DEVICE_WITHROOMS_CLEAN_RSP {
+  required uint32 result = 1;
+}
+

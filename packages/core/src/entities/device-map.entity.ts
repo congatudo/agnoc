@@ -5,6 +5,7 @@ import { isPresent } from "../utils/is-present.util";
 import { Coordinate } from "../value-objects/coordinate.value-object";
 import { ID } from "../value-objects/id.value-object";
 import { Position } from "../value-objects/position.value-object";
+import { Room } from "./room.entity";
 
 export interface DeviceMapProps {
   id: ID;
@@ -14,6 +15,7 @@ export interface DeviceMapProps {
   grid: Buffer;
   robot: Position;
   charger: Position;
+  rooms: Room[];
 }
 
 export class DeviceMap extends Entity<DeviceMapProps> {
@@ -48,6 +50,10 @@ export class DeviceMap extends Entity<DeviceMapProps> {
 
   get charger(): Position {
     return this.props.charger;
+  }
+
+  get rooms(): Room[] {
+    return this.props.rooms;
   }
 
   updateRobot(robot: Position): void {

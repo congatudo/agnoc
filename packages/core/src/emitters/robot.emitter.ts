@@ -60,6 +60,8 @@ import { Coordinate } from "../value-objects/coordinate.value-object";
 import { Position } from "../value-objects/position.value-object";
 import { ID } from "../value-objects/id.value-object";
 import { DomainException } from "../exceptions/domain.exception";
+import { Room } from "../entities/room.entity";
+import { isPresent } from "../utils/is-present.util";
 
 export interface RobotProps {
   device: Device;
@@ -431,6 +433,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       mapGrid,
       robotPoseInfo,
       robotChargeInfo,
+      cleanRoomList,
+      roomSegmentList,
     } = object;
     const props: Partial<DeviceMapProps> = {};
 
@@ -495,6 +499,35 @@ export class Robot extends TypedEmitter<RobotEvents> {
         y: robotChargeInfo.poseY,
         phi: robotChargeInfo.posePhi,
       });
+    }
+
+    if (cleanRoomList && roomSegmentList) {
+      props.rooms = cleanRoomList
+        .map((cleanRoom) => {
+          const segment = roomSegmentList.find(
+            (roomSegment) => roomSegment.roomId === cleanRoom.roomId
+          );
+
+          if (!segment) {
+            return undefined;
+          }
+
+          return new Room({
+            id: new ID(cleanRoom.roomId),
+            name: cleanRoom.roomName,
+            center: new Coordinate({
+              x: cleanRoom.roomX,
+              y: cleanRoom.roomY,
+            }),
+            pixels: segment?.roomPixelList.map((pixel) => {
+              return new Coordinate({
+                x: pixel.x,
+                y: pixel.y,
+              });
+            }),
+          });
+        })
+        .filter(isPresent);
     }
 
     this.device.updateMap(props as DeviceMapProps);
