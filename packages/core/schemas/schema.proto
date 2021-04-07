@@ -152,8 +152,8 @@ message DEVICE_SET_CLEAN_PREFERENCE_RSP {
 }
 
 message DEVICE_AUTO_CLEAN_REQ {
-  required uint32 mode = 1;
-  required uint32 unk1 = 2;
+  required uint32 ctrlValue = 1;
+  required uint32 cleanType = 2;
 }
 
 message DEVICE_AUTO_CLEAN_RSP {}
@@ -395,10 +395,10 @@ message UNK_11A7 {
 message UNK_0044 {}
 
 message DEVICE_WITHROOMS_CLEAN_REQ {
-  required uint32 mode = 1;
-  required uint32 unk1 = 2;
+  required uint32 cleanType = 1;
+  required uint32 ctrlValue = 2;
   required uint32 roomNumber = 3;
-  repeated uint32 roomId = 4;
+  required bytes roomIdList = 4;
 }
 
 message DEVICE_WITHROOMS_CLEAN_RSP {

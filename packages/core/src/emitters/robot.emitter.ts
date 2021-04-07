@@ -35,6 +35,7 @@ import {
   IPUSH_DEVICE_BATTERY_INFO_RSP,
   IPUSH_DEVICE_PACKAGE_UPGRADE_INFO_RSP,
   IDEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ,
+  IDEVICE_WITHROOMS_CLEAN_REQ,
 } from "../../schemas/schema";
 import { hasKey } from "../utils/has-key.util";
 import {
@@ -128,22 +129,22 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async start(): Promise<void> {
     await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      mode: 1,
-      unk1: 2,
+      ctrlValue: 1,
+      cleanType: 2,
     } as IDEVICE_AUTO_CLEAN_REQ);
   }
 
   async stop(): Promise<void> {
     await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      mode: 2,
-      unk1: 2,
+      ctrlValue: 2,
+      cleanType: 2,
     } as IDEVICE_AUTO_CLEAN_REQ);
   }
 
   async pause(): Promise<void> {
     await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      mode: 2,
-      unk1: 2,
+      ctrlValue: 2,
+      cleanType: 2,
     } as IDEVICE_AUTO_CLEAN_REQ);
   }
 
@@ -230,8 +231,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async enterManualMode(): Promise<void> {
     await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      mode: 0,
-      unk1: 2,
+      ctrlValue: 0,
+      cleanType: 2,
     } as IDEVICE_AUTO_CLEAN_REQ);
     await this.sendRecv("DEVICE_MANUAL_CTRL_REQ", "DEVICE_MANUAL_CTRL_RSP", {
       command: MANUAL_MODE.init,
@@ -240,8 +241,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async leaveManualMode(): Promise<void> {
     await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      mode: 2,
-      unk1: 2,
+      ctrlValue: 2,
+      cleanType: 2,
     } as IDEVICE_AUTO_CLEAN_REQ);
   }
 
@@ -342,6 +343,21 @@ export class Robot extends TypedEmitter<RobotEvents> {
       "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ",
       "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_RSP",
       { mode: 0 } as IDEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ
+    );
+  }
+
+  async cleanRooms(rooms: Room[]): Promise<void> {
+    const ids = rooms.map((room) => room.id.value);
+
+    await this.sendRecv(
+      "DEVICE_WITHROOMS_CLEAN_REQ",
+      "DEVICE_WITHROOMS_CLEAN_RSP",
+      {
+        ctrlValue: 1,
+        cleanType: 2,
+        roomNumber: ids.length,
+        roomIdList: Buffer.from(ids),
+      } as IDEVICE_WITHROOMS_CLEAN_REQ
     );
   }
 
