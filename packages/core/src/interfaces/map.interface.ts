@@ -128,15 +128,15 @@ export interface CleanAreaInfo {
   cleanAreaList: CleanArea[];
 }
 
-export interface RoomMask {
-  unk1: number;
-  unk2: number;
-  unk3: number;
+export interface RoomPixel {
+  x: number;
+  y: number;
+  mask: number;
 }
 
-export interface RoomUnk {
+export interface RoomSegment {
   roomId: number;
-  roomMaskList: RoomMask[];
+  roomPixelList: RoomPixel[];
 }
 
 export interface MapInfo {
@@ -160,5 +160,5 @@ export interface MapInfo {
   unkRooms?: Buffer;
   roomEnableInfo?: RoomEnableInfo;
   unk1?: Buffer;
-  roomUnkList?: RoomUnk[];
+  roomSegmentList?: RoomSegment[];
 }

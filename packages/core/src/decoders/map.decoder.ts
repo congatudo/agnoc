@@ -20,7 +20,7 @@ import {
   MapHeadInfo,
   MapInfo,
   MapPlanInfo,
-  RoomUnk,
+  RoomSegment,
 } from "../interfaces/map.interface";
 import { DomainException } from "../exceptions/domain.exception";
 
@@ -202,31 +202,31 @@ function readCleanAreaInfo(stream: Readable): CleanAreaInfo {
   };
 }
 
-function readRoomUnk(stream: Readable): RoomUnk {
+function readRoomSegment(stream: Readable): RoomSegment {
   const list = [];
   const roomId = readWord(stream);
   const count = readWord(stream);
 
   for (let i = 0; i < count; i++) {
     list.push({
-      unk1: readShort(stream),
-      unk2: readShort(stream),
-      unk3: readByte(stream),
+      x: readShort(stream),
+      y: readShort(stream),
+      mask: readByte(stream),
     });
   }
 
   return {
     roomId,
-    roomMaskList: list,
+    roomPixelList: list,
   };
 }
 
-function readRoomUnkList(stream: Readable): RoomUnk[] {
+function readRoomSegmentList(stream: Readable): RoomSegment[] {
   const count = readWord(stream);
   const list = [];
 
   for (let i = 0; i < count; i++) {
-    list.push(readRoomUnk(stream));
+    list.push(readRoomSegment(stream));
   }
 
   return list;
@@ -359,7 +359,7 @@ export function decodeMap(payload: Buffer): MapInfo {
     };
 
     if (data.roomEnableInfo.size) {
-      throw new DomainException("handleMap: unhandled room enable info");
+      // throw new DomainException("handleMap: unhandled room enable info");
     }
 
     // dump unknown bytes
@@ -367,7 +367,7 @@ export function decodeMap(payload: Buffer): MapInfo {
   }
 
   if (data.mask & 0x4000) {
-    data.roomUnkList = readRoomUnkList(stream);
+    data.roomSegmentList = readRoomSegmentList(stream);
   }
 
   if (stream.readableLength) {
