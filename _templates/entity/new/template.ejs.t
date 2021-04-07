@@ -21,6 +21,10 @@ export class <%= PascalCaseName %> extends Entity<<%= PascalCaseName %>Props> {
     this.validate(props);
   }
 
+  get id(): ID {
+    return this.props.id;
+  }
+
   private validate(props: <%= PascalCaseName %>Props): void {
     if (![props.id].map(isPresent)) {
       throw new ArgumentNotProvidedException(

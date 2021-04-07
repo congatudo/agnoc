@@ -14,6 +14,10 @@ export interface <%= PascalCaseName %>Props {
 }
 
 export class <%= PascalCaseName %> extends ValueObject<<%= PascalCaseName %>Props> {
+  get foo(): string {
+    return this.props.foo;
+  }
+
   protected validate(props: <%= PascalCaseName %>Props): void {
     if (![props.foo].map(isPresent)) {
       throw new ArgumentNotProvidedException(
