@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/adrigzr/agnoc/compare/v0.3.0...v0.4.0) (2021-04-07)
+
+### Bug Fixes
+
+- export manual mode constants ([5f90d24](https://github.com/adrigzr/agnoc/commit/5f90d246f8315132f91496c59337f28f6a59fd4a))
+- mark as optional taskList for 3090 ([3985207](https://github.com/adrigzr/agnoc/commit/3985207b3e121e5410e887b71bdf12b20a4ae870))
+
+### Features
+
+- add more opcodes ([a1cf50f](https://github.com/adrigzr/agnoc/commit/a1cf50ffb7f73abe1ae9a42ccd9248d05b98ff01))
+- add room entity with pixels ([59cbc10](https://github.com/adrigzr/agnoc/commit/59cbc10b53e2c256c9a535c2c3840f9afd975b8f))
+
 # [0.3.0](https://github.com/adrigzr/agnoc/compare/v0.2.2...v0.3.0) (2021-04-06)
 
 ### Bug Fixes
