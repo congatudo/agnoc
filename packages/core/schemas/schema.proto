@@ -86,7 +86,7 @@ message PUSH_DEVICE_AGENT_SETTING_REQ {
   required uint32 deviceId = 1;
   required Voice voice = 2;
   required Config config = 3;
-  required TaskList taskList = 4;
+  optional TaskList taskList = 4;
   required PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ ota = 5;
   required Status status = 7;
 }
