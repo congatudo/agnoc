@@ -159,7 +159,7 @@ message DEVICE_AUTO_CLEAN_REQ {
 message DEVICE_AUTO_CLEAN_RSP {}
 
 message DEVICE_CHARGE_REQ {
-  required uint32 unk1 = 1;
+  required uint32 enable = 1;
 }
 
 message DEVICE_CHARGE_RSP {
@@ -184,7 +184,7 @@ message DEVICE_MAPID_SET_NAVIGATION_RSP {
 }
 
 message DEVICE_WORKSTATUS_REPORT_REQ {
-  required uint32 unk1 = 1;
+  required uint32 status = 1;
 }
 
 message DEVICE_WORKSTATUS_REPORT_RSP {
@@ -243,7 +243,7 @@ message DEVICE_MAPID_SET_AREA_CLEAN_INFO_RSP {
 }
 
 message DEVICE_AREA_CLEAN_REQ {
-  required uint32 unk1 = 1;
+  required uint32 ctrlValue = 1;
 }
 
 message DEVICE_AREA_CLEAN_RSP {
@@ -345,13 +345,6 @@ message DEVICE_EVENT_REPORT_CLEANTASK {
   optional uint32 mapHeadId = 9;
   optional string mapName = 10;
   optional string planName = 11;
-}
-
-message DEVICE_EVENT_REPORT_CLEANMAP {
-  required uint32 cleanId = 1;
-  required bytes image = 2;
-  required string cleanName = 3;
-  required bytes unk4 = 4;
 }
 
 message DEVICE_CLEAN_MAP_BIN_DATA_REPORT_REQ {

@@ -150,7 +150,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async home(): Promise<void> {
     await this.sendRecv("DEVICE_CHARGE_REQ", "DEVICE_CHARGE_RSP", {
-      unk1: 1,
+      enable: 1,
     } as IDEVICE_CHARGE_REQ);
   }
 
@@ -306,7 +306,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
    *   │   │
    * B └───┘ C
    */
-  async setAreas(areas: Coordinate[][]): Promise<void> {
+  async cleanAreas(areas: Coordinate[][]): Promise<void> {
     if (!this.device.map) {
       return;
     }
@@ -325,16 +325,16 @@ export class Robot extends TypedEmitter<RobotEvents> {
       }),
     };
 
+    await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
+      ctrlValue: 0,
+    } as IDEVICE_AREA_CLEAN_REQ);
     await this.sendRecv(
       "DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ",
       "DEVICE_MAPID_SET_AREA_CLEAN_INFO_RSP",
       object
     );
-  }
-
-  async cleanAreas(): Promise<void> {
     await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
-      unk1: 1,
+      ctrlValue: 1,
     } as IDEVICE_AREA_CLEAN_REQ);
   }
 
@@ -414,21 +414,13 @@ export class Robot extends TypedEmitter<RobotEvents> {
   handleDeviceStatus(message: Message): void {
     const object = message.packet.payload
       .object as IDEVICE_MAPID_WORK_STATUS_PUSH_REQ;
-    const {
-      battery,
-      type,
-      workMode,
-      chargeStatus,
-      cleanPreference,
-      areaCleanFlag,
-    } = object;
+    const { battery, type, workMode, chargeStatus, cleanPreference } = object;
     const props: DeviceStatusProps = {
       battery: DeviceStatus.getBatteryValue({ battery }),
       state: DeviceStatus.getStateValue({
         type,
         workMode,
         chargeStatus,
-        areaCleanFlag,
       }),
       mode: DeviceStatus.getModeValue({ workMode }),
       fanSpeed: DeviceStatus.getFanSpeedValue({ cleanPreference }),
@@ -469,7 +461,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
           type,
           workMode,
           chargeStatus,
-          areaCleanFlag: false,
         }),
         mode: DeviceStatus.getModeValue({ workMode }),
         fanSpeed: DeviceStatus.getFanSpeedValue({ cleanPreference }),
@@ -624,7 +615,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   addConnection(connection: Connection): void {
-    this.multiplexer.addConnection(connection);
+    const added = this.multiplexer.addConnection(connection);
+
+    if (added && this.multiplexer.connectionCount === 2) {
+      void this.adquire();
+    }
   }
 
   handleMessage(message: Message): void {

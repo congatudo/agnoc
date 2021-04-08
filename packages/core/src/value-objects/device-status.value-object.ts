@@ -20,6 +20,7 @@ export type DeviceState = typeof DEVICE_STATE[keyof typeof DEVICE_STATE];
 export const DEVICE_MODE = {
   NONE: "none",
   SPOT: "spot",
+  ZONE: "zone",
   UNKNOWN: "unknown",
 } as const;
 
@@ -119,12 +120,10 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
     type,
     workMode,
     chargeStatus,
-    areaCleanFlag,
   }: {
     type: number;
     workMode: number;
     chargeStatus: boolean;
-    areaCleanFlag: boolean;
   }): DeviceState {
     if (![0, 3].includes(type) || [11].includes(workMode)) {
       return DEVICE_STATE.ERROR;
@@ -138,7 +137,7 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       return DEVICE_STATE.DOCKED;
     }
 
-    if ([5, 10].includes(workMode)) {
+    if ([5, 10, 32].includes(workMode)) {
       return DEVICE_STATE.RETURNING;
     }
 
@@ -146,11 +145,11 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       return DEVICE_STATE.PAUSED;
     }
 
-    if ([0, 23, 29].includes(workMode)) {
+    if ([0, 23, 29, 35].includes(workMode)) {
       return DEVICE_STATE.IDLE;
     }
 
-    if (areaCleanFlag || [1, 6, 7, 25, 20, 30].includes(workMode)) {
+    if ([1, 6, 7, 25, 20, 30].includes(workMode)) {
       return DEVICE_STATE.CLEANING;
     }
 
@@ -160,6 +159,10 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
   static getModeValue({ workMode }: { workMode: number }): DeviceMode {
     if ([0, 1, 2, 4, 5, 10, 11].includes(workMode)) {
       return DEVICE_MODE.NONE;
+    }
+
+    if ([30, 31, 32, 35].includes(workMode)) {
+      return DEVICE_MODE.ZONE;
     }
 
     if ([6, 7, 9, 14, 22, 36, 37, 38, 39, 40].includes(workMode)) {

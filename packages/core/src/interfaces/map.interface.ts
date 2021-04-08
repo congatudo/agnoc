@@ -27,8 +27,8 @@ export interface MapHeadInfo {
 
 export interface HistoryHeadInfo {
   mapHeadId: number;
-  pointNumber: number;
-  poseId: number;
+  unk1: number;
+  unk2: number;
 }
 
 export interface RobotChargeInfo {

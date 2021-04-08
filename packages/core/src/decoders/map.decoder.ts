@@ -266,12 +266,12 @@ export function decodeMap(payload: Buffer): MapInfo {
   if (data.mask & 0x4) {
     data.historyHeadInfo = {
       mapHeadId: readWord(stream),
-      pointNumber: readWord(stream),
-      poseId: readWord(stream),
+      unk1: readWord(stream),
+      unk2: readWord(stream),
     };
 
     // dump history bytes
-    data.pointUnk = stream.read(data.historyHeadInfo.pointNumber * 9) as Buffer;
+    data.pointUnk = stream.read(data.historyHeadInfo.unk2 * 9) as Buffer;
   }
 
   if (data.mask & 0x8) {
@@ -312,29 +312,29 @@ export function decodeMap(payload: Buffer): MapInfo {
     };
   }
 
-  if (data.mask & 0x100) {
-    throw new DomainException(
-      `handleMap: unhandled mask 0x100 (${data.mask}) with payload ${
-        (stream.read() as Buffer | null)?.length || 0
-      }`
-    );
-  }
+  // if (data.mask & 0x100) {
+  //   throw new DomainException(
+  //     `handleMap: unhandled mask 0x100 (${data.mask}) with payload ${
+  //       (stream.read() as Buffer | null)?.length || 0
+  //     }`
+  //   );
+  // }
 
-  if (data.mask & 0x200) {
-    throw new DomainException(
-      `handleMap: unhandled mask 0x200 (${data.mask}) with payload ${
-        (stream.read() as Buffer | null)?.length || 0
-      }`
-    );
-  }
+  // if (data.mask & 0x200) {
+  //   throw new DomainException(
+  //     `handleMap: unhandled mask 0x200 (${data.mask}) with payload ${
+  //       (stream.read() as Buffer | null)?.length || 0
+  //     }`
+  //   );
+  // }
 
-  if (data.mask & 0x400) {
-    throw new DomainException(
-      `handleMap: unhandled mask 0x400 (${data.mask}) with payload ${
-        (stream.read() as Buffer | null)?.length || 0
-      }`
-    );
-  }
+  // if (data.mask & 0x400) {
+  //   throw new DomainException(
+  //     `handleMap: unhandled mask 0x400 (${data.mask}) with payload ${
+  //       (stream.read() as Buffer | null)?.length || 0
+  //     }`
+  //   );
+  // }
 
   if (data.mask & 0x800) {
     data.cleanPlanInfo = readCleanPlanInfo(stream);
