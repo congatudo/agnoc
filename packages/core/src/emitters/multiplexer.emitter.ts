@@ -30,6 +30,10 @@ export class Multiplexer extends TypedEmitter<MultiplexerEvents> {
     return this.connections.length > 0;
   }
 
+  get connectionCount(): number {
+    return this.connections.length;
+  }
+
   addConnection(connection: Connection): boolean {
     if (!this.connections.includes(connection)) {
       connection.on("data", this.handlePacket);

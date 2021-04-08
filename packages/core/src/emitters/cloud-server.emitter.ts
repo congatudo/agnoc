@@ -93,8 +93,6 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
         result: 0,
       } as ICLIENT_ONLINE_RSP);
 
-      void robot.adquire();
-
       this.emit("addRobot", robot);
     }
   }
