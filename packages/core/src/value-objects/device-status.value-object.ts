@@ -170,7 +170,7 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
   }
 
   static getModeValue({ workMode }: { workMode: number }): DeviceMode {
-    if ([0, 5, 10].includes(workMode)) {
+    if ([0, 1, 5, 10].includes(workMode)) {
       return DEVICE_MODE.NONE;
     }
 

@@ -6,6 +6,7 @@ import { Coordinate } from "../value-objects/coordinate.value-object";
 import { ID } from "../value-objects/id.value-object";
 import { Position } from "../value-objects/position.value-object";
 import { Room } from "./room.entity";
+import { Zone } from "./zone.entity";
 
 export interface DeviceMapProps {
   id: ID;
@@ -16,6 +17,7 @@ export interface DeviceMapProps {
   robot: Position;
   charger: Position;
   rooms: Room[];
+  restrictedZones: Zone[];
 }
 
 export class DeviceMap extends Entity<DeviceMapProps> {
@@ -54,6 +56,10 @@ export class DeviceMap extends Entity<DeviceMapProps> {
 
   get rooms(): Room[] {
     return this.props.rooms;
+  }
+
+  get restrictedZones(): Zone[] {
+    return this.props.restrictedZones;
   }
 
   updateRobot(robot: Position): void {
