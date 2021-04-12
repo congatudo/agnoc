@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/adrigzr/agnoc/compare/v0.4.0...v0.5.0) (2021-04-12)
+
+### Bug Fixes
+
+- fix area clean ([85e04f6](https://github.com/adrigzr/agnoc/commit/85e04f63746ef6e116a9138b221f528f8d047191))
+
 # [0.4.0](https://github.com/adrigzr/agnoc/compare/v0.3.0...v0.4.0) (2021-04-07)
 
 **Note:** Version bump only for package @agnoc/cli

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/adrigzr/agnoc/compare/v0.4.0...v0.5.0) (2021-04-12)
+
+### Bug Fixes
+
+- fix area clean ([85e04f6](https://github.com/adrigzr/agnoc/commit/85e04f63746ef6e116a9138b221f528f8d047191))
+- fix map decode issues ([d6b2ec1](https://github.com/adrigzr/agnoc/commit/d6b2ec16fcb8e6bc4e857f954cfc5f154d7fa156))
+
+### Features
+
+- add room clean ([d313f51](https://github.com/adrigzr/agnoc/commit/d313f51c410769ebab5b21c31303fce0456aadae))
+
 # [0.4.0](https://github.com/adrigzr/agnoc/compare/v0.3.0...v0.4.0) (2021-04-07)
 
 ### Bug Fixes
