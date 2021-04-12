@@ -58,7 +58,7 @@ export class Connection extends TypedEmitter<ConnectionEvents> {
 
   send({ opname, userId, deviceId, object }: ConnectionSendProps): boolean {
     const packet = new Packet({
-      ctype: 8,
+      ctype: 2,
       flow: 0,
       // This swap is intended.
       userId: deviceId,

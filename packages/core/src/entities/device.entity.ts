@@ -10,6 +10,10 @@ import {
   DeviceSystem,
   DeviceSystemProps,
 } from "../value-objects/device-system.value-object";
+import {
+  DeviceWlan,
+  DeviceWlanProps,
+} from "../value-objects/device-wlan.value-object";
 import { ID } from "../value-objects/id.value-object";
 import { DeviceMap, DeviceMapProps } from "./device-map.entity";
 import { DeviceOrder } from "./device-order.entity";
@@ -21,6 +25,7 @@ export interface DeviceProps {
   orders?: DeviceOrder[];
   consumables?: DeviceConsumable[];
   map?: DeviceMap;
+  wlan?: DeviceWlan;
 }
 
 export class Device extends Entity<DeviceProps> {
@@ -47,6 +52,10 @@ export class Device extends Entity<DeviceProps> {
 
   get map(): DeviceMap | undefined {
     return this.props.map;
+  }
+
+  get wlan(): DeviceWlan | undefined {
+    return this.props.wlan;
   }
 
   updateSystem(props: Partial<DeviceSystemProps>): void {
@@ -76,6 +85,13 @@ export class Device extends Entity<DeviceProps> {
       ...this.props.map?.getPropsCopy(),
       ...map,
     } as DeviceMapProps);
+  }
+
+  updateWlan(props: Partial<DeviceWlanProps>): void {
+    this.props.wlan = new DeviceWlan({
+      ...this.props.wlan?.getRawProps(),
+      ...props,
+    } as DeviceWlanProps);
   }
 
   toString(): string {

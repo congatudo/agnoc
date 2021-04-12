@@ -35,6 +35,14 @@ export enum FAN_SPEED {
 
 export type FanSpeed = keyof typeof FAN_SPEED;
 
+export const DEVICE_ERROR = {
+  NO_DEPOSIT: "no_deposit",
+  NO_GROUND: "no_ground",
+  UNKNOWN: "unknown",
+} as const;
+
+export type DeviceError = typeof DEVICE_ERROR[keyof typeof DEVICE_ERROR];
+
 export interface DeviceStatusProps {
   battery: number;
   state: DeviceState;
@@ -42,6 +50,7 @@ export interface DeviceStatusProps {
   fanSpeed: FanSpeed;
   currentCleanSize: number;
   currentCleanTime: number;
+  error: DeviceError;
 }
 
 export class DeviceStatus extends ValueObject<DeviceStatusProps> {
@@ -67,6 +76,10 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
 
   get currentCleanTime(): number {
     return this.props.currentCleanTime;
+  }
+
+  get error(): DeviceError {
+    return this.props.error;
   }
 
   protected validate(props: DeviceStatusProps): void {
@@ -137,7 +150,7 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       return DEVICE_STATE.DOCKED;
     }
 
-    if ([5, 10, 32].includes(workMode)) {
+    if ([5, 10, 12, 32].includes(workMode)) {
       return DEVICE_STATE.RETURNING;
     }
 
@@ -145,7 +158,7 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       return DEVICE_STATE.PAUSED;
     }
 
-    if ([0, 23, 29, 35].includes(workMode)) {
+    if ([0, 14, 23, 29, 35].includes(workMode)) {
       return DEVICE_STATE.IDLE;
     }
 
@@ -157,15 +170,15 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
   }
 
   static getModeValue({ workMode }: { workMode: number }): DeviceMode {
-    if ([0, 1, 2, 4, 5, 10, 11].includes(workMode)) {
+    if ([0, 5, 10].includes(workMode)) {
       return DEVICE_MODE.NONE;
     }
 
-    if ([30, 31, 32, 35].includes(workMode)) {
+    if ([30, 32, 35].includes(workMode)) {
       return DEVICE_MODE.ZONE;
     }
 
-    if ([6, 7, 9, 14, 22, 36, 37, 38, 39, 40].includes(workMode)) {
+    if ([7, 12, 14].includes(workMode)) {
       return DEVICE_MODE.SPOT;
     }
 
@@ -179,5 +192,16 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
   }): FanSpeed {
     // eslint-disable-next-line security/detect-object-injection
     return FAN_SPEED[cleanPreference] as FanSpeed;
+  }
+
+  static getError({ faultCode }: { faultCode: number }): DeviceError {
+    switch (faultCode) {
+      case 501:
+        return DEVICE_ERROR.NO_GROUND;
+      case 503:
+        return DEVICE_ERROR.NO_DEPOSIT;
+      default:
+        return DEVICE_ERROR.UNKNOWN;
+    }
   }
 }
