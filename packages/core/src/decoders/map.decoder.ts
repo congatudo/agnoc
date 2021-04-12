@@ -146,7 +146,7 @@ export function readCleanPlanList(stream: Readable): CleanPlan[] {
 }
 
 function getMask(stream: Readable): number {
-  let mask = readWord(stream);
+  let mask = readWord(stream) & 0xffff;
 
   // HACK: hacky way to discover 3090 model.
   if (mask < 0x7ff) {
