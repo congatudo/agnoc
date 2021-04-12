@@ -27,6 +27,7 @@ import {
   IDEVICE_MAPID_GET_CONSUMABLES_PARAM_RSP,
   IDEVICE_MAPID_GET_GLOBAL_INFO_REQ,
   IDEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ,
+  IDEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ,
   IDEVICE_MAPID_SET_NAVIGATION_REQ,
   IDEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ,
   IDEVICE_MAPID_WORK_STATUS_PUSH_REQ,
@@ -73,6 +74,7 @@ import { DomainException } from "../exceptions/domain.exception";
 import { Room } from "../entities/room.entity";
 import { isPresent } from "../utils/is-present.util";
 import { DeviceWlan } from "../value-objects/device-wlan.value-object";
+import { Zone } from "../entities/zone.entity";
 
 export interface RobotProps {
   device: Device;
@@ -405,6 +407,35 @@ export class Robot extends TypedEmitter<RobotEvents> {
     } as IDEVICE_AREA_CLEAN_REQ);
   }
 
+  /**
+   * A ┌───┐ D
+   *   │   │
+   * B └───┘ C
+   */
+  async setRestrictedZones(areas: Coordinate[][]): Promise<void> {
+    if (!this.device.map) {
+      return;
+    }
+
+    await this.sendRecv(
+      "DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ",
+      "DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_RSP",
+      {
+        mapHeadId: this.device.map.id.value,
+        unk1: 0,
+        cleanAreaLength: areas.length,
+        cleanAreaList: areas.map((coords) => {
+          return {
+            cleanAreaId: ID.generate().value,
+            unk1: 0,
+            coordinateLength: coords.length,
+            coordinateList: coords,
+          };
+        }),
+      } as IDEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ
+    );
+  }
+
   async discardWaitingMap(): Promise<void> {
     await this.sendRecv(
       "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ",
@@ -523,8 +554,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
       robotChargeInfo,
       cleanRoomList,
       roomSegmentList,
+      wallListInfo,
     } = object;
-    const props: Partial<DeviceMapProps> = {};
+    const props: Partial<DeviceMapProps> = {
+      rooms: [],
+      restrictedZones: [],
+    };
 
     if (statusInfo) {
       const {
@@ -585,6 +620,20 @@ export class Robot extends TypedEmitter<RobotEvents> {
         x: robotChargeInfo.poseX,
         y: robotChargeInfo.poseY,
         phi: robotChargeInfo.posePhi,
+      });
+    }
+
+    if (wallListInfo) {
+      props.restrictedZones = wallListInfo.cleanAreaList.map((cleanArea) => {
+        return new Zone({
+          id: new ID(cleanArea.cleanAreaId),
+          coordinates: cleanArea.coordinateList.map(({ x, y }) => {
+            return new Coordinate({
+              x,
+              y,
+            });
+          }),
+        });
       });
     }
 

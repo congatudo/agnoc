@@ -3,7 +3,7 @@ syntax = "proto2";
 message COMMON_ERROR_REPLY {
   required uint32 result = 1;
   required string error = 2;
-  required uint32 opcode = 3;
+  optional uint32 opcode = 3;
 }
 
 message CLIENT_IDLE_TIMEOUT {}
