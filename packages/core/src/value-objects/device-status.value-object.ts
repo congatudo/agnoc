@@ -174,11 +174,11 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       return DEVICE_MODE.NONE;
     }
 
-    if ([30, 32, 35].includes(workMode)) {
+    if ([30, 31, 32, 35].includes(workMode)) {
       return DEVICE_MODE.ZONE;
     }
 
-    if ([7, 12, 14].includes(workMode)) {
+    if ([7, 9, 12, 14].includes(workMode)) {
       return DEVICE_MODE.SPOT;
     }
 

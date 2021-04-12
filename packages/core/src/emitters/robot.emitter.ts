@@ -51,6 +51,7 @@ import { hasKey } from "../utils/has-key.util";
 import {
   DeviceStatus,
   DeviceStatusProps,
+  DEVICE_MODE,
   FanSpeed,
   FAN_SPEED,
 } from "../value-objects/device-status.value-object";
@@ -144,24 +145,59 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async start(): Promise<void> {
-    await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      ctrlValue: 1,
-      cleanType: 2,
-    } as IDEVICE_AUTO_CLEAN_REQ);
+    if (this.device.status?.mode === DEVICE_MODE.ZONE) {
+      await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
+        ctrlValue: 1,
+      } as IDEVICE_AREA_CLEAN_REQ);
+    } else if (
+      this.device.status?.mode === DEVICE_MODE.SPOT &&
+      this.device.map?.currentSpot
+    ) {
+      await this.sendRecv(
+        "DEVICE_MAPID_SET_NAVIGATION_REQ",
+        "DEVICE_MAPID_SET_NAVIGATION_RSP",
+        {
+          mapHeadId: this.device.map.id.value,
+          poseX: this.device.map.currentSpot.x,
+          poseY: this.device.map.currentSpot.y,
+          posePhi: this.device.map.currentSpot.phi,
+          ctrlValue: 1,
+        } as IDEVICE_MAPID_SET_NAVIGATION_REQ
+      );
+    } else {
+      await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
+        ctrlValue: 1,
+        cleanType: 2,
+      } as IDEVICE_AUTO_CLEAN_REQ);
+    }
   }
 
   async stop(): Promise<void> {
-    await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      ctrlValue: 2,
-      cleanType: 2,
-    } as IDEVICE_AUTO_CLEAN_REQ);
-  }
-
-  async pause(): Promise<void> {
-    await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      ctrlValue: 2,
-      cleanType: 2,
-    } as IDEVICE_AUTO_CLEAN_REQ);
+    if (this.device.status?.mode === DEVICE_MODE.ZONE) {
+      await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
+        ctrlValue: 2,
+      } as IDEVICE_AREA_CLEAN_REQ);
+    } else if (
+      this.device.status?.mode === DEVICE_MODE.SPOT &&
+      this.device.map?.currentSpot
+    ) {
+      await this.sendRecv(
+        "DEVICE_MAPID_SET_NAVIGATION_REQ",
+        "DEVICE_MAPID_SET_NAVIGATION_RSP",
+        {
+          mapHeadId: this.device.map.id.value,
+          poseX: this.device.map.currentSpot.x,
+          poseY: this.device.map.currentSpot.y,
+          posePhi: this.device.map.currentSpot.phi,
+          ctrlValue: 2,
+        } as IDEVICE_MAPID_SET_NAVIGATION_REQ
+      );
+    } else {
+      await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
+        ctrlValue: 2,
+        cleanType: 2,
+      } as IDEVICE_AUTO_CLEAN_REQ);
+    }
   }
 
   async home(): Promise<void> {
@@ -330,6 +366,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       { mask } as IDEVICE_MAPID_GET_GLOBAL_INFO_REQ
     );
 
+    // TODO: remove this waiting for device mode change.
     const packet = await this.recv("DEVICE_MAPID_WORK_STATUS_PUSH_REQ");
     const status = packet.payload.object as IDEVICE_MAPID_WORK_STATUS_PUSH_REQ;
 
@@ -345,7 +382,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         poseX: position.x,
         poseY: position.y,
         posePhi: position.phi,
-        update: true,
+        ctrlValue: 1,
       } as IDEVICE_MAPID_SET_NAVIGATION_REQ
     );
   }
@@ -376,6 +413,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       { mask } as IDEVICE_MAPID_GET_GLOBAL_INFO_REQ
     );
 
+    // TODO: remove this waiting for device mode change.
     const packet = await this.recv("DEVICE_MAPID_WORK_STATUS_PUSH_REQ");
     const status = packet.payload.object as IDEVICE_MAPID_WORK_STATUS_PUSH_REQ;
 
@@ -555,6 +593,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       cleanRoomList,
       roomSegmentList,
       wallListInfo,
+      spotInfo,
     } = object;
     const props: Partial<DeviceMapProps> = {
       rooms: [],
@@ -620,6 +659,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
         x: robotChargeInfo.poseX,
         y: robotChargeInfo.poseY,
         phi: robotChargeInfo.posePhi,
+      });
+    }
+
+    if (spotInfo) {
+      props.currentSpot = new Position({
+        x: spotInfo.poseX,
+        y: spotInfo.poseY,
+        phi: spotInfo.posePhi,
       });
     }
 

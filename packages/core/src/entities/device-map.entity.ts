@@ -14,8 +14,9 @@ export interface DeviceMapProps {
   min: Coordinate;
   max: Coordinate;
   grid: Buffer;
-  robot: Position;
-  charger: Position;
+  robot?: Position;
+  charger?: Position;
+  currentSpot?: Position;
   rooms: Room[];
   restrictedZones: Zone[];
 }
@@ -46,11 +47,11 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     return this.props.grid;
   }
 
-  get robot(): Position {
+  get robot(): Position | undefined {
     return this.props.robot;
   }
 
-  get charger(): Position {
+  get charger(): Position | undefined {
     return this.props.charger;
   }
 
@@ -60,6 +61,10 @@ export class DeviceMap extends Entity<DeviceMapProps> {
 
   get restrictedZones(): Zone[] {
     return this.props.restrictedZones;
+  }
+
+  get currentSpot(): Position | undefined {
+    return this.props.currentSpot;
   }
 
   updateRobot(robot: Position): void {
@@ -89,7 +94,17 @@ export class DeviceMap extends Entity<DeviceMapProps> {
   }
 
   private validate(props: DeviceMapProps): void {
-    if (![props.id].map(isPresent)) {
+    if (
+      ![
+        props.id,
+        props.size,
+        props.min,
+        props.max,
+        props.grid,
+        props.rooms,
+        props.restrictedZones,
+      ].map(isPresent)
+    ) {
       throw new ArgumentNotProvidedException(
         "Missing property in device map constructor"
       );
@@ -98,6 +113,18 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     if (!(props.id instanceof ID)) {
       throw new ArgumentInvalidException(
         "Invalid id in device map constructor"
+      );
+    }
+
+    if (!Array.isArray(props.rooms)) {
+      throw new ArgumentInvalidException(
+        "Invalid rooms in device map constructor"
+      );
+    }
+
+    if (!Array.isArray(props.restrictedZones)) {
+      throw new ArgumentInvalidException(
+        "Invalid restricted zones in device map constructor"
       );
     }
   }

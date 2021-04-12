@@ -148,15 +148,15 @@ export function readCleanPlanList(stream: Readable): CleanPlan[] {
 function getMask(stream: Readable): number {
   let mask = readWord(stream);
 
-  if (mask >>> 15 !== 0) {
+  // HACK: hacky way to discover 3090 model.
+  if (mask < 0x7ff) {
     const buf = Buffer.alloc(4);
 
     buf.writeUInt32LE(mask);
 
     stream.unshift(buf);
 
-    // HACK: unknown mask 0x200. Temporary cut to 1 byte.
-    mask = readShort(stream) & 0xff;
+    mask = readShort(stream);
   }
 
   return mask;
