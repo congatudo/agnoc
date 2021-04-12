@@ -506,11 +506,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     this.send("DEVICE_STATUS_GETTING_REQ");
 
-    await this.sendRecv(
-      "DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ",
-      "DEVICE_GET_ALL_GLOBAL_MAP_INFO_RSP",
-      { unk1: 0, unk2: "" } as IDEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ
-    );
+    void this.send("DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ", {
+      unk1: 0,
+      unk2: "",
+    } as IDEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ);
 
     void this.getTime();
     void this.updateMap();
