@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/adrigzr/agnoc/compare/v0.5.0...v0.6.0) (2021-04-12)
+
+### Bug Fixes
+
+- start/stop with area/spot mode ([b16f143](https://github.com/adrigzr/agnoc/commit/b16f143d024037b060456b20eea0c1b70fa95c2e))
+
+### Features
+
+- add restricted zones to map ([12e6180](https://github.com/adrigzr/agnoc/commit/12e61803d8c5f73d3db08294f9eb83e0a240b866))
+
 # [0.5.0](https://github.com/adrigzr/agnoc/compare/v0.4.0...v0.5.0) (2021-04-12)
 
 ### Bug Fixes
