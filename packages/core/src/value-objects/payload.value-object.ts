@@ -24,10 +24,6 @@ export interface PayloadSerialized {
 
 type Decoder = (buffer: Buffer) => unknown;
 
-function noop(): void {
-  return;
-}
-
 const root = protobuf.Root.fromJSON(schema);
 const decoders = {
   DEVICE_MAPID_PUSH_POSITION_INFO: decodeRobotPosition,
@@ -35,7 +31,6 @@ const decoders = {
   DEVICE_MAPID_GET_GLOBAL_INFO_RSP: decodeMap,
   DEVICE_MAPID_PUSH_MAP_INFO: decodeMap,
   DEVICE_MAPID_PUSH_ALL_MEMORY_MAP_INFO: decodeArea,
-  DEVICE_EVENT_REPORT_CLEANMAP: noop,
 } as const;
 
 function fromObject(opcode: OPCode, object: ObjectLiteral): Buffer {

@@ -237,6 +237,30 @@ message DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ {
   repeated CleanArea cleanAreaList = 4;
 }
 
+message DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ {
+  message Coordinate {
+    required float x = 1;
+    required float y = 2;
+  }
+
+  message CleanArea {
+    required uint32 cleanAreaId = 1;
+    required uint32 unk1 = 2;
+    required uint32 coordinateLength = 3;
+    repeated Coordinate coordinateList = 4;
+  }
+
+  required uint32 mapHeadId = 1;
+  required uint32 unk1 = 2;
+  required uint32 cleanAreaLength = 3;
+  repeated CleanArea cleanAreaList = 4;
+}
+
+message DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_RSP {
+  required uint32 result = 1;
+  required DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ position = 3;
+}
+
 message DEVICE_MAPID_SET_AREA_CLEAN_INFO_RSP {
   required uint32 result = 1;
   required DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ position = 3;
@@ -347,9 +371,13 @@ message DEVICE_EVENT_REPORT_CLEANTASK {
   optional string planName = 11;
 }
 
-message DEVICE_CLEAN_MAP_BIN_DATA_REPORT_REQ {
-  required uint32 unk1 = 1;
-  required bytes unk2 = 2;
+message DEVICE_CLEANMAP_BINDATA_REPORT_REQ {
+  required uint32 cleanId = 1;
+}
+
+message DEVICE_CLEANMAP_BINDATA_REPORT_RSP {
+  required uint32 result = 1;
+  required uint32 cleanId = 3;
 }
 
 message DEVICE_OFFLINE_CMD {
@@ -369,9 +397,13 @@ message DEVICE_EVENT_REPORT_REQ {
   required uint32 unk2 = 2;
 }
 
+message DEVICE_EVENT_REPORT_CLEANMAP {
+  required uint32 cleanId = 1;
+}
+
 message DEVICE_EVENT_REPORT_RSP {
   message Body {
-    required uint32 time = 1;
+    required uint32 cleanId = 1;
   }
   required uint32 result = 1;
   required Body body = 3;
@@ -398,3 +430,17 @@ message DEVICE_WITHROOMS_CLEAN_RSP {
   required uint32 result = 1;
 }
 
+message DEVICE_WLAN_INFO_GETTING_REQ {}
+
+message DEVICE_WLAN_INFO_GETTING_RSP {
+  message Body {
+    required string ipv4 = 1;
+    required string ssid = 2;
+    required uint32 port = 3;
+    required string mask = 4;
+    required string mac = 5;
+  }
+
+  required uint32 result = 1;
+  required Body body = 3;
+}

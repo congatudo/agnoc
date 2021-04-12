@@ -1,5 +1,6 @@
 import { Transform, TransformCallback } from "stream";
 import { Packet } from "@agnoc/core/value-objects/packet.value-object";
+import { DomainException } from "@agnoc/core/exceptions/domain.exception";
 
 export class PacketDecodeTransform extends Transform {
   private buffer: Buffer = Buffer.alloc(0);
@@ -31,6 +32,18 @@ export class PacketDecodeTransform extends Transform {
       }
 
       size = this.buffer.readUInt32LE();
+    }
+
+    done();
+  }
+
+  _final(done: TransformCallback): void {
+    if (this.buffer.length > 0) {
+      return done(
+        new DomainException(
+          `Unable to decode ${this.buffer.length} bytes. Possible malformed data stream.`
+        )
+      );
     }
 
     done();

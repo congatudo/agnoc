@@ -15,7 +15,7 @@ LIB_JS := $(patsubst src/%.ts,lib/%.js,$(SRC_TS))
 LIB_TYPES := $(patsubst src/%.ts,lib/%.d.ts,$(SRC_TS))
 
 .PHONY: all
-all: $(LIB_JS) $(LIB_TYPES) build-schemas
+all: build-schemas $(LIB_JS) $(LIB_TYPES)
 
 .PHONY: build-schemas
 build-schemas: schemas/schema.json schemas/schema.js schemas/schema.d.ts
