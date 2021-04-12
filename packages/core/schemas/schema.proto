@@ -175,7 +175,7 @@ message DEVICE_MAPID_SET_NAVIGATION_REQ {
   required float poseX = 2;
   required float poseY = 3;
   required float posePhi = 4;
-  required bool update = 5;
+  required uint32 ctrlValue = 5;
 }
 
 message DEVICE_MAPID_SET_NAVIGATION_RSP {
