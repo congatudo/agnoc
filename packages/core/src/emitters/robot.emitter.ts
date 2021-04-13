@@ -76,6 +76,7 @@ import { Room } from "../entities/room.entity";
 import { isPresent } from "../utils/is-present.util";
 import { DeviceWlan } from "../value-objects/device-wlan.value-object";
 import { Zone } from "../entities/zone.entity";
+import { waitFor } from "../utils/wait-for.util";
 
 export interface RobotProps {
   device: Device;
@@ -106,6 +107,8 @@ export enum MANUAL_MODE {
 }
 
 export type ManualMode = typeof MANUAL_MODE[keyof typeof MANUAL_MODE];
+
+const MODE_CHANGE_TIMEOUT = 5000;
 
 export class Robot extends TypedEmitter<RobotEvents> {
   public readonly device: Device;
@@ -354,24 +357,24 @@ export class Robot extends TypedEmitter<RobotEvents> {
       throw new DomainException("Unable to set robot position: map not loaded");
     }
 
-    let mask = 0x78ff | 0x200;
+    if (this.device.status?.mode !== DEVICE_MODE.SPOT) {
+      let mask = 0x78ff | 0x200;
 
-    if (this.device.system.model === DEVICE_MODEL.C3090) {
-      mask = 0xff | 0x200;
-    }
+      if (this.device.system.model === DEVICE_MODEL.C3090) {
+        mask = 0xff | 0x200;
+      }
 
-    await this.sendRecv(
-      "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
-      "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-      { mask } as IDEVICE_MAPID_GET_GLOBAL_INFO_REQ
-    );
+      await this.sendRecv(
+        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
+        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
+        { mask } as IDEVICE_MAPID_GET_GLOBAL_INFO_REQ
+      );
 
-    // TODO: remove this waiting for device mode change.
-    const packet = await this.recv("DEVICE_MAPID_WORK_STATUS_PUSH_REQ");
-    const status = packet.payload.object as IDEVICE_MAPID_WORK_STATUS_PUSH_REQ;
-
-    if (status.workMode !== 14) {
-      throw new DomainException("Unable to set robot to position mode");
+      await waitFor(() => this.device.status?.mode === DEVICE_MODE.SPOT, {
+        timeout: MODE_CHANGE_TIMEOUT,
+      }).catch(() => {
+        throw new DomainException("Unable to change robot to position mode");
+      });
     }
 
     await this.sendRecv(
@@ -397,28 +400,28 @@ export class Robot extends TypedEmitter<RobotEvents> {
       return;
     }
 
-    await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
-      ctrlValue: 0,
-    } as IDEVICE_AREA_CLEAN_REQ);
+    if (this.device.status?.mode !== DEVICE_MODE.ZONE) {
+      await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
+        ctrlValue: 0,
+      } as IDEVICE_AREA_CLEAN_REQ);
 
-    let mask = 0x78ff | 0x100;
+      let mask = 0x78ff | 0x100;
 
-    if (this.device.system.model === DEVICE_MODEL.C3090) {
-      mask = 0xff | 0x100;
-    }
+      if (this.device.system.model === DEVICE_MODEL.C3090) {
+        mask = 0xff | 0x100;
+      }
 
-    await this.sendRecv(
-      "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
-      "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-      { mask } as IDEVICE_MAPID_GET_GLOBAL_INFO_REQ
-    );
+      await this.sendRecv(
+        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
+        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
+        { mask } as IDEVICE_MAPID_GET_GLOBAL_INFO_REQ
+      );
 
-    // TODO: remove this waiting for device mode change.
-    const packet = await this.recv("DEVICE_MAPID_WORK_STATUS_PUSH_REQ");
-    const status = packet.payload.object as IDEVICE_MAPID_WORK_STATUS_PUSH_REQ;
-
-    if (status.workMode !== 35) {
-      throw new DomainException("Unable to set robot to area mode");
+      await waitFor(() => this.device.status?.mode === DEVICE_MODE.ZONE, {
+        timeout: MODE_CHANGE_TIMEOUT,
+      }).catch(() => {
+        throw new DomainException("Unable to change robot to area mode");
+      });
     }
 
     const req: IDEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ = {
