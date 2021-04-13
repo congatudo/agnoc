@@ -97,6 +97,12 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
   }
 
   static fromOrderList(orderList: IDEVICE_ORDERLIST_SETTING_REQ): DeviceOrder {
+    if (!orderList.cleanInfo) {
+      throw new ArgumentNotProvidedException(
+        "Unable to read clean info from order list"
+      );
+    }
+
     const hour = Math.floor(orderList.dayTime / 60);
     const minute = orderList.dayTime % 60;
     const props: DeviceOrderProps = {

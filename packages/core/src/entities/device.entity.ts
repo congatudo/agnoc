@@ -1,6 +1,10 @@
 import { Entity } from "../base-classes/entity.base";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
+import {
+  DeviceConfig,
+  DeviceConfigProps,
+} from "../value-objects/device-config.value-object";
 import { DeviceConsumable } from "../value-objects/device-consumable.value-object";
 import {
   DeviceStatus,
@@ -21,6 +25,7 @@ import { DeviceOrder } from "./device-order.entity";
 export interface DeviceProps {
   id: ID;
   system: DeviceSystem;
+  config?: DeviceConfig;
   status?: DeviceStatus;
   orders?: DeviceOrder[];
   consumables?: DeviceConsumable[];
@@ -36,6 +41,10 @@ export class Device extends Entity<DeviceProps> {
 
   get system(): DeviceSystem {
     return this.props.system;
+  }
+
+  get config(): DeviceConfig | undefined {
+    return this.props.config;
   }
 
   get status(): DeviceStatus | undefined {
@@ -65,6 +74,13 @@ export class Device extends Entity<DeviceProps> {
     } as DeviceSystemProps);
   }
 
+  updateConfig(props: Partial<DeviceConfigProps>): void {
+    this.props.config = new DeviceConfig({
+      ...this.props.config?.getRawProps(),
+      ...props,
+    } as DeviceConfigProps);
+  }
+
   updateStatus(props: Partial<DeviceStatusProps>): void {
     this.props.status = new DeviceStatus({
       ...this.props.status?.getRawProps(),
@@ -92,19 +108,6 @@ export class Device extends Entity<DeviceProps> {
       ...this.props.wlan?.getRawProps(),
       ...props,
     } as DeviceWlanProps);
-  }
-
-  toString(): string {
-    return [
-      `system: [${this.system.toString()}]`,
-      `status: [${this.status?.toString() || "unknown"}]`,
-      `orders: [${
-        this.orders?.map((item) => item.toString()).join(", ") || "unknown"
-      }]`,
-      `consumables: [${
-        this.consumables?.map((item) => item.toString()).join(", ") || "unknown"
-      }]`,
-    ].join(" ");
   }
 
   protected validate(props: DeviceProps): void {
