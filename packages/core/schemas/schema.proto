@@ -444,3 +444,33 @@ message DEVICE_WLAN_INFO_GETTING_RSP {
   required uint32 result = 1;
   required Body body = 3;
 }
+
+message DEVICE_MAPID_SELECT_MAP_PLAN_REQ {
+  required uint32 mapHeadId = 1;
+  required uint32 unk1 = 3;
+}
+
+message DEVICE_MAPID_SELECT_MAP_PLAN_RSP {
+  required uint32 result = 1;
+  required uint32 unk1 = 3;
+}
+
+message DEVICE_MAPID_SET_PLAN_PARAMS_REQ {
+  message Room {
+    required uint32 roomId = 1;
+    required string roomName = 3;
+    required uint32 unk1 = 4;
+  }
+
+  required uint32 mapHeadId = 1;
+  required uint32 unk1 = 2;
+  required string mapName = 3;
+  required string planName = 4;
+  repeated Room roomList = 5;
+  required DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ areaInfo = 6;
+}
+
+message DEVICE_MAPID_SET_PLAN_PARAMS_RSP {
+  required uint32 result = 1;
+  required uint32 unk1 = 3;
+}
