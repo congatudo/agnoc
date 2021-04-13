@@ -56,39 +56,12 @@ message DEVICE_VERSION_INFO_UPDATE_RSP {
 }
 
 message PUSH_DEVICE_AGENT_SETTING_REQ {
-  message TaskList {
-    required uint32 orderId = 1;
-    required bool enable = 2;
-    required bool repeat = 3;
-    required uint32 weekday = 4;
-    required uint32 day_time = 5;
-  }
-
-  message Voice {
-    required bool voiceMode = 1;
-    required bool volume = 2;
-  }
-
-  message Config {
-    required bool ecoMode = 1;
-    required bool repeatClean = 2;
-    required bool brokenEnable = 3;
-    required bool carpetTurbo = 4;
-    required bool historyMapEnable = 5;
-  }
-
-  message Status {
-    required bool isOpen = 1;
-    required uint32 beginTime = 2;
-    required uint32 endTime = 3;
-  }
-
   required uint32 deviceId = 1;
-  required Voice voice = 2;
-  required Config config = 3;
-  optional TaskList taskList = 4;
+  required USER_SET_DEVICE_CTRL_SETTING_REQ voice = 2;
+  required USER_SET_DEVICE_CLEANPREFERENCE_REQ cleanPreference = 3;
+  optional DEVICE_ORDERLIST_SETTING_REQ taskList = 4;
   required PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ ota = 5;
-  required Status status = 7;
+  required USER_SET_DEVICE_QUIETHOURS_REQ quietHours = 7;
 }
 
 message PUSH_DEVICE_AGENT_SETTING_RSP {
@@ -324,7 +297,7 @@ message DEVICE_ORDERLIST_SETTING_REQ {
   required bool repeat = 3;
   required uint32 weekDay = 4;
   required uint32 dayTime = 5;
-  required CleanInfo cleanInfo = 6;
+  optional CleanInfo cleanInfo = 6;
 }
 
 message DEVICE_ORDERLIST_SETTING_RSP {
@@ -494,7 +467,7 @@ message DEVICE_VIRWALL_ALL_LIST_SETTING_RSP {
 }
 
 message USER_SET_DEVICE_QUIETHOURS_REQ {
-  required uint32 isOpen = 1;
+  required bool isOpen = 1;
   required uint32 beginTime = 2;
   required uint32 endTime = 3;
 }
@@ -504,11 +477,11 @@ message USER_SET_DEVICE_QUIETHOURS_RSP {
 }
 
 message USER_SET_DEVICE_CLEANPREFERENCE_REQ {
-  optional uint32 ecoMode = 1;
-  optional uint32 repeatClean = 2;
-  optional uint32 cleanBroken = 3;
-  optional uint32 carpetTurbo = 4;
-  optional uint32 historyMap = 5;
+  optional bool ecoMode = 1;
+  optional bool repeatClean = 2;
+  optional bool cleanBroken = 3;
+  optional bool carpetTurbo = 4;
+  optional bool historyMap = 5;
   optional uint32 waterLevel = 6;
 }
 
@@ -544,7 +517,7 @@ message DEVICE_UPGRADE_SET_AUTO_INSTALL_RSP {
 }
 
 message USER_SET_DEVICE_CTRL_SETTING_REQ {
-  required uint32 voiceMode = 1;
+  required bool voiceMode = 1;
   optional uint32 volume = 2;
 }
 

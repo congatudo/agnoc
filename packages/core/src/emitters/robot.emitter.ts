@@ -41,6 +41,7 @@ import {
   IDEVICE_WLAN_INFO_GETTING_REQ,
   IDEVICE_WLAN_INFO_GETTING_RSP,
   IDEVICE_WORKSTATUS_REPORT_RSP,
+  IPUSH_DEVICE_AGENT_SETTING_REQ,
   IPUSH_DEVICE_AGENT_SETTING_RSP,
   IPUSH_DEVICE_BATTERY_INFO_REQ,
   IPUSH_DEVICE_BATTERY_INFO_RSP,
@@ -80,6 +81,7 @@ import { DeviceWlan } from "../value-objects/device-wlan.value-object";
 import { Zone } from "../entities/zone.entity";
 import { waitFor } from "../utils/wait-for.util";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
+import { DeviceConfigProps } from "../value-objects/device-config.value-object";
 
 export interface RobotProps {
   device: Device;
@@ -565,6 +567,33 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   @bind
   handleDeviceAgentSetting(message: Message): void {
+    const object = message.packet.payload
+      .object as IPUSH_DEVICE_AGENT_SETTING_REQ;
+    const props: DeviceConfigProps = {
+      voice: {
+        isEnabled: object.voice.voiceMode,
+        volume: object.voice.volume || 0,
+      },
+      quietHours: {
+        isEnabled: object.quietHours.isOpen,
+        begin: {
+          hour: Math.floor(object.quietHours.beginTime / 60),
+          minute: object.quietHours.beginTime % 60,
+        },
+        end: {
+          hour: Math.floor(object.quietHours.endTime / 60),
+          minute: object.quietHours.endTime % 60,
+        },
+      },
+      isEcoModeEnabled: object.cleanPreference.ecoMode || false,
+      isRepeatCleanEnabled: object.cleanPreference.repeatClean || false,
+      isBrokenCleanEnabled: object.cleanPreference.cleanBroken || false,
+      isCarpetModeEnabled: object.cleanPreference.carpetTurbo || false,
+      isHistoryMapEnabled: object.cleanPreference.historyMap || false,
+    };
+
+    this.device.updateConfig(props);
+
     message.respond("PUSH_DEVICE_AGENT_SETTING_RSP", {
       result: 0,
     } as IPUSH_DEVICE_AGENT_SETTING_RSP);
