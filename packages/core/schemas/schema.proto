@@ -1,7 +1,7 @@
 syntax = "proto2";
 
 message COMMON_ERROR_REPLY {
-  required uint32 result = 1;
+  required int32 result = 1;
   required string error = 2;
   optional uint32 opcode = 3;
 }
@@ -9,7 +9,7 @@ message COMMON_ERROR_REPLY {
 message CLIENT_IDLE_TIMEOUT {}
 
 message DEVICE_MAPID_PUSH_HAS_WAITING_BE_SAVED {
-    required uint32 result = 1;
+    required int32 result = 1;
 }
 
 message CLIENT_HEARTBEAT_REQ {}
@@ -23,7 +23,7 @@ message CLIENT_ONLINE_REQ {
 }
 
 message CLIENT_ONLINE_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
   optional string reason = 2;
 }
 
@@ -42,7 +42,7 @@ message DEVICE_REGISTER_RSP {
     required uint32 id = 1;
   }
 
-  required uint32 result = 1;
+  required int32 result = 1;
   required Device device = 3;
 }
 
@@ -52,7 +52,7 @@ message DEVICE_VERSION_INFO_UPDATE_REQ {
 }
 
 message DEVICE_VERSION_INFO_UPDATE_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message PUSH_DEVICE_AGENT_SETTING_REQ {
@@ -92,7 +92,7 @@ message PUSH_DEVICE_AGENT_SETTING_REQ {
 }
 
 message PUSH_DEVICE_AGENT_SETTING_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ {
@@ -105,7 +105,7 @@ message PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ {
 }
 
 message PUSH_DEVICE_PACKAGE_UPGRADE_INFO_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message PUSH_DEVICE_BATTERY_INFO_REQ {
@@ -117,7 +117,7 @@ message PUSH_DEVICE_BATTERY_INFO_REQ {
 }
 
 message PUSH_DEVICE_BATTERY_INFO_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message DEVICE_SEEK_LOCATION_REQ {}
@@ -148,7 +148,7 @@ message DEVICE_SET_CLEAN_PREFERENCE_REQ {
 }
 
 message DEVICE_SET_CLEAN_PREFERENCE_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message DEVICE_AUTO_CLEAN_REQ {
@@ -163,7 +163,7 @@ message DEVICE_CHARGE_REQ {
 }
 
 message DEVICE_CHARGE_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message DEVICE_MAPID_GET_GLOBAL_INFO_REQ {
@@ -179,7 +179,7 @@ message DEVICE_MAPID_SET_NAVIGATION_REQ {
 }
 
 message DEVICE_MAPID_SET_NAVIGATION_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
   required DEVICE_MAPID_SET_NAVIGATION_REQ position = 3;
 }
 
@@ -188,7 +188,7 @@ message DEVICE_WORKSTATUS_REPORT_REQ {
 }
 
 message DEVICE_WORKSTATUS_REPORT_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ {
@@ -197,7 +197,7 @@ message DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ {
 }
 
 message DEVICE_GET_ALL_GLOBAL_MAP_INFO_RSP {
-    required uint32 result = 1;
+    required int32 result = 1;
 }
 
 message DEVICE_GETTIME_REQ {}
@@ -208,14 +208,14 @@ message DEVICE_GETTIME_RSP {
         required uint32 deviceTimezone = 2;
     }
 
-    required uint32 result = 1;
+    required int32 result = 1;
     required Body body = 3;
 }
 
 message DEVICE_CONTROL_LOCK_REQ {}
 
 message DEVICE_CONTROL_LOCK_RSP {
-    required uint32 result = 1;
+    required int32 result = 1;
 }
 
 message DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ {
@@ -257,12 +257,12 @@ message DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ {
 }
 
 message DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
   required DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ position = 3;
 }
 
 message DEVICE_MAPID_SET_AREA_CLEAN_INFO_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
   required DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ position = 3;
 }
 
@@ -271,7 +271,7 @@ message DEVICE_AREA_CLEAN_REQ {
 }
 
 message DEVICE_AREA_CLEAN_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message DEVICE_MANUAL_CTRL_REQ {
@@ -279,7 +279,7 @@ message DEVICE_MANUAL_CTRL_REQ {
 }
 
 message DEVICE_MANUAL_CTRL_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ {
@@ -287,7 +287,7 @@ message DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ {
 }
 
 message DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message DEVICE_ORDERLIST_GETTING_REQ {}
@@ -304,7 +304,7 @@ message DEVICE_ORDERLIST_GETTING_RSP {
     repeated PlanInfo planInfo = 3;
   }
 
-  required uint32 result = 1;
+  required int32 result = 1;
   repeated DEVICE_ORDERLIST_SETTING_REQ orderList = 3;
   repeated MapInfo mapInfoList = 4;
 }
@@ -329,7 +329,7 @@ message DEVICE_ORDERLIST_SETTING_REQ {
 
 message DEVICE_ORDERLIST_SETTING_RSP {
   required uint32 orderId = 1;
-  required uint32 result = 2;
+  required int32 result = 2;
 }
 
 message DEVICE_ORDERLIST_DELETE_REQ {
@@ -339,7 +339,7 @@ message DEVICE_ORDERLIST_DELETE_REQ {
 
 message DEVICE_ORDERLIST_DELETE_RSP {
   required uint32 orderId = 1;
-  required uint32 result = 2;
+  required int32 result = 2;
 }
 
 message DEVICE_MAPID_GET_CONSUMABLES_PARAM_REQ {}
@@ -376,19 +376,19 @@ message DEVICE_CLEANMAP_BINDATA_REPORT_REQ {
 }
 
 message DEVICE_CLEANMAP_BINDATA_REPORT_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
   required uint32 cleanId = 3;
 }
 
 message DEVICE_OFFLINE_CMD {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message DEVICE_TIME_SYNC_RSP {
   message Body {
     required uint32 time = 1;
   }
-  required uint32 result = 1;
+  required int32 result = 1;
   required Body body = 3;
 }
 
@@ -405,7 +405,7 @@ message DEVICE_EVENT_REPORT_RSP {
   message Body {
     required uint32 cleanId = 1;
   }
-  required uint32 result = 1;
+  required int32 result = 1;
   required Body body = 3;
 }
 
@@ -427,7 +427,7 @@ message DEVICE_WITHROOMS_CLEAN_REQ {
 }
 
 message DEVICE_WITHROOMS_CLEAN_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
 }
 
 message DEVICE_WLAN_INFO_GETTING_REQ {}
@@ -441,7 +441,7 @@ message DEVICE_WLAN_INFO_GETTING_RSP {
     required string mac = 5;
   }
 
-  required uint32 result = 1;
+  required int32 result = 1;
   required Body body = 3;
 }
 
@@ -451,7 +451,7 @@ message DEVICE_MAPID_SELECT_MAP_PLAN_REQ {
 }
 
 message DEVICE_MAPID_SELECT_MAP_PLAN_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
   required uint32 unk1 = 3;
 }
 
@@ -471,6 +471,24 @@ message DEVICE_MAPID_SET_PLAN_PARAMS_REQ {
 }
 
 message DEVICE_MAPID_SET_PLAN_PARAMS_RSP {
-  required uint32 result = 1;
+  required int32 result = 1;
   required uint32 unk1 = 3;
+}
+
+message DEVICE_MAPID_SET_ARRANGEROOM_INFO_REQ {
+  required uint32 mapHeadId = 1;
+  required uint32 type = 2;
+  required uint32 dataLen = 3;
+  required bytes data = 4;
+  required uint32 roomId = 5;
+}
+
+message DEVICE_MAPID_SET_ARRANGEROOM_INFO_RSP {
+  required int32 result = 1;
+}
+
+message DEVICE_VIRWALL_ALL_LIST_SETTING_RSP {
+  required int32 result = 1;
+  required string unk1 = 2;
+  required int32 unk2 = 3;
 }
