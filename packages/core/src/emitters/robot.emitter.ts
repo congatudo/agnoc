@@ -48,6 +48,8 @@ import {
   IPUSH_DEVICE_PACKAGE_UPGRADE_INFO_RSP,
   IUNK_0044,
   IUNK_11A7,
+  IUSER_GET_DEVICE_QUIETHOURS_RSP,
+  IUSER_SET_DEVICE_QUIETHOURS_REQ,
 } from "../../schemas/schema";
 import { hasKey } from "../utils/has-key.util";
 import {
@@ -82,6 +84,8 @@ import { Zone } from "../entities/zone.entity";
 import { waitFor } from "../utils/wait-for.util";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { DeviceConfigProps } from "../value-objects/device-config.value-object";
+import { DeviceQuietHours } from "../value-objects/device-quiet-hours.value-object";
+import { DeviceTime } from "../value-objects/device-time.value-object";
 
 export interface RobotProps {
   device: Device;
@@ -89,7 +93,7 @@ export interface RobotProps {
   multiplexer: Multiplexer;
 }
 
-interface DeviceTime {
+interface DeviceTimestamp {
   timestamp: number;
   offset: number;
 }
@@ -238,7 +242,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
   }
 
-  async getTime(): Promise<DeviceTime> {
+  async getTime(): Promise<DeviceTimestamp> {
     const packet = await this.sendRecv(
       "DEVICE_GETTIME_REQ",
       "DEVICE_GETTIME_RSP"
@@ -508,6 +512,36 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
   }
 
+  async getQuietHours(): Promise<DeviceQuietHours> {
+    const packet = await this.sendRecv(
+      "USER_GET_DEVICE_QUIETHOURS_REQ",
+      "USER_GET_DEVICE_QUIETHOURS_RSP"
+    );
+    const object = packet.payload.object as IUSER_GET_DEVICE_QUIETHOURS_RSP;
+    const quietHours = new DeviceQuietHours({
+      isEnabled: object.isOpen,
+      begin: DeviceTime.fromMinutes(object.beginTime),
+      end: DeviceTime.fromMinutes(object.endTime),
+    });
+
+    this.device.config?.updateQuietHours(quietHours);
+    this.emit("updateDevice");
+
+    return quietHours;
+  }
+
+  async setQuietHours(quietHours: DeviceQuietHours): Promise<void> {
+    await this.sendRecv(
+      "USER_SET_DEVICE_QUIETHOURS_REQ",
+      "USER_SET_DEVICE_QUIETHOURS_RSP",
+      {
+        isOpen: quietHours.isEnabled,
+        beginTime: quietHours.begin.toMinutes(),
+        endTime: quietHours.end.toMinutes(),
+      } as IUSER_SET_DEVICE_QUIETHOURS_REQ
+    );
+  }
+
   async discardWaitingMap(): Promise<void> {
     await this.sendRecv(
       "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ",
@@ -574,17 +608,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
         isEnabled: object.voice.voiceMode,
         volume: object.voice.volume || 0,
       },
-      quietHours: {
+      quietHours: new DeviceQuietHours({
         isEnabled: object.quietHours.isOpen,
-        begin: {
-          hour: Math.floor(object.quietHours.beginTime / 60),
-          minute: object.quietHours.beginTime % 60,
-        },
-        end: {
-          hour: Math.floor(object.quietHours.endTime / 60),
-          minute: object.quietHours.endTime % 60,
-        },
-      },
+        begin: DeviceTime.fromMinutes(object.quietHours.beginTime),
+        end: DeviceTime.fromMinutes(object.quietHours.endTime),
+      }),
       isEcoModeEnabled: object.cleanPreference.ecoMode || false,
       isRepeatCleanEnabled: object.cleanPreference.repeatClean || false,
       isBrokenCleanEnabled: object.cleanPreference.cleanBroken || false,

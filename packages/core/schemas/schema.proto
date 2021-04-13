@@ -533,3 +533,11 @@ message DEVICE_MAPID_SET_CONSUMABLES_PARAM_RSP {
   required int32 result = 1;
 }
 
+message USER_GET_DEVICE_QUIETHOURS_REQ {}
+
+message USER_GET_DEVICE_QUIETHOURS_RSP {
+  required bool isOpen = 1;
+  required uint32 beginTime = 2;
+  required uint32 endTime = 3;
+}
+

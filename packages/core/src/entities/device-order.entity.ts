@@ -7,6 +7,7 @@ import {
   FanSpeed,
   FAN_SPEED,
 } from "../value-objects/device-status.value-object";
+import { DeviceTime } from "../value-objects/device-time.value-object";
 import { ID } from "../value-objects/id.value-object";
 
 export enum WeekDay {
@@ -35,8 +36,7 @@ export interface DeviceOrderProps {
   isRepeatable: boolean;
   isDeepClean: boolean;
   weekDay: WeekDay;
-  hour: number;
-  minute: number;
+  time: DeviceTime;
   cleanMode: CleanMode;
   fanSpeed: FanSpeed;
   waterLevel: number;
@@ -76,12 +76,8 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
     return this.props.weekDay;
   }
 
-  get hour(): number {
-    return this.props.hour;
-  }
-
-  get minute(): number {
-    return this.props.minute;
+  get time(): DeviceTime {
+    return this.props.time;
   }
 
   get cleanMode(): CleanMode {
@@ -103,8 +99,7 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
       );
     }
 
-    const hour = Math.floor(orderList.dayTime / 60);
-    const minute = orderList.dayTime % 60;
+    const time = DeviceTime.fromMinutes(orderList.dayTime);
     const props: DeviceOrderProps = {
       id: new ID(orderList.orderId),
       mapId: new ID(orderList.cleanInfo.mapHeadId),
@@ -113,8 +108,7 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
       isRepeatable: orderList.enable,
       isDeepClean: orderList.cleanInfo.twiceClean,
       weekDay: orderList.weekDay,
-      hour,
-      minute,
+      time,
       cleanMode: CLEAN_MODE[orderList.cleanInfo.cleanMode] as CleanMode,
       fanSpeed: FAN_SPEED[orderList.cleanInfo.windPower] as FanSpeed,
       waterLevel: orderList.cleanInfo.waterLevel,
@@ -124,13 +118,12 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
   }
 
   toOrderList(): IDEVICE_ORDERLIST_SETTING_REQ {
-    const dayTime = this.hour * 60 + this.minute;
     const orderList: IDEVICE_ORDERLIST_SETTING_REQ = {
       orderId: this.id.value,
       enable: this.isEnabled,
       repeat: this.isRepeatable,
       weekDay: this.weekDay,
-      dayTime,
+      dayTime: this.time.toMinutes(),
       cleanInfo: {
         mapHeadId: this.mapId.value,
         planId: this.planId.value,
@@ -154,8 +147,7 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
         props.isRepeatable,
         props.isDeepClean,
         props.weekDay,
-        props.hour,
-        props.minute,
+        props.time,
         props.cleanMode,
         props.fanSpeed,
         props.waterLevel,
@@ -181,6 +173,12 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
     if (!(props.planId instanceof ID)) {
       throw new ArgumentInvalidException(
         "Invalid planId in device order constructor"
+      );
+    }
+
+    if (!(props.time instanceof DeviceTime)) {
+      throw new ArgumentInvalidException(
+        "Invalid time in device order constructor"
       );
     }
 

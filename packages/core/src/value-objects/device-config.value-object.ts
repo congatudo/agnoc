@@ -1,26 +1,17 @@
 import { ValueObject } from "../base-classes/value-object.base";
+import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
+import { DeviceQuietHours } from "./device-quiet-hours.value-object";
 
-interface QuietHoursTime {
-  hour: number;
-  minute: number;
-}
-
-interface QuietHours {
-  isEnabled: boolean;
-  begin: QuietHoursTime;
-  end: QuietHoursTime;
-}
-
-interface Voice {
+export interface Voice {
   isEnabled: boolean;
   volume: number;
 }
 
 export interface DeviceConfigProps {
   voice: Voice;
-  quietHours: QuietHours;
+  quietHours: DeviceQuietHours;
   isEcoModeEnabled: boolean;
   isRepeatCleanEnabled: boolean;
   isBrokenCleanEnabled: boolean;
@@ -33,7 +24,7 @@ export class DeviceConfig extends ValueObject<DeviceConfigProps> {
     return this.props.voice;
   }
 
-  get quietHours(): QuietHours {
+  get quietHours(): DeviceQuietHours {
     return this.props.quietHours;
   }
 
@@ -57,16 +48,19 @@ export class DeviceConfig extends ValueObject<DeviceConfigProps> {
     return this.props.isHistoryMapEnabled;
   }
 
+  updateQuietHours(quietHours: Partial<DeviceQuietHours>): void {
+    this.props.quietHours = new DeviceQuietHours({
+      ...this.props.quietHours.getRawProps(),
+      ...quietHours,
+    });
+  }
+
   protected validate(props: DeviceConfigProps): void {
     if (
       ![
         props.voice.isEnabled,
         props.voice.volume,
-        props.quietHours.isEnabled,
-        props.quietHours.begin.hour,
-        props.quietHours.begin.minute,
-        props.quietHours.end.hour,
-        props.quietHours.end.minute,
+        props.quietHours,
         props.isEcoModeEnabled,
         props.isRepeatCleanEnabled,
         props.isBrokenCleanEnabled,
@@ -76,6 +70,12 @@ export class DeviceConfig extends ValueObject<DeviceConfigProps> {
     ) {
       throw new ArgumentNotProvidedException(
         "Missing property in device config constructor"
+      );
+    }
+
+    if (!(props.quietHours instanceof DeviceQuietHours)) {
+      throw new ArgumentInvalidException(
+        "Invalid property quiet hours in device config constructor"
       );
     }
   }
