@@ -458,6 +458,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
       return;
     }
 
+    if (!areas.length) {
+      areas.push([]);
+    }
+
     await this.sendRecv(
       "DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ",
       "DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_RSP",
