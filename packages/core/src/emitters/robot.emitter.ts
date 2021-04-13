@@ -28,6 +28,7 @@ import {
   IDEVICE_MAPID_GET_GLOBAL_INFO_REQ,
   IDEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ,
   IDEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ,
+  IDEVICE_MAPID_SET_CONSUMABLES_PARAM_REQ,
   IDEVICE_MAPID_SET_NAVIGATION_REQ,
   IDEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ,
   IDEVICE_MAPID_WORK_STATUS_PUSH_REQ,
@@ -59,6 +60,7 @@ import { TypedEmitter } from "tiny-typed-emitter";
 import { Debugger } from "debug";
 import { DeviceOrder } from "../entities/device-order.entity";
 import {
+  ConsumableType,
   CONSUMABLE_TYPE,
   DeviceConsumable,
 } from "../value-objects/device-consumable.value-object";
@@ -77,6 +79,7 @@ import { isPresent } from "../utils/is-present.util";
 import { DeviceWlan } from "../value-objects/device-wlan.value-object";
 import { Zone } from "../entities/zone.entity";
 import { waitFor } from "../utils/wait-for.util";
+import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 
 export interface RobotProps {
   device: Device;
@@ -109,6 +112,13 @@ export enum MANUAL_MODE {
 export type ManualMode = typeof MANUAL_MODE[keyof typeof MANUAL_MODE];
 
 const MODE_CHANGE_TIMEOUT = 5000;
+
+const CONSUMABLE_TYPE_RESET = {
+  [CONSUMABLE_TYPE.MAIN_BRUSH]: 1,
+  [CONSUMABLE_TYPE.SIDE_BRUSH]: 2,
+  [CONSUMABLE_TYPE.FILTER]: 3,
+  [CONSUMABLE_TYPE.DISHCLOTH]: 4,
+};
 
 export class Robot extends TypedEmitter<RobotEvents> {
   public readonly device: Device;
@@ -268,6 +278,21 @@ export class Robot extends TypedEmitter<RobotEvents> {
     this.device.updateConsumables(consumables);
 
     return consumables;
+  }
+
+  async resetConsumable(consumable: ConsumableType): Promise<void> {
+    if (!(consumable in CONSUMABLE_TYPE_RESET)) {
+      throw new ArgumentInvalidException("Invalid consumable");
+    }
+
+    // eslint-disable-next-line security/detect-object-injection
+    const itemId = CONSUMABLE_TYPE_RESET[consumable];
+
+    await this.sendRecv(
+      "DEVICE_MAPID_SET_CONSUMABLES_PARAM_REQ",
+      "DEVICE_MAPID_SET_CONSUMABLES_PARAM_RSP",
+      { itemId } as IDEVICE_MAPID_SET_CONSUMABLES_PARAM_REQ
+    );
   }
 
   async updateMap(): Promise<void> {
