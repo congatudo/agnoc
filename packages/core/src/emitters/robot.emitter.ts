@@ -49,6 +49,7 @@ import {
   IUNK_0044,
   IUNK_11A7,
   IUSER_GET_DEVICE_QUIETHOURS_RSP,
+  IUSER_SET_DEVICE_CLEANPREFERENCE_REQ,
   IUSER_SET_DEVICE_QUIETHOURS_REQ,
 } from "../../schemas/schema";
 import { hasKey } from "../utils/has-key.util";
@@ -525,7 +526,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
 
     this.device.config?.updateQuietHours(quietHours);
-    this.emit("updateDevice");
 
     return quietHours;
   }
@@ -540,6 +540,18 @@ export class Robot extends TypedEmitter<RobotEvents> {
         endTime: quietHours.end.toMinutes(),
       } as IUSER_SET_DEVICE_QUIETHOURS_REQ
     );
+  }
+
+  async setCarpetMode(enable: boolean): Promise<void> {
+    await this.sendRecv(
+      "USER_SET_DEVICE_CLEANPREFERENCE_REQ",
+      "USER_SET_DEVICE_CLEANPREFERENCE_RSP",
+      {
+        carpetTurbo: enable,
+      } as IUSER_SET_DEVICE_CLEANPREFERENCE_REQ
+    );
+
+    this.device.config?.updateCarpetMode(enable);
   }
 
   async discardWaitingMap(): Promise<void> {
