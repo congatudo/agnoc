@@ -540,6 +540,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
         endTime: quietHours.end.toMinutes(),
       } as IUSER_SET_DEVICE_QUIETHOURS_REQ
     );
+
+    this.device.config?.updateQuietHours(quietHours);
   }
 
   async setCarpetMode(enable: boolean): Promise<void> {
