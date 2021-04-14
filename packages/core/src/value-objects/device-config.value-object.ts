@@ -48,6 +48,10 @@ export class DeviceConfig extends ValueObject<DeviceConfigProps> {
     return this.props.isHistoryMapEnabled;
   }
 
+  updateCarpetMode(enable: boolean): void {
+    this.props.isCarpetModeEnabled = enable;
+  }
+
   updateQuietHours(quietHours: Partial<DeviceQuietHours>): void {
     this.props.quietHours = new DeviceQuietHours({
       ...this.props.quietHours.getRawProps(),
