@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/adrigzr/agnoc/compare/v0.6.1...v0.7.0) (2021-04-14)
+
+### Bug Fixes
+
+- wait for device mode change ([c3e74c6](https://github.com/adrigzr/agnoc/commit/c3e74c679d9b42a6eaab87a414b882ca78875392))
+
 ## [0.6.1](https://github.com/adrigzr/agnoc/compare/v0.6.0...v0.6.1) (2021-04-12)
 
 **Note:** Version bump only for package @agnoc/cli

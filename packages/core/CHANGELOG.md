@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/adrigzr/agnoc/compare/v0.6.1...v0.7.0) (2021-04-14)
+
+### Bug Fixes
+
+- add more opcodes ([a571d36](https://github.com/adrigzr/agnoc/commit/a571d3603f9918d813d7f58161bf5b0ca6eecae3))
+- send at least one zone when removing restricted zones ([13dddbd](https://github.com/adrigzr/agnoc/commit/13dddbd4ba810601023b121a84b486b8f9143781))
+- wait for device mode change ([c3e74c6](https://github.com/adrigzr/agnoc/commit/c3e74c679d9b42a6eaab87a414b882ca78875392))
+
+### Features
+
+- add arrange rooms messages ([89b4602](https://github.com/adrigzr/agnoc/commit/89b4602dbb9162520230c02d75b42e2f47bc43fe))
+- add carpet mode toggle ([bd5dbf1](https://github.com/adrigzr/agnoc/commit/bd5dbf1d0fcc53022ee2af3d84d8455e3e327bd1))
+- add device config ([bc37358](https://github.com/adrigzr/agnoc/commit/bc373580af62fbe70a40a2dade294ad8f830d303))
+- add map control opcodes ([7d9eabc](https://github.com/adrigzr/agnoc/commit/7d9eabc11f4d52fc12a499b06505361d9e5b8533))
+- add reset consumable ([4fc39a9](https://github.com/adrigzr/agnoc/commit/4fc39a986338d6403195fdc534a6fd5f548c858d))
+- get/set quiet hours ([01bbee8](https://github.com/adrigzr/agnoc/commit/01bbee8415947b75a1382c4787b5a35863318d60))
+
 ## [0.6.1](https://github.com/adrigzr/agnoc/compare/v0.6.0...v0.6.1) (2021-04-12)
 
 ### Bug Fixes
