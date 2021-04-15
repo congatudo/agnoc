@@ -21,30 +21,26 @@ export class OPCode extends ValueObject<number> {
     super({ value });
   }
 
-  public get value(): number {
+  get value(): number {
     return this.props.value;
   }
 
-  public get code(): string {
+  get code(): string {
     return `0x${this.value.toString(16)}`;
   }
 
-  public get name(): OPName | undefined {
+  get name(): OPName | undefined {
     return OPNAMES[this.value as keyof typeof OPNAMES];
   }
 
-  public toString(): string {
+  toString(): string {
     return this.name || this.code;
   }
 
-  public toJSON(): OPCodeSerialized {
+  toJSON(): OPCodeSerialized {
     const { name, code } = this;
 
     return name ? { name } : { code };
-  }
-
-  public static fromJSON(obj: OPCodeSerialized): OPCode {
-    return obj.name ? this.fromName(obj.name) : this.fromCode(obj.code);
   }
 
   protected validate({ value }: DomainPrimitive<number>): void {
@@ -53,7 +49,11 @@ export class OPCode extends ValueObject<number> {
     }
   }
 
-  public static fromCode(code: number | string): OPCode {
+  static fromJSON(obj: OPCodeSerialized): OPCode {
+    return obj.name ? this.fromName(obj.name) : this.fromCode(obj.code);
+  }
+
+  static fromCode(code: number | string): OPCode {
     if (typeof code === "string") {
       code = Number(code);
     }
@@ -61,7 +61,7 @@ export class OPCode extends ValueObject<number> {
     return new OPCode(code);
   }
 
-  public static fromName(name: OPName): OPCode {
+  static fromName(name: OPName): OPCode {
     if (!hasKey(OPCODES, name)) {
       throw new ArgumentInvalidException(`Invalid opcode with name '${name}'`);
     }

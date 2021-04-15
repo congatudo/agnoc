@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-types
+/* eslint-disable @typescript-eslint/ban-types */
 export function bind<T extends Function>(
   _: unknown,
   propertyKey: string,
@@ -13,7 +13,7 @@ export function bind<T extends Function>(
   return {
     configurable: true,
     get(this: T): T {
-      const bound = descriptor.value?.bind(this) as T;
+      const bound = (descriptor.value as Function).bind(this) as T;
 
       Object.defineProperty(this, propertyKey, {
         value: bound,

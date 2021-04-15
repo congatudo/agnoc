@@ -38,7 +38,7 @@
     "tiny-typed-emitter": "^2.0.3"
   },
   "devDependencies": {
-    "chai": "^4.3.3",
+    "chai": "^4.3.4",
     "mocha": "^8.3.1",
     "sinon": "^10.0.0",
     "sinon-chai": "^3.6.0",

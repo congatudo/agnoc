@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import { expect } from "chai";
 import { flipObject } from "../../../src/utils/flip-object.util";
 
-describe("flipObject", () => {
+describe("flip-object.util", () => {
   it("flips object keys", () => {
     const obj = {
       foo: "bar",
