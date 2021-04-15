@@ -366,8 +366,9 @@ message DEVICE_TIME_SYNC_RSP {
 }
 
 message DEVICE_EVENT_REPORT_REQ {
-  required uint32 unk1 = 1;
-  required uint32 unk2 = 2;
+  required int32 type = 1;
+  required int32 keyValue = 2;
+  optional int32 reportTime = 3;
 }
 
 message DEVICE_EVENT_REPORT_CLEANMAP {
@@ -541,3 +542,6 @@ message USER_GET_DEVICE_QUIETHOURS_RSP {
   required uint32 endTime = 3;
 }
 
+message DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_REQ {}
+
+message DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_RSP {}
