@@ -1,7 +1,7 @@
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { convertPropsToObject } from "../utils/convert-props-to-object.util";
 import { isEmpty } from "../utils/is-empty.util";
-import { isObject } from "../utils/is-object.util";
+import { isPresent } from "../utils/is-present.util";
 
 export type Primitives = string | number | boolean | bigint;
 export interface DomainPrimitive<T extends Primitives | Date> {
@@ -19,32 +19,32 @@ export abstract class ValueObject<T> {
     this.props = props;
   }
 
-  public equals(vo?: ValueObject<T>): boolean {
-    if (vo === null || vo === undefined) {
+  equals(vo?: unknown): boolean {
+    if (!isPresent(vo)) {
       return false;
     }
     return JSON.stringify(this) === JSON.stringify(vo);
   }
 
-  public toString(): string {
+  toString(): string {
+    if (this.isDomainPrimitive(this.props)) {
+      return String(this.props.value);
+    }
+
     return JSON.stringify(this.toJSON());
   }
 
-  public toJSON(): unknown {
+  toJSON(): unknown {
     if (this.isDomainPrimitive(this.props)) {
       return this.props.value;
     }
 
-    if (isObject(this.props)) {
-      const propsCopy = convertPropsToObject(this.props);
+    const propsCopy = convertPropsToObject(this.props);
 
-      return Object.freeze(propsCopy);
-    }
-
-    return this.props;
+    return Object.freeze(propsCopy as T);
   }
 
-  public getRawProps(): T {
+  getRawProps(): T {
     if (this.isDomainPrimitive(this.props)) {
       return this.props.value;
     }

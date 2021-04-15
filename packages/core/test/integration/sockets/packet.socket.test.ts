@@ -10,7 +10,7 @@ declare module "mocha" {
   }
 }
 
-describe("PacketSocket", () => {
+describe("packet.socket", () => {
   beforeEach(function () {
     this.server = new Server();
   });

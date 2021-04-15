@@ -10,7 +10,7 @@ declare module "mocha" {
   }
 }
 
-describe("PacketServer", () => {
+describe("packet-server.emitter", () => {
   beforeEach(function () {
     this.packetServer = new PacketServer();
   });

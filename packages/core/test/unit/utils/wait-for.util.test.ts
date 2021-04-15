@@ -4,7 +4,7 @@ import { waitFor } from "@agnoc/core/utils/wait-for.util";
 import { DomainException } from "@agnoc/core/exceptions/domain.exception";
 import sinon, { SinonFakeTimers } from "sinon";
 
-describe("waitFor", () => {
+describe("wait-for.util", () => {
   let timer: SinonFakeTimers;
 
   beforeEach(function () {

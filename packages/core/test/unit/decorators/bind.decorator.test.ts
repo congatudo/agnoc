@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import { expect } from "chai";
 import { bind } from "@agnoc/core/decorators/bind.decorator";
 
-describe("@bind", () => {
+describe("bind.decorator", () => {
   it("binds a class method", () => {
     class Foo {
       wow = 1;
@@ -18,5 +18,15 @@ describe("@bind", () => {
     const bar = foo.bar;
 
     expect(bar()).to.be.equal(foo.wow);
+  });
+
+  it("throws an error when applied to a class", () => {
+    expect(() => {
+      // @ts-expect-error bad signature
+      @bind
+      class Foo {}
+
+      new Foo();
+    }).to.throw(TypeError);
   });
 });

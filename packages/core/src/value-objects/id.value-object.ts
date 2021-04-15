@@ -16,10 +16,6 @@ export class ID extends ValueObject<number> {
     return this.props.value;
   }
 
-  toString(): string {
-    return String(this.value);
-  }
-
   protected validate({ value }: DomainPrimitive<number>): void {
     if (typeof value !== "number") {
       throw new ArgumentInvalidException("Incorrect ID value");
