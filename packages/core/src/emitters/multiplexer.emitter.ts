@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { TypedEmitter } from "tiny-typed-emitter";
-import { OPName } from "../constants/opcodes.constant";
+import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
 import { bind } from "../decorators/bind.decorator";
 import { DomainException } from "../exceptions/domain.exception";
 import { ID } from "../value-objects/id.value-object";
@@ -8,21 +8,23 @@ import { Packet } from "../value-objects/packet.value-object";
 import { Connection } from "./connection.emitter";
 import { debug } from "../utils/debug.util";
 
-type MultiplexerEvents = {
-  [key in OPName]: (packet: Packet) => void;
+type MultiplexerEvents<Name extends OPDecoderLiteral> = {
+  [key in Name]: (packet: Packet<Name>) => void;
 } & {
-  data: (packet: Packet) => void;
+  data: (packet: Packet<OPDecoderLiteral>) => void;
   error: (err: Error) => void;
 };
 
-interface MultiplexerSendProps {
-  opname: OPName;
+interface MultiplexerSendProps<Name extends OPDecoderLiteral> {
+  opname: Name;
   userId: ID;
   deviceId: ID;
-  object: unknown;
+  object: OPDecoders[Name];
 }
 
-export class Multiplexer extends TypedEmitter<MultiplexerEvents> {
+export class Multiplexer extends TypedEmitter<
+  MultiplexerEvents<OPDecoderLiteral>
+> {
   private connections: Connection[] = [];
   private debug = debug(__filename);
 
@@ -49,7 +51,7 @@ export class Multiplexer extends TypedEmitter<MultiplexerEvents> {
     return false;
   }
 
-  send(props: MultiplexerSendProps): boolean {
+  send(props: MultiplexerSendProps<OPDecoderLiteral>): boolean {
     const connection = this.connections[0];
 
     if (!connection) {
@@ -74,7 +76,7 @@ export class Multiplexer extends TypedEmitter<MultiplexerEvents> {
   }
 
   @bind
-  private handlePacket(packet: Packet): void {
+  private handlePacket(packet: Packet<OPDecoderLiteral>): void {
     const opname = packet.payload.opcode.name;
 
     if (!opname) {

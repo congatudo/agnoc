@@ -67,9 +67,7 @@ describe("decode", () => {
         userId: 2,
         sequence: "7a479a0fbb978c12",
         payload: {
-          opcode: {
-            name: "DEVICE_GETTIME_RSP",
-          },
+          opcode: "DEVICE_GETTIME_RSP",
           object: {
             result: 0,
             body: {
@@ -105,9 +103,7 @@ describe("decode", () => {
         userId: 2,
         sequence: "7a479a0fbb978c12",
         payload: {
-          opcode: {
-            name: "DEVICE_GETTIME_RSP",
-          },
+          opcode: "DEVICE_GETTIME_RSP",
           object: {
             result: 0,
             body: {

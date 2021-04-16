@@ -1,5 +1,6 @@
 import { AddressInfo, Socket, SocketConnectOpts } from "net";
 import { Duplex } from "stream";
+import { OPDecoderLiteral } from "../constants/opcodes.constant";
 import { DomainException } from "../exceptions/domain.exception";
 import { Packet } from "../value-objects/packet.value-object";
 
@@ -10,7 +11,7 @@ interface PacketSocketProps {
 type Callback = (error?: Error | null) => void;
 
 interface PacketSocketEvents {
-  data: (packet: Packet) => void;
+  data: (packet: Packet<OPDecoderLiteral>) => void;
   connect: () => void;
   close: (hasError: boolean) => void;
   drain: () => void;
@@ -44,16 +45,16 @@ export declare interface PacketSocket extends Duplex {
   ): this;
 
   write(
-    packet: Packet,
+    packet: Packet<OPDecoderLiteral>,
     encoding?: BufferEncoding,
     cb?: (error: Error | null | undefined) => void
   ): boolean;
   write(
-    packet: Packet,
+    packet: Packet<OPDecoderLiteral>,
     cb?: (error: Error | null | undefined) => void
   ): boolean;
   end(cb?: () => void): void;
-  end(packet: Packet, cb?: () => void): void;
+  end(packet: Packet<OPDecoderLiteral>, cb?: () => void): void;
 }
 
 export class PacketSocket extends Duplex {
@@ -181,7 +182,11 @@ export class PacketSocket extends Duplex {
     setImmediate(this.onReadable.bind(this));
   }
 
-  _write(packet: Packet, _: BufferEncoding, done: Callback): void {
+  _write(
+    packet: Packet<OPDecoderLiteral>,
+    _: BufferEncoding,
+    done: Callback
+  ): void {
     if (!this.socket) {
       done(new DomainException("Called _write without connection"));
       return;

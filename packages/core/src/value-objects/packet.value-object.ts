@@ -9,26 +9,29 @@ import { BigNumber, BigNumberSerialized } from "./big-number.value-object";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ID, IDSerialized } from "./id.value-object";
+import { OPCodeLiteral, OPDecoderLiteral } from "../constants/opcodes.constant";
 
-export interface PacketProps {
+export interface PacketProps<Name extends OPDecoderLiteral> {
   ctype: number;
   flow: number;
   deviceId: ID;
   userId: ID;
   sequence: BigNumber;
-  payload: Payload;
+  payload: Payload<Name>;
 }
 
-export interface PacketSerialized {
+export interface PacketSerialized<Name extends OPDecoderLiteral> {
   ctype: number;
   flow: number;
   deviceId: IDSerialized;
   userId: IDSerialized;
   sequence: BigNumberSerialized;
-  payload: PayloadSerialized;
+  payload: PayloadSerialized<Name>;
 }
 
-export function unpack(data: Buffer): PacketProps {
+export function unpack<Name extends OPDecoderLiteral>(
+  data: Buffer
+): PacketProps<Name> {
   const stream = toStream(data);
   const size = readWord(stream);
 
@@ -39,9 +42,9 @@ export function unpack(data: Buffer): PacketProps {
   const deviceId = new ID(readWord(stream));
   const userId = new ID(readWord(stream));
   const sequence = new BigNumber(readLong(stream));
-  const opcode = OPCode.fromCode(readShort(stream));
+  const opcode = OPCode.fromCode(readShort(stream) as OPCodeLiteral);
   const payload = Payload.fromBuffer(
-    opcode,
+    opcode as OPCode<Name, OPCodeLiteral>,
     size > 24 ? (stream.read(size - 24) as Buffer) : Buffer.alloc(0)
   );
 
@@ -55,7 +58,9 @@ export function unpack(data: Buffer): PacketProps {
   };
 }
 
-export function pack(packet: PacketProps): Buffer {
+export function pack<Name extends OPDecoderLiteral>(
+  packet: PacketProps<Name>
+): Buffer {
   const size = 24 + Number(packet.payload?.buffer.length);
   const data = Buffer.alloc(24);
   let offset = 0;
@@ -71,7 +76,9 @@ export function pack(packet: PacketProps): Buffer {
   return packet.payload ? Buffer.concat([data, packet.payload.buffer]) : data;
 }
 
-export class Packet extends ValueObject<PacketProps> {
+export class Packet<Name extends OPDecoderLiteral> extends ValueObject<
+  PacketProps<Name>
+> {
   get ctype(): number {
     return this.props.ctype;
   }
@@ -92,7 +99,7 @@ export class Packet extends ValueObject<PacketProps> {
     return this.props.sequence;
   }
 
-  get payload(): Payload {
+  get payload(): Payload<Name> {
     return this.props.payload;
   }
 
@@ -112,11 +119,11 @@ export class Packet extends ValueObject<PacketProps> {
     ].join(" ");
   }
 
-  toJSON(): PacketSerialized {
-    return super.toJSON() as PacketSerialized;
+  toJSON(): PacketSerialized<Name> {
+    return super.toJSON() as PacketSerialized<Name>;
   }
 
-  protected validate(props: PacketProps): void {
+  protected validate(props: PacketProps<Name>): void {
     if (
       ![
         props.ctype,
@@ -145,12 +152,16 @@ export class Packet extends ValueObject<PacketProps> {
     }
   }
 
-  static fromBuffer(buffer: Buffer): Packet {
+  static fromBuffer<Name extends OPDecoderLiteral>(
+    buffer: Buffer
+  ): Packet<Name> {
     return new Packet(unpack(buffer));
   }
 
-  static fromJSON(serialized: PacketSerialized): Packet {
-    const props: PacketProps = {
+  static fromJSON<Name extends OPDecoderLiteral>(
+    serialized: PacketSerialized<Name>
+  ): Packet<Name> {
+    const props: PacketProps<Name> = {
       ctype: serialized.ctype,
       flow: serialized.flow,
       deviceId: ID.fromJSON(serialized.deviceId),

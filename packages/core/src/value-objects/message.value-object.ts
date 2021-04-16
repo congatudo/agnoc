@@ -1,19 +1,30 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { ValueObject } from "../base-classes/value-object.base";
-import { OPName } from "../constants/opcodes.constant";
+import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { Connection } from "../emitters/connection.emitter";
 import { isPresent } from "../utils/is-present.util";
 import { Packet } from "./packet.value-object";
 
-interface MessageProps {
+interface MessageProps<Name extends OPDecoderLiteral> {
   connection: Connection;
-  packet: Packet;
+  packet: Packet<Name>;
 }
 
-export class Message extends ValueObject<MessageProps> {
-  constructor(props: MessageProps) {
+export type MessageHandler<Name extends OPDecoderLiteral> = (
+  message: Message<Name>
+) => void;
+export type MessageHandlers = Partial<
+  {
+    [Name in OPDecoderLiteral]: MessageHandler<Name>;
+  }
+>;
+
+export class Message<Name extends OPDecoderLiteral> extends ValueObject<
+  MessageProps<Name>
+> {
+  constructor(props: MessageProps<Name>) {
     super(props);
   }
 
@@ -21,15 +32,18 @@ export class Message extends ValueObject<MessageProps> {
     return this.props.connection;
   }
 
-  get packet(): Packet {
+  get packet(): Packet<Name> {
     return this.props.packet;
   }
 
-  get opname(): OPName {
-    return this.packet.payload.opcode.name as OPName;
+  get opname(): Name {
+    return this.packet.payload.opcode.name;
   }
 
-  respond(opname: OPName, object: unknown = {}): boolean {
+  respond<RName extends OPDecoderLiteral>(
+    opname: RName,
+    object: OPDecoders[RName]
+  ): boolean {
     return this.connection.respond({ packet: this.packet, opname, object });
   }
 
@@ -37,7 +51,7 @@ export class Message extends ValueObject<MessageProps> {
     return "[Message]";
   }
 
-  protected validate(props: MessageProps): void {
+  protected validate(props: MessageProps<Name>): void {
     if (![props.connection, props.packet].map(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in message constructor"
