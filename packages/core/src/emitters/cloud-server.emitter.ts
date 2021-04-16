@@ -4,31 +4,24 @@ import { PacketSocket } from "../sockets/packet.socket";
 import { PacketServer } from "./packet-server.emitter";
 import { bind } from "../decorators/bind.decorator";
 import { Device } from "../entities/device.entity";
-import { Message } from "../value-objects/message.value-object";
-import { OPName } from "../constants/opcodes.constant";
+import {
+  Message,
+  MessageHandler,
+  MessageHandlers,
+} from "../value-objects/message.value-object";
 import { User } from "../entities/user.entity";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { Connection } from "./connection.emitter";
 import { DeviceSystem } from "../value-objects/device-system.value-object";
-import {
-  ICLIENT_ONLINE_REQ,
-  ICLIENT_ONLINE_RSP,
-  ICOMMON_ERROR_REPLY,
-  IDEVICE_REGISTER_REQ,
-  IDEVICE_REGISTER_RSP,
-  IDEVICE_TIME_SYNC_RSP,
-} from "../../schemas/schema";
 import { ID } from "../value-objects/id.value-object";
 import { Multiplexer } from "./multiplexer.emitter";
+import { OPDecoderLiteral } from "../constants/opcodes.constant";
 
 interface Servers {
   cmd: PacketServer;
   map: PacketServer;
   rtc: PacketServer;
 }
-
-type Handler = (message: Message) => void;
-type Handlers = Partial<Record<OPName, Handler>>;
 
 interface CloudServerEvents {
   addRobot: (robot: Robot) => void;
@@ -38,10 +31,10 @@ interface CloudServerEvents {
 export class CloudServer extends TypedEmitter<CloudServerEvents> {
   private robots = new Map() as Map<number, Robot>;
   private servers: Servers;
-  private handlers: Handlers = {
+  private handlers: MessageHandlers = {
     CLIENT_ONLINE_REQ: this.handleClientLogin,
     DEVICE_REGISTER_REQ: this.handleClientRegister,
-  };
+  } as const;
 
   constructor() {
     super();
@@ -78,28 +71,28 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
   }
 
   @bind
-  private handleClientLogin(message: Message): void {
+  private handleClientLogin(message: Message<"CLIENT_ONLINE_REQ">): void {
     const robot = this.robots.get(message.packet.deviceId.value);
 
     if (!robot) {
-      const object = message.packet.payload.object as ICLIENT_ONLINE_REQ;
+      const object = message.packet.payload.object;
 
       message.respond("CLIENT_ONLINE_RSP", {
         result: 12002,
         reason: `Device not registered(devsn: ${object.deviceSerialNumber})`,
-      } as ICLIENT_ONLINE_RSP);
+      });
     } else {
       message.respond("CLIENT_ONLINE_RSP", {
         result: 0,
-      } as ICLIENT_ONLINE_RSP);
+      });
 
       this.emit("addRobot", robot);
     }
   }
 
   @bind
-  private handleClientRegister(message: Message): void {
-    const props = message.packet.payload.object as IDEVICE_REGISTER_REQ;
+  private handleClientRegister(message: Message<"DEVICE_REGISTER_REQ">): void {
+    const props = message.packet.payload.object;
     const multiplexer = new Multiplexer();
     const device = new Device({
       id: ID.generate(),
@@ -121,12 +114,14 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
       device: {
         id: device.id.value,
       },
-    } as IDEVICE_REGISTER_RSP);
+    });
   }
 
   @bind
-  handleMessage(message: Message): void {
-    const handler = this.handlers[message.opname];
+  handleMessage<Name extends OPDecoderLiteral>(message: Message<Name>): void {
+    const handler = this.handlers[message.opname] as
+      | MessageHandler<Name>
+      | undefined;
 
     if (handler) {
       return handler(message);
@@ -145,7 +140,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
       result: 1,
       opcode: message.packet.payload.opcode.value,
       error: "Device not registered",
-    } as ICOMMON_ERROR_REPLY);
+    });
   }
 
   @bind
@@ -172,7 +167,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
         body: {
           time: Math.floor(Date.now() / 1000),
         },
-      } as IDEVICE_TIME_SYNC_RSP,
+      },
     });
 
     connection.close();

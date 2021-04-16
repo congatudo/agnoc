@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { TypedEmitter } from "tiny-typed-emitter";
-import { OPName } from "../constants/opcodes.constant";
 import { bind } from "../decorators/bind.decorator";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { DomainException } from "../exceptions/domain.exception";
 import { PacketSocket } from "../sockets/packet.socket";
-import { ObjectLiteral } from "../types/object-literal.type";
 import { isPresent } from "../utils/is-present.util";
 import { BigNumber } from "../value-objects/big-number.value-object";
 import { ID } from "../value-objects/id.value-object";
@@ -15,29 +13,36 @@ import { Packet } from "../value-objects/packet.value-object";
 import { Payload } from "../value-objects/payload.value-object";
 import { debug } from "../utils/debug.util";
 import { Debugger } from "debug";
+import {
+  OPCodeLiteral,
+  OPDecoderLiteral,
+  OPDecoders,
+} from "../constants/opcodes.constant";
 
-interface ConnectionSendProps {
-  opname: OPName;
+interface ConnectionSendProps<Name extends OPDecoderLiteral> {
+  opname: Name;
   userId: ID;
   deviceId: ID;
-  object: unknown;
+  object: OPDecoders[Name];
 }
 
-interface ConnectionRespondProps {
-  packet: Packet;
-  opname: OPName;
-  object: unknown;
+interface ConnectionRespondProps<Name extends OPDecoderLiteral> {
+  packet: Packet<OPDecoderLiteral>;
+  opname: Name;
+  object: OPDecoders[Name];
 }
 
-type ConnectionEvents = {
-  [key in OPName]: (packet: Packet) => void;
+type ConnectionEvents<Name extends OPDecoderLiteral> = {
+  [key in Name]: (packet: Packet<Name>) => void;
 } & {
-  data: (packet: Packet) => void;
+  data: (packet: Packet<OPDecoderLiteral>) => void;
   close: () => void;
   error: (err: Error) => void;
 };
 
-export class Connection extends TypedEmitter<ConnectionEvents> {
+export class Connection extends TypedEmitter<
+  ConnectionEvents<OPDecoderLiteral>
+> {
   private socket: PacketSocket;
   private debug: Debugger;
 
@@ -56,7 +61,12 @@ export class Connection extends TypedEmitter<ConnectionEvents> {
     this.socket.on("close", this.handleClose);
   }
 
-  send({ opname, userId, deviceId, object }: ConnectionSendProps): boolean {
+  send<Name extends OPDecoderLiteral>({
+    opname,
+    userId,
+    deviceId,
+    object,
+  }: ConnectionSendProps<Name>): boolean {
     const packet = new Packet({
       ctype: 2,
       flow: 0,
@@ -65,8 +75,8 @@ export class Connection extends TypedEmitter<ConnectionEvents> {
       deviceId: userId,
       sequence: BigNumber.generate(),
       payload: Payload.fromObject(
-        OPCode.fromName(opname),
-        object as ObjectLiteral
+        OPCode.fromName<Name, OPCodeLiteral>(opname),
+        object
       ),
     });
 
@@ -75,7 +85,11 @@ export class Connection extends TypedEmitter<ConnectionEvents> {
     return this.socket.write(packet);
   }
 
-  respond({ packet, opname, object }: ConnectionRespondProps): boolean {
+  respond<Name extends OPDecoderLiteral>({
+    packet,
+    opname,
+    object,
+  }: ConnectionRespondProps<Name>): boolean {
     const response = new Packet({
       ctype: packet.ctype,
       flow: packet.flow + 1,
@@ -84,8 +98,8 @@ export class Connection extends TypedEmitter<ConnectionEvents> {
       deviceId: packet.userId,
       sequence: packet.sequence,
       payload: Payload.fromObject(
-        OPCode.fromName(opname),
-        object as ObjectLiteral
+        OPCode.fromName<Name, OPCodeLiteral>(opname),
+        object
       ),
     });
 
@@ -101,7 +115,7 @@ export class Connection extends TypedEmitter<ConnectionEvents> {
   }
 
   @bind
-  private handlePacket(packet: Packet): void {
+  private handlePacket(packet: Packet<OPDecoderLiteral>): void {
     this.validatePacket(packet);
 
     const opname = packet.payload.opcode.name;
@@ -133,7 +147,7 @@ export class Connection extends TypedEmitter<ConnectionEvents> {
     }::${this.socket.localAddress || "unknown"}:${this.socket.localPort || 0}`;
   }
 
-  protected validatePacket(packet: Packet): void {
+  protected validatePacket(packet: Packet<OPDecoderLiteral>): void {
     if (!(packet instanceof Packet)) {
       throw new DomainException("Connection socket emitted non-packet data");
     }
