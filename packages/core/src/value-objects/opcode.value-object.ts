@@ -14,6 +14,10 @@ import { ArgumentOutOfRangeException } from "../exceptions/argument-out-of-range
 const MIN_OPCODE = 0;
 const MAX_OPCODE = 0xffff;
 
+function toHex(value: number) {
+  return `0x${value.toString(16).padStart(4, "0")}`;
+}
+
 export class OPCode<
   Name extends typeof OPNAMES[Code],
   Code extends OPCodeLiteral
@@ -27,7 +31,7 @@ export class OPCode<
   }
 
   get code(): string {
-    return `0x${this.value.toString(16).padStart(4, "0")}`;
+    return toHex(this.props.value);
   }
 
   get name(): Name {
@@ -44,12 +48,14 @@ export class OPCode<
 
   protected validate({ value }: DomainPrimitive<number>): void {
     if (value < MIN_OPCODE || value > MAX_OPCODE) {
-      throw new ArgumentOutOfRangeException(`Wrong opcode value '${value}'`);
+      throw new ArgumentOutOfRangeException(
+        `Wrong opcode value '${toHex(value)}'`
+      );
     }
 
     if (!(value in OPNAMES)) {
       throw new ArgumentInvalidException(
-        `Unrecognized opcode value '${value}'`
+        `Unrecognized opcode value '${toHex(value)}'`
       );
     }
   }
