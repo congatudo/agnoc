@@ -17,9 +17,12 @@ import {
 } from "../value-objects/device-system.value-object";
 import { hasKey } from "../utils/has-key.util";
 import {
+  DeviceMode,
   DeviceStatus,
   DeviceStatusProps,
+  DeviceWaterLevel,
   DEVICE_MODE,
+  DEVICE_WATER_LEVEL,
   FanSpeed,
   FAN_SPEED,
 } from "../value-objects/device-status.value-object";
@@ -83,6 +86,13 @@ const CONSUMABLE_TYPE_RESET = {
   [CONSUMABLE_TYPE.DISHCLOTH]: 4,
 };
 
+const WATER_LEVEL_MODE = {
+  [DEVICE_WATER_LEVEL.OFF]: 10,
+  [DEVICE_WATER_LEVEL.LOW]: 11,
+  [DEVICE_WATER_LEVEL.MEDIUM]: 12,
+  [DEVICE_WATER_LEVEL.HIGH]: 13,
+};
+
 export class Robot extends TypedEmitter<RobotEvents> {
   public readonly device: Device;
   public readonly user: User;
@@ -125,6 +135,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
       await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
         ctrlValue: 1,
       });
+    } else if (this.device.status?.mode === DEVICE_MODE.MOP) {
+      await this.sendRecv(
+        "DEVICE_MOP_FLOOR_CLEAN_REQ",
+        "DEVICE_MOP_FLOOR_CLEAN_RSP",
+        {
+          ctrlValue: 1,
+        }
+      );
     } else if (
       this.device.status?.mode === DEVICE_MODE.SPOT &&
       this.device.map?.currentSpot
@@ -153,6 +171,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
       await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
         ctrlValue: 2,
       });
+    } else if (this.device.status?.mode === DEVICE_MODE.MOP) {
+      await this.sendRecv(
+        "DEVICE_MOP_FLOOR_CLEAN_REQ",
+        "DEVICE_MOP_FLOOR_CLEAN_RSP",
+        {
+          ctrlValue: 2,
+        }
+      );
     } else if (
       this.device.status?.mode === DEVICE_MODE.SPOT &&
       this.device.map?.currentSpot
@@ -190,6 +216,53 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
   }
 
+  async setMode(mode: DeviceMode): Promise<void> {
+    if (mode === DEVICE_MODE.NONE) {
+      await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
+        ctrlValue: 0,
+        cleanType: 2,
+      });
+    } else if (mode === DEVICE_MODE.SPOT) {
+      let mask = 0x78ff | 0x200;
+
+      if (this.device.system.model === DEVICE_MODEL.C3090) {
+        mask = 0xff | 0x200;
+      }
+
+      await this.sendRecv(
+        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
+        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
+        { mask }
+      );
+    } else if (mode === DEVICE_MODE.ZONE) {
+      await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
+        ctrlValue: 0,
+      });
+
+      let mask = 0x78ff | 0x100;
+
+      if (this.device.system.model === DEVICE_MODEL.C3090) {
+        mask = 0xff | 0x100;
+      }
+
+      await this.sendRecv(
+        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
+        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
+        { mask }
+      );
+    } else if (mode === DEVICE_MODE.MOP) {
+      await this.sendRecv(
+        "DEVICE_MAPID_INTO_MODEIDLE_INFO_REQ",
+        "DEVICE_MAPID_INTO_MODEIDLE_INFO_RSP",
+        {
+          mode: 7,
+        }
+      );
+    } else {
+      throw new ArgumentInvalidException("Unknown device mode");
+    }
+  }
+
   async setFanSpeed(speed: FanSpeed): Promise<void> {
     if (hasKey(FAN_SPEED, speed)) {
       await this.sendRecv(
@@ -200,6 +273,19 @@ export class Robot extends TypedEmitter<RobotEvents> {
       );
     } else {
       throw new Error("Invalid fan speed");
+    }
+  }
+
+  async setWaterLevel(waterLevel: DeviceWaterLevel): Promise<void> {
+    if (waterLevel in WATER_LEVEL_MODE) {
+      await this.sendRecv(
+        "DEVICE_SET_CLEAN_PREFERENCE_REQ",
+        "DEVICE_SET_CLEAN_PREFERENCE_RSP",
+        // eslint-disable-next-line security/detect-object-injection
+        { mode: WATER_LEVEL_MODE[waterLevel] }
+      );
+    } else {
+      throw new Error("Invalid water level");
     }
   }
 
@@ -346,23 +432,29 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
   }
 
+  async mopClean(): Promise<void> {
+    await this.setMode(DEVICE_MODE.MOP);
+
+    await waitFor(() => this.device.status?.mode === DEVICE_MODE.MOP, {
+      timeout: MODE_CHANGE_TIMEOUT,
+    }).catch(() => {
+      throw new DomainException("Unable to change robot to mop mode");
+    });
+
+    await this.sendRecv(
+      "DEVICE_MOP_FLOOR_CLEAN_REQ",
+      "DEVICE_MOP_FLOOR_CLEAN_RSP",
+      { ctrlValue: 1 }
+    );
+  }
+
   async cleanPosition(position: Position): Promise<void> {
     if (!this.device.map) {
       throw new DomainException("Unable to set robot position: map not loaded");
     }
 
     if (this.device.status?.mode !== DEVICE_MODE.SPOT) {
-      let mask = 0x78ff | 0x200;
-
-      if (this.device.system.model === DEVICE_MODEL.C3090) {
-        mask = 0xff | 0x200;
-      }
-
-      await this.sendRecv(
-        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
-        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-        { mask }
-      );
+      await this.setMode(DEVICE_MODE.SPOT);
 
       await waitFor(() => this.device.status?.mode === DEVICE_MODE.SPOT, {
         timeout: MODE_CHANGE_TIMEOUT,
@@ -395,21 +487,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     if (this.device.status?.mode !== DEVICE_MODE.ZONE) {
-      await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
-        ctrlValue: 0,
-      });
-
-      let mask = 0x78ff | 0x100;
-
-      if (this.device.system.model === DEVICE_MODEL.C3090) {
-        mask = 0xff | 0x100;
-      }
-
-      await this.sendRecv(
-        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
-        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-        { mask }
-      );
+      await this.setMode(DEVICE_MODE.ZONE);
 
       await waitFor(() => this.device.status?.mode === DEVICE_MODE.ZONE, {
         timeout: MODE_CHANGE_TIMEOUT,
@@ -636,6 +714,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       chargeStatus,
       cleanPreference,
       faultCode,
+      waterLevel,
+      mopType,
     } = object;
     const props: DeviceStatusProps = {
       battery: DeviceStatus.getBatteryValue({ battery }),
@@ -649,6 +729,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       currentCleanSize: object.cleanSize,
       currentCleanTime: object.cleanTime,
       error: DeviceStatus.getError({ faultCode }),
+      waterLevel: DeviceStatus.getWaterLevel(waterLevel || 10),
+      hasMop: Boolean(mopType),
     };
 
     this.device.updateStatus(props);

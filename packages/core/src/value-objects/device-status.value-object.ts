@@ -3,6 +3,8 @@ import { ArgumentInvalidException } from "../exceptions/argument-invalid.excepti
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
 
+// TODO: convert all to value-objects
+
 export const DEVICE_STATE = {
   ERROR: "error",
   DOCKED: "docked",
@@ -21,6 +23,7 @@ export const DEVICE_MODE = {
   NONE: "none",
   SPOT: "spot",
   ZONE: "zone",
+  MOP: "mop",
   UNKNOWN: "unknown",
 } as const;
 
@@ -43,6 +46,15 @@ export const DEVICE_ERROR = {
 
 export type DeviceError = typeof DEVICE_ERROR[keyof typeof DEVICE_ERROR];
 
+export const DEVICE_WATER_LEVEL = {
+  OFF: "off",
+  LOW: "low",
+  MEDIUM: "medium",
+  HIGH: "high",
+} as const;
+
+export type DeviceWaterLevel = typeof DEVICE_WATER_LEVEL[keyof typeof DEVICE_WATER_LEVEL];
+
 export interface DeviceStatusProps {
   battery: number;
   state: DeviceState;
@@ -51,6 +63,8 @@ export interface DeviceStatusProps {
   currentCleanSize: number;
   currentCleanTime: number;
   error: DeviceError;
+  waterLevel: DeviceWaterLevel;
+  hasMop: boolean;
 }
 
 export class DeviceStatus extends ValueObject<DeviceStatusProps> {
@@ -82,6 +96,14 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
     return this.props.error;
   }
 
+  get waterLevel(): DeviceWaterLevel {
+    return this.props.waterLevel;
+  }
+
+  get hasMop(): boolean {
+    return this.props.hasMop;
+  }
+
   protected validate(props: DeviceStatusProps): void {
     if (
       ![
@@ -91,6 +113,9 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
         props.fanSpeed,
         props.currentCleanSize,
         props.currentCleanTime,
+        props.error,
+        props.waterLevel,
+        props.hasMop,
       ].map(isPresent)
     ) {
       throw new ArgumentNotProvidedException(
@@ -119,6 +144,12 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
     if (!Object.keys(FAN_SPEED).includes(props.fanSpeed)) {
       throw new ArgumentInvalidException(
         "Invalid property fanSpeed in device status constructor"
+      );
+    }
+
+    if (!Object.values(DEVICE_WATER_LEVEL).includes(props.waterLevel)) {
+      throw new ArgumentInvalidException(
+        "Invalid property waterLevel in device status constructor"
       );
     }
   }
@@ -154,15 +185,15 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       return DEVICE_STATE.RETURNING;
     }
 
-    if ([4, 9, 31].includes(workMode)) {
+    if ([4, 9, 31, 37].includes(workMode)) {
       return DEVICE_STATE.PAUSED;
     }
 
-    if ([0, 14, 23, 29, 35].includes(workMode)) {
+    if ([0, 14, 23, 29, 35, 40].includes(workMode)) {
       return DEVICE_STATE.IDLE;
     }
 
-    if ([1, 6, 7, 25, 20, 30].includes(workMode)) {
+    if ([1, 6, 7, 25, 20, 30, 36].includes(workMode)) {
       return DEVICE_STATE.CLEANING;
     }
 
@@ -180,6 +211,10 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
 
     if ([7, 9, 12, 14].includes(workMode)) {
       return DEVICE_MODE.SPOT;
+    }
+
+    if ([36, 37, 40].includes(workMode)) {
+      return DEVICE_MODE.MOP;
     }
 
     return DEVICE_MODE.UNKNOWN;
@@ -202,6 +237,19 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
         return DEVICE_ERROR.NO_DEPOSIT;
       default:
         return DEVICE_ERROR.UNKNOWN;
+    }
+  }
+
+  static getWaterLevel(waterLevel: number): DeviceWaterLevel {
+    switch (waterLevel) {
+      case 13:
+        return DEVICE_WATER_LEVEL.HIGH;
+      case 12:
+        return DEVICE_WATER_LEVEL.MEDIUM;
+      case 11:
+        return DEVICE_WATER_LEVEL.LOW;
+      default:
+        return DEVICE_WATER_LEVEL.OFF;
     }
   }
 }

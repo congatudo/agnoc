@@ -545,3 +545,19 @@ message USER_GET_DEVICE_QUIETHOURS_RSP {
 message DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_REQ {}
 
 message DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_RSP {}
+
+message DEVICE_MAPID_INTO_MODEIDLE_INFO_REQ {
+  required uint32 mode = 1;
+}
+
+message DEVICE_MAPID_INTO_MODEIDLE_INFO_RSP {
+  required int32 result = 1;
+}
+
+message DEVICE_MOP_FLOOR_CLEAN_REQ {
+  required uint32 ctrlValue = 1;
+}
+
+message DEVICE_MOP_FLOOR_CLEAN_RSP {
+  required int32 result = 1;
+}
