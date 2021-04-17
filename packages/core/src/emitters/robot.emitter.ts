@@ -93,6 +93,12 @@ const WATER_LEVEL_MODE = {
   [DEVICE_WATER_LEVEL.HIGH]: 13,
 };
 
+const CTRL_VALUE = {
+  STOP: 0,
+  START: 1,
+  PAUSE: 2,
+};
+
 export class Robot extends TypedEmitter<RobotEvents> {
   public readonly device: Device;
   public readonly user: User;
@@ -133,14 +139,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
   async start(): Promise<void> {
     if (this.device.status?.mode === DEVICE_MODE.ZONE) {
       await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
-        ctrlValue: 1,
+        ctrlValue: CTRL_VALUE.START,
       });
     } else if (this.device.status?.mode === DEVICE_MODE.MOP) {
       await this.sendRecv(
         "DEVICE_MOP_FLOOR_CLEAN_REQ",
         "DEVICE_MOP_FLOOR_CLEAN_RSP",
         {
-          ctrlValue: 1,
+          ctrlValue: CTRL_VALUE.START,
         }
       );
     } else if (
@@ -155,12 +161,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
           poseX: this.device.map.currentSpot.x,
           poseY: this.device.map.currentSpot.y,
           posePhi: this.device.map.currentSpot.phi,
-          ctrlValue: 1,
+          ctrlValue: CTRL_VALUE.START,
         }
       );
     } else {
       await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-        ctrlValue: 1,
+        ctrlValue: CTRL_VALUE.START,
         cleanType: 2,
       });
     }
@@ -169,14 +175,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
   async stop(): Promise<void> {
     if (this.device.status?.mode === DEVICE_MODE.ZONE) {
       await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
-        ctrlValue: 2,
+        ctrlValue: CTRL_VALUE.PAUSE,
       });
     } else if (this.device.status?.mode === DEVICE_MODE.MOP) {
       await this.sendRecv(
         "DEVICE_MOP_FLOOR_CLEAN_REQ",
         "DEVICE_MOP_FLOOR_CLEAN_RSP",
         {
-          ctrlValue: 2,
+          ctrlValue: CTRL_VALUE.PAUSE,
         }
       );
     } else if (
@@ -191,12 +197,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
           poseX: this.device.map.currentSpot.x,
           poseY: this.device.map.currentSpot.y,
           posePhi: this.device.map.currentSpot.phi,
-          ctrlValue: 2,
+          ctrlValue: CTRL_VALUE.PAUSE,
         }
       );
     } else {
       await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-        ctrlValue: 2,
+        ctrlValue: CTRL_VALUE.PAUSE,
         cleanType: 2,
       });
     }
@@ -219,7 +225,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   async setMode(mode: DeviceMode): Promise<void> {
     if (mode === DEVICE_MODE.NONE) {
       await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-        ctrlValue: 0,
+        ctrlValue: CTRL_VALUE.STOP,
         cleanType: 2,
       });
     } else if (mode === DEVICE_MODE.SPOT) {
@@ -236,7 +242,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       );
     } else if (mode === DEVICE_MODE.ZONE) {
       await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
-        ctrlValue: 0,
+        ctrlValue: CTRL_VALUE.STOP,
       });
 
       let mask = 0x78ff | 0x100;
@@ -379,7 +385,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async enterManualMode(): Promise<void> {
     await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      ctrlValue: 0,
+      ctrlValue: CTRL_VALUE.STOP,
       cleanType: 2,
     });
     await this.sendRecv("DEVICE_MANUAL_CTRL_REQ", "DEVICE_MANUAL_CTRL_RSP", {
@@ -389,7 +395,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async leaveManualMode(): Promise<void> {
     await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      ctrlValue: 2,
+      ctrlValue: CTRL_VALUE.PAUSE,
       cleanType: 2,
     });
   }
@@ -444,7 +450,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     await this.sendRecv(
       "DEVICE_MOP_FLOOR_CLEAN_REQ",
       "DEVICE_MOP_FLOOR_CLEAN_RSP",
-      { ctrlValue: 1 }
+      { ctrlValue: CTRL_VALUE.START }
     );
   }
 
@@ -471,7 +477,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         poseX: position.x,
         poseY: position.y,
         posePhi: position.phi,
-        ctrlValue: 1,
+        ctrlValue: CTRL_VALUE.START,
       }
     );
   }
@@ -516,7 +522,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       req
     );
     await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
-      ctrlValue: 1,
+      ctrlValue: CTRL_VALUE.START,
     });
   }
 
@@ -612,7 +618,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       "DEVICE_WITHROOMS_CLEAN_REQ",
       "DEVICE_WITHROOMS_CLEAN_RSP",
       {
-        ctrlValue: 1,
+        ctrlValue: CTRL_VALUE.START,
         cleanType: 2,
         roomNumber: ids.length,
         roomIdList: Buffer.from(ids),
