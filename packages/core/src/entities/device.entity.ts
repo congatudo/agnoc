@@ -8,6 +8,7 @@ import {
 } from "../value-objects/device-config.value-object";
 import { DeviceConsumable } from "../value-objects/device-consumable.value-object";
 import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
+import { DeviceMode } from "../value-objects/device-mode.value-object";
 import { DeviceState } from "../value-objects/device-state.value-object";
 import { DeviceStatus } from "../value-objects/device-status.value-object";
 import {
@@ -34,6 +35,7 @@ export interface DeviceProps {
   wlan?: DeviceWlan;
   battery?: DeviceBattery;
   state?: DeviceState;
+  mode?: DeviceMode;
   fanSpeed?: DeviceFanSpeed;
   waterLevel?: DeviceWaterLevel;
   hasMopAttached?: boolean;
@@ -79,6 +81,10 @@ export class Device extends Entity<DeviceProps> {
 
   get state(): DeviceState | undefined {
     return this.props.state;
+  }
+
+  get mode(): DeviceMode | undefined {
+    return this.props.mode;
   }
 
   get fanSpeed(): DeviceFanSpeed | undefined {
@@ -139,6 +145,10 @@ export class Device extends Entity<DeviceProps> {
 
   updateState(state: DeviceState): void {
     this.props.state = state;
+  }
+
+  updateMode(mode: DeviceMode): void {
+    this.props.mode = mode;
   }
 
   updateFanSpeed(fanSpeed: DeviceFanSpeed): void {

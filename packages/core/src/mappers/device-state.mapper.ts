@@ -12,7 +12,7 @@ interface RobotState {
   chargeStatus: boolean;
 }
 
-function getDomainValue(state: RobotState): ValueOf<typeof DeviceState.VALUE> {
+function getDomainValue(state: RobotState): ValueOf<typeof VALUE> {
   const { type, workMode, chargeStatus } = state;
 
   if (![0, 3].includes(type) || [11].includes(workMode)) {
