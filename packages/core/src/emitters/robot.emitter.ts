@@ -15,14 +15,11 @@ import {
   DeviceSystemProps,
   DEVICE_MODEL,
 } from "../value-objects/device-system.value-object";
-import { hasKey } from "../utils/has-key.util";
 import {
   DeviceMode,
   DeviceStatus,
   DeviceStatusProps,
   DEVICE_MODE,
-  FanSpeed,
-  FAN_SPEED,
 } from "../value-objects/device-status.value-object";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { Debugger } from "debug";
@@ -49,6 +46,8 @@ import { DeviceTime } from "../value-objects/device-time.value-object";
 import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
 import { DeviceWaterLevel } from "../value-objects/device-water-level.value-object";
 import { DeviceWaterLevelMapper } from "../mappers/device-water-level.mapper";
+import { DeviceFanSpeedMapper } from "../mappers/device-fan-speed.mapper";
+import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
 
 export interface RobotProps {
   device: Device;
@@ -262,16 +261,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
   }
 
-  async setFanSpeed(speed: FanSpeed): Promise<void> {
-    if (hasKey(FAN_SPEED, speed)) {
-      await this.sendRecv(
-        "DEVICE_SET_CLEAN_PREFERENCE_REQ",
-        "DEVICE_SET_CLEAN_PREFERENCE_RSP",
-        { mode: FAN_SPEED[speed] }
-      );
-    } else {
-      throw new Error("Invalid fan speed");
-    }
+  async setFanSpeed(fanSpeed: DeviceFanSpeed): Promise<void> {
+    await this.sendRecv(
+      "DEVICE_SET_CLEAN_PREFERENCE_REQ",
+      "DEVICE_SET_CLEAN_PREFERENCE_RSP",
+      { mode: DeviceFanSpeedMapper.toRobot(fanSpeed) }
+    );
   }
 
   async setWaterLevel(waterLevel: DeviceWaterLevel): Promise<void> {
@@ -717,7 +712,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         chargeStatus,
       }),
       mode: DeviceStatus.getModeValue({ workMode }),
-      fanSpeed: DeviceStatus.getFanSpeedValue({ cleanPreference }),
+      fanSpeed: DeviceFanSpeedMapper.toDomain(cleanPreference),
       currentCleanSize: object.cleanSize,
       currentCleanTime: object.cleanTime,
       error: DeviceStatus.getError({ faultCode }),
@@ -771,7 +766,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
           chargeStatus,
         }),
         mode: DeviceStatus.getModeValue({ workMode }),
-        fanSpeed: DeviceStatus.getFanSpeedValue({ cleanPreference }),
+        fanSpeed: DeviceFanSpeedMapper.toDomain(cleanPreference),
         currentCleanSize: statusInfo.cleanSize,
         currentCleanTime: statusInfo.cleanTime,
       });
