@@ -79,7 +79,6 @@ export class OPCode<
       throw new ArgumentInvalidException(`Invalid opcode with name '${name}'`);
     }
 
-    // eslint-disable-next-line security/detect-object-injection
     const code = OPCODES[name] as Code;
 
     return new OPCode(code);

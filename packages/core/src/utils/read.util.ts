@@ -32,7 +32,6 @@ function readFn<M extends AllowedMethods>(size: number, method: M) {
 
     assert(buffer, `read(${size}): empty value from stream`);
 
-    // eslint-disable-next-line security/detect-object-injection
     return buffer[method]() as ReturnType<Buffer[M]>;
   };
 }

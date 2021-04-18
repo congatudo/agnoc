@@ -12,7 +12,6 @@ export function flipObject<T extends Record<PropertyKey, PropertyKey>>(
   const entries = Object.entries(obj) as [keyof T, T[keyof T]][];
 
   return entries.reduce((acc, [key, value]) => {
-    // eslint-disable-next-line security/detect-object-injection
     acc[value] = key;
     return acc;
   }, {} as FlipObject<T>);
