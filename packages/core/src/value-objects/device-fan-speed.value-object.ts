@@ -22,7 +22,7 @@ export class DeviceFanSpeed extends ValueObject<Value> {
   }
 
   protected validate(props: DomainPrimitive<Value>): void {
-    if (![props.value].map(isPresent)) {
+    if (![props.value].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in device fan speed constructor"
       );

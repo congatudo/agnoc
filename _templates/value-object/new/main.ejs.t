@@ -19,7 +19,7 @@ export class <%= PascalCaseName %> extends ValueObject<<%= PascalCaseName %>Prop
   }
 
   protected validate(props: <%= PascalCaseName %>Props): void {
-    if (![props.foo].map(isPresent)) {
+    if (![props.foo].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in <%= NoCaseName %> constructor"
       );

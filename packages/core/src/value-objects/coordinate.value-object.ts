@@ -17,7 +17,7 @@ export class Coordinate extends ValueObject<CoordinateProps> {
   }
 
   protected validate(props: CoordinateProps): void {
-    if (![props.x, props.y].map(isPresent)) {
+    if (![props.x, props.y].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in coordinate constructor"
       );

@@ -35,7 +35,7 @@ export class Room extends Entity<RoomProps> {
   }
 
   private validate(props: RoomProps): void {
-    if (![props.id, props.name, props.center, props.pixels].map(isPresent)) {
+    if (![props.id, props.name, props.center, props.pixels].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in room constructor"
       );

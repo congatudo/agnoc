@@ -28,7 +28,7 @@ export class DeviceTime extends ValueObject<DeviceTimeProps> {
   }
 
   protected validate(props: DeviceTimeProps): void {
-    if (![props.hour, props.minute].map(isPresent)) {
+    if (![props.hour, props.minute].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in device time constructor"
       );

@@ -132,7 +132,7 @@ export class Packet<Name extends OPDecoderLiteral> extends ValueObject<
         props.deviceId,
         props.sequence,
         props.payload,
-      ].map(isPresent)
+      ].every(isPresent)
     ) {
       throw new ArgumentNotProvidedException(
         "Missing property in packet constructor"

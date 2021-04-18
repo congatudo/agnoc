@@ -1,19 +1,19 @@
 import { Entity } from "../base-classes/entity.base";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
+import { DeviceBattery } from "../value-objects/device-battery.value-object";
 import {
   DeviceConfig,
   DeviceConfigProps,
 } from "../value-objects/device-config.value-object";
 import { DeviceConsumable } from "../value-objects/device-consumable.value-object";
-import {
-  DeviceStatus,
-  DeviceStatusProps,
-} from "../value-objects/device-status.value-object";
+import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
+import { DeviceStatus } from "../value-objects/device-status.value-object";
 import {
   DeviceSystem,
   DeviceSystemProps,
 } from "../value-objects/device-system.value-object";
+import { DeviceWaterLevel } from "../value-objects/device-water-level.value-object";
 import {
   DeviceWlan,
   DeviceWlanProps,
@@ -31,6 +31,10 @@ export interface DeviceProps {
   consumables?: DeviceConsumable[];
   map?: DeviceMap;
   wlan?: DeviceWlan;
+  battery?: DeviceBattery;
+  fanSpeed?: DeviceFanSpeed;
+  waterLevel?: DeviceWaterLevel;
+  hasMopAttached?: boolean;
 }
 
 export class Device extends Entity<DeviceProps> {
@@ -67,6 +71,22 @@ export class Device extends Entity<DeviceProps> {
     return this.props.wlan;
   }
 
+  get battery(): DeviceBattery | undefined {
+    return this.props.battery;
+  }
+
+  get fanSpeed(): DeviceFanSpeed | undefined {
+    return this.props.fanSpeed;
+  }
+
+  get waterLevel(): DeviceWaterLevel | undefined {
+    return this.props.waterLevel;
+  }
+
+  get hasMopAttached(): boolean | undefined {
+    return this.props.hasMopAttached;
+  }
+
   updateSystem(props: Partial<DeviceSystemProps>): void {
     this.props.system = new DeviceSystem({
       ...this.props.system.getRawProps(),
@@ -81,11 +101,8 @@ export class Device extends Entity<DeviceProps> {
     } as DeviceConfigProps);
   }
 
-  updateStatus(props: Partial<DeviceStatusProps>): void {
-    this.props.status = new DeviceStatus({
-      ...this.props.status?.getRawProps(),
-      ...props,
-    } as DeviceStatusProps);
+  updateStatus(status: DeviceStatus): void {
+    this.props.status = status;
   }
 
   updateOrders(orders: DeviceOrder[]): void {
@@ -110,8 +127,24 @@ export class Device extends Entity<DeviceProps> {
     } as DeviceWlanProps);
   }
 
+  updateBattery(battery: DeviceBattery): void {
+    this.props.battery = battery;
+  }
+
+  updateFanSpeed(fanSpeed: DeviceFanSpeed): void {
+    this.props.fanSpeed = fanSpeed;
+  }
+
+  updateWaterLevel(waterLevel: DeviceWaterLevel): void {
+    this.props.waterLevel = waterLevel;
+  }
+
+  updateHasMopAttached(value: boolean): void {
+    this.props.hasMopAttached = value;
+  }
+
   protected validate(props: DeviceProps): void {
-    if (![props.system].map(isPresent)) {
+    if (![props.system].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in device constructor"
       );

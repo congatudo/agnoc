@@ -27,7 +27,7 @@ export class DeviceConsumable extends ValueObject<DeviceConsumableProps> {
   }
 
   protected validate(props: DeviceConsumableProps): void {
-    if (![props.type, props.used].map(isPresent)) {
+    if (![props.type, props.used].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in device consumable constructor"
       );

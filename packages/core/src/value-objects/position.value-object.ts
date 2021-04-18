@@ -32,7 +32,7 @@ export class Position extends ValueObject<PositionProps> {
   }
 
   protected validate(props: PositionProps): void {
-    if (![props.x, props.y, props.phi].map(isPresent)) {
+    if (![props.x, props.y, props.phi].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in position constructor"
       );

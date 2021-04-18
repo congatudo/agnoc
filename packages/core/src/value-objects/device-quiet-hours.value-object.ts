@@ -24,7 +24,7 @@ export class DeviceQuietHours extends ValueObject<DeviceQuietHoursProps> {
   }
 
   protected validate(props: DeviceQuietHoursProps): void {
-    if (![props.isEnabled, props.begin, props.end].map(isPresent)) {
+    if (![props.isEnabled, props.begin, props.end].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in device quiet hours constructor"
       );

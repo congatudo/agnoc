@@ -44,7 +44,7 @@ export class DeviceSystem extends ValueObject<DeviceSystemProps> {
         props.deviceType,
         props.customerFirmwareId,
         props.ctrlVersion,
-      ].map(isPresent)
+      ].every(isPresent)
     ) {
       throw new ArgumentNotProvidedException(
         "Missing property in device system constructor"

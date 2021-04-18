@@ -2,8 +2,6 @@ import { ValueObject } from "../base-classes/value-object.base";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
-import { DeviceFanSpeed } from "./device-fan-speed.value-object";
-import { DeviceWaterLevel } from "./device-water-level.value-object";
 
 // TODO: convert all to value-objects
 
@@ -40,32 +38,20 @@ export const DEVICE_ERROR = {
 export type DeviceError = typeof DEVICE_ERROR[keyof typeof DEVICE_ERROR];
 
 export interface DeviceStatusProps {
-  battery: number;
   state: DeviceState;
   mode: DeviceMode;
-  fanSpeed: DeviceFanSpeed;
   currentCleanSize: number;
   currentCleanTime: number;
   error: DeviceError;
-  waterLevel: DeviceWaterLevel;
-  hasMop: boolean;
 }
 
 export class DeviceStatus extends ValueObject<DeviceStatusProps> {
-  get battery(): number {
-    return this.props.battery;
-  }
-
   get state(): DeviceState {
     return this.props.state;
   }
 
   get mode(): DeviceMode {
     return this.props.mode;
-  }
-
-  get fanSpeed(): DeviceFanSpeed {
-    return this.props.fanSpeed;
   }
 
   get currentCleanSize(): number {
@@ -80,36 +66,18 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
     return this.props.error;
   }
 
-  get waterLevel(): DeviceWaterLevel {
-    return this.props.waterLevel;
-  }
-
-  get hasMop(): boolean {
-    return this.props.hasMop;
-  }
-
   protected validate(props: DeviceStatusProps): void {
     if (
       ![
-        props.battery,
         props.state,
         props.mode,
-        props.fanSpeed,
         props.currentCleanSize,
         props.currentCleanTime,
         props.error,
-        props.waterLevel,
-        props.hasMop,
-      ].map(isPresent)
+      ].every(isPresent)
     ) {
       throw new ArgumentNotProvidedException(
         "Missing property in device status constructor"
-      );
-    }
-
-    if (props.battery < 0 || props.battery > 100) {
-      throw new ArgumentInvalidException(
-        "Invalid property battery in device status constructor"
       );
     }
 
@@ -124,24 +92,6 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
         "Invalid property mode in device status constructor"
       );
     }
-
-    if (!(props.fanSpeed instanceof DeviceFanSpeed)) {
-      throw new ArgumentInvalidException(
-        "Invalid property fanSpeed in device status constructor"
-      );
-    }
-
-    if (!(props.waterLevel instanceof DeviceWaterLevel)) {
-      throw new ArgumentInvalidException(
-        "Invalid property waterLevel in device status constructor"
-      );
-    }
-  }
-
-  static getBatteryValue({ battery }: { battery: number }): number {
-    const batteryMaxValue = 200;
-
-    return (battery * 100) / batteryMaxValue;
   }
 
   static getStateValue({
