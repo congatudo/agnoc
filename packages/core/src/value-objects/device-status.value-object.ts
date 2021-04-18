@@ -2,6 +2,7 @@ import { ValueObject } from "../base-classes/value-object.base";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
+import { DeviceFanSpeed } from "./device-fan-speed.value-object";
 import { DeviceWaterLevel } from "./device-water-level.value-object";
 
 // TODO: convert all to value-objects
@@ -30,15 +31,6 @@ export const DEVICE_MODE = {
 
 export type DeviceMode = typeof DEVICE_MODE[keyof typeof DEVICE_MODE];
 
-export enum FAN_SPEED {
-  "off",
-  "low",
-  "medium",
-  "high",
-}
-
-export type FanSpeed = keyof typeof FAN_SPEED;
-
 export const DEVICE_ERROR = {
   NO_DEPOSIT: "no_deposit",
   NO_GROUND: "no_ground",
@@ -51,7 +43,7 @@ export interface DeviceStatusProps {
   battery: number;
   state: DeviceState;
   mode: DeviceMode;
-  fanSpeed: FanSpeed;
+  fanSpeed: DeviceFanSpeed;
   currentCleanSize: number;
   currentCleanTime: number;
   error: DeviceError;
@@ -72,7 +64,7 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
     return this.props.mode;
   }
 
-  get fanSpeed(): FanSpeed {
+  get fanSpeed(): DeviceFanSpeed {
     return this.props.fanSpeed;
   }
 
@@ -133,7 +125,7 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       );
     }
 
-    if (!Object.keys(FAN_SPEED).includes(props.fanSpeed)) {
+    if (!(props.fanSpeed instanceof DeviceFanSpeed)) {
       throw new ArgumentInvalidException(
         "Invalid property fanSpeed in device status constructor"
       );
@@ -210,14 +202,6 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
     }
 
     return DEVICE_MODE.UNKNOWN;
-  }
-
-  static getFanSpeedValue({
-    cleanPreference,
-  }: {
-    cleanPreference: number;
-  }): FanSpeed {
-    return FAN_SPEED[cleanPreference] as FanSpeed;
   }
 
   static getError({ faultCode }: { faultCode: number }): DeviceError {

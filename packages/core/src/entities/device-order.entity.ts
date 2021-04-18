@@ -2,12 +2,12 @@ import { IDEVICE_ORDERLIST_SETTING_REQ } from "../../schemas/schema";
 import { Entity } from "../base-classes/entity.base";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
+import { DeviceFanSpeedMapper } from "../mappers/device-fan-speed.mapper";
+import { DeviceWaterLevelMapper } from "../mappers/device-water-level.mapper";
 import { isPresent } from "../utils/is-present.util";
-import {
-  FanSpeed,
-  FAN_SPEED,
-} from "../value-objects/device-status.value-object";
+import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
 import { DeviceTime } from "../value-objects/device-time.value-object";
+import { DeviceWaterLevel } from "../value-objects/device-water-level.value-object";
 import { ID } from "../value-objects/id.value-object";
 
 export enum WeekDay {
@@ -38,8 +38,8 @@ export interface DeviceOrderProps {
   weekDay: WeekDay;
   time: DeviceTime;
   cleanMode: CleanMode;
-  fanSpeed: FanSpeed;
-  waterLevel: number;
+  fanSpeed: DeviceFanSpeed;
+  waterLevel: DeviceWaterLevel;
 }
 
 export class DeviceOrder extends Entity<DeviceOrderProps> {
@@ -84,11 +84,11 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
     return this.props.cleanMode;
   }
 
-  get fanSpeed(): FanSpeed {
+  get fanSpeed(): DeviceFanSpeed {
     return this.props.fanSpeed;
   }
 
-  get waterLevel(): number {
+  get waterLevel(): DeviceWaterLevel {
     return this.props.waterLevel;
   }
 
@@ -110,8 +110,10 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
       weekDay: orderList.weekDay,
       time,
       cleanMode: CLEAN_MODE[orderList.cleanInfo.cleanMode] as CleanMode,
-      fanSpeed: FAN_SPEED[orderList.cleanInfo.windPower] as FanSpeed,
-      waterLevel: orderList.cleanInfo.waterLevel,
+      fanSpeed: DeviceFanSpeedMapper.toDomain(orderList.cleanInfo.windPower),
+      waterLevel: orderList.cleanInfo.waterLevel
+        ? DeviceWaterLevelMapper.toDomain(orderList.cleanInfo.waterLevel)
+        : new DeviceWaterLevel({ value: DeviceWaterLevel.VALUE.OFF }),
     };
 
     return new DeviceOrder(props);
@@ -128,8 +130,8 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
         mapHeadId: this.mapId.value,
         planId: this.planId.value,
         cleanMode: CLEAN_MODE[this.cleanMode],
-        windPower: FAN_SPEED[this.fanSpeed],
-        waterLevel: this.waterLevel,
+        windPower: DeviceFanSpeedMapper.toRobot(this.fanSpeed),
+        waterLevel: DeviceWaterLevelMapper.toRobot(this.waterLevel),
         twiceClean: this.isDeepClean,
       },
     };
@@ -188,9 +190,15 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
       );
     }
 
-    if (!Object.keys(FAN_SPEED).includes(props.fanSpeed)) {
+    if (!(props.fanSpeed instanceof DeviceFanSpeed)) {
       throw new ArgumentInvalidException(
-        "Invalid cleanMode in device order constructor"
+        "Invalid property fanSpeed in device order constructor"
+      );
+    }
+
+    if (!(props.waterLevel instanceof DeviceWaterLevel)) {
+      throw new ArgumentInvalidException(
+        "Invalid property waterLevel in device order constructor"
       );
     }
   }
