@@ -16,11 +16,9 @@ import {
   DEVICE_MODEL,
 } from "../value-objects/device-system.value-object";
 import {
-  DeviceMode,
   DeviceStatus,
   DeviceStatusProps,
   DEVICE_ERROR,
-  DEVICE_MODE,
 } from "../value-objects/device-status.value-object";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { Debugger } from "debug";
@@ -51,6 +49,8 @@ import { DeviceFanSpeedMapper } from "../mappers/device-fan-speed.mapper";
 import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
 import { DeviceBatteryMapper } from "../mappers/device-battery.mapper";
 import { DeviceStateMapper } from "../mappers/device-state.mapper";
+import { DeviceModeMapper } from "../mappers/device-mode.mapper";
+import { DeviceMode } from "../value-objects/device-mode.value-object";
 
 export interface RobotProps {
   device: Device;
@@ -132,11 +132,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async start(): Promise<void> {
-    if (this.device.status?.mode === DEVICE_MODE.ZONE) {
+    if (this.device.mode?.value === DeviceMode.VALUE.ZONE) {
       await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
         ctrlValue: CTRL_VALUE.START,
       });
-    } else if (this.device.status?.mode === DEVICE_MODE.MOP) {
+    } else if (this.device.mode?.value === DeviceMode.VALUE.MOP) {
       await this.sendRecv(
         "DEVICE_MOP_FLOOR_CLEAN_REQ",
         "DEVICE_MOP_FLOOR_CLEAN_RSP",
@@ -145,7 +145,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         }
       );
     } else if (
-      this.device.status?.mode === DEVICE_MODE.SPOT &&
+      this.device.mode?.value === DeviceMode.VALUE.SPOT &&
       this.device.map?.currentSpot
     ) {
       await this.sendRecv(
@@ -168,11 +168,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async stop(): Promise<void> {
-    if (this.device.status?.mode === DEVICE_MODE.ZONE) {
+    if (this.device.mode?.value === DeviceMode.VALUE.ZONE) {
       await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
         ctrlValue: CTRL_VALUE.PAUSE,
       });
-    } else if (this.device.status?.mode === DEVICE_MODE.MOP) {
+    } else if (this.device.mode?.value === DeviceMode.VALUE.MOP) {
       await this.sendRecv(
         "DEVICE_MOP_FLOOR_CLEAN_REQ",
         "DEVICE_MOP_FLOOR_CLEAN_RSP",
@@ -181,7 +181,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         }
       );
     } else if (
-      this.device.status?.mode === DEVICE_MODE.SPOT &&
+      this.device.mode?.value === DeviceMode.VALUE.SPOT &&
       this.device.map?.currentSpot
     ) {
       await this.sendRecv(
@@ -218,12 +218,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async setMode(mode: DeviceMode): Promise<void> {
-    if (mode === DEVICE_MODE.NONE) {
+    if (mode.value === DeviceMode.VALUE.NONE) {
       await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
         ctrlValue: CTRL_VALUE.STOP,
         cleanType: 2,
       });
-    } else if (mode === DEVICE_MODE.SPOT) {
+    } else if (mode.value === DeviceMode.VALUE.SPOT) {
       let mask = 0x78ff | 0x200;
 
       if (this.device.system.model === DEVICE_MODEL.C3090) {
@@ -235,7 +235,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
         { mask }
       );
-    } else if (mode === DEVICE_MODE.ZONE) {
+    } else if (mode.value === DeviceMode.VALUE.ZONE) {
       await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
         ctrlValue: CTRL_VALUE.STOP,
       });
@@ -251,7 +251,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
         { mask }
       );
-    } else if (mode === DEVICE_MODE.MOP) {
+    } else if (mode.value === DeviceMode.VALUE.MOP) {
       await this.sendRecv(
         "DEVICE_MAPID_INTO_MODEIDLE_INFO_REQ",
         "DEVICE_MAPID_INTO_MODEIDLE_INFO_RSP",
@@ -423,9 +423,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async mopClean(): Promise<void> {
-    await this.setMode(DEVICE_MODE.MOP);
+    await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.MOP }));
 
-    await waitFor(() => this.device.status?.mode === DEVICE_MODE.MOP, {
+    await waitFor(() => this.device.mode?.value === DeviceMode.VALUE.MOP, {
       timeout: MODE_CHANGE_TIMEOUT,
     }).catch(() => {
       throw new DomainException("Unable to change robot to mop mode");
@@ -443,10 +443,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
       throw new DomainException("Unable to set robot position: map not loaded");
     }
 
-    if (this.device.status?.mode !== DEVICE_MODE.SPOT) {
-      await this.setMode(DEVICE_MODE.SPOT);
+    if (this.device.mode?.value !== DeviceMode.VALUE.SPOT) {
+      await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.SPOT }));
 
-      await waitFor(() => this.device.status?.mode === DEVICE_MODE.SPOT, {
+      await waitFor(() => this.device.mode?.value === DeviceMode.VALUE.SPOT, {
         timeout: MODE_CHANGE_TIMEOUT,
       }).catch(() => {
         throw new DomainException("Unable to change robot to position mode");
@@ -476,10 +476,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
       return;
     }
 
-    if (this.device.status?.mode !== DEVICE_MODE.ZONE) {
-      await this.setMode(DEVICE_MODE.ZONE);
+    if (this.device.mode?.value !== DeviceMode.VALUE.ZONE) {
+      await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.ZONE }));
 
-      await waitFor(() => this.device.status?.mode === DEVICE_MODE.ZONE, {
+      await waitFor(() => this.device.mode?.value === DeviceMode.VALUE.ZONE, {
         timeout: MODE_CHANGE_TIMEOUT,
       }).catch(() => {
         throw new DomainException("Unable to change robot to area mode");
@@ -708,7 +708,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
       mopType,
     } = object;
     const props: DeviceStatusProps = {
-      mode: DeviceStatus.getModeValue({ workMode }),
       currentCleanSize: object.cleanSize,
       currentCleanTime: object.cleanTime,
       error: DeviceStatus.getError({ faultCode }),
@@ -718,6 +717,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     this.device.updateState(
       DeviceStateMapper.toDomain({ type, workMode, chargeStatus })
     );
+    this.device.updateMode(DeviceModeMapper.toDomain(workMode));
     this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
     this.device.updateFanSpeed(DeviceFanSpeedMapper.toDomain(cleanPreference));
 
@@ -766,13 +766,13 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
       this.device.updateStatus(
         new DeviceStatus({
-          mode: DeviceStatus.getModeValue({ workMode }),
           currentCleanSize: statusInfo.cleanSize,
           currentCleanTime: statusInfo.cleanTime,
           error: this.device.status?.error || DEVICE_ERROR.UNKNOWN,
         })
       );
       this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
+      this.device.updateMode(DeviceModeMapper.toDomain(workMode));
       this.device.updateState(
         DeviceStateMapper.toDomain({ type, workMode, chargeStatus })
       );
