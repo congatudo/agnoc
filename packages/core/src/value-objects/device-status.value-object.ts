@@ -2,6 +2,7 @@ import { ValueObject } from "../base-classes/value-object.base";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
+import { DeviceWaterLevel } from "./device-water-level.value-object";
 
 // TODO: convert all to value-objects
 
@@ -45,15 +46,6 @@ export const DEVICE_ERROR = {
 } as const;
 
 export type DeviceError = typeof DEVICE_ERROR[keyof typeof DEVICE_ERROR];
-
-export const DEVICE_WATER_LEVEL = {
-  OFF: "off",
-  LOW: "low",
-  MEDIUM: "medium",
-  HIGH: "high",
-} as const;
-
-export type DeviceWaterLevel = typeof DEVICE_WATER_LEVEL[keyof typeof DEVICE_WATER_LEVEL];
 
 export interface DeviceStatusProps {
   battery: number;
@@ -147,7 +139,7 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       );
     }
 
-    if (!Object.values(DEVICE_WATER_LEVEL).includes(props.waterLevel)) {
+    if (!(props.waterLevel instanceof DeviceWaterLevel)) {
       throw new ArgumentInvalidException(
         "Invalid property waterLevel in device status constructor"
       );
@@ -225,7 +217,6 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
   }: {
     cleanPreference: number;
   }): FanSpeed {
-    // eslint-disable-next-line security/detect-object-injection
     return FAN_SPEED[cleanPreference] as FanSpeed;
   }
 
@@ -237,19 +228,6 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
         return DEVICE_ERROR.NO_DEPOSIT;
       default:
         return DEVICE_ERROR.UNKNOWN;
-    }
-  }
-
-  static getWaterLevel(waterLevel: number): DeviceWaterLevel {
-    switch (waterLevel) {
-      case 13:
-        return DEVICE_WATER_LEVEL.HIGH;
-      case 12:
-        return DEVICE_WATER_LEVEL.MEDIUM;
-      case 11:
-        return DEVICE_WATER_LEVEL.LOW;
-      default:
-        return DEVICE_WATER_LEVEL.OFF;
     }
   }
 }

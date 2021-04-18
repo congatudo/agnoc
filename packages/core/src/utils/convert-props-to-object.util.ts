@@ -1,4 +1,3 @@
-/* eslint-disable security/detect-object-injection */
 import { ObjectLiteral } from "../types/object-literal.type";
 import { isObject } from "./is-object.util";
 

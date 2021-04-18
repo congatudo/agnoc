@@ -20,9 +20,7 @@ import {
   DeviceMode,
   DeviceStatus,
   DeviceStatusProps,
-  DeviceWaterLevel,
   DEVICE_MODE,
-  DEVICE_WATER_LEVEL,
   FanSpeed,
   FAN_SPEED,
 } from "../value-objects/device-status.value-object";
@@ -49,6 +47,8 @@ import { DeviceConfigProps } from "../value-objects/device-config.value-object";
 import { DeviceQuietHours } from "../value-objects/device-quiet-hours.value-object";
 import { DeviceTime } from "../value-objects/device-time.value-object";
 import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
+import { DeviceWaterLevel } from "../value-objects/device-water-level.value-object";
+import { DeviceWaterLevelMapper } from "../mappers/device-water-level.mapper";
 
 export interface RobotProps {
   device: Device;
@@ -84,13 +84,6 @@ const CONSUMABLE_TYPE_RESET = {
   [CONSUMABLE_TYPE.SIDE_BRUSH]: 2,
   [CONSUMABLE_TYPE.FILTER]: 3,
   [CONSUMABLE_TYPE.DISHCLOTH]: 4,
-};
-
-const WATER_LEVEL_MODE = {
-  [DEVICE_WATER_LEVEL.OFF]: 10,
-  [DEVICE_WATER_LEVEL.LOW]: 11,
-  [DEVICE_WATER_LEVEL.MEDIUM]: 12,
-  [DEVICE_WATER_LEVEL.HIGH]: 13,
 };
 
 const CTRL_VALUE = {
@@ -274,7 +267,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
       await this.sendRecv(
         "DEVICE_SET_CLEAN_PREFERENCE_REQ",
         "DEVICE_SET_CLEAN_PREFERENCE_RSP",
-        // eslint-disable-next-line security/detect-object-injection
         { mode: FAN_SPEED[speed] }
       );
     } else {
@@ -283,16 +275,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async setWaterLevel(waterLevel: DeviceWaterLevel): Promise<void> {
-    if (waterLevel in WATER_LEVEL_MODE) {
-      await this.sendRecv(
-        "DEVICE_SET_CLEAN_PREFERENCE_REQ",
-        "DEVICE_SET_CLEAN_PREFERENCE_RSP",
-        // eslint-disable-next-line security/detect-object-injection
-        { mode: WATER_LEVEL_MODE[waterLevel] }
-      );
-    } else {
-      throw new Error("Invalid water level");
-    }
+    await this.sendRecv(
+      "DEVICE_SET_CLEAN_PREFERENCE_REQ",
+      "DEVICE_SET_CLEAN_PREFERENCE_RSP",
+      { mode: DeviceWaterLevelMapper.toRobot(waterLevel) }
+    );
   }
 
   async getTime(): Promise<DeviceTimestamp> {
@@ -345,7 +332,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
       throw new ArgumentInvalidException("Invalid consumable");
     }
 
-    // eslint-disable-next-line security/detect-object-injection
     const itemId = CONSUMABLE_TYPE_RESET[consumable];
 
     await this.sendRecv(
@@ -735,7 +721,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
       currentCleanSize: object.cleanSize,
       currentCleanTime: object.cleanTime,
       error: DeviceStatus.getError({ faultCode }),
-      waterLevel: DeviceStatus.getWaterLevel(waterLevel || 10),
+      waterLevel: waterLevel
+        ? DeviceWaterLevelMapper.toDomain(waterLevel)
+        : new DeviceWaterLevel({ value: DeviceWaterLevel.VALUE.OFF }),
       hasMop: Boolean(mopType),
     };
 
