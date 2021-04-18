@@ -50,6 +50,7 @@ import { DeviceWaterLevelMapper } from "../mappers/device-water-level.mapper";
 import { DeviceFanSpeedMapper } from "../mappers/device-fan-speed.mapper";
 import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
 import { DeviceBatteryMapper } from "../mappers/device-battery.mapper";
+import { DeviceStateMapper } from "../mappers/device-state.mapper";
 
 export interface RobotProps {
   device: Device;
@@ -707,11 +708,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
       mopType,
     } = object;
     const props: DeviceStatusProps = {
-      state: DeviceStatus.getStateValue({
-        type,
-        workMode,
-        chargeStatus,
-      }),
       mode: DeviceStatus.getModeValue({ workMode }),
       currentCleanSize: object.cleanSize,
       currentCleanTime: object.cleanTime,
@@ -719,6 +715,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
     };
 
     this.device.updateStatus(new DeviceStatus(props));
+    this.device.updateState(
+      DeviceStateMapper.toDomain({ type, workMode, chargeStatus })
+    );
     this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
     this.device.updateFanSpeed(DeviceFanSpeedMapper.toDomain(cleanPreference));
 
@@ -767,11 +766,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
       this.device.updateStatus(
         new DeviceStatus({
-          state: DeviceStatus.getStateValue({
-            type,
-            workMode,
-            chargeStatus,
-          }),
           mode: DeviceStatus.getModeValue({ workMode }),
           currentCleanSize: statusInfo.cleanSize,
           currentCleanTime: statusInfo.cleanTime,
@@ -779,6 +773,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
         })
       );
       this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
+      this.device.updateState(
+        DeviceStateMapper.toDomain({ type, workMode, chargeStatus })
+      );
       this.device.updateFanSpeed(
         DeviceFanSpeedMapper.toDomain(cleanPreference)
       );

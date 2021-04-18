@@ -3,4 +3,5 @@ export enum Exceptions {
   argumentOutOfRange = "ArgumentOutOfRangeException",
   argumentNotProvided = "ArgumentNotProvidedException",
   domain = "DomainException",
+  notImplemented = "NotImplementedException",
 }
