@@ -19,6 +19,7 @@ import {
   DeviceMode,
   DeviceStatus,
   DeviceStatusProps,
+  DEVICE_ERROR,
   DEVICE_MODE,
 } from "../value-objects/device-status.value-object";
 import { TypedEmitter } from "tiny-typed-emitter";
@@ -48,6 +49,7 @@ import { DeviceWaterLevel } from "../value-objects/device-water-level.value-obje
 import { DeviceWaterLevelMapper } from "../mappers/device-water-level.mapper";
 import { DeviceFanSpeedMapper } from "../mappers/device-fan-speed.mapper";
 import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
+import { DeviceBatteryMapper } from "../mappers/device-battery.mapper";
 
 export interface RobotProps {
   device: Device;
@@ -705,24 +707,29 @@ export class Robot extends TypedEmitter<RobotEvents> {
       mopType,
     } = object;
     const props: DeviceStatusProps = {
-      battery: DeviceStatus.getBatteryValue({ battery }),
       state: DeviceStatus.getStateValue({
         type,
         workMode,
         chargeStatus,
       }),
       mode: DeviceStatus.getModeValue({ workMode }),
-      fanSpeed: DeviceFanSpeedMapper.toDomain(cleanPreference),
       currentCleanSize: object.cleanSize,
       currentCleanTime: object.cleanTime,
       error: DeviceStatus.getError({ faultCode }),
-      waterLevel: waterLevel
-        ? DeviceWaterLevelMapper.toDomain(waterLevel)
-        : new DeviceWaterLevel({ value: DeviceWaterLevel.VALUE.OFF }),
-      hasMop: Boolean(mopType),
     };
 
-    this.device.updateStatus(props);
+    this.device.updateStatus(new DeviceStatus(props));
+    this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
+    this.device.updateFanSpeed(DeviceFanSpeedMapper.toDomain(cleanPreference));
+
+    if (mopType) {
+      this.device.updateHasMopAttached(mopType);
+    }
+
+    if (waterLevel) {
+      this.device.updateWaterLevel(DeviceWaterLevelMapper.toDomain(waterLevel));
+    }
+
     this.emit("updateDevice");
   }
 
@@ -758,18 +765,23 @@ export class Robot extends TypedEmitter<RobotEvents> {
         cleanPreference,
       } = statusInfo;
 
-      this.device.updateStatus({
-        battery: DeviceStatus.getBatteryValue({ battery }),
-        state: DeviceStatus.getStateValue({
-          type,
-          workMode,
-          chargeStatus,
-        }),
-        mode: DeviceStatus.getModeValue({ workMode }),
-        fanSpeed: DeviceFanSpeedMapper.toDomain(cleanPreference),
-        currentCleanSize: statusInfo.cleanSize,
-        currentCleanTime: statusInfo.cleanTime,
-      });
+      this.device.updateStatus(
+        new DeviceStatus({
+          state: DeviceStatus.getStateValue({
+            type,
+            workMode,
+            chargeStatus,
+          }),
+          mode: DeviceStatus.getModeValue({ workMode }),
+          currentCleanSize: statusInfo.cleanSize,
+          currentCleanTime: statusInfo.cleanTime,
+          error: this.device.status?.error || DEVICE_ERROR.UNKNOWN,
+        })
+      );
+      this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
+      this.device.updateFanSpeed(
+        DeviceFanSpeedMapper.toDomain(cleanPreference)
+      );
       this.emit("updateDevice");
     }
 
@@ -920,12 +932,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     const object = message.packet.payload.object;
-    const battery = object.battery.level;
-    const props: Partial<DeviceStatusProps> = {
-      battery: DeviceStatus.getBatteryValue({ battery }),
-    };
 
-    this.device.updateStatus(props);
+    this.device.updateBattery(
+      DeviceBatteryMapper.toDomain(object.battery.level)
+    );
+
     this.emit("updateDevice");
   }
 

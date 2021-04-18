@@ -103,7 +103,7 @@ export class DeviceMap extends Entity<DeviceMapProps> {
         props.grid,
         props.rooms,
         props.restrictedZones,
-      ].map(isPresent)
+      ].every(isPresent)
     ) {
       throw new ArgumentNotProvidedException(
         "Missing property in device map constructor"

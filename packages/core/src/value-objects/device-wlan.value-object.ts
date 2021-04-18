@@ -33,7 +33,7 @@ export class DeviceWlan extends ValueObject<DeviceWlanProps> {
 
   protected validate(props: DeviceWlanProps): void {
     if (
-      ![props.ipv4, props.ssid, props.port, props.mask, props.mac].map(
+      ![props.ipv4, props.ssid, props.port, props.mask, props.mac].every(
         isPresent
       )
     ) {

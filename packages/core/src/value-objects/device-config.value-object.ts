@@ -67,7 +67,10 @@ export class DeviceConfig extends ValueObject<DeviceConfigProps> {
         props.isBrokenCleanEnabled,
         props.isCarpetModeEnabled,
         props.isHistoryMapEnabled,
-      ].map(isPresent)
+        props.isBrokenCleanEnabled,
+        props.isCarpetModeEnabled,
+        props.isHistoryMapEnabled,
+      ].every(isPresent)
     ) {
       throw new ArgumentNotProvidedException(
         "Missing property in device config constructor"

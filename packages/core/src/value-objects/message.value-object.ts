@@ -52,7 +52,7 @@ export class Message<Name extends OPDecoderLiteral> extends ValueObject<
   }
 
   protected validate(props: MessageProps<Name>): void {
-    if (![props.connection, props.packet].map(isPresent)) {
+    if (![props.connection, props.packet].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in message constructor"
       );

@@ -153,7 +153,7 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
         props.cleanMode,
         props.fanSpeed,
         props.waterLevel,
-      ].map(isPresent)
+      ].every(isPresent)
     ) {
       throw new ArgumentNotProvidedException(
         "Missing property in device order constructor"

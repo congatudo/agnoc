@@ -26,7 +26,7 @@ export class <%= PascalCaseName %> extends Entity<<%= PascalCaseName %>Props> {
   }
 
   private validate(props: <%= PascalCaseName %>Props): void {
-    if (![props.id].map(isPresent)) {
+    if (![props.id].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in <%= NoCaseName %> constructor"
       );

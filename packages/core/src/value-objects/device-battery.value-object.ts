@@ -4,36 +4,30 @@ import {
 } from "../base-classes/value-object.base";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { ValueOf } from "../types/value-of.type";
 import { isPresent } from "../utils/is-present.util";
 
-const VALUE = {
-  OFF: "off",
-  LOW: "low",
-  MEDIUM: "medium",
-  HIGH: "high",
-} as const;
+const MIN_VALUE = 0;
+const MAX_VALUE = 100;
 
-type Value = ValueOf<typeof VALUE>;
-
-export class DeviceWaterLevel extends ValueObject<Value> {
-  get value(): Value {
+export class DeviceBattery extends ValueObject<number> {
+  get value(): number {
     return this.props.value;
   }
 
-  protected validate(props: DomainPrimitive<Value>): void {
+  protected validate(props: DomainPrimitive<number>): void {
     if (![props.value].every(isPresent)) {
       throw new ArgumentNotProvidedException(
-        "Missing property in device water level constructor"
+        "Missing property in device fan speed constructor"
       );
     }
 
-    if (!Object.values(VALUE).includes(props.value)) {
+    if (props.value < MIN_VALUE || props.value > MAX_VALUE) {
       throw new ArgumentInvalidException(
-        "Invalid property in device water level constructor"
+        "Invalid property in device battery constructor"
       );
     }
   }
 
-  static VALUE = VALUE;
+  static MIN_VALUE = MIN_VALUE;
+  static MAX_VALUE = MAX_VALUE;
 }

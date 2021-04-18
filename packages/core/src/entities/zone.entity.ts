@@ -25,7 +25,7 @@ export class Zone extends Entity<ZoneProps> {
   }
 
   private validate(props: ZoneProps): void {
-    if (![props.id, props.coordinates].map(isPresent)) {
+    if (![props.id, props.coordinates].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in zone constructor"
       );
