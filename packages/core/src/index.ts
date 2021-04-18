@@ -9,6 +9,7 @@ export * from "./value-objects/device-battery.value-object";
 export * from "./value-objects/device-consumable.value-object";
 export * from "./value-objects/device-fan-speed.value-object";
 export * from "./value-objects/device-quiet-hours.value-object";
+export * from "./value-objects/device-state.value-object";
 export * from "./value-objects/device-status.value-object";
 export * from "./value-objects/device-time.value-object";
 export * from "./value-objects/device-water-level.value-object";

@@ -5,20 +5,6 @@ import { isPresent } from "../utils/is-present.util";
 
 // TODO: convert all to value-objects
 
-export const DEVICE_STATE = {
-  ERROR: "error",
-  DOCKED: "docked",
-  IDLE: "idle",
-  RETURNING: "returning",
-  CLEANING: "cleaning",
-  PAUSED: "paused",
-  MANUAL_CONTROL: "manual_control",
-  MOVING: "moving",
-  UNKNOWN: "unknown",
-} as const;
-
-export type DeviceState = typeof DEVICE_STATE[keyof typeof DEVICE_STATE];
-
 export const DEVICE_MODE = {
   NONE: "none",
   SPOT: "spot",
@@ -38,7 +24,6 @@ export const DEVICE_ERROR = {
 export type DeviceError = typeof DEVICE_ERROR[keyof typeof DEVICE_ERROR];
 
 export interface DeviceStatusProps {
-  state: DeviceState;
   mode: DeviceMode;
   currentCleanSize: number;
   currentCleanTime: number;
@@ -46,10 +31,6 @@ export interface DeviceStatusProps {
 }
 
 export class DeviceStatus extends ValueObject<DeviceStatusProps> {
-  get state(): DeviceState {
-    return this.props.state;
-  }
-
   get mode(): DeviceMode {
     return this.props.mode;
   }
@@ -69,7 +50,6 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
   protected validate(props: DeviceStatusProps): void {
     if (
       ![
-        props.state,
         props.mode,
         props.currentCleanSize,
         props.currentCleanTime,
@@ -81,57 +61,11 @@ export class DeviceStatus extends ValueObject<DeviceStatusProps> {
       );
     }
 
-    if (!Object.values(DEVICE_STATE).includes(props.state)) {
-      throw new ArgumentInvalidException(
-        "Invalid property state in device status constructor"
-      );
-    }
-
     if (!Object.values(DEVICE_MODE).includes(props.mode)) {
       throw new ArgumentInvalidException(
         "Invalid property mode in device status constructor"
       );
     }
-  }
-
-  static getStateValue({
-    type,
-    workMode,
-    chargeStatus,
-  }: {
-    type: number;
-    workMode: number;
-    chargeStatus: boolean;
-  }): DeviceState {
-    if (![0, 3].includes(type) || [11].includes(workMode)) {
-      return DEVICE_STATE.ERROR;
-    }
-
-    if ([2].includes(workMode)) {
-      return DEVICE_STATE.MANUAL_CONTROL;
-    }
-
-    if (chargeStatus) {
-      return DEVICE_STATE.DOCKED;
-    }
-
-    if ([5, 10, 12, 32].includes(workMode)) {
-      return DEVICE_STATE.RETURNING;
-    }
-
-    if ([4, 9, 31, 37].includes(workMode)) {
-      return DEVICE_STATE.PAUSED;
-    }
-
-    if ([0, 14, 23, 29, 35, 40].includes(workMode)) {
-      return DEVICE_STATE.IDLE;
-    }
-
-    if ([1, 6, 7, 25, 20, 30, 36].includes(workMode)) {
-      return DEVICE_STATE.CLEANING;
-    }
-
-    return DEVICE_STATE.UNKNOWN;
   }
 
   static getModeValue({ workMode }: { workMode: number }): DeviceMode {
