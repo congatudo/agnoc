@@ -8,8 +8,6 @@ export interface DeviceSystemProps {
   deviceType: number;
   customerFirmwareId: number;
   ctrlVersion: string;
-  softwareVersion: string;
-  hardwareVersion: string;
 }
 
 export const DEVICE_MODEL = {
@@ -37,8 +35,6 @@ export class DeviceSystem extends ValueObject<DeviceSystemProps> {
   protected validate(props: DeviceSystemProps): void {
     if (
       ![
-        props.softwareVersion,
-        props.hardwareVersion,
         props.deviceSerialNumber,
         props.deviceMac,
         props.deviceType,

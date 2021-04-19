@@ -16,6 +16,7 @@ import { DeviceSystem } from "../value-objects/device-system.value-object";
 import { ID } from "../value-objects/id.value-object";
 import { Multiplexer } from "./multiplexer.emitter";
 import { OPDecoderLiteral } from "../constants/opcodes.constant";
+import { DeviceVersion } from "../value-objects/device-version.value-object";
 
 interface Servers {
   cmd: PacketServer;
@@ -97,6 +98,10 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
     const device = new Device({
       id: ID.generate(),
       system: new DeviceSystem(props),
+      version: new DeviceVersion({
+        software: props.softwareVersion,
+        hardware: props.hardwareVersion,
+      }),
     });
     const user = new User({
       id: ID.generate(),

@@ -2,34 +2,27 @@ import { Entity } from "../base-classes/entity.base";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
 import { DeviceBattery } from "../value-objects/device-battery.value-object";
-import {
-  DeviceConfig,
-  DeviceConfigProps,
-} from "../value-objects/device-config.value-object";
+import { DeviceConfig } from "../value-objects/device-config.value-object";
 import { DeviceConsumable } from "../value-objects/device-consumable.value-object";
+import { DeviceCurrentClean } from "../value-objects/device-current-clean.value-object";
 import { DeviceError } from "../value-objects/device-error.value-object";
 import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
 import { DeviceMode } from "../value-objects/device-mode.value-object";
 import { DeviceState } from "../value-objects/device-state.value-object";
-import { DeviceStatus } from "../value-objects/device-status.value-object";
-import {
-  DeviceSystem,
-  DeviceSystemProps,
-} from "../value-objects/device-system.value-object";
+import { DeviceSystem } from "../value-objects/device-system.value-object";
+import { DeviceVersion } from "../value-objects/device-version.value-object";
 import { DeviceWaterLevel } from "../value-objects/device-water-level.value-object";
-import {
-  DeviceWlan,
-  DeviceWlanProps,
-} from "../value-objects/device-wlan.value-object";
+import { DeviceWlan } from "../value-objects/device-wlan.value-object";
 import { ID } from "../value-objects/id.value-object";
-import { DeviceMap, DeviceMapProps } from "./device-map.entity";
+import { DeviceMap } from "./device-map.entity";
 import { DeviceOrder } from "./device-order.entity";
 
 export interface DeviceProps {
   id: ID;
   system: DeviceSystem;
+  version: DeviceVersion;
   config?: DeviceConfig;
-  status?: DeviceStatus;
+  currentClean?: DeviceCurrentClean;
   orders?: DeviceOrder[];
   consumables?: DeviceConsumable[];
   map?: DeviceMap;
@@ -53,12 +46,16 @@ export class Device extends Entity<DeviceProps> {
     return this.props.system;
   }
 
+  get version(): DeviceVersion {
+    return this.props.version;
+  }
+
   get config(): DeviceConfig | undefined {
     return this.props.config;
   }
 
-  get status(): DeviceStatus | undefined {
-    return this.props.status;
+  get currentClean(): DeviceCurrentClean | undefined {
+    return this.props.currentClean;
   }
 
   get orders(): DeviceOrder[] | undefined {
@@ -105,22 +102,20 @@ export class Device extends Entity<DeviceProps> {
     return this.props.hasMopAttached;
   }
 
-  updateSystem(props: Partial<DeviceSystemProps>): void {
-    this.props.system = new DeviceSystem({
-      ...this.props.system.getRawProps(),
-      ...props,
-    } as DeviceSystemProps);
+  updateSystem(system: DeviceSystem): void {
+    this.props.system = system;
   }
 
-  updateConfig(props: Partial<DeviceConfigProps>): void {
-    this.props.config = new DeviceConfig({
-      ...this.props.config?.getRawProps(),
-      ...props,
-    } as DeviceConfigProps);
+  updateVersion(version: DeviceVersion): void {
+    this.props.version = version;
   }
 
-  updateStatus(status: DeviceStatus): void {
-    this.props.status = status;
+  updateConfig(config: DeviceConfig): void {
+    this.props.config = config;
+  }
+
+  updateCurrentClean(currentClean: DeviceCurrentClean): void {
+    this.props.currentClean = currentClean;
   }
 
   updateOrders(orders: DeviceOrder[]): void {
@@ -131,18 +126,12 @@ export class Device extends Entity<DeviceProps> {
     this.props.consumables = consumables;
   }
 
-  updateMap(map: Partial<DeviceMapProps>): void {
-    this.props.map = new DeviceMap({
-      ...this.props.map?.getPropsCopy(),
-      ...map,
-    } as DeviceMapProps);
+  updateMap(map: DeviceMap): void {
+    this.props.map = map;
   }
 
-  updateWlan(props: Partial<DeviceWlanProps>): void {
-    this.props.wlan = new DeviceWlan({
-      ...this.props.wlan?.getRawProps(),
-      ...props,
-    } as DeviceWlanProps);
+  updateWlan(wlan: DeviceWlan): void {
+    this.props.wlan = wlan;
   }
 
   updateBattery(battery: DeviceBattery): void {
@@ -174,7 +163,7 @@ export class Device extends Entity<DeviceProps> {
   }
 
   protected validate(props: DeviceProps): void {
-    if (![props.system].every(isPresent)) {
+    if (![props.system, props.version].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in device constructor"
       );
