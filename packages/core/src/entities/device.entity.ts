@@ -7,6 +7,7 @@ import {
   DeviceConfigProps,
 } from "../value-objects/device-config.value-object";
 import { DeviceConsumable } from "../value-objects/device-consumable.value-object";
+import { DeviceError } from "../value-objects/device-error.value-object";
 import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
 import { DeviceMode } from "../value-objects/device-mode.value-object";
 import { DeviceState } from "../value-objects/device-state.value-object";
@@ -36,6 +37,7 @@ export interface DeviceProps {
   battery?: DeviceBattery;
   state?: DeviceState;
   mode?: DeviceMode;
+  error?: DeviceError;
   fanSpeed?: DeviceFanSpeed;
   waterLevel?: DeviceWaterLevel;
   hasMopAttached?: boolean;
@@ -85,6 +87,10 @@ export class Device extends Entity<DeviceProps> {
 
   get mode(): DeviceMode | undefined {
     return this.props.mode;
+  }
+
+  get error(): DeviceError | undefined {
+    return this.props.error;
   }
 
   get fanSpeed(): DeviceFanSpeed | undefined {
@@ -149,6 +155,10 @@ export class Device extends Entity<DeviceProps> {
 
   updateMode(mode: DeviceMode): void {
     this.props.mode = mode;
+  }
+
+  updateError(error: DeviceError): void {
+    this.props.error = error;
   }
 
   updateFanSpeed(fanSpeed: DeviceFanSpeed): void {
