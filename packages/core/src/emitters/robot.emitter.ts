@@ -11,14 +11,7 @@ import { Packet } from "../value-objects/packet.value-object";
 import { Device } from "../entities/device.entity";
 import { User } from "../entities/user.entity";
 import { debug } from "../utils/debug.util";
-import {
-  DeviceSystemProps,
-  DEVICE_MODEL,
-} from "../value-objects/device-system.value-object";
-import {
-  DeviceStatus,
-  DeviceStatusProps,
-} from "../value-objects/device-status.value-object";
+import { DEVICE_MODEL } from "../value-objects/device-system.value-object";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { Debugger } from "debug";
 import { DeviceOrder } from "../entities/device-order.entity";
@@ -27,7 +20,7 @@ import {
   CONSUMABLE_TYPE,
   DeviceConsumable,
 } from "../value-objects/device-consumable.value-object";
-import { DeviceMapProps } from "../entities/device-map.entity";
+import { DeviceMap, DeviceMapProps } from "../entities/device-map.entity";
 import { Coordinate } from "../value-objects/coordinate.value-object";
 import { Position } from "../value-objects/position.value-object";
 import { ID } from "../value-objects/id.value-object";
@@ -38,7 +31,7 @@ import { DeviceWlan } from "../value-objects/device-wlan.value-object";
 import { Zone } from "../entities/zone.entity";
 import { waitFor } from "../utils/wait-for.util";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { DeviceConfigProps } from "../value-objects/device-config.value-object";
+import { DeviceConfig } from "../value-objects/device-config.value-object";
 import { DeviceQuietHours } from "../value-objects/device-quiet-hours.value-object";
 import { DeviceTime } from "../value-objects/device-time.value-object";
 import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
@@ -51,6 +44,8 @@ import { DeviceStateMapper } from "../mappers/device-state.mapper";
 import { DeviceModeMapper } from "../mappers/device-mode.mapper";
 import { DeviceMode } from "../value-objects/device-mode.value-object";
 import { DeviceErrorMapper } from "../mappers/device-error.mapper";
+import { DeviceVersion } from "../value-objects/device-version.value-object";
+import { DeviceCurrentClean } from "../value-objects/device-current-clean.value-object";
 
 export interface RobotProps {
   device: Device;
@@ -361,7 +356,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
     const object = packet.payload.object;
 
-    this.device.updateWlan(object.body);
+    this.device.updateWlan(new DeviceWlan(object.body));
     this.emit("updateDevice");
 
     return this.device.wlan as DeviceWlan;
@@ -639,9 +634,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
   handleDeviceVersionInfoUpdate(
     message: Message<"DEVICE_VERSION_INFO_UPDATE_REQ">
   ): void {
-    const props = message.packet.payload.object;
+    const object = message.packet.payload.object;
 
-    this.device.updateSystem(props as DeviceSystemProps);
+    this.device.updateVersion(
+      new DeviceVersion({
+        software: object.softwareVersion,
+        hardware: object.hardwareVersion,
+      })
+    );
     this.emit("updateDevice");
 
     message.respond("DEVICE_VERSION_INFO_UPDATE_RSP", {
@@ -654,7 +654,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     message: Message<"PUSH_DEVICE_AGENT_SETTING_REQ">
   ): void {
     const object = message.packet.payload.object;
-    const props: DeviceConfigProps = {
+    const props = {
       voice: {
         isEnabled: object.voice.voiceMode,
         volume: object.voice.volume || 0,
@@ -671,7 +671,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       isHistoryMapEnabled: object.cleanPreference.historyMap || false,
     };
 
-    this.device.updateConfig(props);
+    this.device.updateConfig(new DeviceConfig(props));
 
     message.respond("PUSH_DEVICE_AGENT_SETTING_RSP", {
       result: 0,
@@ -707,12 +707,13 @@ export class Robot extends TypedEmitter<RobotEvents> {
       waterLevel,
       mopType,
     } = object;
-    const props: DeviceStatusProps = {
-      currentCleanSize: object.cleanSize,
-      currentCleanTime: object.cleanTime,
-    };
 
-    this.device.updateStatus(new DeviceStatus(props));
+    this.device.updateCurrentClean(
+      new DeviceCurrentClean({
+        size: object.cleanSize,
+        time: object.cleanTime,
+      })
+    );
     this.device.updateState(
       DeviceStateMapper.toDomain({ type, workMode, chargeStatus })
     );
@@ -765,10 +766,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
         faultCode,
       } = statusInfo;
 
-      this.device.updateStatus(
-        new DeviceStatus({
-          currentCleanSize: statusInfo.cleanSize,
-          currentCleanTime: statusInfo.cleanTime,
+      this.device.updateCurrentClean(
+        new DeviceCurrentClean({
+          size: statusInfo.cleanSize,
+          time: statusInfo.cleanTime,
         })
       );
       this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
@@ -872,7 +873,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         .filter(isPresent);
     }
 
-    this.device.updateMap(props as DeviceMapProps);
+    this.device.updateMap(new DeviceMap(props as DeviceMapProps));
     this.emit("updateMap");
   }
 
@@ -923,11 +924,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
     message.respond("PUSH_DEVICE_BATTERY_INFO_RSP", {
       result: 0,
     });
-
-    // TODO: fix this.
-    if (!this.device.status) {
-      return;
-    }
 
     const object = message.packet.payload.object;
 
