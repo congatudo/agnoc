@@ -18,7 +18,6 @@ import {
 import {
   DeviceStatus,
   DeviceStatusProps,
-  DEVICE_ERROR,
 } from "../value-objects/device-status.value-object";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { Debugger } from "debug";
@@ -51,6 +50,7 @@ import { DeviceBatteryMapper } from "../mappers/device-battery.mapper";
 import { DeviceStateMapper } from "../mappers/device-state.mapper";
 import { DeviceModeMapper } from "../mappers/device-mode.mapper";
 import { DeviceMode } from "../value-objects/device-mode.value-object";
+import { DeviceErrorMapper } from "../mappers/device-error.mapper";
 
 export interface RobotProps {
   device: Device;
@@ -710,7 +710,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
     const props: DeviceStatusProps = {
       currentCleanSize: object.cleanSize,
       currentCleanTime: object.cleanTime,
-      error: DeviceStatus.getError({ faultCode }),
     };
 
     this.device.updateStatus(new DeviceStatus(props));
@@ -718,6 +717,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       DeviceStateMapper.toDomain({ type, workMode, chargeStatus })
     );
     this.device.updateMode(DeviceModeMapper.toDomain(workMode));
+    this.device.updateError(DeviceErrorMapper.toDomain(faultCode));
     this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
     this.device.updateFanSpeed(DeviceFanSpeedMapper.toDomain(cleanPreference));
 
@@ -762,13 +762,13 @@ export class Robot extends TypedEmitter<RobotEvents> {
         workingMode: workMode,
         chargeState: chargeStatus,
         cleanPreference,
+        faultCode,
       } = statusInfo;
 
       this.device.updateStatus(
         new DeviceStatus({
           currentCleanSize: statusInfo.cleanSize,
           currentCleanTime: statusInfo.cleanTime,
-          error: this.device.status?.error || DEVICE_ERROR.UNKNOWN,
         })
       );
       this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
@@ -776,6 +776,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       this.device.updateState(
         DeviceStateMapper.toDomain({ type, workMode, chargeStatus })
       );
+      this.device.updateError(DeviceErrorMapper.toDomain(faultCode));
       this.device.updateFanSpeed(
         DeviceFanSpeedMapper.toDomain(cleanPreference)
       );
