@@ -75,6 +75,18 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     this.props.charger = charger;
   }
 
+  updateRestrictedZones(restrictedZones: Zone[]): void {
+    this.props.restrictedZones = restrictedZones;
+  }
+
+  updateRooms(rooms: Room[]): void {
+    this.props.rooms = rooms;
+  }
+
+  updateCurrentSpot(currentSpot: Position): void {
+    this.props.currentSpot = currentSpot;
+  }
+
   getRelativeCoordinate(pos: Coordinate): Coordinate {
     return new Coordinate({
       x: Math.floor(

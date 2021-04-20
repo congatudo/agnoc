@@ -20,7 +20,7 @@ import {
   CONSUMABLE_TYPE,
   DeviceConsumable,
 } from "../value-objects/device-consumable.value-object";
-import { DeviceMap, DeviceMapProps } from "../entities/device-map.entity";
+import { DeviceMap } from "../entities/device-map.entity";
 import { Coordinate } from "../value-objects/coordinate.value-object";
 import { Position } from "../value-objects/position.value-object";
 import { ID } from "../value-objects/id.value-object";
@@ -483,12 +483,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     const req = {
       mapHeadId: this.device.map.id.value,
-      unk1: 0,
+      planId: 0,
       cleanAreaLength: areas.length,
       cleanAreaList: areas.map((coords) => {
         return {
           cleanAreaId: ID.generate().value,
-          unk1: 0,
+          type: 0,
           coordinateLength: coords.length,
           coordinateList: coords,
         };
@@ -524,12 +524,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
       "DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_RSP",
       {
         mapHeadId: this.device.map.id.value,
-        unk1: 0,
+        planId: 0,
         cleanAreaLength: areas.length,
         cleanAreaList: areas.map((coords) => {
           return {
             cleanAreaId: ID.generate().value,
-            unk1: 0,
+            type: 0,
             coordinateLength: coords.length,
             coordinateList: coords,
           };
@@ -591,18 +591,51 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async cleanRooms(rooms: Room[]): Promise<void> {
-    const ids = rooms.map((room) => room.id.value);
+    if (!this.device.map) {
+      return;
+    }
+
+    const { id, restrictedZones } = this.device.map;
 
     await this.sendRecv(
-      "DEVICE_WITHROOMS_CLEAN_REQ",
-      "DEVICE_WITHROOMS_CLEAN_RSP",
+      "DEVICE_MAPID_SET_PLAN_PARAMS_REQ",
+      "DEVICE_MAPID_SET_PLAN_PARAMS_RSP",
       {
-        ctrlValue: CTRL_VALUE.START,
-        cleanType: 2,
-        roomNumber: ids.length,
-        roomIdList: Buffer.from(ids),
+        mapHeadId: id.value,
+        // FIXME: this will change user map name.
+        mapName: "Default",
+        planId: 2,
+        // FIXME: this will change user plan name.
+        planName: "Default",
+        roomList: this.device.map.rooms.map((room) => ({
+          roomId: room.id.value,
+          roomName: room.name,
+          enable: Boolean(rooms.find((r) => room.equals(r))),
+        })),
+        areaInfo: {
+          mapHeadId: id.value,
+          planId: 2,
+          cleanAreaLength: restrictedZones.length,
+          cleanAreaList: restrictedZones.map((zone) => ({
+            cleanAreaId: zone.id.value,
+            type: 0,
+            coordinateLength: zone.coordinates.length,
+            coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
+          })),
+        },
       }
     );
+
+    await this.sendRecv(
+      "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
+      "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
+      { mask: 0x800 }
+    );
+
+    await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
+      ctrlValue: CTRL_VALUE.START,
+      cleanType: 2,
+    });
   }
 
   async controlLock(): Promise<void> {
@@ -751,10 +784,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
       wallListInfo,
       spotInfo,
     } = object;
-    const props: Partial<DeviceMapProps> = {
-      rooms: [],
-      restrictedZones: [],
-    };
 
     if (statusInfo) {
       const {
@@ -784,8 +813,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       this.emit("updateDevice");
     }
 
-    if (mapHeadInfo) {
-      Object.assign(props, {
+    if (mapHeadInfo && mapGrid) {
+      const props = {
         id: new ID(mapHeadInfo.mapHeadId),
         size: new Coordinate({
           x: mapHeadInfo.sizeX,
@@ -799,81 +828,95 @@ export class Robot extends TypedEmitter<RobotEvents> {
           x: mapHeadInfo.maxX,
           y: mapHeadInfo.maxY,
         }),
-      });
+        grid: mapGrid,
+        rooms: [],
+        restrictedZones: [],
+      };
+
+      this.device.updateMap(new DeviceMap(props));
     }
 
-    if (mapGrid) {
-      props.grid = mapGrid;
-    }
+    const map = this.device.map;
 
-    if (robotPoseInfo) {
-      props.robot = new Position({
-        x: robotPoseInfo.poseX,
-        y: robotPoseInfo.poseY,
-        phi: robotPoseInfo.posePhi,
-      });
-    }
+    if (map) {
+      if (robotPoseInfo) {
+        map.updateRobot(
+          new Position({
+            x: robotPoseInfo.poseX,
+            y: robotPoseInfo.poseY,
+            phi: robotPoseInfo.posePhi,
+          })
+        );
+      }
 
-    if (robotChargeInfo) {
-      props.charger = new Position({
-        x: robotChargeInfo.poseX,
-        y: robotChargeInfo.poseY,
-        phi: robotChargeInfo.posePhi,
-      });
-    }
+      if (robotChargeInfo) {
+        map.updateCharger(
+          new Position({
+            x: robotChargeInfo.poseX,
+            y: robotChargeInfo.poseY,
+            phi: robotChargeInfo.posePhi,
+          })
+        );
+      }
 
-    if (spotInfo) {
-      props.currentSpot = new Position({
-        x: spotInfo.poseX,
-        y: spotInfo.poseY,
-        phi: spotInfo.posePhi,
-      });
-    }
+      if (spotInfo) {
+        map.updateCurrentSpot(
+          new Position({
+            x: spotInfo.poseX,
+            y: spotInfo.poseY,
+            phi: spotInfo.posePhi,
+          })
+        );
+      }
 
-    if (wallListInfo) {
-      props.restrictedZones = wallListInfo.cleanAreaList.map((cleanArea) => {
-        return new Zone({
-          id: new ID(cleanArea.cleanAreaId),
-          coordinates: cleanArea.coordinateList.map(({ x, y }) => {
-            return new Coordinate({
-              x,
-              y,
+      if (wallListInfo) {
+        map.updateRestrictedZones(
+          wallListInfo.cleanAreaList.map((cleanArea) => {
+            return new Zone({
+              id: new ID(cleanArea.cleanAreaId),
+              coordinates: cleanArea.coordinateList.map(({ x, y }) => {
+                return new Coordinate({
+                  x,
+                  y,
+                });
+              }),
             });
-          }),
-        });
-      });
-    }
+          })
+        );
+      }
 
-    if (cleanRoomList && roomSegmentList) {
-      props.rooms = cleanRoomList
-        .map((cleanRoom) => {
-          const segment = roomSegmentList.find(
-            (roomSegment) => roomSegment.roomId === cleanRoom.roomId
-          );
+      if (cleanRoomList && roomSegmentList) {
+        map.updateRooms(
+          cleanRoomList
+            .map((cleanRoom) => {
+              const segment = roomSegmentList.find(
+                (roomSegment) => roomSegment.roomId === cleanRoom.roomId
+              );
 
-          if (!segment) {
-            return undefined;
-          }
+              if (!segment) {
+                return undefined;
+              }
 
-          return new Room({
-            id: new ID(cleanRoom.roomId),
-            name: cleanRoom.roomName,
-            center: new Coordinate({
-              x: cleanRoom.roomX,
-              y: cleanRoom.roomY,
-            }),
-            pixels: segment?.roomPixelList.map((pixel) => {
-              return new Coordinate({
-                x: pixel.x,
-                y: pixel.y,
+              return new Room({
+                id: new ID(cleanRoom.roomId),
+                name: cleanRoom.roomName,
+                center: new Coordinate({
+                  x: cleanRoom.roomX,
+                  y: cleanRoom.roomY,
+                }),
+                pixels: segment?.roomPixelList.map((pixel) => {
+                  return new Coordinate({
+                    x: pixel.x,
+                    y: pixel.y,
+                  });
+                }),
               });
-            }),
-          });
-        })
-        .filter(isPresent);
+            })
+            .filter(isPresent)
+        );
+      }
     }
 
-    this.device.updateMap(new DeviceMap(props as DeviceMapProps));
     this.emit("updateMap");
   }
 

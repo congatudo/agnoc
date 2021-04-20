@@ -9,6 +9,7 @@ const ROBOT_TO_DOMAIN = {
   2100: DeviceError.VALUE.BROKEN_GO_HOME,
   2101: DeviceError.VALUE.NONE,
   2103: DeviceError.VALUE.NONE,
+  2104: DeviceError.VALUE.NONE,
   2105: DeviceError.VALUE.NONE,
   2106: DeviceError.VALUE.NONE,
   2107: DeviceError.VALUE.GLOBAL_APPOINT_CLEAN,

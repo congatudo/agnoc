@@ -82,15 +82,15 @@ export interface CleanRoom {
 }
 
 export interface CleanRoomInfo {
-  infoId: number;
-  infoType: number;
+  roomId: number;
+  enable: number;
 }
 
 export interface CleanPlan {
   planId: number;
   planName: string;
   mapHeadId: number;
-  unk1: number;
+  currentPlanId: number;
   areaInfoList: AreaInfo[];
   cleanRoomInfoList: CleanRoomInfo[];
 }
