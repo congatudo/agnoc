@@ -421,7 +421,7 @@ message DEVICE_WLAN_INFO_GETTING_RSP {
 
 message DEVICE_MAPID_SELECT_MAP_PLAN_REQ {
   required uint32 mapHeadId = 1;
-  required uint32 planId = 2;
+  optional uint32 planId = 2;
   required uint32 mode = 3;
 }
 

@@ -145,23 +145,6 @@ export function readCleanPlanList(stream: Readable): CleanPlan[] {
   return list;
 }
 
-function getMask(stream: Readable): number {
-  let mask = readWord(stream) & 0xffff;
-
-  // HACK: hacky way to discover 3090 model.
-  if (mask < 0x7ff) {
-    const buf = Buffer.alloc(4);
-
-    buf.writeUInt32LE(mask);
-
-    stream.unshift(buf);
-
-    mask = readShort(stream);
-  }
-
-  return mask;
-}
-
 function readCleanCoordinateList(stream: Readable): CleanCoordinate[] {
   const count = readWord(stream);
   const list = [];
@@ -232,13 +215,12 @@ function readRoomSegmentList(stream: Readable): RoomSegment[] {
   return list;
 }
 
-export function decodeMap(payload: Buffer): MapInfo {
-  const buffer = inflateSync(payload);
-  const stream = toStream(buffer);
+function readMap(stream: Readable, mask: number): MapInfo {
+  const data: MapInfo = { mask };
 
-  const data: MapInfo = {
-    mask: getMask(stream),
-  };
+  if (data.mask > 0x7fff) {
+    throw new DomainException(`Invalid mask ${data.mask}`);
+  }
 
   if (data.mask & 0x1) {
     data.statusInfo = {
@@ -375,4 +357,22 @@ export function decodeMap(payload: Buffer): MapInfo {
   }
 
   return data;
+}
+
+export function decodeMap(payload: Buffer): MapInfo {
+  const buffer = inflateSync(payload);
+
+  try {
+    // try 3490 approach.
+    const stream = toStream(buffer);
+    const mask = readWord(stream);
+
+    return readMap(stream, mask);
+  } catch (e) {
+    // on error, try 3090 approach.
+    const stream = toStream(buffer);
+    const mask = readShort(stream);
+
+    return readMap(stream, mask);
+  }
 }
