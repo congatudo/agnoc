@@ -119,8 +119,8 @@ export function readCleanRoomInfoList(stream: Readable): CleanRoomInfo[] {
 
   for (let i = 0; i < size; i++) {
     list.push({
-      infoId: readByte(stream),
-      infoType: readByte(stream),
+      roomId: readByte(stream),
+      enable: readByte(stream),
     });
   }
 
@@ -136,7 +136,7 @@ export function readCleanPlanList(stream: Readable): CleanPlan[] {
       planId: readWord(stream),
       planName: readString(stream),
       mapHeadId: readWord(stream),
-      unk1: readWord(stream),
+      currentPlanId: readWord(stream),
       areaInfoList: readAreaInfoList(stream),
       cleanRoomInfoList: readCleanRoomInfoList(stream),
     });

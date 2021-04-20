@@ -199,13 +199,13 @@ message DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ {
 
   message CleanArea {
     required uint32 cleanAreaId = 1;
-    required uint32 unk1 = 2;
+    required uint32 type = 2;
     required uint32 coordinateLength = 3;
     repeated Coordinate coordinateList = 4;
   }
 
   required uint32 mapHeadId = 1;
-  required uint32 unk1 = 2;
+  required uint32 planId = 2;
   required uint32 cleanAreaLength = 3;
   repeated CleanArea cleanAreaList = 4;
 }
@@ -218,13 +218,13 @@ message DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ {
 
   message CleanArea {
     required uint32 cleanAreaId = 1;
-    required uint32 unk1 = 2;
+    required uint32 type = 2;
     required uint32 coordinateLength = 3;
     repeated Coordinate coordinateList = 4;
   }
 
   required uint32 mapHeadId = 1;
-  required uint32 unk1 = 2;
+  required uint32 planId = 2;
   required uint32 cleanAreaLength = 3;
   repeated CleanArea cleanAreaList = 4;
 }
@@ -421,7 +421,8 @@ message DEVICE_WLAN_INFO_GETTING_RSP {
 
 message DEVICE_MAPID_SELECT_MAP_PLAN_REQ {
   required uint32 mapHeadId = 1;
-  required uint32 unk1 = 3;
+  required uint32 planId = 2;
+  required uint32 mode = 3;
 }
 
 message DEVICE_MAPID_SELECT_MAP_PLAN_RSP {
@@ -433,11 +434,11 @@ message DEVICE_MAPID_SET_PLAN_PARAMS_REQ {
   message Room {
     required uint32 roomId = 1;
     required string roomName = 3;
-    required uint32 unk1 = 4;
+    required bool enable = 4;
   }
 
   required uint32 mapHeadId = 1;
-  required uint32 unk1 = 2;
+  required uint32 planId = 2;
   required string mapName = 3;
   required string planName = 4;
   repeated Room roomList = 5;
