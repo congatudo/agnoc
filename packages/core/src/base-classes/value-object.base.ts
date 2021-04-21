@@ -9,6 +9,9 @@ export interface DomainPrimitive<T extends Primitives | Date> {
 }
 
 type ValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T> : T;
+type PartialValueObjectProps<T> = T extends Primitives | Date
+  ? DomainPrimitive<T>
+  : Partial<T>;
 
 export abstract class ValueObject<T> {
   protected readonly props: ValueObjectProps<T>;
@@ -44,14 +47,13 @@ export abstract class ValueObject<T> {
     return Object.freeze(propsCopy as T);
   }
 
-  getRawProps(): T {
-    if (this.isDomainPrimitive(this.props)) {
-      return this.props.value;
-    }
+  clone<C extends ValueObject<T>>(props: PartialValueObjectProps<T>): C {
+    const ctor = this.constructor as new (props: ValueObjectProps<T>) => C;
 
-    const propsCopy = convertPropsToObject(this.props);
-
-    return Object.freeze(propsCopy as T);
+    return new ctor({
+      ...this.props,
+      ...props,
+    });
   }
 
   protected abstract validate(props: ValueObjectProps<T>): void;

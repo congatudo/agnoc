@@ -100,7 +100,7 @@ describe("value-object.base", () => {
       expect(a.toJSON()).to.be.deep.equal("foo");
     });
 
-    it("returns raw props", () => {
+    it("clones itself", () => {
       class A extends ValueObject<string> {
         protected validate(): void {
           return;
@@ -108,8 +108,10 @@ describe("value-object.base", () => {
       }
 
       const a = new A({ value: "foo" });
+      const b = a.clone({ value: "bar" });
 
-      expect(a.getRawProps()).to.be.deep.equal("foo");
+      expect(b.toJSON()).to.be.deep.equal("bar");
+      expect(b).to.be.instanceof(A);
     });
   });
 
@@ -193,8 +195,8 @@ describe("value-object.base", () => {
       expect(a.toJSON()).to.be.deep.equal({ foo: "bar" });
     });
 
-    it("returns raw props", () => {
-      type Props = { foo: string };
+    it("clones itself", () => {
+      type Props = { foo: string; bar: string };
 
       class A extends ValueObject<Props> {
         protected validate(): void {
@@ -202,9 +204,11 @@ describe("value-object.base", () => {
         }
       }
 
-      const a = new A({ foo: "bar" });
+      const a = new A({ foo: "foo", bar: "bar" });
+      const b = a.clone({ foo: "bar" });
 
-      expect(a.getRawProps()).to.be.deep.equal({ foo: "bar" });
+      expect(b.toJSON()).to.be.deep.equal({ foo: "bar", bar: "bar" });
+      expect(b).to.be.instanceof(A);
     });
   });
 });

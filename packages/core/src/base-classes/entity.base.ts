@@ -41,12 +41,13 @@ export abstract class Entity<EntityProps extends BaseEntityProps> {
     return this.id.equals(object.id);
   }
 
-  public getPropsCopy(): EntityProps {
-    const propsCopy = {
-      ...this.props,
-    };
+  clone<C extends Entity<EntityProps>>(props: Partial<EntityProps>): C {
+    const ctor = this.constructor as new (props: EntityProps) => C;
 
-    return Object.freeze(propsCopy);
+    return new ctor({
+      ...this.props,
+      ...props,
+    });
   }
 
   public toJSON(): unknown {
