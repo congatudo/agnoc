@@ -77,23 +77,19 @@ describe("entity.base", () => {
     expect(Entity.isEntity(a)).to.be.true;
   });
 
-  it("returns a frozen copy of its props", () => {
+  it("returns a copy of itself", () => {
     type EntityProps = { id: ID; foo: string };
 
     class A extends Entity<EntityProps> {}
 
-    const id = ID.generate();
-    const a = new A({ id, foo: "bar" });
-    const props = a.getPropsCopy();
+    const a = new A({ id: new ID(1), foo: "bar" });
+    const b = a.clone({ foo: "foo" });
 
-    expect(props).to.be.deep.equal({
-      id,
-      foo: "bar",
+    expect(b).to.be.instanceof(A);
+    expect(b.toJSON()).to.be.deep.equal({
+      id: 1,
+      foo: "foo",
     });
-
-    expect(() => {
-      props.id = ID.generate();
-    }).to.throw(TypeError);
   });
 
   it("returns a copy of its props as a frozen object", () => {

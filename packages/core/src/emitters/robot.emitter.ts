@@ -590,6 +590,104 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
   }
 
+  async updateRoom(room: Room): Promise<void> {
+    if (!this.device.map) {
+      return;
+    }
+
+    const { id, restrictedZones } = this.device.map;
+
+    await this.sendRecv(
+      "DEVICE_MAPID_SET_PLAN_PARAMS_REQ",
+      "DEVICE_MAPID_SET_PLAN_PARAMS_RSP",
+      {
+        mapHeadId: id.value,
+        // FIXME: this will change user map name.
+        mapName: "Default",
+        planId: 2,
+        // FIXME: this will change user plan name.
+        planName: "Default",
+        roomList: this.device.map.rooms.map((r) => {
+          r = room.equals(r) ? room : r;
+
+          return {
+            roomId: r.id.value,
+            roomName: r.name,
+            enable: true,
+          };
+        }),
+        areaInfo: {
+          mapHeadId: id.value,
+          planId: 2,
+          cleanAreaLength: restrictedZones.length,
+          cleanAreaList: restrictedZones.map((zone) => ({
+            cleanAreaId: zone.id.value,
+            type: 0,
+            coordinateLength: zone.coordinates.length,
+            coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
+          })),
+        },
+      }
+    );
+  }
+
+  async joinRooms(rooms: Room[]): Promise<void> {
+    if (!this.device.map) {
+      return;
+    }
+
+    const data = Buffer.from([
+      1,
+      rooms.length,
+      ...rooms.map((room) => room.id.value),
+    ]);
+
+    await this.sendRecv(
+      "DEVICE_MAPID_SET_ARRANGEROOM_INFO_REQ",
+      "DEVICE_MAPID_SET_ARRANGEROOM_INFO_RSP",
+      {
+        mapHeadId: this.device.map.id.value,
+        type: 0,
+        dataLen: data.length,
+        data,
+        roomId: 0,
+      }
+    );
+  }
+
+  async splitRoom(
+    room: Room,
+    pointA: Coordinate,
+    pointB: Coordinate
+  ): Promise<void> {
+    if (!this.device.map) {
+      return;
+    }
+
+    const data = Buffer.alloc(19);
+    let offset = 0;
+
+    offset = data.writeUInt8(1, offset);
+    offset = data.writeUInt8(1, offset);
+    offset = data.writeUInt8(2, offset);
+    offset = data.writeFloatLE(pointA.x, offset);
+    offset = data.writeFloatLE(pointA.y, offset);
+    offset = data.writeFloatLE(pointB.x, offset);
+    data.writeFloatLE(pointB.y, offset);
+
+    await this.sendRecv(
+      "DEVICE_MAPID_SET_ARRANGEROOM_INFO_REQ",
+      "DEVICE_MAPID_SET_ARRANGEROOM_INFO_RSP",
+      {
+        mapHeadId: this.device.map.id.value,
+        type: 1,
+        dataLen: data.length,
+        data,
+        roomId: room.id.value,
+      }
+    );
+  }
+
   async cleanRooms(rooms: Room[]): Promise<void> {
     if (!this.device.map) {
       return;
