@@ -1,6 +1,6 @@
 import { inflateSync } from "zlib";
 import { toStream } from "../utils/to-stream.util";
-import { readWord } from "../utils/read.util";
+import { readWord } from "../utils/stream.util";
 import {
   CleanPlan,
   CleanPlanInfo,

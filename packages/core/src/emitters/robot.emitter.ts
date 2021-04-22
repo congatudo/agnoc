@@ -46,6 +46,8 @@ import { DeviceMode } from "../value-objects/device-mode.value-object";
 import { DeviceErrorMapper } from "../mappers/device-error.mapper";
 import { DeviceVersion } from "../value-objects/device-version.value-object";
 import { DeviceCurrentClean } from "../value-objects/device-current-clean.value-object";
+import { BufferWriter } from "../streams/buffer-writer.stream";
+import { writeByte, writeFloat } from "../utils/stream.util";
 
 export interface RobotProps {
   device: Device;
@@ -636,11 +638,16 @@ export class Robot extends TypedEmitter<RobotEvents> {
       return;
     }
 
-    const data = Buffer.from([
-      1,
-      rooms.length,
-      ...rooms.map((room) => room.id.value),
-    ]);
+    const stream = new BufferWriter();
+
+    writeByte(stream, 1);
+    writeByte(stream, rooms.length);
+
+    rooms.forEach((room) => {
+      writeByte(stream, room.id.value);
+    });
+
+    const data = stream.buffer;
 
     await this.sendRecv(
       "DEVICE_MAPID_SET_ARRANGEROOM_INFO_REQ",
@@ -664,16 +671,17 @@ export class Robot extends TypedEmitter<RobotEvents> {
       return;
     }
 
-    const data = Buffer.alloc(19);
-    let offset = 0;
+    const stream = new BufferWriter();
 
-    offset = data.writeUInt8(1, offset);
-    offset = data.writeUInt8(1, offset);
-    offset = data.writeUInt8(2, offset);
-    offset = data.writeFloatLE(pointA.x, offset);
-    offset = data.writeFloatLE(pointA.y, offset);
-    offset = data.writeFloatLE(pointB.x, offset);
-    data.writeFloatLE(pointB.y, offset);
+    writeByte(stream, 1);
+    writeByte(stream, 1);
+    writeByte(stream, 2);
+    writeFloat(stream, pointA.x);
+    writeFloat(stream, pointA.y);
+    writeFloat(stream, pointB.x);
+    writeFloat(stream, pointB.y);
+
+    const data = stream.buffer;
 
     await this.sendRecv(
       "DEVICE_MAPID_SET_ARRANGEROOM_INFO_REQ",

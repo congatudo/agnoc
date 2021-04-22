@@ -6,7 +6,7 @@ import {
   readShort,
   readString,
   readWord,
-} from "../utils/read.util";
+} from "../utils/stream.util";
 import { Readable } from "stream";
 import {
   AreaInfo,

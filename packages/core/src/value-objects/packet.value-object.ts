@@ -1,5 +1,5 @@
 import { toStream } from "../utils/to-stream.util";
-import { readByte, readLong, readShort, readWord } from "../utils/read.util";
+import { readByte, readLong, readShort, readWord } from "../utils/stream.util";
 import assert from "assert";
 import { OPCode } from "./opcode.value-object";
 import { Payload, PayloadSerialized } from "./payload.value-object";
