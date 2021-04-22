@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/adrigzr/agnoc/compare/v0.8.0...v0.9.0) (2021-04-22)
+
+### Bug Fixes
+
+- add code 2102 to errors ([8ad10b5](https://github.com/adrigzr/agnoc/commit/8ad10b5ef8c9609a831d63a3c926da577ac1dc80))
+- use existing map before update ([23adcab](https://github.com/adrigzr/agnoc/commit/23adcabfad268bc58c43409b62e7fc3f89de0013))
+
+### Features
+
+- add map reset ([405989b](https://github.com/adrigzr/agnoc/commit/405989bb2c8651c9617b7004f14907546cce5b0f))
+
 # [0.8.0](https://github.com/adrigzr/agnoc/compare/v0.7.1...v0.8.0) (2021-04-22)
 
 ### Bug Fixes
