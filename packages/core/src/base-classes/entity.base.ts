@@ -41,7 +41,10 @@ export abstract class Entity<EntityProps extends BaseEntityProps> {
     return this.id.equals(object.id);
   }
 
-  clone<C extends Entity<EntityProps>>(props: Partial<EntityProps>): C {
+  clone<C extends Entity<EntityProps>>(
+    this: C,
+    props: Partial<EntityProps>
+  ): C {
     const ctor = this.constructor as new (props: EntityProps) => C;
 
     return new ctor({

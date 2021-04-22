@@ -47,7 +47,10 @@ export abstract class ValueObject<T> {
     return Object.freeze(propsCopy as T);
   }
 
-  clone<C extends ValueObject<T>>(props: PartialValueObjectProps<T>): C {
+  clone<C extends ValueObject<T>>(
+    this: C,
+    props: PartialValueObjectProps<T>
+  ): C {
     const ctor = this.constructor as new (props: ValueObjectProps<T>) => C;
 
     return new ctor({
