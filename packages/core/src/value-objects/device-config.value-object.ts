@@ -56,6 +56,10 @@ export class DeviceConfig extends ValueObject<DeviceConfigProps> {
     this.props.quietHours = quietHours;
   }
 
+  updateHistoryMap(enable: boolean): void {
+    this.props.isHistoryMapEnabled = enable;
+  }
+
   protected validate(props: DeviceConfigProps): void {
     if (
       ![

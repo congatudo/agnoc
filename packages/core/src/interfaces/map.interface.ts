@@ -1,6 +1,6 @@
 export interface StatusInfo {
   mapHeadId: number;
-  hasHistoryMap: number;
+  hasHistoryMap: boolean;
   workingMode: number;
   batteryPercent: number;
   chargeState: boolean;

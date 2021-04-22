@@ -225,7 +225,7 @@ function readMap(stream: Readable, mask: number): MapInfo {
   if (data.mask & 0x1) {
     data.statusInfo = {
       mapHeadId: readWord(stream),
-      hasHistoryMap: readWord(stream),
+      hasHistoryMap: Boolean(readWord(stream)),
       workingMode: readWord(stream),
       batteryPercent: readWord(stream),
       chargeState: Boolean(readWord(stream)),

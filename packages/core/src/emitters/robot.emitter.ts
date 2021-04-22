@@ -584,6 +584,18 @@ export class Robot extends TypedEmitter<RobotEvents> {
     this.device.config?.updateCarpetMode(enable);
   }
 
+  async setHistoryMap(enable: boolean): Promise<void> {
+    await this.sendRecv(
+      "USER_SET_DEVICE_CLEANPREFERENCE_REQ",
+      "USER_SET_DEVICE_CLEANPREFERENCE_RSP",
+      {
+        historyMap: enable,
+      }
+    );
+
+    this.device.config?.updateHistoryMap(enable);
+  }
+
   async discardWaitingMap(): Promise<void> {
     await this.sendRecv(
       "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ",

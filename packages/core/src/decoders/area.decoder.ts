@@ -22,18 +22,16 @@ interface Unk1 {
 }
 
 interface AreaListInfo {
-  unk1: {
-    count: number;
-    mapHeadId: number;
-  };
-  unk2: Unk1[];
-  mapHeadInfo: MapHeadInfo;
-  mapGrid: Buffer;
-  cleanPlanInfo: CleanPlanInfo;
-  mapInfoList: MapPlanInfo[];
-  currentPlanId: number;
-  cleanRoomList: CleanRoom[];
-  cleanPlanList: CleanPlan[];
+  count: number;
+  mapHeadId?: number;
+  unk2?: Unk1[];
+  mapHeadInfo?: MapHeadInfo;
+  mapGrid?: Buffer;
+  cleanPlanInfo?: CleanPlanInfo;
+  mapInfoList?: MapPlanInfo[];
+  currentPlanId?: number;
+  cleanRoomList?: CleanRoom[];
+  cleanPlanList?: CleanPlan[];
 }
 
 export function decodeArea(payload: Buffer): AreaListInfo {
@@ -41,14 +39,16 @@ export function decodeArea(payload: Buffer): AreaListInfo {
   const stream = toStream(buffer);
   const data: Partial<AreaListInfo> = {};
 
-  data.unk1 = {
-    count: readWord(stream),
-    mapHeadId: readWord(stream),
-  };
+  data.count = readWord(stream);
 
+  if (!data.count) {
+    return data as AreaListInfo;
+  }
+
+  data.mapHeadId = readWord(stream);
   data.unk2 = [];
 
-  for (let i = 0; i < data.unk1.count; i++) {
+  for (let i = 0; i < data.count; i++) {
     data.unk2.push({
       unk1: readWord(stream),
       unk2: readWord(stream),
