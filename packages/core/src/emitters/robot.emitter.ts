@@ -919,6 +919,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       this.emit("updateDevice");
     }
 
+    let map = this.device.map;
+
     if (mapHeadInfo && mapGrid) {
       const props = {
         id: new ID(mapHeadInfo.mapHeadId),
@@ -939,10 +941,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
         restrictedZones: [],
       };
 
-      this.device.updateMap(new DeviceMap(props));
-    }
+      map = map ? map.clone(props) : new DeviceMap(props);
 
-    const map = this.device.map;
+      this.device.updateMap(map);
+    }
 
     if (map) {
       if (robotPoseInfo) {
