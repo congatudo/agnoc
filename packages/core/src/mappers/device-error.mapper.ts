@@ -8,6 +8,7 @@ const ROBOT_TO_DOMAIN = {
   2003: DeviceError.VALUE.LOW_POWER_PLAN_DIS,
   2100: DeviceError.VALUE.BROKEN_GO_HOME,
   2101: DeviceError.VALUE.NONE,
+  2102: DeviceError.VALUE.NONE,
   2103: DeviceError.VALUE.NONE,
   2104: DeviceError.VALUE.NONE,
   2105: DeviceError.VALUE.NONE,
