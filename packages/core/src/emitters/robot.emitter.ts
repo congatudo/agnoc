@@ -744,6 +744,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
   }
 
+  async resetMap(): Promise<void> {
+    await this.sendRecv(
+      "DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_REQ",
+      "DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_RSP",
+      {}
+    );
+  }
+
   async controlLock(): Promise<void> {
     await this.sendRecv(
       "DEVICE_CONTROL_LOCK_REQ",
