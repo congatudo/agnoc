@@ -1,5 +1,14 @@
 import { toStream } from "../utils/to-stream.util";
-import { readByte, readLong, readShort, readWord } from "../utils/stream.util";
+import {
+  readByte,
+  readLong,
+  readShort,
+  readWord,
+  writeByte,
+  writeLong,
+  writeShort,
+  writeWord,
+} from "../utils/stream.util";
 import assert from "assert";
 import { OPCode } from "./opcode.value-object";
 import { Payload, PayloadSerialized } from "./payload.value-object";
@@ -10,6 +19,7 @@ import { ArgumentNotProvidedException } from "../exceptions/argument-not-provide
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ID, IDSerialized } from "./id.value-object";
 import { OPCodeLiteral, OPDecoderLiteral } from "../constants/opcodes.constant";
+import { BufferWriter } from "../streams/buffer-writer.stream";
 
 export interface PacketProps<Name extends OPDecoderLiteral> {
   ctype: number;
@@ -62,18 +72,19 @@ export function pack<Name extends OPDecoderLiteral>(
   packet: PacketProps<Name>
 ): Buffer {
   const size = 24 + Number(packet.payload?.buffer.length);
-  const data = Buffer.alloc(24);
-  let offset = 0;
+  const stream = new BufferWriter();
 
-  offset = data.writeUInt32LE(size, offset);
-  offset = data.writeUInt8(packet.ctype, offset);
-  offset = data.writeUInt8(packet.flow, offset);
-  offset = data.writeUInt32LE(packet.deviceId.value, offset);
-  offset = data.writeUInt32LE(packet.userId.value, offset);
-  offset = data.writeBigUInt64LE(packet.sequence.value, offset);
-  data.writeUInt16LE(packet.payload.opcode.value, offset);
+  writeWord(stream, size);
+  writeByte(stream, packet.ctype);
+  writeByte(stream, packet.flow);
+  writeWord(stream, packet.deviceId.value);
+  writeWord(stream, packet.userId.value);
+  writeLong(stream, packet.sequence.value);
+  writeShort(stream, packet.payload.opcode.value);
 
-  return packet.payload ? Buffer.concat([data, packet.payload.buffer]) : data;
+  stream.write(packet.payload.buffer);
+
+  return stream.buffer;
 }
 
 export class Packet<Name extends OPDecoderLiteral> extends ValueObject<
