@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/adrigzr/agnoc/compare/v0.7.1...v0.8.0) (2021-04-22)
+
+### Features
+
+- **cli:** add read command ([f65967e](https://github.com/adrigzr/agnoc/commit/f65967ec11d7d606ff5034157e6aecc7cb7246a7))
+
 ## [0.7.1](https://github.com/adrigzr/agnoc/compare/v0.7.0...v0.7.1) (2021-04-14)
 
 **Note:** Version bump only for package @agnoc/cli

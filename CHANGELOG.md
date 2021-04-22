@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/adrigzr/agnoc/compare/v0.7.1...v0.8.0) (2021-04-22)
+
+### Bug Fixes
+
+- fix room clean ([c0fe3c9](https://github.com/adrigzr/agnoc/commit/c0fe3c9f5e66b37074c2683e06484207602c479d))
+
+### Features
+
+- add support for map segmentation ([b445928](https://github.com/adrigzr/agnoc/commit/b4459288eff89eed99eb924e04781be6f22e50bb))
+- **cli:** add read command ([f65967e](https://github.com/adrigzr/agnoc/commit/f65967ec11d7d606ff5034157e6aecc7cb7246a7))
+- add history map toggle opcodes ([2474b58](https://github.com/adrigzr/agnoc/commit/2474b586cb206f9cff0866201360d32bcc652663))
+- add support for mop mode ([76100a5](https://github.com/adrigzr/agnoc/commit/76100a5547d803d44cc079d9ee04f31db02cba40))
+
 ## [0.7.1](https://github.com/adrigzr/agnoc/compare/v0.7.0...v0.7.1) (2021-04-14)
 
 ### Bug Fixes
