@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/adrigzr/agnoc/compare/v0.10.0...v0.11.0) (2021-04-23)
+
+### Features
+
+- add pixel object ([44a12bc](https://github.com/adrigzr/agnoc/commit/44a12bccb529bbb5fd05f3eb80021a258eda4668))
+- decode robot path ([1fc9fdd](https://github.com/adrigzr/agnoc/commit/1fc9fddb68f142cc4f07f2b0a05d8b717201a470))
+
 # [0.10.0](https://github.com/adrigzr/agnoc/compare/v0.9.0...v0.10.0) (2021-04-23)
 
 ### Bug Fixes
