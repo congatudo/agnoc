@@ -3,14 +3,10 @@ import { ArgumentInvalidException } from "../exceptions/argument-invalid.excepti
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
 import { DeviceQuietHours } from "./device-quiet-hours.value-object";
-
-export interface Voice {
-  isEnabled: boolean;
-  volume: number;
-}
+import { DeviceVoice } from "./device-voice.value-object";
 
 export interface DeviceConfigProps {
-  voice: Voice;
+  voice: DeviceVoice;
   quietHours: DeviceQuietHours;
   isEcoModeEnabled: boolean;
   isRepeatCleanEnabled: boolean;
@@ -20,7 +16,7 @@ export interface DeviceConfigProps {
 }
 
 export class DeviceConfig extends ValueObject<DeviceConfigProps> {
-  get voice(): Voice {
+  get voice(): DeviceVoice {
     return this.props.voice;
   }
 
@@ -46,6 +42,10 @@ export class DeviceConfig extends ValueObject<DeviceConfigProps> {
 
   get isHistoryMapEnabled(): boolean {
     return this.props.isHistoryMapEnabled;
+  }
+
+  updateVoice(voice: DeviceVoice): void {
+    this.props.voice = voice;
   }
 
   updateCarpetMode(enable: boolean): void {

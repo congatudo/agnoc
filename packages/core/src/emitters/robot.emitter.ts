@@ -48,6 +48,8 @@ import { DeviceVersion } from "../value-objects/device-version.value-object";
 import { DeviceCurrentClean } from "../value-objects/device-current-clean.value-object";
 import { BufferWriter } from "../streams/buffer-writer.stream";
 import { writeByte, writeFloat } from "../utils/stream.util";
+import { DeviceVoice } from "../value-objects/device-voice.value-object";
+import { DeviceVoiceMapper } from "../mappers/device-voice.mapper";
 
 export interface RobotProps {
   device: Device;
@@ -582,6 +584,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
 
     this.device.config?.updateCarpetMode(enable);
+    this.emit("updateDevice");
   }
 
   async setHistoryMap(enable: boolean): Promise<void> {
@@ -594,6 +597,23 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
 
     this.device.config?.updateHistoryMap(enable);
+    this.emit("updateDevice");
+  }
+
+  async setVoice(voice: DeviceVoice): Promise<void> {
+    const robotVoice = DeviceVoiceMapper.toRobot(voice);
+
+    await this.sendRecv(
+      "USER_SET_DEVICE_CTRL_SETTING_REQ",
+      "USER_SET_DEVICE_CTRL_SETTING_RSP",
+      {
+        voiceMode: robotVoice.isEnabled,
+        volume: robotVoice.volume,
+      }
+    );
+
+    this.device.config?.updateVoice(voice);
+    this.emit("updateDevice");
   }
 
   async discardWaitingMap(): Promise<void> {
@@ -814,10 +834,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
   ): void {
     const object = message.packet.payload.object;
     const props = {
-      voice: {
-        isEnabled: object.voice.voiceMode,
-        volume: object.voice.volume || 0,
-      },
+      voice: DeviceVoiceMapper.toDomain({
+        isEnabled: object.voice.voiceMode || false,
+        volume: object.voice.volume || 1,
+      }),
       quietHours: new DeviceQuietHours({
         isEnabled: object.quietHours.isOpen,
         begin: DeviceTime.fromMinutes(object.quietHours.beginTime),
