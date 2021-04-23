@@ -16,3 +16,4 @@ export * from "./value-objects/device-time.value-object";
 export * from "./value-objects/device-voice.value-object";
 export * from "./value-objects/device-water-level.value-object";
 export * from "./value-objects/position.value-object";
+export * from "./value-objects/pixel.value-object";

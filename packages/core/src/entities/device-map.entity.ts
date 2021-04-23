@@ -4,13 +4,14 @@ import { ArgumentNotProvidedException } from "../exceptions/argument-not-provide
 import { isPresent } from "../utils/is-present.util";
 import { Coordinate } from "../value-objects/coordinate.value-object";
 import { ID } from "../value-objects/id.value-object";
+import { Pixel } from "../value-objects/pixel.value-object";
 import { Position } from "../value-objects/position.value-object";
 import { Room } from "./room.entity";
 import { Zone } from "./zone.entity";
 
 export interface DeviceMapProps {
   id: ID;
-  size: Coordinate;
+  size: Pixel;
   min: Coordinate;
   max: Coordinate;
   grid: Buffer;
@@ -31,7 +32,7 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     return this.props.id;
   }
 
-  get size(): Coordinate {
+  get size(): Pixel {
     return this.props.size;
   }
 
@@ -87,8 +88,8 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     this.props.currentSpot = currentSpot;
   }
 
-  getRelativeCoordinate(pos: Coordinate): Coordinate {
-    return new Coordinate({
+  toPixel(pos: Coordinate): Pixel {
+    return new Pixel({
       x: Math.floor(
         ((pos.x - this.min.x) * this.size.x) / (this.max.x - this.min.x)
       ),
@@ -98,7 +99,7 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     });
   }
 
-  getAbsoluteCoordinate(pos: Coordinate): Coordinate {
+  toCoordinate(pos: Pixel): Coordinate {
     return new Coordinate({
       x: (pos.x / this.size.x) * (this.max.x - this.min.x) + this.min.x,
       y: (pos.y / this.size.y) * (this.max.y - this.min.y) + this.min.y,
