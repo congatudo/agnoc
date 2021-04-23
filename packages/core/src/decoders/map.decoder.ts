@@ -20,6 +20,8 @@ import {
   MapHeadInfo,
   MapInfo,
   MapPlanInfo,
+  Point,
+  RoomConnection,
   RoomSegment,
 } from "../interfaces/map.interface";
 import { DomainException } from "../exceptions/domain.exception";
@@ -215,6 +217,63 @@ function readRoomSegmentList(stream: Readable): RoomSegment[] {
   return list;
 }
 
+function readRoomConnectionList(
+  stream: Readable,
+  roomList: CleanRoom[]
+): RoomConnection[] {
+  const list = [];
+
+  for (let i = 0; i < roomList.length; i++) {
+    const connectionList = [];
+
+    for (let j = 0; j < roomList.length; j++) {
+      const flag = readByte(stream);
+
+      if (flag) {
+        connectionList.push(roomList[j].roomId);
+      }
+    }
+
+    list.push({
+      roomId: roomList[i].roomId,
+      connectionList,
+    });
+  }
+
+  return list;
+}
+
+function readPointList(stream: Readable, pointNumber: number): Point[] {
+  const list = [];
+
+  for (let i = 0; i < pointNumber; i++) {
+    list.push({
+      flag: readByte(stream),
+      x: readFloat(stream),
+      y: readFloat(stream),
+    });
+  }
+
+  return list;
+}
+
+export const MASK = {
+  STATUS: 0x1,
+  MAP: 0x2,
+  HISTORY: 0x4,
+  CHARGER: 0x8,
+  WALL_LIST: 0x10,
+  AREA_LIST: 0x20,
+  SPOT: 0x40,
+  ROBOT: 0x80,
+  AREA_MODE: 0x100,
+  SPOT_MODE: 0x200,
+  PLAN_LIST: 0x800,
+  UNK: 0x1000,
+  UNK_2: 0x2000,
+  ROOM_LIST: 0x4000,
+};
+
 function readMap(stream: Readable, mask: number): MapInfo {
   const data: MapInfo = { mask };
 
@@ -248,12 +307,15 @@ function readMap(stream: Readable, mask: number): MapInfo {
   if (data.mask & 0x4) {
     data.historyHeadInfo = {
       mapHeadId: readWord(stream),
-      unk1: readWord(stream),
-      unk2: readWord(stream),
+      poseId: readWord(stream),
+      pointNumber: readWord(stream),
+      pointList: [],
     };
 
-    // dump history bytes
-    data.pointUnk = stream.read(data.historyHeadInfo.unk2 * 9) as Buffer;
+    data.historyHeadInfo.pointList = readPointList(
+      stream,
+      data.historyHeadInfo.pointNumber
+    );
   }
 
   if (data.mask & 0x8) {
@@ -324,14 +386,14 @@ function readMap(stream: Readable, mask: number): MapInfo {
     data.currentPlanId = readWord(stream);
     data.cleanRoomList = readCleanRoomList(stream);
     data.cleanPlanList = readCleanPlanList(stream);
-    data.totalRooms = data.cleanRoomList.length;
   }
 
-  if (data.mask & 0x1000) {
+  if (data.mask & 0x1000 && data.cleanRoomList) {
     // dump rooms
-    data.unkRooms = stream.read(
-      (data.totalRooms || 0) * (data.totalRooms || 0)
-    ) as Buffer;
+    data.roomConnectionList = readRoomConnectionList(
+      stream,
+      data.cleanRoomList
+    );
   }
 
   if (data.mask & 0x2000) {

@@ -524,27 +524,29 @@ export class Robot extends TypedEmitter<RobotEvents> {
       areas.push([]);
     }
 
+    const cleanAreaList = [
+      ...areas.map((coords) => ({
+        cleanAreaId: ID.generate().value,
+        type: 0,
+        coordinateLength: coords.length,
+        coordinateList: coords,
+      })),
+      ...this.device.map.restrictedZones.map((zone) => ({
+        cleanAreaId: zone.id.value,
+        type: 0,
+        coordinateLength: 0,
+        coordinateList: [],
+      })),
+    ];
+
     await this.sendRecv(
       "DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ",
       "DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_RSP",
       {
         mapHeadId: this.device.map.id.value,
         planId: 0,
-        cleanAreaLength: areas.length,
-        cleanAreaList: [
-          ...areas.map((coords) => ({
-            cleanAreaId: ID.generate().value,
-            type: 0,
-            coordinateLength: coords.length,
-            coordinateList: coords,
-          })),
-          ...this.device.map.restrictedZones.map((zone) => ({
-            cleanAreaId: zone.id.value,
-            type: 0,
-            coordinateLength: 0,
-            coordinateList: [],
-          })),
-        ],
+        cleanAreaLength: cleanAreaList.length,
+        cleanAreaList,
       }
     );
   }
@@ -623,11 +625,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
     this.emit("updateDevice");
   }
 
-  async discardWaitingMap(): Promise<void> {
+  async saveWaitingMap(save: boolean): Promise<void> {
     await this.sendRecv(
       "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ",
       "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_RSP",
-      { mode: 0 }
+      { mode: Number(save) }
     );
   }
 
@@ -930,6 +932,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       statusInfo,
       mapHeadInfo,
       mapGrid,
+      historyHeadInfo,
       robotPoseInfo,
       robotChargeInfo,
       cleanRoomList,
@@ -986,6 +989,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         grid: mapGrid,
         rooms: [],
         restrictedZones: [],
+        robotPath: [],
       };
 
       map = map ? map.clone(props) : new DeviceMap(props);
@@ -994,6 +998,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     if (map) {
+      if (historyHeadInfo) {
+        map.updateRobotPath(
+          historyHeadInfo.pointList.map(({ x, y }) => new Coordinate({ x, y }))
+        );
+      }
+
       if (robotPoseInfo) {
         map.updateRobot(
           new Position({
@@ -1134,8 +1144,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   @bind
   handleWaitingMap(): void {
-    // Discard waiting map for now.
-    void this.discardWaitingMap();
+    void this.saveWaitingMap(
+      !this.device.map || this.device.map.id.value === 0
+    );
   }
 
   @bind

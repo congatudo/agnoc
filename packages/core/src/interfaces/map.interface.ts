@@ -27,8 +27,9 @@ export interface MapHeadInfo {
 
 export interface HistoryHeadInfo {
   mapHeadId: number;
-  unk1: number;
-  unk2: number;
+  poseId: number;
+  pointNumber: number;
+  pointList: Point[];
 }
 
 export interface RobotChargeInfo {
@@ -139,13 +140,23 @@ export interface RoomSegment {
   roomPixelList: RoomPixel[];
 }
 
+export interface RoomConnection {
+  roomId: number;
+  connectionList: number[];
+}
+
+export interface Point {
+  flag: number;
+  x: number;
+  y: number;
+}
+
 export interface MapInfo {
   mask: number;
   statusInfo?: StatusInfo;
   mapHeadInfo?: MapHeadInfo;
   mapGrid?: Buffer;
   historyHeadInfo?: HistoryHeadInfo;
-  pointUnk?: Buffer;
   robotChargeInfo?: RobotChargeInfo;
   wallListInfo?: CleanAreaInfo;
   areaListInfo?: CleanAreaInfo;
@@ -156,8 +167,7 @@ export interface MapInfo {
   currentPlanId?: number;
   cleanRoomList?: CleanRoom[];
   cleanPlanList?: CleanPlan[];
-  totalRooms?: number;
-  unkRooms?: Buffer;
+  roomConnectionList?: RoomConnection[];
   roomEnableInfo?: RoomEnableInfo;
   unk1?: Buffer;
   roomSegmentList?: RoomSegment[];
