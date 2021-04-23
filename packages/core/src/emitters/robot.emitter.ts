@@ -50,6 +50,7 @@ import { BufferWriter } from "../streams/buffer-writer.stream";
 import { writeByte, writeFloat } from "../utils/stream.util";
 import { DeviceVoice } from "../value-objects/device-voice.value-object";
 import { DeviceVoiceMapper } from "../mappers/device-voice.mapper";
+import { Pixel } from "../value-objects/pixel.value-object";
 
 export interface RobotProps {
   device: Device;
@@ -530,14 +531,20 @@ export class Robot extends TypedEmitter<RobotEvents> {
         mapHeadId: this.device.map.id.value,
         planId: 0,
         cleanAreaLength: areas.length,
-        cleanAreaList: areas.map((coords) => {
-          return {
+        cleanAreaList: [
+          ...areas.map((coords) => ({
             cleanAreaId: ID.generate().value,
             type: 0,
             coordinateLength: coords.length,
             coordinateList: coords,
-          };
-        }),
+          })),
+          ...this.device.map.restrictedZones.map((zone) => ({
+            cleanAreaId: zone.id.value,
+            type: 0,
+            coordinateLength: 0,
+            coordinateList: [],
+          })),
+        ],
       }
     );
   }
@@ -964,7 +971,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     if (mapHeadInfo && mapGrid) {
       const props = {
         id: new ID(mapHeadInfo.mapHeadId),
-        size: new Coordinate({
+        size: new Pixel({
           x: mapHeadInfo.sizeX,
           y: mapHeadInfo.sizeY,
         }),
@@ -1053,7 +1060,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
                   y: cleanRoom.roomY,
                 }),
                 pixels: segment?.roomPixelList.map((pixel) => {
-                  return new Coordinate({
+                  return new Pixel({
                     x: pixel.x,
                     y: pixel.y,
                   });

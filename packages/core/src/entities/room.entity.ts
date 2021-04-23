@@ -4,12 +4,13 @@ import { ArgumentNotProvidedException } from "../exceptions/argument-not-provide
 import { isPresent } from "../utils/is-present.util";
 import { Coordinate } from "../value-objects/coordinate.value-object";
 import { ID } from "../value-objects/id.value-object";
+import { Pixel } from "../value-objects/pixel.value-object";
 
 export interface RoomProps {
   id: ID;
   name: string;
   center: Coordinate;
-  pixels: Coordinate[];
+  pixels: Pixel[];
 }
 
 export class Room extends Entity<RoomProps> {
@@ -30,7 +31,7 @@ export class Room extends Entity<RoomProps> {
     return this.props.center;
   }
 
-  get pixels(): Coordinate[] {
+  get pixels(): Pixel[] {
     return this.props.pixels;
   }
 
