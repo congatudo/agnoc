@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/adrigzr/agnoc/compare/v0.9.0...v0.10.0) (2021-04-23)
+
+### Bug Fixes
+
+- use 2 bytes for id generation ([64886cb](https://github.com/adrigzr/agnoc/commit/64886cb88b235e068a715547de5f60e970bba97a))
+
+### Features
+
+- add map history map toggle ([247aca2](https://github.com/adrigzr/agnoc/commit/247aca27153c2456b622c06f26f6742a74f0aa77))
+- set voice method ([6a834a3](https://github.com/adrigzr/agnoc/commit/6a834a3fbba36d900be566bd8b8a2f34961a905c))
+
 # [0.9.0](https://github.com/adrigzr/agnoc/compare/v0.8.0...v0.9.0) (2021-04-22)
 
 ### Bug Fixes
