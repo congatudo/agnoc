@@ -20,6 +20,7 @@ export interface DeviceMapProps {
   currentSpot?: Position;
   rooms: Room[];
   restrictedZones: Zone[];
+  robotPath: Coordinate[];
 }
 
 export class DeviceMap extends Entity<DeviceMapProps> {
@@ -68,6 +69,10 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     return this.props.currentSpot;
   }
 
+  get robotPath(): Coordinate[] {
+    return this.props.robotPath;
+  }
+
   updateRobot(robot: Position): void {
     this.props.robot = robot;
   }
@@ -86,6 +91,10 @@ export class DeviceMap extends Entity<DeviceMapProps> {
 
   updateCurrentSpot(currentSpot: Position): void {
     this.props.currentSpot = currentSpot;
+  }
+
+  updateRobotPath(robotPath: Coordinate[]): void {
+    this.props.robotPath = robotPath;
   }
 
   toPixel(pos: Coordinate): Pixel {
