@@ -23,7 +23,7 @@ export class ID extends ValueObject<number> {
   }
 
   static generate(): ID {
-    const uint32 = randomBytes(3).toString("hex");
+    const uint32 = randomBytes(2).toString("hex");
     const id = parseInt(uint32, 16);
 
     return new ID(id);
