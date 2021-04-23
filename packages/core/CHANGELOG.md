@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.1](https://github.com/adrigzr/agnoc/compare/v0.11.0...v0.11.1) (2021-04-23)
+
+### Bug Fixes
+
+- change map mode on restricted zones ([97b5038](https://github.com/adrigzr/agnoc/commit/97b50382833e358907a6d582e920d48cb8011c8f))
+- remove phi variant on position ([e01ab20](https://github.com/adrigzr/agnoc/commit/e01ab20ffa23d546dd92807785c3217009a83fe4))
+
 # [0.11.0](https://github.com/adrigzr/agnoc/compare/v0.10.0...v0.11.0) (2021-04-23)
 
 ### Features
