@@ -1,5 +1,4 @@
 import { ValueObject } from "../base-classes/value-object.base";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { isPresent } from "../utils/is-present.util";
 import { Coordinate } from "./coordinate.value-object";
@@ -35,12 +34,6 @@ export class Position extends ValueObject<PositionProps> {
     if (![props.x, props.y, props.phi].every(isPresent)) {
       throw new ArgumentNotProvidedException(
         "Missing property in position constructor"
-      );
-    }
-
-    if (props.phi < -1 * Math.PI || props.phi > Math.PI) {
-      throw new ArgumentInvalidException(
-        "Invalid property phi in position constructor"
       );
     }
   }
