@@ -13,5 +13,6 @@ export * from "./value-objects/device-state.value-object";
 export * from "./value-objects/device-version.value-object";
 export * from "./value-objects/device-current-clean.value-object";
 export * from "./value-objects/device-time.value-object";
+export * from "./value-objects/device-voice.value-object";
 export * from "./value-objects/device-water-level.value-object";
 export * from "./value-objects/position.value-object";

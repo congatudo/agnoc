@@ -519,7 +519,7 @@ message DEVICE_UPGRADE_SET_AUTO_INSTALL_RSP {
 }
 
 message USER_SET_DEVICE_CTRL_SETTING_REQ {
-  required bool voiceMode = 1;
+  optional bool voiceMode = 1;
   optional uint32 volume = 2;
 }
 
