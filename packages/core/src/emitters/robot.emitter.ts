@@ -524,6 +524,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
       areas.push([]);
     }
 
+    if (this.device.system.model === DEVICE_MODEL.C3090) {
+      await this.sendRecv(
+        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
+        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
+        { mask: 0xff | 0x400 }
+      );
+    }
+
     const cleanAreaList = [
       ...areas.map((coords) => ({
         cleanAreaId: ID.generate().value,
