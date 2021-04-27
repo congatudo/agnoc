@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.2](https://github.com/adrigzr/agnoc/compare/v0.11.1...v0.11.2) (2021-04-27)
+
+### Bug Fixes
+
+- add mode 11 ([d9954a9](https://github.com/adrigzr/agnoc/commit/d9954a98e7c7181252e83e55be879d3f60d5e152))
+
 ## [0.11.1](https://github.com/adrigzr/agnoc/compare/v0.11.0...v0.11.1) (2021-04-23)
 
 ### Bug Fixes
