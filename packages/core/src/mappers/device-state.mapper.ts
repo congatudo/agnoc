@@ -35,7 +35,7 @@ function getDomainValue(state: RobotState): ValueOf<typeof VALUE> {
     return VALUE.PAUSED;
   }
 
-  if ([0, 14, 23, 29, 35, 40].includes(workMode)) {
+  if ([0, 11, 14, 23, 29, 35, 40].includes(workMode)) {
     return VALUE.IDLE;
   }
 

@@ -7,7 +7,7 @@ import { DeviceMode } from "../value-objects/device-mode.value-object";
 const { VALUE } = DeviceMode;
 
 function getDomainValue(mode: number): ValueOf<typeof VALUE> {
-  if ([0, 1, 4, 5, 10].includes(mode)) {
+  if ([0, 1, 4, 5, 10, 11].includes(mode)) {
     return VALUE.NONE;
   }
 
