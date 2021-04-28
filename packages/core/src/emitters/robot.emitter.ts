@@ -66,6 +66,8 @@ interface DeviceTimestamp {
 interface RobotEvents {
   updateDevice: () => void;
   updateMap: () => void;
+  updateRobotPosition: () => void;
+  updateChargerPosition: () => void;
 }
 
 export enum MANUAL_MODE {
@@ -1150,7 +1152,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         phi: object.posePhi,
       })
     );
-    this.emit("updateMap");
+    this.emit("updateRobotPosition");
   }
 
   @bind
@@ -1170,7 +1172,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         phi: object.posePhi,
       })
     );
-    this.emit("updateMap");
+    this.emit("updateChargerPosition");
   }
 
   @bind
