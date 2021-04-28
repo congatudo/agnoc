@@ -82,6 +82,7 @@ export enum MANUAL_MODE {
 export type ManualMode = typeof MANUAL_MODE[keyof typeof MANUAL_MODE];
 
 const MODE_CHANGE_TIMEOUT = 5000;
+const RECV_TIMEOUT = 5000;
 
 const CONSUMABLE_TYPE_RESET = {
   [CONSUMABLE_TYPE.MAIN_BRUSH]: 1,
@@ -1303,10 +1304,24 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   recv<Name extends OPDecoderLiteral>(opname: Name): Promise<Packet<Name>> {
-    return new Promise((resolve) => {
-      this.multiplexer.once(opname, (packet) =>
-        resolve(packet as Packet<Name>)
-      );
+    return new Promise((resolve, reject) => {
+      const done = (packet: Packet<OPDecoderLiteral>) => {
+        clearTimeout(timer);
+        resolve(packet as Packet<Name>);
+      };
+
+      const fail = () => {
+        this.multiplexer.off(opname, done);
+        reject(
+          new DomainException(
+            `Timeout waiting for response from opcode '${opname}'`
+          )
+        );
+      };
+
+      const timer = setTimeout(fail, RECV_TIMEOUT);
+
+      this.multiplexer.once(opname, done);
     });
   }
 
@@ -1318,12 +1333,32 @@ export class Robot extends TypedEmitter<RobotEvents> {
     recvOPName: RecvName,
     sendObject: OPDecoders[SendName]
   ): Promise<Packet<RecvName>> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const ret = this.send(sendOPName, sendObject);
+      let timer: NodeJS.Timer;
+
+      const done = (packet: Packet<OPDecoderLiteral>) => {
+        clearTimeout(timer);
+        resolve(packet as Packet<RecvName>);
+      };
+
+      const fail = () => {
+        this.multiplexer.off(recvOPName, done);
+        reject(
+          new DomainException(
+            `Timeout waiting for response from opcode '${recvOPName}'`
+          )
+        );
+      };
 
       if (ret) {
-        this.multiplexer.once(recvOPName, (packet) =>
-          resolve(packet as Packet<RecvName>)
+        timer = setTimeout(fail, RECV_TIMEOUT);
+        this.multiplexer.once(recvOPName, done);
+      } else {
+        reject(
+          new DomainException(
+            `Unable to wait for response from opcode '${recvOPName}', there was an error sending opcode '${sendOPName}'`
+          )
         );
       }
     });
