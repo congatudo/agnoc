@@ -337,6 +337,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async getConsumables(): Promise<DeviceConsumable[]> {
+    if (this.device.system.model === DEVICE_MODEL.C3090) {
+      return [];
+    }
+
     const packet = await this.sendRecv(
       "DEVICE_MAPID_GET_CONSUMABLES_PARAM_REQ",
       "DEVICE_MAPID_GET_CONSUMABLES_PARAM_RSP",
@@ -864,7 +868,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
     void this.getTime();
     void this.updateMap();
     void this.getOrders();
-    void this.getConsumables();
     void this.getWlan();
   }
 
