@@ -86,8 +86,6 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
       message.respond("CLIENT_ONLINE_RSP", {
         result: 0,
       });
-
-      this.emit("addRobot", robot);
     }
   }
 
@@ -113,6 +111,8 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
     robot.addConnection(message.connection);
 
     this.robots.set(device.id.value, robot);
+
+    this.emit("addRobot", robot);
 
     message.respond("DEVICE_REGISTER_RSP", {
       result: 0,
