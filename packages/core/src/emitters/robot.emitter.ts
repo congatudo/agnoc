@@ -829,9 +829,19 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
 
     await this.sendRecv(
+      "DEVICE_MAPID_SELECT_MAP_PLAN_REQ",
+      "DEVICE_MAPID_SELECT_MAP_PLAN_RSP",
+      {
+        mapHeadId: id.value,
+        planId: 2,
+        mode: 1,
+      }
+    );
+
+    await this.sendRecv(
       "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
       "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-      { mask: 0x800 }
+      { mask: 0x78ff }
     );
 
     await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
