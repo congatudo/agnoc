@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.1](https://github.com/adrigzr/agnoc/compare/v0.12.0...v0.12.1) (2021-04-30)
+
+### Bug Fixes
+
+- clean rooms on 4090 ([211e3e4](https://github.com/adrigzr/agnoc/commit/211e3e401b794d5512136e8b05e58df31706359a))
+- state mode 11 is not an error ([96b0325](https://github.com/adrigzr/agnoc/commit/96b03253e34a9f18c4b2032b8d02fface8a6b555))
+
 # [0.12.0](https://github.com/adrigzr/agnoc/compare/v0.11.2...v0.12.0) (2021-04-30)
 
 ### Bug Fixes
