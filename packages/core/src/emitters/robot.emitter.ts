@@ -1294,13 +1294,19 @@ export class Robot extends TypedEmitter<RobotEvents> {
   send<Name extends OPDecoderLiteral>(
     opname: Name,
     object: OPDecoders[Name]
-  ): boolean {
-    return this.multiplexer.send({
+  ): void {
+    const ret = this.multiplexer.send({
       opname,
       userId: this.user.id,
       deviceId: this.device.id,
       object,
     });
+
+    if (!ret) {
+      throw new DomainException(
+        `There was an error sending opcode '${opname}'`
+      );
+    }
   }
 
   recv<Name extends OPDecoderLiteral>(opname: Name): Promise<Packet<Name>> {
@@ -1333,34 +1339,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
     recvOPName: RecvName,
     sendObject: OPDecoders[SendName]
   ): Promise<Packet<RecvName>> {
-    return new Promise((resolve, reject) => {
-      const ret = this.send(sendOPName, sendObject);
-      let timer: NodeJS.Timer;
+    this.send(sendOPName, sendObject);
 
-      const done = (packet: Packet<OPDecoderLiteral>) => {
-        clearTimeout(timer);
-        resolve(packet as Packet<RecvName>);
-      };
-
-      const fail = () => {
-        this.multiplexer.off(recvOPName, done);
-        reject(
-          new DomainException(
-            `Timeout waiting for response from opcode '${recvOPName}'`
-          )
-        );
-      };
-
-      if (ret) {
-        timer = setTimeout(fail, RECV_TIMEOUT);
-        this.multiplexer.once(recvOPName, done);
-      } else {
-        reject(
-          new DomainException(
-            `Unable to wait for response from opcode '${recvOPName}', there was an error sending opcode '${sendOPName}'`
-          )
-        );
-      }
-    });
+    return this.recv(recvOPName);
   }
 }
