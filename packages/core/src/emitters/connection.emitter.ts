@@ -82,7 +82,7 @@ export class Connection extends TypedEmitter<
 
     this.debug(`sending packet ${packet.toString()}`);
 
-    return this.socket.write(packet);
+    return this.write(packet);
   }
 
   respond<Name extends OPDecoderLiteral>({
@@ -105,7 +105,15 @@ export class Connection extends TypedEmitter<
 
     this.debug(`responding to packet with ${response.toString()}`);
 
-    return this.socket.write(response);
+    return this.write(response);
+  }
+
+  private write(packet: Packet<OPDecoderLiteral>): boolean {
+    if (!this.socket.destroyed && !this.socket.connecting) {
+      return this.socket.write(packet);
+    }
+
+    return false;
   }
 
   close(): void {
