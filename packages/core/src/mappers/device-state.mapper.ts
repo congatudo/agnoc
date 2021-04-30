@@ -15,7 +15,7 @@ interface RobotState {
 function getDomainValue(state: RobotState): ValueOf<typeof VALUE> {
   const { type, workMode, chargeStatus } = state;
 
-  if (![0, 3].includes(type) || [11].includes(workMode)) {
+  if (![0, 3].includes(type)) {
     return VALUE.ERROR;
   }
 
