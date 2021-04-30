@@ -11,7 +11,7 @@ import { Packet } from "../value-objects/packet.value-object";
 import { Device } from "../entities/device.entity";
 import { User } from "../entities/user.entity";
 import { debug } from "../utils/debug.util";
-import { DEVICE_MODEL } from "../value-objects/device-system.value-object";
+import { DEVICE_CAPABILITY } from "../value-objects/device-system.value-object";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { Debugger } from "debug";
 import { DeviceOrder } from "../entities/device-order.entity";
@@ -269,7 +269,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     } else if (mode.value === DeviceMode.VALUE.SPOT) {
       let mask = 0x78ff | 0x200;
 
-      if (this.device.system.model === DEVICE_MODEL.C3090) {
+      if (!this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS)) {
         mask = 0xff | 0x200;
       }
 
@@ -285,7 +285,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
       let mask = 0x78ff | 0x100;
 
-      if (this.device.system.model === DEVICE_MODEL.C3090) {
+      if (!this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS)) {
         mask = 0xff | 0x100;
       }
 
@@ -338,7 +338,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async getConsumables(): Promise<DeviceConsumable[]> {
-    if (this.device.system.model === DEVICE_MODEL.C3090) {
+    if (!this.device.system.supports(DEVICE_CAPABILITY.CONSUMABLES)) {
       return [];
     }
 
@@ -389,7 +389,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   async updateMap(): Promise<void> {
     let mask = 0x78ff;
 
-    if (this.device.system.model === DEVICE_MODEL.C3090) {
+    if (!this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS)) {
       mask = 0xff;
     }
 
@@ -571,7 +571,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       areas.push([]);
     }
 
-    if (this.device.system.model === DEVICE_MODEL.C3090) {
+    if (!this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS)) {
       await this.sendRecv(
         "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
         "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
@@ -868,7 +868,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     void this.getTime();
     void this.updateMap();
-    void this.getOrders();
     void this.getWlan();
   }
 

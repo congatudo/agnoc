@@ -1,5 +1,6 @@
 import { ValueObject } from "../base-classes/value-object.base";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
+import { ValueOf } from "../types/value-of.type";
 import { isPresent } from "../utils/is-present.util";
 
 export interface DeviceSystemProps {
@@ -25,11 +26,39 @@ export const DEVICE_TYPE = {
 
 export type DeviceType = keyof typeof DEVICE_TYPE;
 
+export const DEVICE_CAPABILITY = {
+  MAP_PLANS: 0x0001,
+  WATER_SENSOR: 0x0002,
+  CONSUMABLES: 0x0004,
+} as const;
+
+export type DeviceCapability = ValueOf<typeof DEVICE_CAPABILITY>;
+
+export const MODEL_CAPABILITY = {
+  [DEVICE_MODEL.C3090]: 0,
+  [DEVICE_MODEL.C3490]:
+    DEVICE_CAPABILITY.MAP_PLANS |
+    DEVICE_CAPABILITY.WATER_SENSOR |
+    DEVICE_CAPABILITY.CONSUMABLES,
+  [DEVICE_MODEL.UNKNOWN]:
+    DEVICE_CAPABILITY.MAP_PLANS |
+    DEVICE_CAPABILITY.WATER_SENSOR |
+    DEVICE_CAPABILITY.CONSUMABLES,
+} as const;
+
 export class DeviceSystem extends ValueObject<DeviceSystemProps> {
   get model(): DeviceModel {
     return (
       DEVICE_TYPE[this.props.deviceType as DeviceType] || DEVICE_MODEL.UNKNOWN
     );
+  }
+
+  get capabilities(): number {
+    return MODEL_CAPABILITY[this.model];
+  }
+
+  supports(capability: DeviceCapability): boolean {
+    return Boolean(this.capabilities & capability);
   }
 
   protected validate(props: DeviceSystemProps): void {
