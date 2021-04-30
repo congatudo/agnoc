@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/adrigzr/agnoc/compare/v0.11.2...v0.12.0) (2021-04-30)
+
+### Bug Fixes
+
+- add exception to send ([e0321a0](https://github.com/adrigzr/agnoc/commit/e0321a004ec4c91a3f4885a019f7a9d2381b2ed8))
+- change add robot event ([68fba00](https://github.com/adrigzr/agnoc/commit/68fba00607491780fba6ecd5781e48ccbed2253e))
+- prevent writing socket when is not connected ([4014d19](https://github.com/adrigzr/agnoc/commit/4014d19685b3f8bd22f224b3bf9262ef690635c9))
+- remove consumables form C3090 ([dc57957](https://github.com/adrigzr/agnoc/commit/dc579571e982f0c5c335c7f7ae71f2a80d0891e8))
+
+### Features
+
+- add capabilities ([6538678](https://github.com/adrigzr/agnoc/commit/6538678cf60b187fb9978c535daec35531ad242c))
+- add pause control ([0407e06](https://github.com/adrigzr/agnoc/commit/0407e06e6d32ad27b268c1bc43ef000fdef3aac1))
+- add timeout to commands ([7a4f3e2](https://github.com/adrigzr/agnoc/commit/7a4f3e283e940b3a080e4b4aee42ab10a6150aa8))
+- emit map position events ([d234432](https://github.com/adrigzr/agnoc/commit/d23443237bb2fdfb2b103897b0ccfc5d69b2b4c1))
+
 ## [0.11.2](https://github.com/adrigzr/agnoc/compare/v0.11.1...v0.11.2) (2021-04-27)
 
 ### Bug Fixes
