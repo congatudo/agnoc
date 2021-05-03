@@ -51,6 +51,7 @@ import { writeByte, writeFloat } from "../utils/stream.util";
 import { DeviceVoice } from "../value-objects/device-voice.value-object";
 import { DeviceVoiceMapper } from "../mappers/device-voice.mapper";
 import { Pixel } from "../value-objects/pixel.value-object";
+import { DeviceState } from "../value-objects/device-state.value-object";
 
 export interface RobotProps {
   device: Device;
@@ -163,6 +164,42 @@ export class Robot extends TypedEmitter<RobotEvents> {
         }
       );
     } else {
+      if (
+        this.device.state?.value === DeviceState.VALUE.DOCKED &&
+        this.device.map?.rooms
+      ) {
+        const { id, restrictedZones } = this.device.map;
+
+        await this.sendRecv(
+          "DEVICE_MAPID_SET_PLAN_PARAMS_REQ",
+          "DEVICE_MAPID_SET_PLAN_PARAMS_RSP",
+          {
+            mapHeadId: id.value,
+            // FIXME: this will change user map name.
+            mapName: "Default",
+            planId: 2,
+            // FIXME: this will change user plan name.
+            planName: "Default",
+            roomList: this.device.map.rooms.map((room) => ({
+              roomId: room.id.value,
+              roomName: room.name,
+              enable: true,
+            })),
+            areaInfo: {
+              mapHeadId: id.value,
+              planId: 2,
+              cleanAreaLength: restrictedZones.length,
+              cleanAreaList: restrictedZones.map((zone) => ({
+                cleanAreaId: zone.id.value,
+                type: 0,
+                coordinateLength: zone.coordinates.length,
+                coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
+              })),
+            },
+          }
+        );
+      }
+
       await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
         ctrlValue: CTRL_VALUE.START,
         cleanType: 2,

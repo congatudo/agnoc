@@ -23,10 +23,6 @@ function getDomainValue(state: RobotState): ValueOf<typeof VALUE> {
     return VALUE.MANUAL_CONTROL;
   }
 
-  if (chargeStatus) {
-    return VALUE.DOCKED;
-  }
-
   if ([5, 10, 12, 32].includes(workMode)) {
     return VALUE.RETURNING;
   }
@@ -35,12 +31,16 @@ function getDomainValue(state: RobotState): ValueOf<typeof VALUE> {
     return VALUE.PAUSED;
   }
 
-  if ([0, 11, 14, 23, 29, 35, 40].includes(workMode)) {
-    return VALUE.IDLE;
+  if ([1, 6, 7, 11, 25, 20, 30, 36].includes(workMode)) {
+    return VALUE.CLEANING;
   }
 
-  if ([1, 6, 7, 25, 20, 30, 36].includes(workMode)) {
-    return VALUE.CLEANING;
+  if (chargeStatus) {
+    return VALUE.DOCKED;
+  }
+
+  if ([0, 14, 23, 29, 35, 40].includes(workMode)) {
+    return VALUE.IDLE;
   }
 
   throw new DomainException(
