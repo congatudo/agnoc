@@ -280,6 +280,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
           },
         }
       );
+
+      await this.updateMap();
     }
   }
 
@@ -1039,6 +1041,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       roomSegmentList,
       wallListInfo,
       spotInfo,
+      cleanPlanList,
+      currentPlanId,
     } = object;
 
     if (statusInfo) {
@@ -1150,12 +1154,19 @@ export class Robot extends TypedEmitter<RobotEvents> {
         );
       }
 
-      if (cleanRoomList && roomSegmentList) {
+      if (cleanRoomList && roomSegmentList && cleanPlanList) {
+        const currentPlan = cleanPlanList.find(
+          (plan) => plan.planId === currentPlanId
+        );
+
         map.updateRooms(
           cleanRoomList
             .map((cleanRoom) => {
               const segment = roomSegmentList.find(
                 (roomSegment) => roomSegment.roomId === cleanRoom.roomId
+              );
+              const roomInfo = currentPlan?.cleanRoomInfoList.find(
+                (r) => r.roomId === cleanRoom.roomId
               );
 
               if (!segment) {
@@ -1165,6 +1176,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
               return new Room({
                 id: new ID(cleanRoom.roomId),
                 name: cleanRoom.roomName,
+                isEnabled: Boolean(roomInfo?.enable),
                 center: new Coordinate({
                   x: cleanRoom.roomX,
                   y: cleanRoom.roomY,

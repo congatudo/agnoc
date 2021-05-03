@@ -9,6 +9,7 @@ import { Pixel } from "../value-objects/pixel.value-object";
 export interface RoomProps {
   id: ID;
   name: string;
+  isEnabled: boolean;
   center: Coordinate;
   pixels: Pixel[];
 }
@@ -27,6 +28,10 @@ export class Room extends Entity<RoomProps> {
     return this.props.name;
   }
 
+  get isEnabled(): boolean {
+    return this.props.isEnabled;
+  }
+
   get center(): Coordinate {
     return this.props.center;
   }
@@ -36,7 +41,15 @@ export class Room extends Entity<RoomProps> {
   }
 
   private validate(props: RoomProps): void {
-    if (![props.id, props.name, props.center, props.pixels].every(isPresent)) {
+    if (
+      ![
+        props.id,
+        props.name,
+        props.isEnabled,
+        props.center,
+        props.pixels,
+      ].every(isPresent)
+    ) {
       throw new ArgumentNotProvidedException(
         "Missing property in room constructor"
       );
