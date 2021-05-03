@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/adrigzr/agnoc/compare/v0.12.1...v0.13.0) (2021-05-03)
+
+### Bug Fixes
+
+- restore rooms when starts from dock ([b6b5395](https://github.com/adrigzr/agnoc/commit/b6b53952fb457001cce117b3ed73259a6d7cd381))
+
+### Features
+
+- add enable to rooms ([fafe3f3](https://github.com/adrigzr/agnoc/commit/fafe3f365d9a50e70c8ed0f2d67a01d7a2ef9121))
+
 ## [0.12.1](https://github.com/adrigzr/agnoc/compare/v0.12.0...v0.12.1) (2021-04-30)
 
 ### Bug Fixes
