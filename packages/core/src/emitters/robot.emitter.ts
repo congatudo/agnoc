@@ -165,8 +165,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
       );
     } else {
       if (
+        this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS) &&
         this.device.state?.value === DeviceState.VALUE.DOCKED &&
-        this.device.map?.rooms
+        this.device.map
       ) {
         const { id, restrictedZones } = this.device.map;
 
@@ -249,7 +250,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
       cleanType: 2,
     });
 
-    if (this.device.map?.rooms) {
+    if (
+      this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS) &&
+      this.device.map
+    ) {
       const { id, restrictedZones } = this.device.map;
 
       await this.sendRecv(
