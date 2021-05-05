@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.1](https://github.com/adrigzr/agnoc/compare/v0.13.0...v0.13.1) (2021-05-05)
+
+### Bug Fixes
+
+- check capabilities before changing plan on start/stop ([7c3c585](https://github.com/adrigzr/agnoc/commit/7c3c5851fc7b080aa4894ce779cddd1ffae8faf7))
+
 # [0.13.0](https://github.com/adrigzr/agnoc/compare/v0.12.1...v0.13.0) (2021-05-03)
 
 ### Bug Fixes
