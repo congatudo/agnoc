@@ -1350,7 +1350,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
   }
 
-  toString(): string {
+  override toString(): string {
     return [
       `device: ${this.device.toString()}`,
       `user: ${this.user.toString()}`,

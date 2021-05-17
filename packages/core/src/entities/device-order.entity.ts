@@ -48,7 +48,7 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
     this.validate(props);
   }
 
-  get id(): ID {
+  override get id(): ID {
     return this.props.id;
   }
 

@@ -118,7 +118,7 @@ export class Packet<Name extends OPDecoderLiteral> extends ValueObject<
     return pack(this.props);
   }
 
-  toString(): string {
+  override toString(): string {
     return [
       `[id: ${this.props.sequence.toString()}]`,
       `[ctype: ${this.props.ctype}]`,
@@ -130,7 +130,7 @@ export class Packet<Name extends OPDecoderLiteral> extends ValueObject<
     ].join(" ");
   }
 
-  toJSON(): PacketSerialized<Name> {
+  override toJSON(): PacketSerialized<Name> {
     return super.toJSON() as PacketSerialized<Name>;
   }
 

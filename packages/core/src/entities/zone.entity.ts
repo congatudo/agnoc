@@ -16,7 +16,7 @@ export class Zone extends Entity<ZoneProps> {
     this.validate(props);
   }
 
-  get id(): ID {
+  override get id(): ID {
     return this.props.id;
   }
 

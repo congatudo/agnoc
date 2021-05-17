@@ -6,7 +6,8 @@ export class AggregateRoot<
     EntityEvents extends ListenerSignature<EntityEvents>
   >
   extends Entity<EntityProps>
-  implements TypedEmitter<EntityEvents> {
+  implements TypedEmitter<EntityEvents>
+{
   eventEmitter = new TypedEmitter<EntityEvents>();
 
   addListener<U extends keyof EntityEvents>(

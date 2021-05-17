@@ -8,12 +8,16 @@ export class JSONTransform extends Transform {
     super({ objectMode: true });
   }
 
-  _transform(chunk: Buffer, _: BufferEncoding, done: TransformCallback): void {
+  override _transform(
+    chunk: Buffer,
+    _: BufferEncoding,
+    done: TransformCallback
+  ): void {
     this.buffer += chunk.toString("utf8");
     done();
   }
 
-  _flush(done: TransformCallback): void {
+  override _flush(done: TransformCallback): void {
     let obj;
 
     try {

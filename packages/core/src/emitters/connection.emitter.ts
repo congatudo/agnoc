@@ -149,7 +149,7 @@ export class Connection extends TypedEmitter<
     this.emit("close");
   }
 
-  toString(): string {
+  override toString(): string {
     return `${this.socket.remoteAddress || "unknown"}:${
       this.socket.remotePort || 0
     }::${this.socket.localAddress || "unknown"}:${this.socket.localPort || 0}`;
