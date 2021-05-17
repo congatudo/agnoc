@@ -38,11 +38,11 @@ export class OPCode<
     return OPNAMES[this.value] as Name;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.name;
   }
 
-  toJSON(): Name {
+  override toJSON(): Name {
     return this.name;
   }
 

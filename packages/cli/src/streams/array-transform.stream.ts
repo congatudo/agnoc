@@ -7,12 +7,12 @@ export class ArrayTransform<T> extends Transform {
     super({ objectMode: true });
   }
 
-  _write(chunk: T, _: BufferEncoding, done: TransformCallback): void {
+  override _write(chunk: T, _: BufferEncoding, done: TransformCallback): void {
     this.list.push(chunk);
     done();
   }
 
-  _final(done: TransformCallback): void {
+  override _final(done: TransformCallback): void {
     this.push(this.list);
     done();
   }

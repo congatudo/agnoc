@@ -29,7 +29,7 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     this.validate(props);
   }
 
-  get id(): ID {
+  override get id(): ID {
     return this.props.id;
   }
 

@@ -69,7 +69,7 @@ export class TCPReader extends Readable {
     this.push(null);
   }
 
-  _read(): void {
+  override _read(): void {
     return;
   }
 }

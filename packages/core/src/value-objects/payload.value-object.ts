@@ -130,11 +130,11 @@ export class Payload<Name extends OPDecoderLiteral> extends ValueObject<
     return this.props.object;
   }
 
-  public toString(): string {
+  public override toString(): string {
     return JSON.stringify(this.object, filterProperties);
   }
 
-  public toJSON(): PayloadSerialized<Name> {
+  public override toJSON(): PayloadSerialized<Name> {
     return { opcode: this.props.opcode.toJSON(), object: this.props.object };
   }
 

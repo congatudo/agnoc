@@ -47,7 +47,7 @@ export class Message<Name extends OPDecoderLiteral> extends ValueObject<
     return this.connection.respond({ packet: this.packet, opname, object });
   }
 
-  public toString(): string {
+  public override toString(): string {
     return "[Message]";
   }
 

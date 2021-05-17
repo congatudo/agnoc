@@ -11,7 +11,7 @@ export class BufferWriter extends Writable {
     this.buffer = buffer || Buffer.alloc(0);
   }
 
-  _write(chunk: Buffer, _: BufferEncoding, done: Callback): void {
+  override _write(chunk: Buffer, _: BufferEncoding, done: Callback): void {
     this.buffer = Buffer.concat([this.buffer, chunk]);
     done();
   }

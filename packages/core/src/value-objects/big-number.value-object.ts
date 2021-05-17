@@ -16,11 +16,11 @@ export class BigNumber extends ValueObject<bigint> {
     return this.props.value;
   }
 
-  public toString(): string {
+  public override toString(): string {
     return this.props.value.toString(16);
   }
 
-  public toJSON(): BigNumberSerialized {
+  public override toJSON(): BigNumberSerialized {
     return this.toString();
   }
 

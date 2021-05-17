@@ -15,7 +15,7 @@ export class DateTime extends ValueObject<Date> {
     return this.props.value;
   }
 
-  public toString(): string {
+  public override toString(): string {
     return this.value.toISOString();
   }
 
