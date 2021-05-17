@@ -1,1 +1,10 @@
-{}
+{
+  "overrides": [
+    {
+      "files": "*.ts",
+      "options": {
+        "parser": "babel-ts"
+      }
+    }
+  ]
+}

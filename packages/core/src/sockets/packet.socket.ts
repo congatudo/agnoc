@@ -177,12 +177,12 @@ export class PacketSocket extends Duplex {
     }
   }
 
-  _read(): void {
+  override _read(): void {
     this.readingPaused = false;
     setImmediate(this.onReadable.bind(this));
   }
 
-  _write(
+  override _write(
     packet: Packet<OPDecoderLiteral>,
     _: BufferEncoding,
     done: Callback
@@ -201,7 +201,7 @@ export class PacketSocket extends Duplex {
     }
   }
 
-  _final(done: Callback): void {
+  override _final(done: Callback): void {
     if (!this.socket) {
       done(new DomainException("Called _final without connection"));
       return;

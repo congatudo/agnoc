@@ -10,7 +10,7 @@ export class PacketEncodeTransform extends Transform {
     super({ objectMode: true });
   }
 
-  _transform(
+  override _transform(
     array: PacketSerialized<OPDecoderLiteral>[],
     _: BufferEncoding,
     done: TransformCallback

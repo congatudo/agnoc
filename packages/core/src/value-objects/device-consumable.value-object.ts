@@ -10,7 +10,8 @@ export const CONSUMABLE_TYPE = {
   DISHCLOTH: "dishcloth",
 } as const;
 
-export type ConsumableType = typeof CONSUMABLE_TYPE[keyof typeof CONSUMABLE_TYPE];
+export type ConsumableType =
+  typeof CONSUMABLE_TYPE[keyof typeof CONSUMABLE_TYPE];
 
 export interface DeviceConsumableProps {
   type: ConsumableType;

@@ -9,12 +9,17 @@ export interface SerializedException {
 }
 
 export abstract class Exception extends Error {
-  constructor(readonly message: string, readonly metadata?: ObjectLiteral) {
+  override readonly message: string;
+  readonly metadata?: ObjectLiteral;
+
+  constructor(message: string, metadata?: ObjectLiteral) {
     super(message);
+    this.message = message;
+    this.metadata = metadata;
     Error.captureStackTrace(this, this.constructor);
   }
 
-  abstract name: Exceptions;
+  abstract override name: Exceptions;
 
   toJSON(): SerializedException {
     return {

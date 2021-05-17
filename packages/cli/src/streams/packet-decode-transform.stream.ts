@@ -11,7 +11,11 @@ export class PacketDecodeTransform extends Transform {
     });
   }
 
-  _transform(chunk: Buffer, _: BufferEncoding, done: TransformCallback): void {
+  override _transform(
+    chunk: Buffer,
+    _: BufferEncoding,
+    done: TransformCallback
+  ): void {
     this.buffer = Buffer.concat([this.buffer, chunk]);
 
     let size = this.buffer.readUInt32LE();
@@ -37,7 +41,7 @@ export class PacketDecodeTransform extends Transform {
     done();
   }
 
-  _final(done: TransformCallback): void {
+  override _final(done: TransformCallback): void {
     if (this.buffer.length > 0) {
       return done(
         new DomainException(
