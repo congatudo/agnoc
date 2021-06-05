@@ -136,6 +136,18 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async start(): Promise<void> {
+    if (
+      this.device.hasMopAttached &&
+      this.device.mode?.value !== DeviceMode.VALUE.MOP
+    ) {
+      await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.MOP }));
+    } else if (
+      !this.device.hasMopAttached &&
+      this.device.mode?.value === DeviceMode.VALUE.MOP
+    ) {
+      await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.NONE }));
+    }
+
     if (this.device.mode?.value === DeviceMode.VALUE.ZONE) {
       await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
         ctrlValue: CTRL_VALUE.START,
@@ -348,6 +360,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
     } else {
       throw new ArgumentInvalidException("Unknown device mode");
     }
+
+    await waitFor(() => this.device.mode?.value === mode.value, {
+      timeout: MODE_CHANGE_TIMEOUT,
+    }).catch(() => {
+      throw new DomainException(`Unable to change robot mode to ${mode.value}`);
+    });
   }
 
   async setFanSpeed(fanSpeed: DeviceFanSpeed): Promise<void> {
@@ -512,22 +530,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
   }
 
-  async mopClean(): Promise<void> {
-    await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.MOP }));
-
-    await waitFor(() => this.device.mode?.value === DeviceMode.VALUE.MOP, {
-      timeout: MODE_CHANGE_TIMEOUT,
-    }).catch(() => {
-      throw new DomainException("Unable to change robot to mop mode");
-    });
-
-    await this.sendRecv(
-      "DEVICE_MOP_FLOOR_CLEAN_REQ",
-      "DEVICE_MOP_FLOOR_CLEAN_RSP",
-      { ctrlValue: CTRL_VALUE.START }
-    );
-  }
-
   async cleanPosition(position: Position): Promise<void> {
     if (!this.device.map) {
       throw new DomainException("Unable to set robot position: map not loaded");
@@ -535,12 +537,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     if (this.device.mode?.value !== DeviceMode.VALUE.SPOT) {
       await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.SPOT }));
-
-      await waitFor(() => this.device.mode?.value === DeviceMode.VALUE.SPOT, {
-        timeout: MODE_CHANGE_TIMEOUT,
-      }).catch(() => {
-        throw new DomainException("Unable to change robot to position mode");
-      });
     }
 
     await this.sendRecv(
@@ -568,12 +564,6 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     if (this.device.mode?.value !== DeviceMode.VALUE.ZONE) {
       await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.ZONE }));
-
-      await waitFor(() => this.device.mode?.value === DeviceMode.VALUE.ZONE, {
-        timeout: MODE_CHANGE_TIMEOUT,
-      }).catch(() => {
-        throw new DomainException("Unable to change robot to area mode");
-      });
     }
 
     const req = {
