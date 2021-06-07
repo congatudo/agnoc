@@ -1006,11 +1006,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
     this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
     this.device.updateFanSpeed(DeviceFanSpeedMapper.toDomain(cleanPreference));
 
-    if (mopType) {
+    if (isPresent(mopType)) {
       this.device.updateHasMopAttached(mopType);
     }
 
-    if (waterLevel) {
+    if (isPresent(waterLevel)) {
       this.device.updateWaterLevel(DeviceWaterLevelMapper.toDomain(waterLevel));
     }
 
