@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.4](https://github.com/adrigzr/agnoc/compare/v0.13.3...v0.13.4) (2021-06-07)
+
+### Bug Fixes
+
+- mop attachment not deattaching ([e27ab3f](https://github.com/adrigzr/agnoc/commit/e27ab3f83cb4d7a83545f7e63e8f6a9c3c1b65ce))
+
 ## [0.13.3](https://github.com/adrigzr/agnoc/compare/v0.13.2...v0.13.3) (2021-06-07)
 
 ### Bug Fixes
