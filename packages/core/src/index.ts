@@ -9,6 +9,7 @@ export * from "./value-objects/device-battery.value-object";
 export * from "./value-objects/device-consumable.value-object";
 export * from "./value-objects/device-current-clean.value-object";
 export * from "./value-objects/device-fan-speed.value-object";
+export * from "./value-objects/device-mode.value-object";
 export * from "./value-objects/device-quiet-hours.value-object";
 export * from "./value-objects/device-state.value-object";
 export * from "./value-objects/device-system.value-object";
