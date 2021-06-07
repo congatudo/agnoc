@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.3](https://github.com/adrigzr/agnoc/compare/v0.13.2...v0.13.3) (2021-06-07)
+
+**Note:** Version bump only for package @agnoc/cli
+
 ## [0.13.2](https://github.com/adrigzr/agnoc/compare/v0.13.1...v0.13.2) (2021-06-05)
 
 **Note:** Version bump only for package @agnoc/cli
