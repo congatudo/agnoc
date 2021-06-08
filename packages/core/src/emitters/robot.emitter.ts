@@ -1095,7 +1095,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     if (map) {
-      if (robotPoseInfo) {
+      if (robotPoseInfo && robotPoseInfo.update) {
         map.updateRobot(
           new Position({
             x: robotPoseInfo.poseX,
@@ -1194,14 +1194,17 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     const object = message.packet.payload.object;
 
-    this.device.map.updateRobot(
-      new Position({
-        x: object.poseX,
-        y: object.poseY,
-        phi: object.posePhi,
-      })
-    );
-    this.emit("updateRobotPosition");
+    if (object.update) {
+      this.device.map.updateRobot(
+        new Position({
+          x: object.poseX,
+          y: object.poseY,
+          phi: object.posePhi,
+        })
+      );
+
+      this.emit("updateRobotPosition");
+    }
   }
 
   @bind
