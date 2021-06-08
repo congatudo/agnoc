@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.6](https://github.com/adrigzr/agnoc/compare/v0.13.5...v0.13.6) (2021-06-08)
+
+### Bug Fixes
+
+- enable path points ([9f8be4f](https://github.com/adrigzr/agnoc/commit/9f8be4fd45cf694accf143d20864a1705f178fbe))
+- only update robot position when update flag is truthy ([a4d3d3b](https://github.com/adrigzr/agnoc/commit/a4d3d3b9a3bec1f730217e2c0eff28e3f535ca3e))
+
 ## [0.13.5](https://github.com/adrigzr/agnoc/compare/v0.13.4...v0.13.5) (2021-06-08)
 
 ### Bug Fixes

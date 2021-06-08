@@ -1,6 +1,6 @@
 {
   "name": "@agnoc/cli",
-  "version": "0.13.5",
+  "version": "0.13.6",
   "description": "Agnoc command line.",
   "keywords": [
     "agnoc",
@@ -34,7 +34,7 @@
     "test": "make test"
   },
   "dependencies": {
-    "@agnoc/core": "^0.13.5",
+    "@agnoc/core": "^0.13.6",
     "commander": "^7.1.0"
   },
   "optionalDependencies": {
