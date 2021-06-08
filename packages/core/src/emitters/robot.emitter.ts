@@ -1097,8 +1097,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     if (map) {
       if (historyHeadInfo) {
+        const currentIndex = map.robotPath.length;
+
         map.updateRobotPath(
-          historyHeadInfo.pointList.map(({ x, y }) => new Coordinate({ x, y }))
+          map.robotPath.concat(
+            historyHeadInfo.pointList
+              .slice(currentIndex)
+              .map(({ x, y }) => new Coordinate({ x, y }))
+          )
         );
       }
 
