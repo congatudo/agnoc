@@ -3,6 +3,7 @@ import { version } from "../package.json";
 import { decode } from "./commands/decode.command";
 import { encode } from "./commands/encode.command";
 import { read } from "./commands/read.command";
+import { wlan } from "./commands/wlan.command";
 
 process.on("unhandledRejection", (e) => {
   console.error(e);
@@ -53,6 +54,18 @@ program
   .action((file, options) =>
     read(file, {
       ...options,
+      ...stdio,
+    })
+  );
+
+program
+  .command("wlan <ssid> <pass>")
+  .description("configure wlan in valetudo", {
+    ssid: "wifi ssid",
+    pass: "wifi password",
+  })
+  .action((ssid, pass) =>
+    wlan(ssid, pass, {
       ...stdio,
     })
   );
