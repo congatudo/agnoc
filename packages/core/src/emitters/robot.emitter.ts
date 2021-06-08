@@ -1028,6 +1028,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       statusInfo,
       mapHeadInfo,
       mapGrid,
+      historyHeadInfo,
       robotPoseInfo,
       robotChargeInfo,
       cleanRoomList,
@@ -1095,6 +1096,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     if (map) {
+      if (historyHeadInfo) {
+        map.updateRobotPath(
+          historyHeadInfo.pointList.map(({ x, y }) => new Coordinate({ x, y }))
+        );
+      }
+
       if (robotPoseInfo && robotPoseInfo.update) {
         map.updateRobot(
           new Position({
