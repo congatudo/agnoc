@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/adrigzr/agnoc/compare/v0.14.0...v0.15.0) (2021-06-14)
+
+### Features
+
+- enhance wlan command to connect to the ap ([83b7d18](https://github.com/adrigzr/agnoc/commit/83b7d184616746b1f24c48a5d89c68dcbf33d838))
+
 # [0.14.0](https://github.com/adrigzr/agnoc/compare/v0.13.7...v0.14.0) (2021-06-14)
 
 ### Features
