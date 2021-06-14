@@ -28,11 +28,8 @@ $ agnoc --help
 
 This command configures the wifi connection of the robot to the given one.
 
-To use this command, the robot must be in AP mode and your device must be connected to the robot AP.
-
 ```
 $ agnoc wlan my-wifi my-password
-Done! Check if your robot is connected to your wifi.\n
 ```
 
 ### Read
