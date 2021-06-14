@@ -4,6 +4,9 @@ import { decode } from "./commands/decode.command";
 import { encode } from "./commands/encode.command";
 import { read } from "./commands/read.command";
 import { wlan } from "./commands/wlan.command";
+import { wlanConfig } from "./commands/wlan-config.command";
+import cli from "cli-ux";
+import chalk from "chalk";
 
 process.on("unhandledRejection", (e) => {
   console.error(e);
@@ -18,11 +21,16 @@ const stdio = {
   stderr: process.stderr,
 };
 
+function handleError(e: Error): void {
+  cli.action.stop(chalk.red("!"));
+  stdio.stderr.write(chalk.red(e.message + "\n"));
+}
+
 program.name("agnoc").version(version);
 
 program
   .command("decode <file>")
-  .description("decode a flow file from binary to stdout", {
+  .description("decodes a flow file from binary to stdout", {
     file: "file to decode, use '-' to read from stdin.",
   })
   .option("-j, --json", "json output")
@@ -47,7 +55,7 @@ program
 
 program
   .command("read <file>")
-  .description("read and decode a pcap file to stdout", {
+  .description("reads and decodes a pcap file to stdout", {
     file: "file to read, use '-' to read from stdin.",
   })
   .option("-j, --json", "json output")
@@ -60,15 +68,30 @@ program
 
 program
   .command("wlan <ssid> <pass>")
-  .description("configure wlan in valetudo", {
+  .description("connects and configures robot wlan", {
     ssid: "wifi ssid",
     pass: "wifi password",
   })
-  .action((ssid, pass) =>
-    wlan(ssid, pass, {
-      ...stdio,
-    })
+  .option("-i, --iface <iface>", "network interface used to connect")
+  .option("-t, --timeout <timeout>", "connect timeout in milliseconds", "10000")
+  .action((ssid, pass, options) =>
+    wlan(ssid, pass, options).catch(handleError)
   );
+
+program
+  .command("wlan:config <ssid> <pass>")
+  .description("configures robot wlan", {
+    ssid: "wifi ssid",
+    pass: "wifi password",
+  })
+  .option("-t, --timeout <timeout>", "connect timeout in milliseconds", "10000")
+  .action(async (ssid, pass, { timeout }) => {
+    cli.action.start("Configuring wifi settings in the robot");
+    await wlanConfig(ssid, pass, { timeout: Number(timeout) }).catch(
+      handleError
+    );
+    cli.action.stop();
+  });
 
 program.addHelpCommand("help [command]", "display help for command");
 

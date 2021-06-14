@@ -38,6 +38,9 @@
     "commander": "^7.1.0"
   },
   "optionalDependencies": {
+    "chalk": "^4.1.1",
+    "cli-ux": "^5.5.1",
+    "node-wifi": "^2.0.14",
     "pcap": "^3.1.0"
   },
   "devDependencies": {

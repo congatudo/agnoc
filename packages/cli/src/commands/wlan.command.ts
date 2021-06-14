@@ -1,77 +1,63 @@
-import { BufferWriter } from "@agnoc/core/streams/buffer-writer.stream";
-import { writeWord } from "@agnoc/core/utils/stream.util";
-import { Socket } from "net";
-import { Duplex } from "stream";
+import wifi, { Network } from "node-wifi";
+import cli from "cli-ux";
+import { wlanConfig } from "./wlan-config.command";
 
 interface WlanOptions {
-  stdin: Duplex;
-  stdout: Duplex;
-  stderr: Duplex;
+  timeout: number;
+  iface: string | null;
 }
 
-function buildHeaders() {
-  const stream = new BufferWriter();
-
-  writeWord(stream, 1364758872);
-  writeWord(stream, 0);
-  writeWord(stream, 101);
-  writeWord(stream, 84);
-  writeWord(stream, 0);
-
-  return stream.buffer;
+function timeout(time: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
-function str(str: string, size: number) {
-  const buffer = Buffer.alloc(size);
-
-  buffer.write(str);
-
-  return buffer;
+function isCongaAP(network: Network): boolean {
+  return Boolean(/CongaLaser/.exec(network.ssid));
 }
 
-function buildPayload(ssid: string, pass: string) {
-  const stream = new BufferWriter();
+export async function wlan(
+  ssid: string,
+  pass: string,
+  options: WlanOptions
+): Promise<void> {
+  await wifi.init({ iface: options.iface });
+  await cli.anykey("Put your robot in AP mode and press any key to continue");
 
-  stream.write(str(ssid, 32));
-  stream.write(str(pass, 48));
+  cli.action.start("Checking current connection");
+  const currentNetworks = await wifi.getCurrentConnections();
+  cli.action.stop();
 
-  writeWord(stream, 290826);
+  let ap = currentNetworks.find(isCongaAP);
 
-  return stream.buffer;
-}
+  if (!ap) {
+    cli.action.start("Looking for robot AP");
 
-export function wlan(ssid: string, pass: string, options: WlanOptions): void {
-  const socket = new Socket();
+    do {
+      const networks = await wifi.scan();
 
-  socket.on("data", () => {
-    options.stdout.write(
-      "Done! Check if your robot is connected to your wifi.\n"
-    );
-    socket.end();
-  });
+      ap = networks.find(isCongaAP);
 
-  socket.on("connect", () => {
-    options.stdout.write("Connected! Sending wifi data...\n");
-    socket.write(buildHeaders());
-    socket.write(buildPayload(ssid, pass));
-  });
+      if (!ap) {
+        await timeout(1000);
+      }
+    } while (!ap);
 
-  socket.on("error", (e) => {
-    options.stderr.write(e.message + "\n");
-    socket.end();
-  });
+    cli.action.stop();
 
-  socket.on("timeout", () => {
-    options.stderr.write("Timeout connecting to robot.\n");
-    socket.end();
-  });
+    cli.action.start("Connecting to robot AP");
+    await wifi.connect({ ssid: ap.ssid });
+    cli.action.stop();
 
-  socket.setTimeout(10000);
-  socket.connect({
-    host: "192.168.5.1",
-    port: 6008,
-    family: 4,
-  });
+    cli.action.start("Checking current connection");
+    const currentNetworks = await wifi.getCurrentConnections();
+    cli.action.stop();
 
-  options.stdout.write("Connecting to robot...\n");
+    if (!currentNetworks.find(isCongaAP)) {
+      throw new Error("Unable to connect to robot AP");
+    }
+  }
+
+  cli.action.start("Configuring wifi settings in the robot");
+  await wlanConfig(ssid, pass, { timeout: Number(options.timeout) });
+  cli.action.stop();
 }
