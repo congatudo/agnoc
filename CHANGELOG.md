@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/adrigzr/agnoc/compare/v0.13.7...v0.14.0) (2021-06-14)
+
+### Features
+
+- add wlan command to cli ([8cf5f69](https://github.com/adrigzr/agnoc/commit/8cf5f691583c7a03ecb55a269341159af5487d67))
+
 ## [0.13.7](https://github.com/adrigzr/agnoc/compare/v0.13.6...v0.13.7) (2021-06-08)
 
 ### Bug Fixes
