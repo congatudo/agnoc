@@ -120,6 +120,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     DEVICE_EVENT_REPORT_CLEANMAP: this.handleReportCleanmap,
     DEVICE_CLEANMAP_BINDATA_REPORT_REQ: this.handleBinDataReport,
     DEVICE_EVENT_REPORT_REQ: this.handleEventReport,
+    DEVICE_SETTIME_REQ: this.handleSetTime,
   };
 
   constructor({ device, user, multiplexer }: RobotProps) {
@@ -394,7 +395,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     return {
       timestamp: object.body.deviceTime * 1000,
-      offset: object.body.deviceTimezone,
+      offset: -1 * (object.body.deviceTimezone / 60),
     };
   }
 
@@ -1305,6 +1306,16 @@ export class Robot extends TypedEmitter<RobotEvents> {
   @bind
   handleEventReport(message: Message<"DEVICE_EVENT_REPORT_REQ">): void {
     message.respond("UNK_11A7", { unk1: 0 });
+  }
+
+  @bind
+  handleSetTime(message: Message<"DEVICE_SETTIME_REQ">): void {
+    const date = new Date();
+
+    message.respond("DEVICE_SETTIME_RSP", {
+      deviceTime: Math.floor(date.getTime() / 1000),
+      deviceTimezone: -1 * (date.getTimezoneOffset() * 60),
+    });
   }
 
   addConnection(connection: Connection): void {
