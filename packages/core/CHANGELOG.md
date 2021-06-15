@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.0](https://github.com/adrigzr/agnoc/compare/v0.15.0...v0.16.0-next.0) (2021-06-15)
+
+### Features
+
+- add device set time ([d74c049](https://github.com/adrigzr/agnoc/commit/d74c049d8a0d8795fab5f119b82471ff70513988))
+
 # [0.15.0](https://github.com/adrigzr/agnoc/compare/v0.14.0...v0.15.0) (2021-06-14)
 
 **Note:** Version bump only for package @agnoc/core
