@@ -2,9 +2,10 @@
   "command": {
     "version": {
       "allowBranch": ["master", "next"],
-      "preid": "next",
       "conventionalCommits": true,
-      "message": "chore(release): release %v [skip ci]"
+      "createRelease": "github",
+      "message": "chore(release): release %v [skip ci]",
+      "preid": "next"
     }
   },
   "npmClient": "yarn",
