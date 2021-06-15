@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.1](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.0...v0.16.0-next.1) (2021-06-15)
+
+### Bug Fixes
+
+- update dependencies ([d0f6a00](https://github.com/adrigzr/agnoc/commit/d0f6a0060804e5c91875e7028a19669776b49e18))
+
 # [0.16.0-next.0](https://github.com/adrigzr/agnoc/compare/v0.15.0...v0.16.0-next.0) (2021-06-15)
 
 ### Features
