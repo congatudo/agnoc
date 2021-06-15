@@ -57,3 +57,34 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  prerelease:
+    if: github.ref == 'refs/heads/next'
+    needs: test
+    runs-on: ubuntu-latest
+    name: Prerelease
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+          registry-url: "https://registry.npmjs.org"
+      - name: Configure CI Git User
+        run: |
+          git config --global user.email adrigzr@users.noreply.github.com
+          git config --global user.name adrigzr
+      - name: Install libpcap-dev
+        run: sudo apt-get install libpcap-dev
+      - name: Install dependencies
+        run: yarn install
+      - name: Prerelease
+        run: |
+          yarn build
+          lerna version --conventional-prerelease --yes
+          lerna publish from-package --yes
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
