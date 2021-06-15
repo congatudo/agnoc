@@ -1,7 +1,8 @@
 {
   "command": {
     "version": {
-      "allowBranch": "master",
+      "allowBranch": ["master", "next"],
+      "preid": "next",
       "conventionalCommits": true,
       "message": "chore(release): release %v [skip ci]"
     }
