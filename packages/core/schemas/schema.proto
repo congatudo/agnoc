@@ -185,6 +185,13 @@ message DEVICE_GETTIME_RSP {
     required Body body = 3;
 }
 
+message DEVICE_SETTIME_REQ {}
+
+message DEVICE_SETTIME_RSP {
+  required uint32 deviceTime = 1;
+  required uint32 deviceTimezone = 2;
+}
+
 message DEVICE_CONTROL_LOCK_REQ {}
 
 message DEVICE_CONTROL_LOCK_RSP {
