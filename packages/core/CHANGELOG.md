@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.2](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.1...v0.16.0-next.2) (2021-06-21)
+
+### Bug Fixes
+
+- emit not cleaning robot position ([8438b40](https://github.com/adrigzr/agnoc/commit/8438b40b872caa7fe7f9020315eef871d22d5e4e))
+
 # [0.16.0-next.1](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.0...v0.16.0-next.1) (2021-06-15)
 
 ### Bug Fixes
