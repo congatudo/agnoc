@@ -1109,7 +1109,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
         );
       }
 
-      if (robotPoseInfo && robotPoseInfo.update) {
+      if (robotPoseInfo) {
         map.updateRobot(
           new Position({
             x: robotPoseInfo.poseX,
