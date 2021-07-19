@@ -6,10 +6,10 @@ import { debug as debugFactory } from "@agnoc/core/utils/debug.util";
 function buildHeaders() {
   const stream = new BufferWriter();
 
-  writeWord(stream, 1364758872);
+  writeWord(stream, 0x51589158);
   writeWord(stream, 0);
-  writeWord(stream, 101);
-  writeWord(stream, 84);
+  writeWord(stream, 0x65);
+  writeWord(stream, 0x54);
   writeWord(stream, 0);
 
   return stream.buffer;
