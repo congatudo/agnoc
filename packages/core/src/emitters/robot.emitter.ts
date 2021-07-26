@@ -720,6 +720,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_RSP",
       { mode: Number(save) }
     );
+
+    this.device.updateHasWaitingMap(false);
   }
 
   async updateRoom(room: Room): Promise<void> {
@@ -1260,9 +1262,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   @bind
   handleWaitingMap(): void {
-    void this.saveWaitingMap(
-      !this.device.map || this.device.map.id.value === 0
-    );
+    this.device.updateHasWaitingMap(true);
   }
 
   @bind

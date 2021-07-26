@@ -34,11 +34,15 @@ export interface DeviceProps {
   fanSpeed?: DeviceFanSpeed;
   waterLevel?: DeviceWaterLevel;
   hasMopAttached?: boolean;
+  hasWaitingMap?: boolean;
 }
 
 export class Device extends Entity<DeviceProps> {
   constructor(props: DeviceProps) {
-    super(props);
+    super({
+      hasWaitingMap: false,
+      ...props,
+    });
     this.validate(props);
   }
 
@@ -102,6 +106,10 @@ export class Device extends Entity<DeviceProps> {
     return this.props.hasMopAttached;
   }
 
+  get hasWaitingMap(): boolean | undefined {
+    return this.props.hasWaitingMap;
+  }
+
   updateSystem(system: DeviceSystem): void {
     this.props.system = system;
   }
@@ -160,6 +168,10 @@ export class Device extends Entity<DeviceProps> {
 
   updateHasMopAttached(value: boolean): void {
     this.props.hasMopAttached = value;
+  }
+
+  updateHasWaitingMap(value: boolean): void {
+    this.props.hasWaitingMap = value;
   }
 
   protected validate(props: DeviceProps): void {
