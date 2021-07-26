@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.3](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.2...v0.16.0-next.3) (2021-07-26)
+
+### Features
+
+- add waiting map handler ([f5c112f](https://github.com/adrigzr/agnoc/commit/f5c112f87a726d7e6d76875be0056a107f8e27e4))
+
 # [0.16.0-next.2](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.1...v0.16.0-next.2) (2021-06-21)
 
 ### Bug Fixes
