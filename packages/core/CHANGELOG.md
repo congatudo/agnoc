@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.5](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.4...v0.16.0-next.5) (2022-01-24)
+
+### Bug Fixes
+
+- add missing workMode ([f3a1975](https://github.com/adrigzr/agnoc/commit/f3a1975ff54947c7ad609350985268f59a598ad2))
+
 # [0.16.0-next.4](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.3...v0.16.0-next.4) (2021-08-16)
 
 ### Bug Fixes
