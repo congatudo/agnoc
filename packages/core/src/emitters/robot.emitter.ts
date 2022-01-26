@@ -477,10 +477,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async enterManualMode(): Promise<void> {
-    await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      ctrlValue: CTRL_VALUE.STOP,
-      cleanType: 2,
-    });
+    // TODO: make a stop if robot is not stopped
     await this.sendRecv("DEVICE_MANUAL_CTRL_REQ", "DEVICE_MANUAL_CTRL_RSP", {
       command: MANUAL_MODE.init,
     });
@@ -488,7 +485,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async leaveManualMode(): Promise<void> {
     await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      ctrlValue: CTRL_VALUE.PAUSE,
+      ctrlValue: CTRL_VALUE.STOP,
       cleanType: 2,
     });
   }
