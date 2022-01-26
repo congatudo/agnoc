@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.6](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.5...v0.16.0-next.6) (2022-01-26)
+
+### Bug Fixes
+
+- **core:** fix enable manual mode ([92dedee](https://github.com/adrigzr/agnoc/commit/92dedee8dbf98c32ae207f742093fafbdc4d3d58))
+- **core:** set device timezone as optional ([851c9aa](https://github.com/adrigzr/agnoc/commit/851c9aa7e67e487f1b99ec2fdbafecc7545c5b60))
+
 # [0.16.0-next.5](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.4...v0.16.0-next.5) (2022-01-24)
 
 ### Bug Fixes
