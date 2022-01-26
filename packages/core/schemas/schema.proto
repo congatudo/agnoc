@@ -178,7 +178,7 @@ message DEVICE_GETTIME_REQ {}
 message DEVICE_GETTIME_RSP {
     message Body {
         required uint32 deviceTime = 1;
-        required uint32 deviceTimezone = 2;
+        optional uint32 deviceTimezone = 2;
     }
 
     required int32 result = 1;
@@ -189,7 +189,7 @@ message DEVICE_SETTIME_REQ {}
 
 message DEVICE_SETTIME_RSP {
   required uint32 deviceTime = 1;
-  required uint32 deviceTimezone = 2;
+  optional uint32 deviceTimezone = 2;
 }
 
 message DEVICE_CONTROL_LOCK_REQ {}

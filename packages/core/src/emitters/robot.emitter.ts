@@ -395,7 +395,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     return {
       timestamp: object.body.deviceTime * 1000,
-      offset: -1 * (object.body.deviceTimezone / 60),
+      offset: -1 * ((object.body.deviceTimezone || 0) / 60),
     };
   }
 
