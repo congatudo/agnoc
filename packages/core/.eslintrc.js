@@ -1,10 +1,12 @@
+const path = require("path");
+
 module.exports = {
   overrides: [
     {
       files: ["src/**/*.{js,ts}", "test/**/*.{js,ts}"],
       parserOptions: {
         ecmaVersion: 2020,
-        project: "./tsconfig.json",
+        project: path.resolve(__dirname, "../../tsconfig.json"),
         sourceType: "module",
       },
       plugins: ["@typescript-eslint", "node", "prettier", "security"],
