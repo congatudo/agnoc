@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.7](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.6...v0.16.0-next.7) (2022-01-28)
+
+### Bug Fixes
+
+- **core:** emit updateDevice event when has waiting map ([63801b3](https://github.com/adrigzr/agnoc/commit/63801b32e8ffbaceefe68b6db9dbdb4502d26a80))
+
 # [0.16.0-next.6](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.5...v0.16.0-next.6) (2022-01-26)
 
 ### Bug Fixes
