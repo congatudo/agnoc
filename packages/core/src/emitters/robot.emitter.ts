@@ -1260,6 +1260,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   @bind
   handleWaitingMap(): void {
     this.device.updateHasWaitingMap(true);
+    this.emit("updateDevice");
   }
 
   @bind
