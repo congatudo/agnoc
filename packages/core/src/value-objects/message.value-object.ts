@@ -24,10 +24,6 @@ export type MessageHandlers = Partial<
 export class Message<Name extends OPDecoderLiteral> extends ValueObject<
   MessageProps<Name>
 > {
-  constructor(props: MessageProps<Name>) {
-    super(props);
-  }
-
   get connection(): Connection {
     return this.props.connection;
   }

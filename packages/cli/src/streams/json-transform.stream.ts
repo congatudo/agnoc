@@ -23,7 +23,7 @@ export class JSONTransform extends Transform {
     try {
       obj = JSON.parse(this.buffer) as ObjectLiteral;
     } catch (e) {
-      return done(e);
+      return done(e as Error);
     }
 
     this.push(obj);

@@ -165,7 +165,7 @@ export class PacketSocket extends Duplex {
       try {
         packet = Packet.fromBuffer(body);
       } catch (e) {
-        this.socket.destroy(e);
+        this.socket.destroy(e as Error);
         return;
       }
 
@@ -197,7 +197,7 @@ export class PacketSocket extends Duplex {
     try {
       this.socket.write(buffer, done);
     } catch (e) {
-      done(e);
+      done(e as Error);
     }
   }
 
@@ -210,7 +210,7 @@ export class PacketSocket extends Duplex {
     try {
       this.socket.end(done);
     } catch (e) {
-      done(e);
+      done(e as Error);
     }
   }
 }
