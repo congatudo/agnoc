@@ -3,5 +3,10 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["packages/*/src", "packages/*/test", "packages/**/typings.d.ts"]
+  "include": [
+    "packages/*/src",
+    "packages/*/test",
+    "packages/**/typings.d.ts",
+    "packages/*/types"
+  ]
 }

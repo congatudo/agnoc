@@ -1,10 +1,10 @@
+import { Readable } from "stream";
 import {
   Decode,
   LiveSessionOptions,
   PacketWithHeader,
   PcapSession,
 } from "pcap";
-import { Readable } from "stream";
 
 interface TCPReaderOptions {
   createSession(

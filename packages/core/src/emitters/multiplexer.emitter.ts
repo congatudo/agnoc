@@ -5,8 +5,8 @@ import { bind } from "../decorators/bind.decorator";
 import { DomainException } from "../exceptions/domain.exception";
 import { ID } from "../value-objects/id.value-object";
 import { Packet } from "../value-objects/packet.value-object";
-import { Connection } from "./connection.emitter";
 import { debug } from "../utils/debug.util";
+import { Connection } from "./connection.emitter";
 
 type MultiplexerEvents<Name extends OPDecoderLiteral> = {
   [key in Name]: (packet: Packet<Name>) => void;

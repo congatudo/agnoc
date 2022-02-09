@@ -1,22 +1,21 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Robot } from "./robot.emitter";
-import { PacketSocket } from "../sockets/packet.socket";
-import { PacketServer } from "./packet-server.emitter";
+import { TypedEmitter } from "tiny-typed-emitter";
 import { bind } from "../decorators/bind.decorator";
 import { Device } from "../entities/device.entity";
 import {
   Message,
-  MessageHandler,
   MessageHandlers,
 } from "../value-objects/message.value-object";
 import { User } from "../entities/user.entity";
-import { TypedEmitter } from "tiny-typed-emitter";
-import { Connection } from "./connection.emitter";
+import { PacketSocket } from "../sockets/packet.socket";
 import { DeviceSystem } from "../value-objects/device-system.value-object";
 import { ID } from "../value-objects/id.value-object";
-import { Multiplexer } from "./multiplexer.emitter";
 import { OPDecoderLiteral } from "../constants/opcodes.constant";
 import { DeviceVersion } from "../value-objects/device-version.value-object";
+import { Connection } from "./connection.emitter";
+import { PacketServer } from "./packet-server.emitter";
+import { Multiplexer } from "./multiplexer.emitter";
+import { Robot } from "./robot.emitter";
 
 interface Servers {
   cmd: PacketServer;
@@ -124,9 +123,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
 
   @bind
   handleMessage<Name extends OPDecoderLiteral>(message: Message<Name>): void {
-    const handler = this.handlers[message.opname] as
-      | MessageHandler<Name>
-      | undefined;
+    const handler = this.handlers[message.opname];
 
     if (handler) {
       return handler(message);

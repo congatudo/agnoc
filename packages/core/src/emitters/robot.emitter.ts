@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { bind } from "../decorators/bind.decorator";
-import { Connection } from "./connection.emitter";
-import { Multiplexer } from "./multiplexer.emitter";
+import { TypedEmitter } from "tiny-typed-emitter";
+import { Debugger } from "debug";
 import {
   Message,
-  MessageHandler,
   MessageHandlers,
 } from "../value-objects/message.value-object";
 import { Packet } from "../value-objects/packet.value-object";
@@ -12,8 +10,7 @@ import { Device } from "../entities/device.entity";
 import { User } from "../entities/user.entity";
 import { debug } from "../utils/debug.util";
 import { DEVICE_CAPABILITY } from "../value-objects/device-system.value-object";
-import { TypedEmitter } from "tiny-typed-emitter";
-import { Debugger } from "debug";
+import { bind } from "../decorators/bind.decorator";
 import { DeviceOrder } from "../entities/device-order.entity";
 import {
   ConsumableType,
@@ -52,6 +49,8 @@ import { DeviceVoice } from "../value-objects/device-voice.value-object";
 import { DeviceVoiceMapper } from "../mappers/device-voice.mapper";
 import { Pixel } from "../value-objects/pixel.value-object";
 import { DeviceState } from "../value-objects/device-state.value-object";
+import { Multiplexer } from "./multiplexer.emitter";
+import { Connection } from "./connection.emitter";
 
 export interface RobotProps {
   device: Device;
@@ -1325,9 +1324,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   handleMessage<Name extends OPDecoderLiteral>(message: Message<Name>): void {
-    const handler = this.handlers[message.opname] as
-      | MessageHandler<Name>
-      | undefined;
+    const handler = this.handlers[message.opname];
 
     if (
       message.packet.userId.value !== 0 &&

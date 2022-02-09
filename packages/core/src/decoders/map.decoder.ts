@@ -1,4 +1,5 @@
 import { inflateSync } from "zlib";
+import { Readable } from "stream";
 import { toStream } from "../utils/to-stream.util";
 import {
   readByte,
@@ -7,7 +8,6 @@ import {
   readString,
   readWord,
 } from "../utils/stream.util";
-import { Readable } from "stream";
 import {
   AreaInfo,
   CleanArea,
@@ -21,6 +21,7 @@ import {
   MapInfo,
   MapPlanInfo,
   Point,
+  RobotPoseInfo,
   RoomConnection,
   RoomSegment,
 } from "../interfaces/map.interface";
@@ -274,7 +275,18 @@ export const MASK = {
   ROOM_LIST: 0x4000,
 };
 
-function readMap(stream: Readable, mask: number): MapInfo {
+export function readRobotPoseInfo(stream: Readable): RobotPoseInfo {
+  return {
+    mapHeadId: readWord(stream),
+    poseId: readWord(stream),
+    update: readByte(stream),
+    poseX: readFloat(stream),
+    poseY: readFloat(stream),
+    posePhi: readFloat(stream),
+  };
+}
+
+export function readMap(stream: Readable, mask: number): MapInfo {
   const data: MapInfo = { mask };
 
   if (data.mask > 0x7fff) {
@@ -346,14 +358,7 @@ function readMap(stream: Readable, mask: number): MapInfo {
   }
 
   if (data.mask & 0x80) {
-    data.robotPoseInfo = {
-      mapHeadId: readWord(stream),
-      poseId: readWord(stream),
-      update: readByte(stream),
-      poseX: readFloat(stream),
-      poseY: readFloat(stream),
-      posePhi: readFloat(stream),
-    };
+    data.robotPoseInfo = readRobotPoseInfo(stream);
   }
 
   // if (data.mask & 0x100) {

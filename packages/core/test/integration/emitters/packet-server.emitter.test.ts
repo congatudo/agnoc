@@ -1,7 +1,7 @@
+import { Socket } from "net";
 import { describe, it } from "mocha";
 import { expect } from "chai";
 import { PacketServer } from "../../../src/emitters/packet-server.emitter";
-import { Socket } from "net";
 import { PacketSocket } from "../../../src/sockets/packet.socket";
 
 declare module "mocha" {

@@ -53,8 +53,8 @@ export declare interface PacketSocket extends Duplex {
     packet: Packet<OPDecoderLiteral>,
     cb?: (error: Error | null | undefined) => void
   ): boolean;
-  end(cb?: () => void): void;
-  end(packet: Packet<OPDecoderLiteral>, cb?: () => void): void;
+  end(cb?: () => void): this;
+  end(packet: Packet<OPDecoderLiteral>, cb?: () => void): this;
 }
 
 export class PacketSocket extends Duplex {

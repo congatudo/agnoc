@@ -5,6 +5,6 @@
     "outDir": "lib",
     "tsBuildInfoFile": ".build-cache/tsconfig.build.tsbuildinfo"
   },
-  "include": ["src", "typings.d.ts"],
+  "include": ["src", "types", "typings.d.ts"],
   "references": [{ "path": "../core/tsconfig.build.json" }]
 }

@@ -1,0 +1,113 @@
+message PACK_TYPE_MAP_DATA {
+  message Unk1 {
+    required uint32 unk1 = 1;
+    required uint32 unk2 = 2;
+    optional float unk4 = 4;
+  }
+
+  message MapHeadInfo {
+    required uint32 mapHeadId = 1;
+    required uint32 sizeX = 2;
+    required uint32 sizeY = 3;
+    required float minX = 4;
+    required float minY = 5;
+    required float maxX = 6;
+    required float maxY = 7;
+    required float resolution = 8;
+  }
+
+  message MapGrid {
+    required bytes grid = 1;
+  }
+
+  message HistoryHeadInfo {
+    required uint32 mapHeadId = 1;
+    required string mapName = 2;
+  }
+
+  message HistoryPointInfo {
+    message Point {
+      required uint32 flag = 1;
+      required float x = 2;
+      required float y = 3;
+    }
+
+    required uint32 pointNumber = 1;
+    repeated Point pointList = 2;
+  }
+
+  message ChargePoseInfo {
+    required float poseX = 1;
+    required float poseY = 2;
+    required float posePhi = 3;
+  }
+
+  message RobotPoseInfo {
+    required uint32 poseId = 1;
+    required uint32 update = 2;
+    required float poseX = 3;
+    required float poseY = 4;
+    required float posePhi = 5;
+  }
+
+  message PointDataInfo {
+    required uint32 pointId = 1;
+    required uint32 status = 2;
+    required uint32 pointType = 3;
+    required float x = 4;
+    required float y = 5;
+    required float phi = 6;
+  }
+
+  message RoomNamePost {
+    required float x = 1;
+    required float y = 2;
+  }
+
+  message RoomDataInfo {
+    required uint32 roomId = 1;
+    required string roomName = 2;
+    required uint32 cleanState = 3;
+    required uint32 materialId = 4;
+    required uint32 roomTypeId = 5;
+    required RoomNamePost roomNamePost = 8;
+  }
+
+  message CleanPlanInfo {
+    required string cleanPlanName = 1;
+  }
+
+  message RoomPixel {
+    required uint32 x = 1;
+    required uint32 y = 2;
+    required uint32 unk = 3;
+  }
+
+  message RoomPixelInfo {
+    required uint32 roomId = 1;
+    repeated RoomPixel roomPixelList = 2;
+  }
+
+  message HouseInfo {
+    required uint32 houseId = 1;
+    required string houseName = 2;
+    required uint32 mapCount = 3;
+    required uint32 maxMapSize = 4;
+    repeated HistoryHeadInfo mapInfoList = 5;
+
+  }
+
+  required uint32 mapType = 1;
+  required Unk1 unk1 = 2;
+  required MapHeadInfo mapHeadInfo = 3;
+  required MapGrid mapGrid = 4;
+  repeated HistoryHeadInfo historyHeadInfo = 5;
+  optional HistoryPointInfo historyPointInfo = 6;
+  optional ChargePoseInfo chargePoseInfo = 7;
+  optional RobotPoseInfo robotPoseInfo = 8;
+  optional PointDataInfo pointDataInfo = 11;
+  repeated RoomDataInfo roomDataInfoList = 12;
+  required CleanPlanInfo cleanPlanInfo = 13;
+  repeated RoomPixelInfo roomPixelInfoList = 14;
+  optional HouseInfo houseInfo = 17;
+}

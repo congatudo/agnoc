@@ -1,5 +1,5 @@
-import logger, { Debugger } from "debug";
 import path from "path";
+import logger, { Debugger } from "debug";
 
 export type Debug = Debugger;
 

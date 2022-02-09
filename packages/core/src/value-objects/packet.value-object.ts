@@ -1,4 +1,4 @@
-import { toStream } from "../utils/to-stream.util";
+import assert from "assert";
 import {
   readByte,
   readLong,
@@ -9,17 +9,17 @@ import {
   writeShort,
   writeWord,
 } from "../utils/stream.util";
-import assert from "assert";
-import { OPCode } from "./opcode.value-object";
-import { Payload, PayloadSerialized } from "./payload.value-object";
+import { toStream } from "../utils/to-stream.util";
 import { ValueObject } from "../base-classes/value-object.base";
 import { isPresent } from "../utils/is-present.util";
-import { BigNumber, BigNumberSerialized } from "./big-number.value-object";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { ID, IDSerialized } from "./id.value-object";
 import { OPCodeLiteral, OPDecoderLiteral } from "../constants/opcodes.constant";
 import { BufferWriter } from "../streams/buffer-writer.stream";
+import { ID, IDSerialized } from "./id.value-object";
+import { BigNumber, BigNumberSerialized } from "./big-number.value-object";
+import { OPCode } from "./opcode.value-object";
+import { Payload, PayloadSerialized } from "./payload.value-object";
 
 export interface PacketProps<Name extends OPDecoderLiteral> {
   ctype: number;

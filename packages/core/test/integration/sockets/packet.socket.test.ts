@@ -1,6 +1,6 @@
+import { Server } from "net";
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { Server } from "net";
 import { Packet } from "../../../src/value-objects/packet.value-object";
 import { PacketSocket } from "../../../src/sockets/packet.socket";
 
