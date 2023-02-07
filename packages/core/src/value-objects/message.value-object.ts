@@ -15,19 +15,13 @@ interface MessageProps<Name extends OPDecoderLiteral> {
 export type MessageHandler<Name extends OPDecoderLiteral> = (
   message: Message<Name>
 ) => void;
-export type MessageHandlers = Partial<
-  {
-    [Name in OPDecoderLiteral]: MessageHandler<Name>;
-  }
->;
+export type MessageHandlers = Partial<{
+  [Name in OPDecoderLiteral]: MessageHandler<Name>;
+}>;
 
 export class Message<Name extends OPDecoderLiteral> extends ValueObject<
   MessageProps<Name>
 > {
-  constructor(props: MessageProps<Name>) {
-    super(props);
-  }
-
   get connection(): Connection {
     return this.props.connection;
   }

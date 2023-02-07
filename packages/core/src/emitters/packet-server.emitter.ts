@@ -1,6 +1,6 @@
 import { ListenOptions, Server, Socket } from "net";
-import { PacketSocket } from "../sockets/packet.socket";
 import { TypedEmitter } from "tiny-typed-emitter";
+import { PacketSocket } from "../sockets/packet.socket";
 
 interface PacketServerEvents {
   connection: (socket: PacketSocket) => void;

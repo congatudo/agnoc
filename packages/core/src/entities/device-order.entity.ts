@@ -1,4 +1,4 @@
-import { IDEVICE_ORDERLIST_SETTING_REQ } from "../../schemas/schema";
+import { IDEVICE_ORDERLIST_SETTING_REQ } from "../../schemas/tcp";
 import { Entity } from "../base-classes/entity.base";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";

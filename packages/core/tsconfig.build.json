@@ -5,5 +5,5 @@
     "outDir": "lib",
     "tsBuildInfoFile": ".build-cache/tsconfig.build.tsbuildinfo"
   },
-  "include": ["src", "schemas"]
+  "include": ["src", "schemas", "types", "typings.d.ts"]
 }

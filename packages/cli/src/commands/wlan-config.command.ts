@@ -1,6 +1,6 @@
+import { Socket } from "net";
 import { BufferWriter } from "@agnoc/core/streams/buffer-writer.stream";
 import { writeWord } from "@agnoc/core/utils/stream.util";
-import { Socket } from "net";
 import { debug as debugFactory } from "@agnoc/core/utils/debug.util";
 
 function buildHeaders() {

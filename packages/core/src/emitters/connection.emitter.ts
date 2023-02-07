@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { TypedEmitter } from "tiny-typed-emitter";
+import { Debugger } from "debug";
 import { bind } from "../decorators/bind.decorator";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
@@ -12,7 +13,6 @@ import { OPCode } from "../value-objects/opcode.value-object";
 import { Packet } from "../value-objects/packet.value-object";
 import { Payload } from "../value-objects/payload.value-object";
 import { debug } from "../utils/debug.util";
-import { Debugger } from "debug";
 import {
   OPCodeLiteral,
   OPDecoderLiteral,
@@ -118,8 +118,7 @@ export class Connection extends TypedEmitter<
 
   close(): void {
     this.debug("closing socket...");
-
-    return this.socket.end();
+    this.socket.end();
   }
 
   @bind

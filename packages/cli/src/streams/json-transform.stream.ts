@@ -1,5 +1,5 @@
-import { ObjectLiteral } from "@agnoc/core/types/object-literal.type";
 import { Transform, TransformCallback } from "stream";
+import { ObjectLiteral } from "@agnoc/core/types/object-literal.type";
 
 export class JSONTransform extends Transform {
   private buffer = "";
@@ -23,7 +23,7 @@ export class JSONTransform extends Transform {
     try {
       obj = JSON.parse(this.buffer) as ObjectLiteral;
     } catch (e) {
-      return done(e);
+      return done(e as Error);
     }
 
     this.push(obj);

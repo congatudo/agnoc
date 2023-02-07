@@ -1,6 +1,7 @@
+import { Readable } from "stream";
+import { AssertionError } from "assert";
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { Readable } from "stream";
 import {
   readByte,
   readFloat,
@@ -15,7 +16,6 @@ import {
   writeString,
   writeWord,
 } from "@agnoc/core/utils/stream.util";
-import { AssertionError } from "assert";
 import { BufferWriter } from "@agnoc/core/streams/buffer-writer.stream";
 
 declare module "mocha" {

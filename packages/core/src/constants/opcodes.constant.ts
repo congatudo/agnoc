@@ -92,7 +92,7 @@ import {
   IUSER_SET_DEVICE_CTRL_SETTING_RSP,
   IUSER_SET_DEVICE_QUIETHOURS_REQ,
   IUSER_SET_DEVICE_QUIETHOURS_RSP,
-} from "../../schemas/schema";
+} from "../../schemas/tcp";
 import {
   ChargePoseInfo,
   MapInfo,

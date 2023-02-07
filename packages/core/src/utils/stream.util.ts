@@ -72,6 +72,7 @@ function writeFn<M extends AllowedWriteMethods>(size: number, method: M) {
   };
 }
 
+// TODO: rename this methods
 export const readByte = readFn(1, "readUInt8");
 export const readShort = readFn(2, "readUInt16LE");
 export const readWord = readFn(4, "readUInt32LE");
@@ -83,6 +84,18 @@ export const writeShort = writeFn(2, "writeUInt16LE");
 export const writeWord = writeFn(4, "writeUInt32LE");
 export const writeFloat = writeFn(4, "writeFloatLE");
 export const writeLong = writeFn(8, "writeBigUInt64LE");
+
+export const readUInt8 = readFn(1, "readUInt8");
+export const readUInt16BE = readFn(2, "readUInt16BE");
+export const readUInt32BE = readFn(4, "readUInt32BE");
+export const readFloatBE = readFn(4, "readFloatBE");
+export const readBigUInt64BE = readFn(8, "readBigUInt64BE");
+
+export const writeUInt8 = writeFn(1, "writeUInt8");
+export const writeUInt16BE = writeFn(2, "writeUInt16BE");
+export const writeUInt32BE = writeFn(4, "writeUInt32BE");
+export const writeFloatBE = writeFn(4, "writeFloatBE");
+export const writeBigUInt64BE = writeFn(8, "writeBigUInt64BE");
 
 export function readString(stream: Readable): string {
   const length = readByte(stream);
