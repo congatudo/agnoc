@@ -1,7 +1,7 @@
 import { ValueObject } from "../base-classes/value-object.base";
 import { OPCode } from "./opcode.value-object";
 import schema from "../../schemas/schema.json";
-import protobuf from "protobufjs/light";
+import protobuf, { INamespace } from "protobufjs/light";
 import { hasKey } from "../utils/has-key.util";
 import { isObject } from "../utils/is-object.util";
 import { decodeRobotPosition } from "../decoders/robot-position.decoder";
@@ -28,7 +28,7 @@ export interface PayloadSerialized<Name extends OPDecoderLiteral> {
 
 type Decoder = (buffer: Buffer) => unknown;
 
-const root = protobuf.Root.fromJSON(schema);
+const root = protobuf.Root.fromJSON(schema as INamespace);
 const decoders = {
   DEVICE_MAPID_PUSH_POSITION_INFO: decodeRobotPosition,
   DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO: decodeChargePosition,

@@ -4,7 +4,6 @@ import { Connection } from "./connection.emitter";
 import { Multiplexer } from "./multiplexer.emitter";
 import {
   Message,
-  MessageHandler,
   MessageHandlers,
 } from "../value-objects/message.value-object";
 import { Packet } from "../value-objects/packet.value-object";
@@ -80,7 +79,7 @@ export enum MANUAL_MODE {
   "init" = 10,
 }
 
-export type ManualMode = typeof MANUAL_MODE[keyof typeof MANUAL_MODE];
+export type ManualMode = (typeof MANUAL_MODE)[keyof typeof MANUAL_MODE];
 
 const MODE_CHANGE_TIMEOUT = 5000;
 const RECV_TIMEOUT = 5000;
@@ -1325,9 +1324,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   handleMessage<Name extends OPDecoderLiteral>(message: Message<Name>): void {
-    const handler = this.handlers[message.opname] as
-      | MessageHandler<Name>
-      | undefined;
+    const handler = this.handlers[message.opname];
 
     if (
       message.packet.userId.value !== 0 &&

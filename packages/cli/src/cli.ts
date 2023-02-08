@@ -26,15 +26,14 @@ function handleError(e: Error): void {
   stdio.stderr.write(chalk.red(e.message + "\n"));
 }
 
-program.name("agnoc").version(version);
+program.name("agnoc").version(version as string);
 
 program
-  .command("decode <file>")
-  .description("decodes a flow file from binary to stdout", {
-    file: "file to decode, use '-' to read from stdin.",
-  })
+  .command("decode")
+  .description("decodes a flow file from binary to stdout")
+  .argument("<file>", "file to decode, use '-' to read from stdin.")
   .option("-j, --json", "json output")
-  .action((file, options) =>
+  .action((file: string, options: { json: true | undefined }) =>
     decode(file, {
       ...options,
       ...stdio,
@@ -42,56 +41,70 @@ program
   );
 
 program
-  .command("encode <file>")
-  .description("encode a json file to binary to stdout", {
-    file: "file to encode, use '-' to read from stdin.",
-  })
-  .action((file, options) =>
+  .command("encode")
+  .description("encode a json file to binary to stdout")
+  .argument("<file>", "file to encode, use '-' to read from stdin.")
+  .action((file: string) =>
     encode(file, {
-      ...options,
       ...stdio,
     })
   );
 
 program
-  .command("read <file>")
-  .description("reads and decodes a pcap file to stdout", {
-    file: "file to read, use '-' to read from stdin.",
-  })
+  .command("read")
+  .description("reads and decodes a pcap file to stdout")
+  .argument("<file>", "file to read, use '-' to read from stdin.")
   .option("-j, --json", "json output")
-  .action((file, options) =>
+  .action((file: string, options: { json: true | undefined }) =>
     read(file, {
       ...options,
       ...stdio,
     })
   );
 
-program
-  .command("wlan <ssid> <pass>")
-  .description("connects and configures robot wlan", {
-    ssid: "wifi ssid",
-    pass: "wifi password",
-  })
-  .option("-i, --iface <iface>", "network interface used to connect")
-  .option("-t, --timeout <timeout>", "connect timeout in milliseconds", "10000")
-  .action((ssid, pass, options) =>
-    wlan(ssid, pass, options).catch(handleError)
-  );
+interface WlanCommandOptions {
+  iface: string | undefined;
+  timeout: string | undefined;
+}
 
 program
-  .command("wlan:config <ssid> <pass>")
-  .description("configures robot wlan", {
-    ssid: "wifi ssid",
-    pass: "wifi password",
-  })
+  .command("wlan")
+  .description("connects and configures robot wlan")
+  .argument("<ssid>", "wifi ssid")
+  .argument("<password>", "wifi password")
+  .option("-i, --iface <iface>", "network interface used to connect")
   .option("-t, --timeout <timeout>", "connect timeout in milliseconds", "10000")
-  .action(async (ssid, pass, { timeout }) => {
-    cli.action.start("Configuring wifi settings in the robot");
-    await wlanConfig(ssid, pass, { timeout: Number(timeout) }).catch(
-      handleError
-    );
-    cli.action.stop();
-  });
+  .action(
+    (ssid: string, password: string, { iface, timeout }: WlanCommandOptions) =>
+      wlan(ssid, password, {
+        iface: iface ?? null,
+        timeout: Number(timeout),
+      }).catch(handleError)
+  );
+
+interface WlanConfigCommandOptions {
+  timeout: string | undefined;
+}
+
+program
+  .command("wlan:config")
+  .description("configures robot wlan")
+  .argument("<ssid>", "wifi ssid")
+  .argument("<password>", "wifi password")
+  .option("-t, --timeout <timeout>", "connect timeout in milliseconds", "10000")
+  .action(
+    async (
+      ssid: string,
+      password: string,
+      { timeout }: WlanConfigCommandOptions
+    ) => {
+      cli.action.start("Configuring wifi settings in the robot");
+      await wlanConfig(ssid, password, { timeout: Number(timeout) }).catch(
+        handleError
+      );
+      cli.action.stop();
+    }
+  );
 
 program.addHelpCommand("help [command]", "display help for command");
 

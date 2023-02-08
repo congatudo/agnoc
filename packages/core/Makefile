@@ -27,6 +27,7 @@ lib/%.d.ts: schemas/schema.d.ts src/%.ts
 	$(TSC) -b tsconfig.build.json
 
 schemas/schema.json: schemas/schema.proto
+	pwd
 	$(PBJS) -t json -o $@ $<
 
 schemas/schema.js: schemas/schema.proto

@@ -26,7 +26,7 @@ export class PacketDecodeTransform extends Transform {
 
         this.push(packet);
       } catch (e) {
-        return done(e);
+        return done(e as Error);
       }
 
       this.buffer = this.buffer.slice(size);

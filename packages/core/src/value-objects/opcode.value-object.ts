@@ -19,7 +19,7 @@ function toHex(value: number) {
 }
 
 export class OPCode<
-  Name extends typeof OPNAMES[Code],
+  Name extends (typeof OPNAMES)[Code],
   Code extends OPCodeLiteral
 > extends ValueObject<number> {
   constructor(value: Code) {
@@ -61,7 +61,7 @@ export class OPCode<
   }
 
   static fromCode<
-    Name extends typeof OPNAMES[Code],
+    Name extends (typeof OPNAMES)[Code],
     Code extends OPCodeLiteral
   >(code: Code | string): OPCode<Name, Code> {
     if (typeof code === "string") {
@@ -72,7 +72,7 @@ export class OPCode<
   }
 
   static fromName<
-    Name extends typeof OPNAMES[Code],
+    Name extends (typeof OPNAMES)[Code],
     Code extends OPCodeLiteral
   >(name: OPNameLiteral): OPCode<Name, Code> {
     if (!(name in OPCODES)) {

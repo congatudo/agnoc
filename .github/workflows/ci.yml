@@ -10,7 +10,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 18
       - name: Install libpcap-dev
         run: sudo apt-get install libpcap-dev
       - name: Install dependencies
@@ -38,7 +38,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
       - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 18
           registry-url: "https://registry.npmjs.org"
       - name: Configure CI Git User
         run: |
@@ -69,7 +69,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
       - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 18
           registry-url: "https://registry.npmjs.org"
       - name: Configure CI Git User
         run: |
