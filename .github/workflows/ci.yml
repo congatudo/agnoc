@@ -29,6 +29,8 @@ jobs:
   release:
     if: github.ref == 'refs/heads/master'
     needs: test
+    environment: production
+    concurrency: production
     runs-on: ubuntu-latest
     name: Release
     steps:
@@ -60,6 +62,8 @@ jobs:
   prerelease:
     if: github.ref == 'refs/heads/next'
     needs: test
+    environment: development
+    concurrency: development
     runs-on: ubuntu-latest
     name: Prerelease
     steps:
