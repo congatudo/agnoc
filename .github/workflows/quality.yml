@@ -1,0 +1,76 @@
+name: Quality
+on: [pull_request]
+jobs:
+  install:
+    name: Install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install libpcap-dev
+        run: sudo apt-get install libpcap-dev
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        id: cache-dependencies
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+          key: cache-dependencies-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            cache-dependencies-
+      - name: Install dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          yarn install
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Bootstrap
+        uses: ./.github/actions/bootstrap
+      - name: Cache build
+        uses: actions/cache@v3
+        with:
+          path: |
+            packages/*/lib
+            packages/core/schemas
+          key: cache-build-${{ github.sha }}
+      - name: Build
+        run: yarn build
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Bootstrap
+        uses: ./.github/actions/bootstrap
+      - name: Lint
+        run: yarn lint
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Bootstrap
+        uses: ./.github/actions/bootstrap
+      - name: Test
+        run: yarn test
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/core/coverage/lcov.info,./packages/cli/coverage/lcov.info
+          fail_ci_if_error: true

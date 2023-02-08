@@ -1,0 +1,33 @@
+name: Prerelease
+on:
+  push:
+    branches:
+      - "next"
+jobs:
+  prerelease:
+    name: Prerelease
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/next'
+    needs: test
+    environment: development
+    concurrency: development
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Bootstrap
+        uses: ./.github/actions/bootstrap
+      - name: Build
+        run: yarn build
+      - name: Version
+        run: lerna version --conventional-prerelease --yes
+      - name: Publish
+        run: |
+          lerna version --conventional-prerelease --yes
+          lerna publish from-package --dist-tag next --yes
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
