@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
 import { createReadStream } from "fs";
 import { Duplex, pipeline } from "stream";
 import { JSONTransform } from "@agnoc/cli/streams/json-transform.stream";

@@ -1,4 +1,4 @@
-import { ListenOptions, Server, Socket } from "net";
+import { AddressInfo, ListenOptions, Server, Socket } from "net";
 import { PacketSocket } from "../sockets/packet.socket";
 import { TypedEmitter } from "tiny-typed-emitter";
 
@@ -20,6 +20,10 @@ export class PacketServer extends TypedEmitter<PacketServerEvents> {
 
   get isListening(): boolean {
     return this.server.listening;
+  }
+
+  get address(): AddressInfo | null {
+    return this.server.address() as AddressInfo | null;
   }
 
   async listen(port?: number): Promise<void>;

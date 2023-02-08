@@ -17,7 +17,7 @@ export const DEVICE_MODEL = {
   UNKNOWN: "unknown",
 } as const;
 
-export type DeviceModel = typeof DEVICE_MODEL[keyof typeof DEVICE_MODEL];
+export type DeviceModel = (typeof DEVICE_MODEL)[keyof typeof DEVICE_MODEL];
 
 export const DEVICE_TYPE = {
   3: DEVICE_MODEL.C3090,
