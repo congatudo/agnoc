@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
       - name: Install libpcap-dev
@@ -21,10 +21,10 @@ jobs:
           yarn build
           yarn lint
           yarn test
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./packages/*/coverage/lcov.info
+          files: ./packages/core/coverage/lcov.info,./packages/cli/coverage/lcov.info
           fail_ci_if_error: true
   release:
     if: github.ref == 'refs/heads/master'
@@ -32,11 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Release
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
           registry-url: "https://registry.npmjs.org"
@@ -63,11 +63,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Prerelease
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
           registry-url: "https://registry.npmjs.org"
