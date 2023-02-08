@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { Server } from "net";
+import { AddressInfo, Server } from "net";
 import { Packet } from "../../../src/value-objects/packet.value-object";
 import { PacketSocket } from "../../../src/sockets/packet.socket";
 
@@ -27,7 +27,9 @@ describe("packet.socket", () => {
     const socket = new PacketSocket();
 
     this.server.once("listening", () => {
-      void socket.connect({ port: 7000 });
+      void socket.connect({
+        port: (this.server.address() as AddressInfo).port,
+      });
     });
 
     socket.once("connect", () => {
@@ -35,14 +37,16 @@ describe("packet.socket", () => {
       done();
     });
 
-    this.server.listen(7000);
+    this.server.listen(0);
   });
 
   it("writes packets to a server", function (done) {
     const socket = new PacketSocket();
 
     this.server.once("listening", () => {
-      void socket.connect({ port: 7000 });
+      void socket.connect({
+        port: (this.server.address() as AddressInfo).port,
+      });
     });
 
     this.server.once("connection", (socket) => {
@@ -76,14 +80,16 @@ describe("packet.socket", () => {
       socket.end(packet);
     });
 
-    this.server.listen(7000);
+    this.server.listen(0);
   });
 
   it("writes packets to a client", function (done) {
     const socket = new PacketSocket();
 
     this.server.once("listening", () => {
-      void socket.connect({ port: 7000 });
+      void socket.connect({
+        port: (this.server.address() as AddressInfo).port,
+      });
     });
 
     this.server.once("connection", (socket) => {
@@ -119,6 +125,6 @@ describe("packet.socket", () => {
       });
     });
 
-    this.server.listen(7000);
+    this.server.listen(0);
   });
 });

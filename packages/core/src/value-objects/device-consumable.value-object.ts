@@ -11,7 +11,7 @@ export const CONSUMABLE_TYPE = {
 } as const;
 
 export type ConsumableType =
-  typeof CONSUMABLE_TYPE[keyof typeof CONSUMABLE_TYPE];
+  (typeof CONSUMABLE_TYPE)[keyof typeof CONSUMABLE_TYPE];
 
 export interface DeviceConsumableProps {
   type: ConsumableType;

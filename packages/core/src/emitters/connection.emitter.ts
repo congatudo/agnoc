@@ -118,8 +118,7 @@ export class Connection extends TypedEmitter<
 
   close(): void {
     this.debug("closing socket...");
-
-    return this.socket.end();
+    this.socket.end();
   }
 
   @bind

@@ -43,8 +43,8 @@ const ALLOWED_WRITE_METHODS = [
   "writeUInt8",
 ] as const;
 
-type AllowedReadMethods = typeof ALLOWED_READ_METHODS[number];
-type AllowedWriteMethods = typeof ALLOWED_WRITE_METHODS[number];
+type AllowedReadMethods = (typeof ALLOWED_READ_METHODS)[number];
+type AllowedWriteMethods = (typeof ALLOWED_WRITE_METHODS)[number];
 
 function readFn<M extends AllowedReadMethods>(size: number, method: M) {
   assert(ALLOWED_READ_METHODS.includes(method), "readFn invalid method");

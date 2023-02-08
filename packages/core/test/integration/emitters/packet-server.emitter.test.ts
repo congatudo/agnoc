@@ -27,7 +27,7 @@ describe("packet-server.emitter", () => {
       done();
     });
 
-    void this.packetServer.listen(7000);
+    void this.packetServer.listen(0);
   });
 
   it("emits connection event", function (done) {
@@ -38,8 +38,10 @@ describe("packet-server.emitter", () => {
       done();
     });
 
-    void this.packetServer.listen(7000).then(() => {
-      socket.connect({ port: 7000 });
+    void this.packetServer.listen(0).then(() => {
+      expect(this.packetServer.address).to.not.be.null;
+
+      socket.connect({ port: this.packetServer.address?.port as number });
       socket.end();
     });
   });
@@ -53,6 +55,6 @@ describe("packet-server.emitter", () => {
       void this.packetServer.close();
     });
 
-    void this.packetServer.listen(7000);
+    void this.packetServer.listen(0);
   });
 });

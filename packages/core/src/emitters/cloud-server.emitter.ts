@@ -6,7 +6,6 @@ import { bind } from "../decorators/bind.decorator";
 import { Device } from "../entities/device.entity";
 import {
   Message,
-  MessageHandler,
   MessageHandlers,
 } from "../value-objects/message.value-object";
 import { User } from "../entities/user.entity";
@@ -124,9 +123,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
 
   @bind
   handleMessage<Name extends OPDecoderLiteral>(message: Message<Name>): void {
-    const handler = this.handlers[message.opname] as
-      | MessageHandler<Name>
-      | undefined;
+    const handler = this.handlers[message.opname];
 
     if (handler) {
       return handler(message);
