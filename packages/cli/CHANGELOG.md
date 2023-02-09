@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.10](https://github.com/adrigzr/agnoc/compare/v0.15.0...v0.16.0-next.10) (2023-02-09)
+
+### Bug Fixes
+
+- update dependencies ([603d174](https://github.com/adrigzr/agnoc/commit/603d174ad6311b74ecc92567ca81989a05ca7f3b))
+
+### Features
+
+- update dependencies ([a23c386](https://github.com/adrigzr/agnoc/commit/a23c386f832916485577eff4fcab380457d8f7d7))
+
 # [0.16.0-next.9](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.8...v0.16.0-next.9) (2023-02-09)
 
 **Note:** Version bump only for package @agnoc/cli
