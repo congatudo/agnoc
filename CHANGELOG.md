@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.10](https://github.com/congatudo/agnoc/compare/v0.15.0...v0.16.0-next.10) (2023-02-09)
+
+### Bug Fixes
+
+- add missing workMode ([522e318](https://github.com/congatudo/agnoc/commit/522e318dce699d4199f1c062675304966f004b40))
+- **core:** emit updateDevice event when has waiting map ([7b087a8](https://github.com/congatudo/agnoc/commit/7b087a82ee18625815e42cbe5f9212661d454730))
+- **core:** fix enable manual mode ([ee40d40](https://github.com/congatudo/agnoc/commit/ee40d409a970045cbcae7e16c8bdeaddba25187c))
+- **core:** set battery value interpolation to 100..200 ([434e899](https://github.com/congatudo/agnoc/commit/434e89942943c1c8935c9c631c69f253f00ca2c7))
+- **core:** set device timezone as optional ([8be52b4](https://github.com/congatudo/agnoc/commit/8be52b435ed16b40528f2f90d69754a559a371a3))
+- emit not cleaning robot position ([2f8e396](https://github.com/congatudo/agnoc/commit/2f8e396611dc98256c167e93466c3d0d47024637))
+- update dependencies ([603d174](https://github.com/congatudo/agnoc/commit/603d174ad6311b74ecc92567ca81989a05ca7f3b))
+
+### Features
+
+- add device set time ([51ef3d9](https://github.com/congatudo/agnoc/commit/51ef3d97aa7872143ad825f7ea722f0dbcf5de4a))
+- add waiting map handler ([db11a1a](https://github.com/congatudo/agnoc/commit/db11a1a8d116ca99b24599cc871b10d43e0a3470))
+- update dependencies ([a23c386](https://github.com/congatudo/agnoc/commit/a23c386f832916485577eff4fcab380457d8f7d7))
+
 # [0.16.0-next.9](https://github.com/congatudo/agnoc/compare/v0.16.0-next.8...v0.16.0-next.9) (2023-02-09)
 
 **Note:** Version bump only for package agnoc
