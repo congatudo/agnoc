@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0-next.9](https://github.com/congatudo/agnoc/compare/v0.16.0-next.8...v0.16.0-next.9) (2023-02-09)
+
+**Note:** Version bump only for package agnoc
+
 # [0.16.0-next.8](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.7...v0.16.0-next.8) (2023-02-08)
 
 ### Features
