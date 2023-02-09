@@ -22,6 +22,8 @@ jobs:
         run: yarn build
       - name: Version
         run: lerna version --yes
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Publish
         run: lerna publish from-package --yes
         env:
