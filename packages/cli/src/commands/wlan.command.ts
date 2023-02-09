@@ -1,5 +1,5 @@
-import wifi, { Network } from "node-wifi";
 import cli from "cli-ux";
+import wifi, { Network } from "node-wifi";
 import { wlanConfig } from "./wlan-config.command";
 
 interface WlanOptions {

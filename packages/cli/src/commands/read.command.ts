@@ -1,6 +1,6 @@
 import { Duplex, pipeline } from "stream";
-import { TCPReader } from "../streams/tcp-reader.stream";
 import { PacketDecodeTransform } from "../streams/packet-decode-transform.stream";
+import { TCPReader } from "../streams/tcp-reader.stream";
 import { toJSONStream } from "../utils/to-json-stream.util";
 import { toStringStream } from "../utils/to-string-stream.util";
 

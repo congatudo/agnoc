@@ -1,8 +1,8 @@
 /* eslint-disable mocha/no-setup-in-describe, @typescript-eslint/restrict-template-expressions */
-import { describe, it } from "mocha";
-import { expect } from "chai";
-import { interpolate } from "@agnoc/core/utils/interpolate.util";
 import { ArgumentOutOfRangeException } from "@agnoc/core/exceptions/argument-out-of-range.exception";
+import { interpolate } from "@agnoc/core/utils/interpolate.util";
+import { expect } from "chai";
+import { describe, it } from "mocha";
 
 describe("interpolate.util", () => {
   it("returns interpolated value from positive range", () => {

@@ -4,11 +4,11 @@ module.exports = {
   parserOptions: {
     sourceType: "script",
   },
-  plugins: ["node", "prettier", "security"],
   extends: [
     "eslint:recommended",
     "plugin:node/recommended",
     "plugin:security/recommended",
+    "plugin:import/recommended",
     "plugin:prettier/recommended",
   ],
   settings: {

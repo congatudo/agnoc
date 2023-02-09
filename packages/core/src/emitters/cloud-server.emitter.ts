@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Robot } from "./robot.emitter";
-import { PacketSocket } from "../sockets/packet.socket";
-import { PacketServer } from "./packet-server.emitter";
+import { TypedEmitter } from "tiny-typed-emitter";
+import { OPDecoderLiteral } from "../constants/opcodes.constant";
 import { bind } from "../decorators/bind.decorator";
 import { Device } from "../entities/device.entity";
+import { User } from "../entities/user.entity";
+import { PacketSocket } from "../sockets/packet.socket";
+import { DeviceSystem } from "../value-objects/device-system.value-object";
+import { DeviceVersion } from "../value-objects/device-version.value-object";
+import { ID } from "../value-objects/id.value-object";
 import {
   Message,
   MessageHandlers,
 } from "../value-objects/message.value-object";
-import { User } from "../entities/user.entity";
-import { TypedEmitter } from "tiny-typed-emitter";
 import { Connection } from "./connection.emitter";
-import { DeviceSystem } from "../value-objects/device-system.value-object";
-import { ID } from "../value-objects/id.value-object";
 import { Multiplexer } from "./multiplexer.emitter";
-import { OPDecoderLiteral } from "../constants/opcodes.constant";
-import { DeviceVersion } from "../value-objects/device-version.value-object";
+import { PacketServer } from "./packet-server.emitter";
+import { Robot } from "./robot.emitter";
 
 interface Servers {
   cmd: PacketServer;
