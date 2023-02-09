@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: yarn build
       - name: Version
-        run: lerna version --yes
+        run: lerna version --conventional-graduate --yes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Publish
