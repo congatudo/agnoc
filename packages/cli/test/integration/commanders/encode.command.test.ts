@@ -1,8 +1,8 @@
-import { describe, it } from "mocha";
-import { expect } from "chai";
-import { encode } from "../../../src/commands/encode.command";
 import { Duplex, PassThrough } from "stream";
+import { expect } from "chai";
+import { describe, it } from "mocha";
 import mockFS from "mock-fs";
+import { encode } from "../../../src/commands/encode.command";
 import { readStream } from "../../helpers/read-stream.helper";
 
 declare module "mocha" {

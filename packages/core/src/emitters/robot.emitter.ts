@@ -1,56 +1,56 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { bind } from "../decorators/bind.decorator";
-import { Connection } from "./connection.emitter";
-import { Multiplexer } from "./multiplexer.emitter";
-import {
-  Message,
-  MessageHandlers,
-} from "../value-objects/message.value-object";
-import { Packet } from "../value-objects/packet.value-object";
-import { Device } from "../entities/device.entity";
-import { User } from "../entities/user.entity";
-import { debug } from "../utils/debug.util";
-import { DEVICE_CAPABILITY } from "../value-objects/device-system.value-object";
-import { TypedEmitter } from "tiny-typed-emitter";
 import { Debugger } from "debug";
+import { TypedEmitter } from "tiny-typed-emitter";
+import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
+import { bind } from "../decorators/bind.decorator";
+import { DeviceMap } from "../entities/device-map.entity";
 import { DeviceOrder } from "../entities/device-order.entity";
+import { Device } from "../entities/device.entity";
+import { Room } from "../entities/room.entity";
+import { User } from "../entities/user.entity";
+import { Zone } from "../entities/zone.entity";
+import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
+import { DomainException } from "../exceptions/domain.exception";
+import { DeviceBatteryMapper } from "../mappers/device-battery.mapper";
+import { DeviceErrorMapper } from "../mappers/device-error.mapper";
+import { DeviceFanSpeedMapper } from "../mappers/device-fan-speed.mapper";
+import { DeviceModeMapper } from "../mappers/device-mode.mapper";
+import { DeviceStateMapper } from "../mappers/device-state.mapper";
+import { DeviceVoiceMapper } from "../mappers/device-voice.mapper";
+import { DeviceWaterLevelMapper } from "../mappers/device-water-level.mapper";
+import { BufferWriter } from "../streams/buffer-writer.stream";
+import { debug } from "../utils/debug.util";
+import { isPresent } from "../utils/is-present.util";
+import { writeByte, writeFloat } from "../utils/stream.util";
+import { waitFor } from "../utils/wait-for.util";
+import { Coordinate } from "../value-objects/coordinate.value-object";
+import { DeviceConfig } from "../value-objects/device-config.value-object";
 import {
   ConsumableType,
   CONSUMABLE_TYPE,
   DeviceConsumable,
 } from "../value-objects/device-consumable.value-object";
-import { DeviceMap } from "../entities/device-map.entity";
-import { Coordinate } from "../value-objects/coordinate.value-object";
-import { Position } from "../value-objects/position.value-object";
-import { ID } from "../value-objects/id.value-object";
-import { DomainException } from "../exceptions/domain.exception";
-import { Room } from "../entities/room.entity";
-import { isPresent } from "../utils/is-present.util";
-import { DeviceWlan } from "../value-objects/device-wlan.value-object";
-import { Zone } from "../entities/zone.entity";
-import { waitFor } from "../utils/wait-for.util";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { DeviceConfig } from "../value-objects/device-config.value-object";
-import { DeviceQuietHours } from "../value-objects/device-quiet-hours.value-object";
-import { DeviceTime } from "../value-objects/device-time.value-object";
-import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
-import { DeviceWaterLevel } from "../value-objects/device-water-level.value-object";
-import { DeviceWaterLevelMapper } from "../mappers/device-water-level.mapper";
-import { DeviceFanSpeedMapper } from "../mappers/device-fan-speed.mapper";
-import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
-import { DeviceBatteryMapper } from "../mappers/device-battery.mapper";
-import { DeviceStateMapper } from "../mappers/device-state.mapper";
-import { DeviceModeMapper } from "../mappers/device-mode.mapper";
-import { DeviceMode } from "../value-objects/device-mode.value-object";
-import { DeviceErrorMapper } from "../mappers/device-error.mapper";
-import { DeviceVersion } from "../value-objects/device-version.value-object";
 import { DeviceCurrentClean } from "../value-objects/device-current-clean.value-object";
-import { BufferWriter } from "../streams/buffer-writer.stream";
-import { writeByte, writeFloat } from "../utils/stream.util";
-import { DeviceVoice } from "../value-objects/device-voice.value-object";
-import { DeviceVoiceMapper } from "../mappers/device-voice.mapper";
-import { Pixel } from "../value-objects/pixel.value-object";
+import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
+import { DeviceMode } from "../value-objects/device-mode.value-object";
+import { DeviceQuietHours } from "../value-objects/device-quiet-hours.value-object";
 import { DeviceState } from "../value-objects/device-state.value-object";
+import { DEVICE_CAPABILITY } from "../value-objects/device-system.value-object";
+import { DeviceTime } from "../value-objects/device-time.value-object";
+import { DeviceVersion } from "../value-objects/device-version.value-object";
+import { DeviceVoice } from "../value-objects/device-voice.value-object";
+import { DeviceWaterLevel } from "../value-objects/device-water-level.value-object";
+import { DeviceWlan } from "../value-objects/device-wlan.value-object";
+import { ID } from "../value-objects/id.value-object";
+import {
+  Message,
+  MessageHandlers,
+} from "../value-objects/message.value-object";
+import { Packet } from "../value-objects/packet.value-object";
+import { Pixel } from "../value-objects/pixel.value-object";
+import { Position } from "../value-objects/position.value-object";
+import { Connection } from "./connection.emitter";
+import { Multiplexer } from "./multiplexer.emitter";
 
 export interface RobotProps {
   device: Device;

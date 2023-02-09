@@ -1,7 +1,7 @@
-import { BufferWriter } from "@agnoc/core/streams/buffer-writer.stream";
-import { writeWord } from "@agnoc/core/utils/stream.util";
 import { Socket } from "net";
+import { BufferWriter } from "@agnoc/core/streams/buffer-writer.stream";
 import { debug as debugFactory } from "@agnoc/core/utils/debug.util";
+import { writeWord } from "@agnoc/core/utils/stream.util";
 
 function buildHeaders() {
   const stream = new BufferWriter();

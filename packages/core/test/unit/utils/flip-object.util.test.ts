@@ -1,5 +1,5 @@
-import { describe, it } from "mocha";
 import { expect } from "chai";
+import { describe, it } from "mocha";
 import { flipObject } from "../../../src/utils/flip-object.util";
 
 describe("flip-object.util", () => {

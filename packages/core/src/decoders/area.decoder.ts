@@ -1,6 +1,4 @@
 import { inflateSync } from "zlib";
-import { toStream } from "../utils/to-stream.util";
-import { readWord } from "../utils/stream.util";
 import {
   CleanPlan,
   CleanPlanInfo,
@@ -8,6 +6,8 @@ import {
   MapHeadInfo,
   MapPlanInfo,
 } from "../interfaces/map.interface";
+import { readWord } from "../utils/stream.util";
+import { toStream } from "../utils/to-stream.util";
 import {
   readMapHeadInfo,
   readCleanPlanInfo,

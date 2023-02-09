@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { ValueObject } from "../base-classes/value-object.base";
 import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
+import { Connection } from "../emitters/connection.emitter";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { Connection } from "../emitters/connection.emitter";
 import { isPresent } from "../utils/is-present.util";
 import { Packet } from "./packet.value-object";
 

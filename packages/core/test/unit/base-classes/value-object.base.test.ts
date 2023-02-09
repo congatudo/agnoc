@@ -1,11 +1,11 @@
-import { describe, it } from "mocha";
-import { expect } from "chai";
 import {
   DomainPrimitive,
   ValueObject,
 } from "@agnoc/core/base-classes/value-object.base";
-import sinon from "sinon";
 import { ArgumentNotProvidedException } from "@agnoc/core/exceptions/argument-not-provided.exception";
+import { expect } from "chai";
+import { describe, it } from "mocha";
+import sinon from "sinon";
 
 describe("value-object.base", () => {
   it("throws an error when has no props", () => {

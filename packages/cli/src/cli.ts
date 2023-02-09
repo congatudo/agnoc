@@ -1,12 +1,12 @@
+import chalk from "chalk";
+import cli from "cli-ux";
 import { Command } from "commander";
 import { version } from "../package.json";
 import { decode } from "./commands/decode.command";
 import { encode } from "./commands/encode.command";
 import { read } from "./commands/read.command";
-import { wlan } from "./commands/wlan.command";
 import { wlanConfig } from "./commands/wlan-config.command";
-import cli from "cli-ux";
-import chalk from "chalk";
+import { wlan } from "./commands/wlan.command";
 
 process.on("unhandledRejection", (e) => {
   console.error(e);

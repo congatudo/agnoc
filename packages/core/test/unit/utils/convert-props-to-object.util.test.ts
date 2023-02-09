@@ -1,6 +1,6 @@
-import { describe, it } from "mocha";
-import { expect } from "chai";
 import { convertPropsToObject } from "@agnoc/core/utils/convert-props-to-object.util";
+import { expect } from "chai";
+import { describe, it } from "mocha";
 
 describe("convert-props-to-object.util", () => {
   it("converts props to object", () => {

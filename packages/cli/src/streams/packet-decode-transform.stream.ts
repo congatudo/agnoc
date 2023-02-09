@@ -1,6 +1,6 @@
 import { Transform, TransformCallback } from "stream";
-import { Packet } from "@agnoc/core/value-objects/packet.value-object";
 import { DomainException } from "@agnoc/core/exceptions/domain.exception";
+import { Packet } from "@agnoc/core/value-objects/packet.value-object";
 
 export class PacketDecodeTransform extends Transform {
   private buffer: Buffer = Buffer.alloc(0);
