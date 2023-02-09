@@ -23,9 +23,7 @@ jobs:
       - name: Version
         run: lerna version --conventional-prerelease --yes
       - name: Publish
-        run: |
-          lerna version --conventional-prerelease --yes
-          lerna publish from-package --dist-tag next --yes
+        run: lerna publish from-package --dist-tag next --yes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
