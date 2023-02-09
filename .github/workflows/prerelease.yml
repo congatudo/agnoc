@@ -16,8 +16,8 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
-      - name: Bootstrap
-        uses: ./.github/actions/bootstrap
+      - name: Install
+        uses: ./.github/actions/install
       - name: Build
         run: yarn build
       - name: Version
