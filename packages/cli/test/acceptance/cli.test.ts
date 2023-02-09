@@ -1,6 +1,6 @@
-import { describe, it } from "mocha";
 import { expect } from "chai";
 import execa, { ExecaError } from "execa";
+import { describe, it } from "mocha";
 
 describe("cli", function () {
   this.timeout(5000);

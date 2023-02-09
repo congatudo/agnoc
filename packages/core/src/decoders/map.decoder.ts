@@ -1,13 +1,6 @@
-import { inflateSync } from "zlib";
-import { toStream } from "../utils/to-stream.util";
-import {
-  readByte,
-  readFloat,
-  readShort,
-  readString,
-  readWord,
-} from "../utils/stream.util";
 import { Readable } from "stream";
+import { inflateSync } from "zlib";
+import { DomainException } from "../exceptions/domain.exception";
 import {
   AreaInfo,
   CleanArea,
@@ -24,7 +17,14 @@ import {
   RoomConnection,
   RoomSegment,
 } from "../interfaces/map.interface";
-import { DomainException } from "../exceptions/domain.exception";
+import {
+  readByte,
+  readFloat,
+  readShort,
+  readString,
+  readWord,
+} from "../utils/stream.util";
+import { toStream } from "../utils/to-stream.util";
 
 export function readMapHeadInfo(stream: Readable): MapHeadInfo {
   return {

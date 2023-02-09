@@ -1,9 +1,9 @@
-import { describe, it } from "mocha";
-import { expect } from "chai";
 import { Entity } from "@agnoc/core/base-classes/entity.base";
-import { ID } from "@agnoc/core/value-objects/id.value-object";
 import { ArgumentInvalidException } from "@agnoc/core/exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "@agnoc/core/exceptions/argument-not-provided.exception";
+import { ID } from "@agnoc/core/value-objects/id.value-object";
+import { expect } from "chai";
+import { describe, it } from "mocha";
 
 describe("entity.base", () => {
   it("throws an error when does not have props", () => {

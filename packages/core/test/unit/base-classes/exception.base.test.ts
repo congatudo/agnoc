@@ -1,7 +1,7 @@
-import { describe, it } from "mocha";
-import { expect } from "chai";
 import { Exception } from "@agnoc/core/base-classes/exception.base";
 import { Exceptions } from "@agnoc/core/constants/exception.constant";
+import { expect } from "chai";
+import { describe, it } from "mocha";
 
 describe("exception.base", () => {
   it("extends from error", () => {

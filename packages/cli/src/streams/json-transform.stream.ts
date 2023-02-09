@@ -1,5 +1,5 @@
-import { ObjectLiteral } from "@agnoc/core/types/object-literal.type";
 import { Transform, TransformCallback } from "stream";
+import { ObjectLiteral } from "@agnoc/core/types/object-literal.type";
 
 export class JSONTransform extends Transform {
   private buffer = "";

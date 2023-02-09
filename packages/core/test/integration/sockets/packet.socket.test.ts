@@ -1,8 +1,8 @@
-import { describe, it } from "mocha";
-import { expect } from "chai";
 import { AddressInfo, Server } from "net";
-import { Packet } from "../../../src/value-objects/packet.value-object";
+import { expect } from "chai";
+import { describe, it } from "mocha";
 import { PacketSocket } from "../../../src/sockets/packet.socket";
+import { Packet } from "../../../src/value-objects/packet.value-object";
 
 declare module "mocha" {
   interface Context {

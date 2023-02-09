@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/unbound-method */
+import { Debugger } from "debug";
 import { TypedEmitter } from "tiny-typed-emitter";
+import {
+  OPCodeLiteral,
+  OPDecoderLiteral,
+  OPDecoders,
+} from "../constants/opcodes.constant";
 import { bind } from "../decorators/bind.decorator";
 import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
 import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
 import { DomainException } from "../exceptions/domain.exception";
 import { PacketSocket } from "../sockets/packet.socket";
+import { debug } from "../utils/debug.util";
 import { isPresent } from "../utils/is-present.util";
 import { BigNumber } from "../value-objects/big-number.value-object";
 import { ID } from "../value-objects/id.value-object";
 import { OPCode } from "../value-objects/opcode.value-object";
 import { Packet } from "../value-objects/packet.value-object";
 import { Payload } from "../value-objects/payload.value-object";
-import { debug } from "../utils/debug.util";
-import { Debugger } from "debug";
-import {
-  OPCodeLiteral,
-  OPDecoderLiteral,
-  OPDecoders,
-} from "../constants/opcodes.constant";
 
 interface ConnectionSendProps<Name extends OPDecoderLiteral> {
   opname: Name;
