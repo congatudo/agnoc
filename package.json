@@ -8,16 +8,17 @@
     "build": "npm-run-all 'build:*'",
     "build:packages": "lerna run build",
     "clean": "lerna run clean",
+    "dependency:upgrade": "ncu --upgrade --peer --deep && yarn-deduplicate --strategy fewer && yarn install",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel 'lint:!(fix)'",
     "lint:js": "eslint --cache --max-warnings 0 .",
     "lint:js:fix": "eslint --fix .",
     "lint:style": "prettier --check .",
     "lint:style:fix": "prettier --write .",
     "lint:types": "tsc",
+    "prepare": "husky install",
     "test": "npm-run-all 'test:*'",
     "test:packages": "lerna run test",
-    "version": "npm run lint:js:fix && npm run lint:style:fix",
-    "prepare": "husky install"
+    "version": "npm run lint:js:fix && npm run lint:style:fix"
   },
   "config": {
     "commitizen": {
@@ -51,10 +52,10 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-chai-friendly": "^0.7.2",
-    "eslint-plugin-mocha": "^10.1.0",
     "eslint-import-resolver-babel-module": "^5.3.2",
+    "eslint-plugin-chai-friendly": "^0.7.2",
     "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-mocha": "^10.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-security": "^1.7.1",
@@ -63,12 +64,14 @@
     "json": "^11.0.0",
     "lerna": "^6.4.1",
     "lint-staged": ">=13.1.1",
+    "npm-check-updates": "^16.6.5",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
     "prettier": "2.8.4",
     "sinon": "^15.0.1",
     "sinon-chai": "^3.7.0",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "yarn-deduplicate": "^6.0.1"
   },
   "engines": {
     "node": ">=12.3"
