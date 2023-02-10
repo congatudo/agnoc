@@ -19,6 +19,7 @@ runs:
       uses: actions/cache/restore@v3
       with:
         path: |
+          node_modules/.cache/nx
           packages/*/lib
           packages/core/schemas
         key: cache-build-${{ github.sha }}
