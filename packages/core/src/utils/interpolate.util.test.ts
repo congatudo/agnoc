@@ -1,10 +1,10 @@
-import { expect } from "chai";
-import { describe, it } from "mocha";
-import { ArgumentOutOfRangeException } from "../exceptions/argument-out-of-range.exception";
-import { interpolate } from "./interpolate.util";
+import { expect } from 'chai';
+import { describe, it } from 'mocha';
+import { ArgumentOutOfRangeException } from '../exceptions/argument-out-of-range.exception';
+import { interpolate } from './interpolate.util';
 
-describe("interpolate.util", () => {
-  it("returns interpolated value from positive range", () => {
+describe('interpolate.util', () => {
+  it('returns interpolated value from positive range', () => {
     const from = {
       min: 50,
       max: 100,
@@ -18,7 +18,7 @@ describe("interpolate.util", () => {
     expect(ret).to.be.equal(110);
   });
 
-  it("returns interpolated value from negative range", () => {
+  it('returns interpolated value from negative range', () => {
     const from = {
       min: -100,
       max: -50,
@@ -32,7 +32,7 @@ describe("interpolate.util", () => {
     expect(ret).to.be.equal(-110);
   });
 
-  it("returns interpolated value from mixed range", () => {
+  it('returns interpolated value from mixed range', () => {
     const from = {
       min: -1000,
       max: -500,
@@ -46,7 +46,7 @@ describe("interpolate.util", () => {
     expect(ret).to.be.equal(900);
   });
 
-  it("throws an error when value is out of range", () => {
+  it('throws an error when value is out of range', () => {
     const from = {
       min: 50,
       max: 100,

@@ -1,20 +1,14 @@
-import { inflateSync } from "zlib";
-import {
-  CleanPlan,
-  CleanPlanInfo,
-  CleanRoom,
-  MapHeadInfo,
-  MapPlanInfo,
-} from "../interfaces/map.interface";
-import { readWord } from "../utils/stream.util";
-import { toStream } from "../utils/to-stream.util";
+import { inflateSync } from 'zlib';
+import { CleanPlan, CleanPlanInfo, CleanRoom, MapHeadInfo, MapPlanInfo } from '../interfaces/map.interface';
+import { readWord } from '../utils/stream.util';
+import { toStream } from '../utils/to-stream.util';
 import {
   readMapHeadInfo,
   readCleanPlanInfo,
   readMapInfoList,
   readCleanRoomList,
   readCleanPlanList,
-} from "./map.decoder";
+} from './map.decoder';
 
 interface Unk1 {
   unk1: number;
@@ -56,9 +50,7 @@ export function decodeArea(payload: Buffer): AreaListInfo {
   }
 
   data.mapHeadInfo = readMapHeadInfo(stream);
-  data.mapGrid = stream.read(
-    data.mapHeadInfo.sizeX * data.mapHeadInfo.sizeY
-  ) as Buffer;
+  data.mapGrid = stream.read(data.mapHeadInfo.sizeX * data.mapHeadInfo.sizeY) as Buffer;
   data.cleanPlanInfo = readCleanPlanInfo(stream);
   data.mapInfoList = readMapInfoList(stream);
   data.currentPlanId = readWord(stream);

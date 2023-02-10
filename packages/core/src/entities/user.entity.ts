@@ -1,5 +1,5 @@
-import { Entity } from "../base-classes/entity.base";
-import { ID } from "../value-objects/id.value-object";
+import { Entity } from '../base-classes/entity.base';
+import { ID } from '../value-objects/id.value-object';
 
 export type UserProps = {
   id: ID;

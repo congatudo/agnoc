@@ -1,56 +1,49 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Debugger } from "debug";
-import { TypedEmitter } from "tiny-typed-emitter";
-import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
-import { bind } from "../decorators/bind.decorator";
-import { DeviceMap } from "../entities/device-map.entity";
-import { DeviceOrder } from "../entities/device-order.entity";
-import { Device } from "../entities/device.entity";
-import { Room } from "../entities/room.entity";
-import { User } from "../entities/user.entity";
-import { Zone } from "../entities/zone.entity";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { DomainException } from "../exceptions/domain.exception";
-import { DeviceBatteryMapper } from "../mappers/device-battery.mapper";
-import { DeviceErrorMapper } from "../mappers/device-error.mapper";
-import { DeviceFanSpeedMapper } from "../mappers/device-fan-speed.mapper";
-import { DeviceModeMapper } from "../mappers/device-mode.mapper";
-import { DeviceStateMapper } from "../mappers/device-state.mapper";
-import { DeviceVoiceMapper } from "../mappers/device-voice.mapper";
-import { DeviceWaterLevelMapper } from "../mappers/device-water-level.mapper";
-import { BufferWriter } from "../streams/buffer-writer.stream";
-import { debug } from "../utils/debug.util";
-import { isPresent } from "../utils/is-present.util";
-import { writeByte, writeFloat } from "../utils/stream.util";
-import { waitFor } from "../utils/wait-for.util";
-import { Coordinate } from "../value-objects/coordinate.value-object";
-import { DeviceConfig } from "../value-objects/device-config.value-object";
-import {
-  ConsumableType,
-  CONSUMABLE_TYPE,
-  DeviceConsumable,
-} from "../value-objects/device-consumable.value-object";
-import { DeviceCurrentClean } from "../value-objects/device-current-clean.value-object";
-import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
-import { DeviceMode } from "../value-objects/device-mode.value-object";
-import { DeviceQuietHours } from "../value-objects/device-quiet-hours.value-object";
-import { DeviceState } from "../value-objects/device-state.value-object";
-import { DEVICE_CAPABILITY } from "../value-objects/device-system.value-object";
-import { DeviceTime } from "../value-objects/device-time.value-object";
-import { DeviceVersion } from "../value-objects/device-version.value-object";
-import { DeviceVoice } from "../value-objects/device-voice.value-object";
-import { DeviceWaterLevel } from "../value-objects/device-water-level.value-object";
-import { DeviceWlan } from "../value-objects/device-wlan.value-object";
-import { ID } from "../value-objects/id.value-object";
-import {
-  Message,
-  MessageHandlers,
-} from "../value-objects/message.value-object";
-import { Packet } from "../value-objects/packet.value-object";
-import { Pixel } from "../value-objects/pixel.value-object";
-import { Position } from "../value-objects/position.value-object";
-import { Connection } from "./connection.emitter";
-import { Multiplexer } from "./multiplexer.emitter";
+import { Debugger } from 'debug';
+import { TypedEmitter } from 'tiny-typed-emitter';
+import { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
+import { bind } from '../decorators/bind.decorator';
+import { DeviceMap } from '../entities/device-map.entity';
+import { DeviceOrder } from '../entities/device-order.entity';
+import { Device } from '../entities/device.entity';
+import { Room } from '../entities/room.entity';
+import { User } from '../entities/user.entity';
+import { Zone } from '../entities/zone.entity';
+import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
+import { DomainException } from '../exceptions/domain.exception';
+import { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
+import { DeviceErrorMapper } from '../mappers/device-error.mapper';
+import { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
+import { DeviceModeMapper } from '../mappers/device-mode.mapper';
+import { DeviceStateMapper } from '../mappers/device-state.mapper';
+import { DeviceVoiceMapper } from '../mappers/device-voice.mapper';
+import { DeviceWaterLevelMapper } from '../mappers/device-water-level.mapper';
+import { BufferWriter } from '../streams/buffer-writer.stream';
+import { debug } from '../utils/debug.util';
+import { isPresent } from '../utils/is-present.util';
+import { writeByte, writeFloat } from '../utils/stream.util';
+import { waitFor } from '../utils/wait-for.util';
+import { Coordinate } from '../value-objects/coordinate.value-object';
+import { DeviceConfig } from '../value-objects/device-config.value-object';
+import { ConsumableType, CONSUMABLE_TYPE, DeviceConsumable } from '../value-objects/device-consumable.value-object';
+import { DeviceCurrentClean } from '../value-objects/device-current-clean.value-object';
+import { DeviceFanSpeed } from '../value-objects/device-fan-speed.value-object';
+import { DeviceMode } from '../value-objects/device-mode.value-object';
+import { DeviceQuietHours } from '../value-objects/device-quiet-hours.value-object';
+import { DeviceState } from '../value-objects/device-state.value-object';
+import { DEVICE_CAPABILITY } from '../value-objects/device-system.value-object';
+import { DeviceTime } from '../value-objects/device-time.value-object';
+import { DeviceVersion } from '../value-objects/device-version.value-object';
+import { DeviceVoice } from '../value-objects/device-voice.value-object';
+import { DeviceWaterLevel } from '../value-objects/device-water-level.value-object';
+import { DeviceWlan } from '../value-objects/device-wlan.value-object';
+import { ID } from '../value-objects/id.value-object';
+import { Message, MessageHandlers } from '../value-objects/message.value-object';
+import { Packet } from '../value-objects/packet.value-object';
+import { Pixel } from '../value-objects/pixel.value-object';
+import { Position } from '../value-objects/position.value-object';
+import { Connection } from './connection.emitter';
+import { Multiplexer } from './multiplexer.emitter';
 
 export interface RobotProps {
   device: Device;
@@ -71,12 +64,12 @@ interface RobotEvents {
 }
 
 export enum MANUAL_MODE {
-  "forward" = 1,
-  "left" = 2,
-  "right" = 3,
-  "backward" = 4,
-  "stop" = 5,
-  "init" = 10,
+  'forward' = 1,
+  'left' = 2,
+  'right' = 3,
+  'backward' = 4,
+  'stop' = 5,
+  'init' = 10,
 }
 
 export type ManualMode = (typeof MANUAL_MODE)[keyof typeof MANUAL_MODE];
@@ -128,7 +121,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     this.user = user;
     this.multiplexer = multiplexer;
     this.debug = debug(__filename).extend(this.device.id.toString());
-    this.debug("new robot");
+    this.debug('new robot');
   }
 
   get isConnected(): boolean {
@@ -136,45 +129,28 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async start(): Promise<void> {
-    if (
-      this.device.hasMopAttached &&
-      this.device.mode?.value !== DeviceMode.VALUE.MOP
-    ) {
+    if (this.device.hasMopAttached && this.device.mode?.value !== DeviceMode.VALUE.MOP) {
       await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.MOP }));
-    } else if (
-      !this.device.hasMopAttached &&
-      this.device.mode?.value === DeviceMode.VALUE.MOP
-    ) {
+    } else if (!this.device.hasMopAttached && this.device.mode?.value === DeviceMode.VALUE.MOP) {
       await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.NONE }));
     }
 
     if (this.device.mode?.value === DeviceMode.VALUE.ZONE) {
-      await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
+      await this.sendRecv('DEVICE_AREA_CLEAN_REQ', 'DEVICE_AREA_CLEAN_RSP', {
         ctrlValue: CTRL_VALUE.START,
       });
     } else if (this.device.mode?.value === DeviceMode.VALUE.MOP) {
-      await this.sendRecv(
-        "DEVICE_MOP_FLOOR_CLEAN_REQ",
-        "DEVICE_MOP_FLOOR_CLEAN_RSP",
-        {
-          ctrlValue: CTRL_VALUE.START,
-        }
-      );
-    } else if (
-      this.device.mode?.value === DeviceMode.VALUE.SPOT &&
-      this.device.map?.currentSpot
-    ) {
-      await this.sendRecv(
-        "DEVICE_MAPID_SET_NAVIGATION_REQ",
-        "DEVICE_MAPID_SET_NAVIGATION_RSP",
-        {
-          mapHeadId: this.device.map.id.value,
-          poseX: this.device.map.currentSpot.x,
-          poseY: this.device.map.currentSpot.y,
-          posePhi: this.device.map.currentSpot.phi,
-          ctrlValue: CTRL_VALUE.START,
-        }
-      );
+      await this.sendRecv('DEVICE_MOP_FLOOR_CLEAN_REQ', 'DEVICE_MOP_FLOOR_CLEAN_RSP', {
+        ctrlValue: CTRL_VALUE.START,
+      });
+    } else if (this.device.mode?.value === DeviceMode.VALUE.SPOT && this.device.map?.currentSpot) {
+      await this.sendRecv('DEVICE_MAPID_SET_NAVIGATION_REQ', 'DEVICE_MAPID_SET_NAVIGATION_RSP', {
+        mapHeadId: this.device.map.id.value,
+        poseX: this.device.map.currentSpot.x,
+        poseY: this.device.map.currentSpot.y,
+        posePhi: this.device.map.currentSpot.phi,
+        ctrlValue: CTRL_VALUE.START,
+      });
     } else {
       if (
         this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS) &&
@@ -183,101 +159,13 @@ export class Robot extends TypedEmitter<RobotEvents> {
       ) {
         const { id, restrictedZones } = this.device.map;
 
-        await this.sendRecv(
-          "DEVICE_MAPID_SET_PLAN_PARAMS_REQ",
-          "DEVICE_MAPID_SET_PLAN_PARAMS_RSP",
-          {
-            mapHeadId: id.value,
-            // FIXME: this will change user map name.
-            mapName: "Default",
-            planId: 2,
-            // FIXME: this will change user plan name.
-            planName: "Default",
-            roomList: this.device.map.rooms.map((room) => ({
-              roomId: room.id.value,
-              roomName: room.name,
-              enable: true,
-            })),
-            areaInfo: {
-              mapHeadId: id.value,
-              planId: 2,
-              cleanAreaLength: restrictedZones.length,
-              cleanAreaList: restrictedZones.map((zone) => ({
-                cleanAreaId: zone.id.value,
-                type: 0,
-                coordinateLength: zone.coordinates.length,
-                coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
-              })),
-            },
-          }
-        );
-      }
-
-      await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-        ctrlValue: CTRL_VALUE.START,
-        cleanType: 2,
-      });
-    }
-  }
-
-  async pause(): Promise<void> {
-    if (this.device.mode?.value === DeviceMode.VALUE.ZONE) {
-      await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
-        ctrlValue: CTRL_VALUE.PAUSE,
-      });
-    } else if (this.device.mode?.value === DeviceMode.VALUE.MOP) {
-      await this.sendRecv(
-        "DEVICE_MOP_FLOOR_CLEAN_REQ",
-        "DEVICE_MOP_FLOOR_CLEAN_RSP",
-        {
-          ctrlValue: CTRL_VALUE.PAUSE,
-        }
-      );
-    } else if (
-      this.device.mode?.value === DeviceMode.VALUE.SPOT &&
-      this.device.map?.currentSpot
-    ) {
-      await this.sendRecv(
-        "DEVICE_MAPID_SET_NAVIGATION_REQ",
-        "DEVICE_MAPID_SET_NAVIGATION_RSP",
-        {
-          mapHeadId: this.device.map.id.value,
-          poseX: this.device.map.currentSpot.x,
-          poseY: this.device.map.currentSpot.y,
-          posePhi: this.device.map.currentSpot.phi,
-          ctrlValue: CTRL_VALUE.PAUSE,
-        }
-      );
-    } else {
-      await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-        ctrlValue: CTRL_VALUE.PAUSE,
-        cleanType: 2,
-      });
-    }
-  }
-
-  async stop(): Promise<void> {
-    await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
-      ctrlValue: CTRL_VALUE.STOP,
-      cleanType: 2,
-    });
-
-    if (
-      this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS) &&
-      this.device.map
-    ) {
-      const { id, restrictedZones } = this.device.map;
-
-      await this.sendRecv(
-        "DEVICE_MAPID_SET_PLAN_PARAMS_REQ",
-        "DEVICE_MAPID_SET_PLAN_PARAMS_RSP",
-        {
+        await this.sendRecv('DEVICE_MAPID_SET_PLAN_PARAMS_REQ', 'DEVICE_MAPID_SET_PLAN_PARAMS_RSP', {
           mapHeadId: id.value,
           // FIXME: this will change user map name.
-          mapName: "Default",
+          mapName: 'Default',
           planId: 2,
           // FIXME: this will change user plan name.
-          planName: "Default",
+          planName: 'Default',
           roomList: this.device.map.rooms.map((room) => ({
             roomId: room.id.value,
             roomName: room.name,
@@ -294,30 +182,92 @@ export class Robot extends TypedEmitter<RobotEvents> {
               coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
             })),
           },
-        }
-      );
+        });
+      }
+
+      await this.sendRecv('DEVICE_AUTO_CLEAN_REQ', 'DEVICE_AUTO_CLEAN_RSP', {
+        ctrlValue: CTRL_VALUE.START,
+        cleanType: 2,
+      });
+    }
+  }
+
+  async pause(): Promise<void> {
+    if (this.device.mode?.value === DeviceMode.VALUE.ZONE) {
+      await this.sendRecv('DEVICE_AREA_CLEAN_REQ', 'DEVICE_AREA_CLEAN_RSP', {
+        ctrlValue: CTRL_VALUE.PAUSE,
+      });
+    } else if (this.device.mode?.value === DeviceMode.VALUE.MOP) {
+      await this.sendRecv('DEVICE_MOP_FLOOR_CLEAN_REQ', 'DEVICE_MOP_FLOOR_CLEAN_RSP', {
+        ctrlValue: CTRL_VALUE.PAUSE,
+      });
+    } else if (this.device.mode?.value === DeviceMode.VALUE.SPOT && this.device.map?.currentSpot) {
+      await this.sendRecv('DEVICE_MAPID_SET_NAVIGATION_REQ', 'DEVICE_MAPID_SET_NAVIGATION_RSP', {
+        mapHeadId: this.device.map.id.value,
+        poseX: this.device.map.currentSpot.x,
+        poseY: this.device.map.currentSpot.y,
+        posePhi: this.device.map.currentSpot.phi,
+        ctrlValue: CTRL_VALUE.PAUSE,
+      });
+    } else {
+      await this.sendRecv('DEVICE_AUTO_CLEAN_REQ', 'DEVICE_AUTO_CLEAN_RSP', {
+        ctrlValue: CTRL_VALUE.PAUSE,
+        cleanType: 2,
+      });
+    }
+  }
+
+  async stop(): Promise<void> {
+    await this.sendRecv('DEVICE_AUTO_CLEAN_REQ', 'DEVICE_AUTO_CLEAN_RSP', {
+      ctrlValue: CTRL_VALUE.STOP,
+      cleanType: 2,
+    });
+
+    if (this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS) && this.device.map) {
+      const { id, restrictedZones } = this.device.map;
+
+      await this.sendRecv('DEVICE_MAPID_SET_PLAN_PARAMS_REQ', 'DEVICE_MAPID_SET_PLAN_PARAMS_RSP', {
+        mapHeadId: id.value,
+        // FIXME: this will change user map name.
+        mapName: 'Default',
+        planId: 2,
+        // FIXME: this will change user plan name.
+        planName: 'Default',
+        roomList: this.device.map.rooms.map((room) => ({
+          roomId: room.id.value,
+          roomName: room.name,
+          enable: true,
+        })),
+        areaInfo: {
+          mapHeadId: id.value,
+          planId: 2,
+          cleanAreaLength: restrictedZones.length,
+          cleanAreaList: restrictedZones.map((zone) => ({
+            cleanAreaId: zone.id.value,
+            type: 0,
+            coordinateLength: zone.coordinates.length,
+            coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
+          })),
+        },
+      });
 
       await this.updateMap();
     }
   }
 
   async home(): Promise<void> {
-    await this.sendRecv("DEVICE_CHARGE_REQ", "DEVICE_CHARGE_RSP", {
+    await this.sendRecv('DEVICE_CHARGE_REQ', 'DEVICE_CHARGE_RSP', {
       enable: 1,
     });
   }
 
   async locate(): Promise<void> {
-    await this.sendRecv(
-      "DEVICE_SEEK_LOCATION_REQ",
-      "DEVICE_SEEK_LOCATION_RSP",
-      {}
-    );
+    await this.sendRecv('DEVICE_SEEK_LOCATION_REQ', 'DEVICE_SEEK_LOCATION_RSP', {});
   }
 
   async setMode(mode: DeviceMode): Promise<void> {
     if (mode.value === DeviceMode.VALUE.NONE) {
-      await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
+      await this.sendRecv('DEVICE_AUTO_CLEAN_REQ', 'DEVICE_AUTO_CLEAN_RSP', {
         ctrlValue: CTRL_VALUE.STOP,
         cleanType: 2,
       });
@@ -328,13 +278,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
         mask = 0xff | 0x200;
       }
 
-      await this.sendRecv(
-        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
-        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-        { mask }
-      );
+      await this.sendRecv('DEVICE_MAPID_GET_GLOBAL_INFO_REQ', 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP', { mask });
     } else if (mode.value === DeviceMode.VALUE.ZONE) {
-      await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
+      await this.sendRecv('DEVICE_AREA_CLEAN_REQ', 'DEVICE_AREA_CLEAN_RSP', {
         ctrlValue: CTRL_VALUE.STOP,
       });
 
@@ -344,21 +290,13 @@ export class Robot extends TypedEmitter<RobotEvents> {
         mask = 0xff | 0x100;
       }
 
-      await this.sendRecv(
-        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
-        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-        { mask }
-      );
+      await this.sendRecv('DEVICE_MAPID_GET_GLOBAL_INFO_REQ', 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP', { mask });
     } else if (mode.value === DeviceMode.VALUE.MOP) {
-      await this.sendRecv(
-        "DEVICE_MAPID_INTO_MODEIDLE_INFO_REQ",
-        "DEVICE_MAPID_INTO_MODEIDLE_INFO_RSP",
-        {
-          mode: 7,
-        }
-      );
+      await this.sendRecv('DEVICE_MAPID_INTO_MODEIDLE_INFO_REQ', 'DEVICE_MAPID_INTO_MODEIDLE_INFO_RSP', {
+        mode: 7,
+      });
     } else {
-      throw new ArgumentInvalidException("Unknown device mode");
+      throw new ArgumentInvalidException('Unknown device mode');
     }
 
     await waitFor(() => this.device.mode?.value === mode.value, {
@@ -369,27 +307,19 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async setFanSpeed(fanSpeed: DeviceFanSpeed): Promise<void> {
-    await this.sendRecv(
-      "DEVICE_SET_CLEAN_PREFERENCE_REQ",
-      "DEVICE_SET_CLEAN_PREFERENCE_RSP",
-      { mode: DeviceFanSpeedMapper.toRobot(fanSpeed) }
-    );
+    await this.sendRecv('DEVICE_SET_CLEAN_PREFERENCE_REQ', 'DEVICE_SET_CLEAN_PREFERENCE_RSP', {
+      mode: DeviceFanSpeedMapper.toRobot(fanSpeed),
+    });
   }
 
   async setWaterLevel(waterLevel: DeviceWaterLevel): Promise<void> {
-    await this.sendRecv(
-      "DEVICE_SET_CLEAN_PREFERENCE_REQ",
-      "DEVICE_SET_CLEAN_PREFERENCE_RSP",
-      { mode: DeviceWaterLevelMapper.toRobot(waterLevel) }
-    );
+    await this.sendRecv('DEVICE_SET_CLEAN_PREFERENCE_REQ', 'DEVICE_SET_CLEAN_PREFERENCE_RSP', {
+      mode: DeviceWaterLevelMapper.toRobot(waterLevel),
+    });
   }
 
   async getTime(): Promise<DeviceTimestamp> {
-    const packet = await this.sendRecv(
-      "DEVICE_GETTIME_REQ",
-      "DEVICE_GETTIME_RSP",
-      {}
-    );
+    const packet = await this.sendRecv('DEVICE_GETTIME_REQ', 'DEVICE_GETTIME_RSP', {});
     const object = packet.payload.object;
 
     return {
@@ -404,9 +334,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     const packet = await this.sendRecv(
-      "DEVICE_MAPID_GET_CONSUMABLES_PARAM_REQ",
-      "DEVICE_MAPID_GET_CONSUMABLES_PARAM_RSP",
-      {}
+      'DEVICE_MAPID_GET_CONSUMABLES_PARAM_REQ',
+      'DEVICE_MAPID_GET_CONSUMABLES_PARAM_RSP',
+      {},
     );
     const object = packet.payload.object;
     const consumables = [
@@ -435,16 +365,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async resetConsumable(consumable: ConsumableType): Promise<void> {
     if (!(consumable in CONSUMABLE_TYPE_RESET)) {
-      throw new ArgumentInvalidException("Invalid consumable");
+      throw new ArgumentInvalidException('Invalid consumable');
     }
 
     const itemId = CONSUMABLE_TYPE_RESET[consumable];
 
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_CONSUMABLES_PARAM_REQ",
-      "DEVICE_MAPID_SET_CONSUMABLES_PARAM_RSP",
-      { itemId }
-    );
+    await this.sendRecv('DEVICE_MAPID_SET_CONSUMABLES_PARAM_REQ', 'DEVICE_MAPID_SET_CONSUMABLES_PARAM_RSP', { itemId });
   }
 
   async updateMap(): Promise<void> {
@@ -454,53 +380,41 @@ export class Robot extends TypedEmitter<RobotEvents> {
       mask = 0xff;
     }
 
-    await this.sendRecv(
-      "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
-      "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-      { mask }
-    );
+    await this.sendRecv('DEVICE_MAPID_GET_GLOBAL_INFO_REQ', 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP', { mask });
   }
 
   async getWlan(): Promise<DeviceWlan> {
-    const packet = await this.sendRecv(
-      "DEVICE_WLAN_INFO_GETTING_REQ",
-      "DEVICE_WLAN_INFO_GETTING_RSP",
-      {}
-    );
+    const packet = await this.sendRecv('DEVICE_WLAN_INFO_GETTING_REQ', 'DEVICE_WLAN_INFO_GETTING_RSP', {});
     const object = packet.payload.object;
 
     this.device.updateWlan(new DeviceWlan(object.body));
-    this.emit("updateDevice");
+    this.emit('updateDevice');
 
     return this.device.wlan as DeviceWlan;
   }
 
   async enterManualMode(): Promise<void> {
     // TODO: make a stop if robot is not stopped
-    await this.sendRecv("DEVICE_MANUAL_CTRL_REQ", "DEVICE_MANUAL_CTRL_RSP", {
+    await this.sendRecv('DEVICE_MANUAL_CTRL_REQ', 'DEVICE_MANUAL_CTRL_RSP', {
       command: MANUAL_MODE.init,
     });
   }
 
   async leaveManualMode(): Promise<void> {
-    await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
+    await this.sendRecv('DEVICE_AUTO_CLEAN_REQ', 'DEVICE_AUTO_CLEAN_RSP', {
       ctrlValue: CTRL_VALUE.STOP,
       cleanType: 2,
     });
   }
 
   async setManualMode(command: ManualMode): Promise<void> {
-    await this.sendRecv("DEVICE_MANUAL_CTRL_REQ", "DEVICE_MANUAL_CTRL_RSP", {
+    await this.sendRecv('DEVICE_MANUAL_CTRL_REQ', 'DEVICE_MANUAL_CTRL_RSP', {
       command,
     });
   }
 
   async getOrders(): Promise<DeviceOrder[]> {
-    const packet = await this.sendRecv(
-      "DEVICE_ORDERLIST_GETTING_REQ",
-      "DEVICE_ORDERLIST_GETTING_RSP",
-      {}
-    );
+    const packet = await this.sendRecv('DEVICE_ORDERLIST_GETTING_REQ', 'DEVICE_ORDERLIST_GETTING_RSP', {});
     const object = packet.payload.object;
     const orders = object.orderList?.map(DeviceOrder.fromOrderList) || [];
 
@@ -512,41 +426,32 @@ export class Robot extends TypedEmitter<RobotEvents> {
   async setOrder(order: DeviceOrder): Promise<void> {
     const orderList = order.toOrderList();
 
-    await this.sendRecv(
-      "DEVICE_ORDERLIST_SETTING_REQ",
-      "DEVICE_ORDERLIST_SETTING_RSP",
-      orderList
-    );
+    await this.sendRecv('DEVICE_ORDERLIST_SETTING_REQ', 'DEVICE_ORDERLIST_SETTING_RSP', orderList);
   }
 
   async deleteOrder(order: DeviceOrder): Promise<void> {
-    await this.sendRecv(
-      "DEVICE_ORDERLIST_DELETE_REQ",
-      "DEVICE_ORDERLIST_DELETE_RSP",
-      { orderId: order.id.value, mode: 1 }
-    );
+    await this.sendRecv('DEVICE_ORDERLIST_DELETE_REQ', 'DEVICE_ORDERLIST_DELETE_RSP', {
+      orderId: order.id.value,
+      mode: 1,
+    });
   }
 
   async cleanPosition(position: Position): Promise<void> {
     if (!this.device.map) {
-      throw new DomainException("Unable to set robot position: map not loaded");
+      throw new DomainException('Unable to set robot position: map not loaded');
     }
 
     if (this.device.mode?.value !== DeviceMode.VALUE.SPOT) {
       await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.SPOT }));
     }
 
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_NAVIGATION_REQ",
-      "DEVICE_MAPID_SET_NAVIGATION_RSP",
-      {
-        mapHeadId: this.device.map.id.value,
-        poseX: position.x,
-        poseY: position.y,
-        posePhi: position.phi,
-        ctrlValue: CTRL_VALUE.START,
-      }
-    );
+    await this.sendRecv('DEVICE_MAPID_SET_NAVIGATION_REQ', 'DEVICE_MAPID_SET_NAVIGATION_RSP', {
+      mapHeadId: this.device.map.id.value,
+      poseX: position.x,
+      poseY: position.y,
+      posePhi: position.phi,
+      ctrlValue: CTRL_VALUE.START,
+    });
   }
 
   /**
@@ -577,12 +482,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       }),
     };
 
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ",
-      "DEVICE_MAPID_SET_AREA_CLEAN_INFO_RSP",
-      req
-    );
-    await this.sendRecv("DEVICE_AREA_CLEAN_REQ", "DEVICE_AREA_CLEAN_RSP", {
+    await this.sendRecv('DEVICE_MAPID_SET_AREA_CLEAN_INFO_REQ', 'DEVICE_MAPID_SET_AREA_CLEAN_INFO_RSP', req);
+    await this.sendRecv('DEVICE_AREA_CLEAN_REQ', 'DEVICE_AREA_CLEAN_RSP', {
       ctrlValue: CTRL_VALUE.START,
     });
   }
@@ -602,11 +503,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     if (!this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS)) {
-      await this.sendRecv(
-        "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
-        "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-        { mask: 0xff | 0x400 }
-      );
+      await this.sendRecv('DEVICE_MAPID_GET_GLOBAL_INFO_REQ', 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP', {
+        mask: 0xff | 0x400,
+      });
     }
 
     const cleanAreaList = [
@@ -624,24 +523,16 @@ export class Robot extends TypedEmitter<RobotEvents> {
       })),
     ];
 
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ",
-      "DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_RSP",
-      {
-        mapHeadId: this.device.map.id.value,
-        planId: 0,
-        cleanAreaLength: cleanAreaList.length,
-        cleanAreaList,
-      }
-    );
+    await this.sendRecv('DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_REQ', 'DEVICE_MAPID_SET_AREA_RESTRICTED_INFO_RSP', {
+      mapHeadId: this.device.map.id.value,
+      planId: 0,
+      cleanAreaLength: cleanAreaList.length,
+      cleanAreaList,
+    });
   }
 
   async getQuietHours(): Promise<DeviceQuietHours> {
-    const packet = await this.sendRecv(
-      "USER_GET_DEVICE_QUIETHOURS_REQ",
-      "USER_GET_DEVICE_QUIETHOURS_RSP",
-      {}
-    );
+    const packet = await this.sendRecv('USER_GET_DEVICE_QUIETHOURS_REQ', 'USER_GET_DEVICE_QUIETHOURS_RSP', {});
     const object = packet.payload.object;
     const quietHours = new DeviceQuietHours({
       isEnabled: object.isOpen,
@@ -655,67 +546,49 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async setQuietHours(quietHours: DeviceQuietHours): Promise<void> {
-    await this.sendRecv(
-      "USER_SET_DEVICE_QUIETHOURS_REQ",
-      "USER_SET_DEVICE_QUIETHOURS_RSP",
-      {
-        isOpen: quietHours.isEnabled,
-        beginTime: quietHours.begin.toMinutes(),
-        endTime: quietHours.end.toMinutes(),
-      }
-    );
+    await this.sendRecv('USER_SET_DEVICE_QUIETHOURS_REQ', 'USER_SET_DEVICE_QUIETHOURS_RSP', {
+      isOpen: quietHours.isEnabled,
+      beginTime: quietHours.begin.toMinutes(),
+      endTime: quietHours.end.toMinutes(),
+    });
 
     this.device.config?.updateQuietHours(quietHours);
   }
 
   async setCarpetMode(enable: boolean): Promise<void> {
-    await this.sendRecv(
-      "USER_SET_DEVICE_CLEANPREFERENCE_REQ",
-      "USER_SET_DEVICE_CLEANPREFERENCE_RSP",
-      {
-        carpetTurbo: enable,
-      }
-    );
+    await this.sendRecv('USER_SET_DEVICE_CLEANPREFERENCE_REQ', 'USER_SET_DEVICE_CLEANPREFERENCE_RSP', {
+      carpetTurbo: enable,
+    });
 
     this.device.config?.updateCarpetMode(enable);
-    this.emit("updateDevice");
+    this.emit('updateDevice');
   }
 
   async setHistoryMap(enable: boolean): Promise<void> {
-    await this.sendRecv(
-      "USER_SET_DEVICE_CLEANPREFERENCE_REQ",
-      "USER_SET_DEVICE_CLEANPREFERENCE_RSP",
-      {
-        historyMap: enable,
-      }
-    );
+    await this.sendRecv('USER_SET_DEVICE_CLEANPREFERENCE_REQ', 'USER_SET_DEVICE_CLEANPREFERENCE_RSP', {
+      historyMap: enable,
+    });
 
     this.device.config?.updateHistoryMap(enable);
-    this.emit("updateDevice");
+    this.emit('updateDevice');
   }
 
   async setVoice(voice: DeviceVoice): Promise<void> {
     const robotVoice = DeviceVoiceMapper.toRobot(voice);
 
-    await this.sendRecv(
-      "USER_SET_DEVICE_CTRL_SETTING_REQ",
-      "USER_SET_DEVICE_CTRL_SETTING_RSP",
-      {
-        voiceMode: robotVoice.isEnabled,
-        volume: robotVoice.volume,
-      }
-    );
+    await this.sendRecv('USER_SET_DEVICE_CTRL_SETTING_REQ', 'USER_SET_DEVICE_CTRL_SETTING_RSP', {
+      voiceMode: robotVoice.isEnabled,
+      volume: robotVoice.volume,
+    });
 
     this.device.config?.updateVoice(voice);
-    this.emit("updateDevice");
+    this.emit('updateDevice');
   }
 
   async saveWaitingMap(save: boolean): Promise<void> {
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ",
-      "DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_RSP",
-      { mode: Number(save) }
-    );
+    await this.sendRecv('DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_REQ', 'DEVICE_MAPID_SET_SAVEWAITINGMAP_INFO_RSP', {
+      mode: Number(save),
+    });
 
     this.device.updateHasWaitingMap(false);
   }
@@ -727,38 +600,34 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     const { id, restrictedZones } = this.device.map;
 
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_PLAN_PARAMS_REQ",
-      "DEVICE_MAPID_SET_PLAN_PARAMS_RSP",
-      {
-        mapHeadId: id.value,
-        // FIXME: this will change user map name.
-        mapName: "Default",
-        planId: 2,
-        // FIXME: this will change user plan name.
-        planName: "Default",
-        roomList: this.device.map.rooms.map((r) => {
-          r = room.equals(r) ? room : r;
+    await this.sendRecv('DEVICE_MAPID_SET_PLAN_PARAMS_REQ', 'DEVICE_MAPID_SET_PLAN_PARAMS_RSP', {
+      mapHeadId: id.value,
+      // FIXME: this will change user map name.
+      mapName: 'Default',
+      planId: 2,
+      // FIXME: this will change user plan name.
+      planName: 'Default',
+      roomList: this.device.map.rooms.map((r) => {
+        r = room.equals(r) ? room : r;
 
-          return {
-            roomId: r.id.value,
-            roomName: r.name,
-            enable: true,
-          };
-        }),
-        areaInfo: {
-          mapHeadId: id.value,
-          planId: 2,
-          cleanAreaLength: restrictedZones.length,
-          cleanAreaList: restrictedZones.map((zone) => ({
-            cleanAreaId: zone.id.value,
-            type: 0,
-            coordinateLength: zone.coordinates.length,
-            coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
-          })),
-        },
-      }
-    );
+        return {
+          roomId: r.id.value,
+          roomName: r.name,
+          enable: true,
+        };
+      }),
+      areaInfo: {
+        mapHeadId: id.value,
+        planId: 2,
+        cleanAreaLength: restrictedZones.length,
+        cleanAreaList: restrictedZones.map((zone) => ({
+          cleanAreaId: zone.id.value,
+          type: 0,
+          coordinateLength: zone.coordinates.length,
+          coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
+        })),
+      },
+    });
   }
 
   async joinRooms(rooms: Room[]): Promise<void> {
@@ -777,24 +646,16 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     const data = stream.buffer;
 
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_ARRANGEROOM_INFO_REQ",
-      "DEVICE_MAPID_SET_ARRANGEROOM_INFO_RSP",
-      {
-        mapHeadId: this.device.map.id.value,
-        type: 0,
-        dataLen: data.length,
-        data,
-        roomId: 0,
-      }
-    );
+    await this.sendRecv('DEVICE_MAPID_SET_ARRANGEROOM_INFO_REQ', 'DEVICE_MAPID_SET_ARRANGEROOM_INFO_RSP', {
+      mapHeadId: this.device.map.id.value,
+      type: 0,
+      dataLen: data.length,
+      data,
+      roomId: 0,
+    });
   }
 
-  async splitRoom(
-    room: Room,
-    pointA: Coordinate,
-    pointB: Coordinate
-  ): Promise<void> {
+  async splitRoom(room: Room, pointA: Coordinate, pointB: Coordinate): Promise<void> {
     if (!this.device.map) {
       return;
     }
@@ -811,17 +672,13 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     const data = stream.buffer;
 
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_ARRANGEROOM_INFO_REQ",
-      "DEVICE_MAPID_SET_ARRANGEROOM_INFO_RSP",
-      {
-        mapHeadId: this.device.map.id.value,
-        type: 1,
-        dataLen: data.length,
-        data,
-        roomId: room.id.value,
-      }
-    );
+    await this.sendRecv('DEVICE_MAPID_SET_ARRANGEROOM_INFO_REQ', 'DEVICE_MAPID_SET_ARRANGEROOM_INFO_RSP', {
+      mapHeadId: this.device.map.id.value,
+      type: 1,
+      dataLen: data.length,
+      data,
+      roomId: room.id.value,
+    });
   }
 
   async cleanRooms(rooms: Room[]): Promise<void> {
@@ -831,81 +688,61 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     const { id, restrictedZones } = this.device.map;
 
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_PLAN_PARAMS_REQ",
-      "DEVICE_MAPID_SET_PLAN_PARAMS_RSP",
-      {
+    await this.sendRecv('DEVICE_MAPID_SET_PLAN_PARAMS_REQ', 'DEVICE_MAPID_SET_PLAN_PARAMS_RSP', {
+      mapHeadId: id.value,
+      // FIXME: this will change user map name.
+      mapName: 'Default',
+      planId: 2,
+      // FIXME: this will change user plan name.
+      planName: 'Default',
+      roomList: this.device.map.rooms.map((room) => ({
+        roomId: room.id.value,
+        roomName: room.name,
+        enable: Boolean(rooms.find((r) => room.equals(r))),
+      })),
+      areaInfo: {
         mapHeadId: id.value,
-        // FIXME: this will change user map name.
-        mapName: "Default",
         planId: 2,
-        // FIXME: this will change user plan name.
-        planName: "Default",
-        roomList: this.device.map.rooms.map((room) => ({
-          roomId: room.id.value,
-          roomName: room.name,
-          enable: Boolean(rooms.find((r) => room.equals(r))),
+        cleanAreaLength: restrictedZones.length,
+        cleanAreaList: restrictedZones.map((zone) => ({
+          cleanAreaId: zone.id.value,
+          type: 0,
+          coordinateLength: zone.coordinates.length,
+          coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
         })),
-        areaInfo: {
-          mapHeadId: id.value,
-          planId: 2,
-          cleanAreaLength: restrictedZones.length,
-          cleanAreaList: restrictedZones.map((zone) => ({
-            cleanAreaId: zone.id.value,
-            type: 0,
-            coordinateLength: zone.coordinates.length,
-            coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
-          })),
-        },
-      }
-    );
+      },
+    });
 
-    await this.sendRecv(
-      "DEVICE_MAPID_SELECT_MAP_PLAN_REQ",
-      "DEVICE_MAPID_SELECT_MAP_PLAN_RSP",
-      {
-        mapHeadId: id.value,
-        planId: 2,
-        mode: 1,
-      }
-    );
+    await this.sendRecv('DEVICE_MAPID_SELECT_MAP_PLAN_REQ', 'DEVICE_MAPID_SELECT_MAP_PLAN_RSP', {
+      mapHeadId: id.value,
+      planId: 2,
+      mode: 1,
+    });
 
-    await this.sendRecv(
-      "DEVICE_MAPID_GET_GLOBAL_INFO_REQ",
-      "DEVICE_MAPID_GET_GLOBAL_INFO_RSP",
-      { mask: 0x78ff }
-    );
+    await this.sendRecv('DEVICE_MAPID_GET_GLOBAL_INFO_REQ', 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP', { mask: 0x78ff });
 
-    await this.sendRecv("DEVICE_AUTO_CLEAN_REQ", "DEVICE_AUTO_CLEAN_RSP", {
+    await this.sendRecv('DEVICE_AUTO_CLEAN_REQ', 'DEVICE_AUTO_CLEAN_RSP', {
       ctrlValue: CTRL_VALUE.START,
       cleanType: 2,
     });
   }
 
   async resetMap(): Promise<void> {
-    await this.sendRecv(
-      "DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_REQ",
-      "DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_RSP",
-      {}
-    );
+    await this.sendRecv('DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_REQ', 'DEVICE_MAPID_SET_HISTORY_MAP_ENABLE_RSP', {});
   }
 
   async controlLock(): Promise<void> {
-    await this.sendRecv(
-      "DEVICE_CONTROL_LOCK_REQ",
-      "DEVICE_CONTROL_LOCK_RSP",
-      {}
-    );
+    await this.sendRecv('DEVICE_CONTROL_LOCK_REQ', 'DEVICE_CONTROL_LOCK_RSP', {});
   }
 
   async handshake(): Promise<void> {
     await this.controlLock();
 
-    this.send("DEVICE_STATUS_GETTING_REQ", {});
+    this.send('DEVICE_STATUS_GETTING_REQ', {});
 
-    void this.send("DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ", {
+    void this.send('DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ', {
       unk1: 0,
-      unk2: "",
+      unk2: '',
     });
 
     void this.getTime();
@@ -914,28 +751,24 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   @bind
-  handleDeviceVersionInfoUpdate(
-    message: Message<"DEVICE_VERSION_INFO_UPDATE_REQ">
-  ): void {
+  handleDeviceVersionInfoUpdate(message: Message<'DEVICE_VERSION_INFO_UPDATE_REQ'>): void {
     const object = message.packet.payload.object;
 
     this.device.updateVersion(
       new DeviceVersion({
         software: object.softwareVersion,
         hardware: object.hardwareVersion,
-      })
+      }),
     );
-    this.emit("updateDevice");
+    this.emit('updateDevice');
 
-    message.respond("DEVICE_VERSION_INFO_UPDATE_RSP", {
+    message.respond('DEVICE_VERSION_INFO_UPDATE_RSP', {
       result: 0,
     });
   }
 
   @bind
-  handleDeviceAgentSetting(
-    message: Message<"PUSH_DEVICE_AGENT_SETTING_REQ">
-  ): void {
+  handleDeviceAgentSetting(message: Message<'PUSH_DEVICE_AGENT_SETTING_REQ'>): void {
     const object = message.packet.payload.object;
     const props = {
       voice: DeviceVoiceMapper.toDomain({
@@ -956,50 +789,35 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     this.device.updateConfig(new DeviceConfig(props));
 
-    message.respond("PUSH_DEVICE_AGENT_SETTING_RSP", {
+    message.respond('PUSH_DEVICE_AGENT_SETTING_RSP', {
       result: 0,
     });
   }
 
   @bind
-  handleClientHeartbeat(message: Message<"CLIENT_HEARTBEAT_REQ">): void {
-    message.respond("CLIENT_HEARTBEAT_RSP", {});
+  handleClientHeartbeat(message: Message<'CLIENT_HEARTBEAT_REQ'>): void {
+    message.respond('CLIENT_HEARTBEAT_RSP', {});
   }
 
   @bind
-  handleDevicePackageUpgrade(
-    message: Message<"PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ">
-  ): void {
-    message.respond("PUSH_DEVICE_PACKAGE_UPGRADE_INFO_RSP", {
+  handleDevicePackageUpgrade(message: Message<'PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ'>): void {
+    message.respond('PUSH_DEVICE_PACKAGE_UPGRADE_INFO_RSP', {
       result: 0,
     });
   }
 
   @bind
-  handleDeviceStatus(
-    message: Message<"DEVICE_MAPID_WORK_STATUS_PUSH_REQ">
-  ): void {
+  handleDeviceStatus(message: Message<'DEVICE_MAPID_WORK_STATUS_PUSH_REQ'>): void {
     const object = message.packet.payload.object;
-    const {
-      battery,
-      type,
-      workMode,
-      chargeStatus,
-      cleanPreference,
-      faultCode,
-      waterLevel,
-      mopType,
-    } = object;
+    const { battery, type, workMode, chargeStatus, cleanPreference, faultCode, waterLevel, mopType } = object;
 
     this.device.updateCurrentClean(
       new DeviceCurrentClean({
         size: object.cleanSize,
         time: object.cleanTime,
-      })
+      }),
     );
-    this.device.updateState(
-      DeviceStateMapper.toDomain({ type, workMode, chargeStatus })
-    );
+    this.device.updateState(DeviceStateMapper.toDomain({ type, workMode, chargeStatus }));
     this.device.updateMode(DeviceModeMapper.toDomain(workMode));
     this.device.updateError(DeviceErrorMapper.toDomain(faultCode));
     this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
@@ -1013,15 +831,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
       this.device.updateWaterLevel(DeviceWaterLevelMapper.toDomain(waterLevel));
     }
 
-    this.emit("updateDevice");
+    this.emit('updateDevice');
   }
 
   @bind
-  handleMapUpdate(
-    message: Message<
-      "DEVICE_MAPID_PUSH_MAP_INFO" | "DEVICE_MAPID_GET_GLOBAL_INFO_RSP"
-    >
-  ): void {
+  handleMapUpdate(message: Message<'DEVICE_MAPID_PUSH_MAP_INFO' | 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP'>): void {
     const object = message.packet.payload.object;
     const {
       statusInfo,
@@ -1052,18 +866,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
         new DeviceCurrentClean({
           size: statusInfo.cleanSize,
           time: statusInfo.cleanTime,
-        })
+        }),
       );
       this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
       this.device.updateMode(DeviceModeMapper.toDomain(workMode));
-      this.device.updateState(
-        DeviceStateMapper.toDomain({ type, workMode, chargeStatus })
-      );
+      this.device.updateState(DeviceStateMapper.toDomain({ type, workMode, chargeStatus }));
       this.device.updateError(DeviceErrorMapper.toDomain(faultCode));
-      this.device.updateFanSpeed(
-        DeviceFanSpeedMapper.toDomain(cleanPreference)
-      );
-      this.emit("updateDevice");
+      this.device.updateFanSpeed(DeviceFanSpeedMapper.toDomain(cleanPreference));
+      this.emit('updateDevice');
     }
 
     let map = this.device.map;
@@ -1100,10 +910,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
         map.updateRobotPath(
           map.robotPath.concat(
-            historyHeadInfo.pointList
-              .slice(currentIndex)
-              .map(({ x, y }) => new Coordinate({ x, y }))
-          )
+            historyHeadInfo.pointList.slice(currentIndex).map(({ x, y }) => new Coordinate({ x, y })),
+          ),
         );
       }
 
@@ -1113,7 +921,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
             x: robotPoseInfo.poseX,
             y: robotPoseInfo.poseY,
             phi: robotPoseInfo.posePhi,
-          })
+          }),
         );
       }
 
@@ -1123,7 +931,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
             x: robotChargeInfo.poseX,
             y: robotChargeInfo.poseY,
             phi: robotChargeInfo.posePhi,
-          })
+          }),
         );
       }
 
@@ -1133,7 +941,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
             x: spotInfo.poseX,
             y: spotInfo.poseY,
             phi: spotInfo.posePhi,
-          })
+          }),
         );
       }
 
@@ -1149,24 +957,18 @@ export class Robot extends TypedEmitter<RobotEvents> {
                 });
               }),
             });
-          })
+          }),
         );
       }
 
       if (cleanRoomList && roomSegmentList && cleanPlanList) {
-        const currentPlan = cleanPlanList.find(
-          (plan) => plan.planId === currentPlanId
-        );
+        const currentPlan = cleanPlanList.find((plan) => plan.planId === currentPlanId);
 
         map.updateRooms(
           cleanRoomList
             .map((cleanRoom) => {
-              const segment = roomSegmentList.find(
-                (roomSegment) => roomSegment.roomId === cleanRoom.roomId
-              );
-              const roomInfo = currentPlan?.cleanRoomInfoList.find(
-                (r) => r.roomId === cleanRoom.roomId
-              );
+              const segment = roomSegmentList.find((roomSegment) => roomSegment.roomId === cleanRoom.roomId);
+              const roomInfo = currentPlan?.cleanRoomInfoList.find((r) => r.roomId === cleanRoom.roomId);
 
               if (!segment) {
                 return undefined;
@@ -1188,18 +990,16 @@ export class Robot extends TypedEmitter<RobotEvents> {
                 }),
               });
             })
-            .filter(isPresent)
+            .filter(isPresent),
         );
       }
     }
 
-    this.emit("updateMap");
+    this.emit('updateMap');
   }
 
   @bind
-  handleUpdateRobotPosition(
-    message: Message<"DEVICE_MAPID_PUSH_POSITION_INFO">
-  ): void {
+  handleUpdateRobotPosition(message: Message<'DEVICE_MAPID_PUSH_POSITION_INFO'>): void {
     if (!this.device.map) {
       return;
     }
@@ -1212,17 +1012,15 @@ export class Robot extends TypedEmitter<RobotEvents> {
           x: object.poseX,
           y: object.poseY,
           phi: object.posePhi,
-        })
+        }),
       );
 
-      this.emit("updateRobotPosition");
+      this.emit('updateRobotPosition');
     }
   }
 
   @bind
-  handleUpdateChargePosition(
-    message: Message<"DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO">
-  ): void {
+  handleUpdateChargePosition(message: Message<'DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO'>): void {
     if (!this.device.map) {
       return;
     }
@@ -1234,54 +1032,46 @@ export class Robot extends TypedEmitter<RobotEvents> {
         x: object.poseX,
         y: object.poseY,
         phi: object.posePhi,
-      })
+      }),
     );
-    this.emit("updateChargerPosition");
+    this.emit('updateChargerPosition');
   }
 
   @bind
-  handleDeviceBatteryInfo(
-    message: Message<"PUSH_DEVICE_BATTERY_INFO_REQ">
-  ): void {
-    message.respond("PUSH_DEVICE_BATTERY_INFO_RSP", {
+  handleDeviceBatteryInfo(message: Message<'PUSH_DEVICE_BATTERY_INFO_REQ'>): void {
+    message.respond('PUSH_DEVICE_BATTERY_INFO_RSP', {
       result: 0,
     });
 
     const object = message.packet.payload.object;
 
-    this.device.updateBattery(
-      DeviceBatteryMapper.toDomain(object.battery.level)
-    );
+    this.device.updateBattery(DeviceBatteryMapper.toDomain(object.battery.level));
 
-    this.emit("updateDevice");
+    this.emit('updateDevice');
   }
 
   @bind
   handleWaitingMap(): void {
     this.device.updateHasWaitingMap(true);
-    this.emit("updateDevice");
+    this.emit('updateDevice');
   }
 
   @bind
-  handleWorkstatusReport(
-    message: Message<"DEVICE_WORKSTATUS_REPORT_REQ">
-  ): void {
-    message.respond("DEVICE_WORKSTATUS_REPORT_RSP", {
+  handleWorkstatusReport(message: Message<'DEVICE_WORKSTATUS_REPORT_REQ'>): void {
+    message.respond('DEVICE_WORKSTATUS_REPORT_RSP', {
       result: 0,
     });
   }
 
   @bind
-  handleReportCleantask(
-    message: Message<"DEVICE_EVENT_REPORT_CLEANTASK">
-  ): void {
-    message.respond("UNK_11A4", { unk1: 0 });
+  handleReportCleantask(message: Message<'DEVICE_EVENT_REPORT_CLEANTASK'>): void {
+    message.respond('UNK_11A4', { unk1: 0 });
   }
 
   @bind
-  handleReportCleanmap(message: Message<"DEVICE_EVENT_REPORT_CLEANMAP">): void {
+  handleReportCleanmap(message: Message<'DEVICE_EVENT_REPORT_CLEANMAP'>): void {
     const object = message.packet.payload.object;
-    message.respond("DEVICE_EVENT_REPORT_RSP", {
+    message.respond('DEVICE_EVENT_REPORT_RSP', {
       result: 0,
       body: {
         cleanId: object.cleanId,
@@ -1290,26 +1080,24 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   @bind
-  handleBinDataReport(
-    message: Message<"DEVICE_CLEANMAP_BINDATA_REPORT_REQ">
-  ): void {
+  handleBinDataReport(message: Message<'DEVICE_CLEANMAP_BINDATA_REPORT_REQ'>): void {
     const object = message.packet.payload.object;
-    message.respond("DEVICE_CLEANMAP_BINDATA_REPORT_RSP", {
+    message.respond('DEVICE_CLEANMAP_BINDATA_REPORT_RSP', {
       result: 0,
       cleanId: object.cleanId,
     });
   }
 
   @bind
-  handleEventReport(message: Message<"DEVICE_EVENT_REPORT_REQ">): void {
-    message.respond("UNK_11A7", { unk1: 0 });
+  handleEventReport(message: Message<'DEVICE_EVENT_REPORT_REQ'>): void {
+    message.respond('UNK_11A7', { unk1: 0 });
   }
 
   @bind
-  handleSetTime(message: Message<"DEVICE_SETTIME_REQ">): void {
+  handleSetTime(message: Message<'DEVICE_SETTIME_REQ'>): void {
     const date = new Date();
 
-    message.respond("DEVICE_SETTIME_RSP", {
+    message.respond('DEVICE_SETTIME_RSP', {
       deviceTime: Math.floor(date.getTime() / 1000),
       deviceTimezone: -1 * (date.getTimezoneOffset() * 60),
     });
@@ -1326,13 +1114,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
   handleMessage<Name extends OPDecoderLiteral>(message: Message<Name>): void {
     const handler = this.handlers[message.opname];
 
-    if (
-      message.packet.userId.value !== 0 &&
-      message.packet.userId.value !== this.user.id.value
-    ) {
-      message.respond("COMMON_ERROR_REPLY", {
+    if (message.packet.userId.value !== 0 && message.packet.userId.value !== this.user.id.value) {
+      message.respond('COMMON_ERROR_REPLY', {
         result: 11001,
-        error: "Target user is offline",
+        error: 'Target user is offline',
         opcode: message.packet.payload.opcode.value,
       });
       return;
@@ -1346,22 +1131,16 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   override toString(): string {
-    return [
-      `device: ${this.device.toString()}`,
-      `user: ${this.user.toString()}`,
-    ].join(" ");
+    return [`device: ${this.device.toString()}`, `user: ${this.user.toString()}`].join(' ');
   }
 
   disconnect(): void {
-    this.debug("disconnecting...");
+    this.debug('disconnecting...');
 
     return this.multiplexer.close();
   }
 
-  send<Name extends OPDecoderLiteral>(
-    opname: Name,
-    object: OPDecoders[Name]
-  ): void {
+  send<Name extends OPDecoderLiteral>(opname: Name, object: OPDecoders[Name]): void {
     const ret = this.multiplexer.send({
       opname,
       userId: this.user.id,
@@ -1370,9 +1149,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
 
     if (!ret) {
-      throw new DomainException(
-        `There was an error sending opcode '${opname}'`
-      );
+      throw new DomainException(`There was an error sending opcode '${opname}'`);
     }
   }
 
@@ -1385,11 +1162,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
       const fail = () => {
         this.multiplexer.off(opname, done);
-        reject(
-          new DomainException(
-            `Timeout waiting for response from opcode '${opname}'`
-          )
-        );
+        reject(new DomainException(`Timeout waiting for response from opcode '${opname}'`));
       };
 
       const timer = setTimeout(fail, RECV_TIMEOUT);
@@ -1398,13 +1171,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
   }
 
-  sendRecv<
-    SendName extends OPDecoderLiteral,
-    RecvName extends OPDecoderLiteral
-  >(
+  sendRecv<SendName extends OPDecoderLiteral, RecvName extends OPDecoderLiteral>(
     sendOPName: SendName,
     recvOPName: RecvName,
-    sendObject: OPDecoders[SendName]
+    sendObject: OPDecoders[SendName],
   ): Promise<Packet<RecvName>> {
     this.send(sendOPName, sendObject);
 

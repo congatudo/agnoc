@@ -1,8 +1,8 @@
-import { ObjectLiteral } from "../types/object-literal.type";
-import { isObject } from "./is-object.util";
+import { ObjectLiteral } from '../types/object-literal.type';
+import { isObject } from './is-object.util';
 
 function convertToRaw(item: unknown): unknown {
-  if (isObject(item) && typeof item.toJSON === "function") {
+  if (isObject(item) && typeof item.toJSON === 'function') {
     return item.toJSON();
   }
   return item;
@@ -10,9 +10,7 @@ function convertToRaw(item: unknown): unknown {
 
 export function convertPropsToObject(props: unknown): ObjectLiteral {
   if (!isObject(props)) {
-    throw new TypeError(
-      `Unable to convert props type <${typeof props}> to object`
-    );
+    throw new TypeError(`Unable to convert props type <${typeof props}> to object`);
   }
 
   const propsCopy = { ...props };

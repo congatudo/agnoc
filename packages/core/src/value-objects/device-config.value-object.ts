@@ -1,9 +1,9 @@
-import { ValueObject } from "../base-classes/value-object.base";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { isPresent } from "../utils/is-present.util";
-import { DeviceQuietHours } from "./device-quiet-hours.value-object";
-import { DeviceVoice } from "./device-voice.value-object";
+import { ValueObject } from '../base-classes/value-object.base';
+import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { isPresent } from '../utils/is-present.util';
+import { DeviceQuietHours } from './device-quiet-hours.value-object';
+import { DeviceVoice } from './device-voice.value-object';
 
 export interface DeviceConfigProps {
   voice: DeviceVoice;
@@ -76,15 +76,11 @@ export class DeviceConfig extends ValueObject<DeviceConfigProps> {
         props.isHistoryMapEnabled,
       ].every(isPresent)
     ) {
-      throw new ArgumentNotProvidedException(
-        "Missing property in device config constructor"
-      );
+      throw new ArgumentNotProvidedException('Missing property in device config constructor');
     }
 
     if (!(props.quietHours instanceof DeviceQuietHours)) {
-      throw new ArgumentInvalidException(
-        "Invalid property quiet hours in device config constructor"
-      );
+      throw new ArgumentInvalidException('Invalid property quiet hours in device config constructor');
     }
   }
 }

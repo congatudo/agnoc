@@ -1,6 +1,6 @@
-import { ValueObject } from "../base-classes/value-object.base";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { isPresent } from "../utils/is-present.util";
+import { ValueObject } from '../base-classes/value-object.base';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { isPresent } from '../utils/is-present.util';
 
 export interface DeviceWlanProps {
   ipv4: string;
@@ -32,14 +32,8 @@ export class DeviceWlan extends ValueObject<DeviceWlanProps> {
   }
 
   protected validate(props: DeviceWlanProps): void {
-    if (
-      ![props.ipv4, props.ssid, props.port, props.mask, props.mac].every(
-        isPresent
-      )
-    ) {
-      throw new ArgumentNotProvidedException(
-        "Missing property in device wlan constructor"
-      );
+    if (![props.ipv4, props.ssid, props.port, props.mask, props.mac].every(isPresent)) {
+      throw new ArgumentNotProvidedException('Missing property in device wlan constructor');
     }
   }
 }

@@ -5,8 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/@agnoc/core.svg)](https://npmjs.org/package/@agnoc/core)
 [![npm downloads](https://img.shields.io/npm/dm/@agnoc/core.svg)](https://npmjs.org/package/@agnoc/core)
 [![codecov](https://codecov.io/gh/adrigzr/agnoc/branch/master/graph/badge.svg?token=8OLQ4HDMMZ)](https://codecov.io/gh/adrigzr/agnoc)
-<br/>
-[![nodei.co](https://nodei.co/npm/@agnoc/core.png)](https://www.npmjs.com/package/@agnoc/core)
+<br/> [![nodei.co](https://nodei.co/npm/@agnoc/core.png)](https://www.npmjs.com/package/@agnoc/core)
 
 Agnoc (_Conga in reverse_) is an unofficial driver library for Conga Robots from Cecotec brand.
 
@@ -32,7 +31,8 @@ Contribution guidelines available in [CONTRIBUTING](./CONTRIBUTING.md).
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](/adrigzr/agnoc/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the
+[tags on this repository](/adrigzr/agnoc/tags).
 
 ## Authors
 

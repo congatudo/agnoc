@@ -1,7 +1,7 @@
-import { ValueObject } from "../base-classes/value-object.base";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { isPresent } from "../utils/is-present.util";
-import { Coordinate } from "./coordinate.value-object";
+import { ValueObject } from '../base-classes/value-object.base';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { isPresent } from '../utils/is-present.util';
+import { Coordinate } from './coordinate.value-object';
 
 export interface PositionProps {
   x: number;
@@ -32,9 +32,7 @@ export class Position extends ValueObject<PositionProps> {
 
   protected validate(props: PositionProps): void {
     if (![props.x, props.y, props.phi].every(isPresent)) {
-      throw new ArgumentNotProvidedException(
-        "Missing property in position constructor"
-      );
+      throw new ArgumentNotProvidedException('Missing property in position constructor');
     }
   }
 }

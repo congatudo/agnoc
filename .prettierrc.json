@@ -1,10 +1,6 @@
 {
-  "overrides": [
-    {
-      "files": "*.ts",
-      "options": {
-        "parser": "babel-ts"
-      }
-    }
-  ]
+  "printWidth": 120,
+  "proseWrap": "always",
+  "singleQuote": true,
+  "trailingComma": "all"
 }

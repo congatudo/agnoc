@@ -1,5 +1,5 @@
-declare module "pcap" {
-  import { EventEmitter } from "events";
+declare module 'pcap' {
+  import { EventEmitter } from 'events';
 
   interface TCP {
     data: Buffer | null;
@@ -53,12 +53,6 @@ declare module "pcap" {
     snap_length?: number;
   }
 
-  export declare function createSession(
-    device: string,
-    options?: LiveSessionOptions
-  ): PcapSession;
-  export declare function createOfflineSession(
-    path: string,
-    options?: LiveSessionOptions
-  ): PcapSession;
+  export declare function createSession(device: string, options?: LiveSessionOptions): PcapSession;
+  export declare function createOfflineSession(path: string, options?: LiveSessionOptions): PcapSession;
 }

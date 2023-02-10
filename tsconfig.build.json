@@ -7,8 +7,5 @@
     "composite": true
   },
   "files": [],
-  "references": [
-    { "path": "packages/core/tsconfig.build.json" },
-    { "path": "packages/cli/tsconfig.build.json" }
-  ]
+  "references": [{ "path": "packages/core/tsconfig.build.json" }, { "path": "packages/cli/tsconfig.build.json" }]
 }

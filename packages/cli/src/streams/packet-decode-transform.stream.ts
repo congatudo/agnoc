@@ -1,6 +1,6 @@
-import { Transform, TransformCallback } from "stream";
-import { DomainException } from "@agnoc/core/exceptions/domain.exception";
-import { Packet } from "@agnoc/core/value-objects/packet.value-object";
+import { Transform, TransformCallback } from 'stream';
+import { DomainException } from '@agnoc/core/exceptions/domain.exception';
+import { Packet } from '@agnoc/core/value-objects/packet.value-object';
 
 export class PacketDecodeTransform extends Transform {
   private buffer: Buffer = Buffer.alloc(0);
@@ -11,11 +11,7 @@ export class PacketDecodeTransform extends Transform {
     });
   }
 
-  override _transform(
-    chunk: Buffer,
-    _: BufferEncoding,
-    done: TransformCallback
-  ): void {
+  override _transform(chunk: Buffer, _: BufferEncoding, done: TransformCallback): void {
     this.buffer = Buffer.concat([this.buffer, chunk]);
 
     let size = this.buffer.readUInt32LE();
@@ -43,11 +39,7 @@ export class PacketDecodeTransform extends Transform {
 
   override _final(done: TransformCallback): void {
     if (this.buffer.length > 0) {
-      return done(
-        new DomainException(
-          `Unable to decode ${this.buffer.length} bytes. Possible malformed data stream.`
-        )
-      );
+      return done(new DomainException(`Unable to decode ${this.buffer.length} bytes. Possible malformed data stream.`));
     }
 
     done();

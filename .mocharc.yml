@@ -1,9 +1,9 @@
 ---
-reporter: "spec"
+reporter: 'spec'
 recursive: true
 require:
-  - "../../scripts/babel-register.js"
-  - "../../scripts/setup.js"
+  - '../../scripts/babel-register.js'
+  - '../../scripts/setup.js'
 extension:
-  - "js"
-  - "ts"
+  - 'js'
+  - 'ts'

@@ -1,13 +1,13 @@
-name: "Install"
-description: "Install dependencies for jobs"
+name: 'Install'
+description: 'Install dependencies for jobs'
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 18
-        registry-url: "https://registry.npmjs.org"
+        registry-url: 'https://registry.npmjs.org'
     - name: Configure git user
       shell: bash
       run: |

@@ -1,6 +1,6 @@
-import { ValueObject } from "../base-classes/value-object.base";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { isPresent } from "../utils/is-present.util";
+import { ValueObject } from '../base-classes/value-object.base';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { isPresent } from '../utils/is-present.util';
 
 export interface DeviceVersionProps {
   software: string;
@@ -18,9 +18,7 @@ export class DeviceVersion extends ValueObject<DeviceVersionProps> {
 
   protected validate(props: DeviceVersionProps): void {
     if (![props.software, props.hardware].every(isPresent)) {
-      throw new ArgumentNotProvidedException(
-        "Missing property in device current clean constructor"
-      );
+      throw new ArgumentNotProvidedException('Missing property in device current clean constructor');
     }
   }
 }

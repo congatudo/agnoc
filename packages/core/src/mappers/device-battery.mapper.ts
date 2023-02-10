@@ -1,6 +1,6 @@
-import { Mapper } from "../base-classes/mapper.base";
-import { interpolate } from "../utils/interpolate.util";
-import { DeviceBattery } from "../value-objects/device-battery.value-object";
+import { Mapper } from '../base-classes/mapper.base';
+import { interpolate } from '../utils/interpolate.util';
+import { DeviceBattery } from '../value-objects/device-battery.value-object';
 
 const ROBOT_MAX_VALUE = 200;
 const ROBOT_MIN_VALUE = 100;

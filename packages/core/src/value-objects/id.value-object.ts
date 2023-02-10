@@ -1,9 +1,6 @@
-import { randomBytes } from "crypto";
-import {
-  DomainPrimitive,
-  ValueObject,
-} from "../base-classes/value-object.base";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
+import { randomBytes } from 'crypto';
+import { DomainPrimitive, ValueObject } from '../base-classes/value-object.base';
+import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 
 export type IDSerialized = number;
 
@@ -17,13 +14,13 @@ export class ID extends ValueObject<number> {
   }
 
   protected validate({ value }: DomainPrimitive<number>): void {
-    if (typeof value !== "number") {
-      throw new ArgumentInvalidException("Incorrect ID value");
+    if (typeof value !== 'number') {
+      throw new ArgumentInvalidException('Incorrect ID value');
     }
   }
 
   static generate(): ID {
-    const uint32 = randomBytes(2).toString("hex");
+    const uint32 = randomBytes(2).toString('hex');
     const id = parseInt(uint32, 16);
 
     return new ID(id);

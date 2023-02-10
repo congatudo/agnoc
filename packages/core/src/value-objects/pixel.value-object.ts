@@ -1,7 +1,7 @@
-import { ValueObject } from "../base-classes/value-object.base";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { isPresent } from "../utils/is-present.util";
+import { ValueObject } from '../base-classes/value-object.base';
+import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { isPresent } from '../utils/is-present.util';
 
 export interface PixelProps {
   x: number;
@@ -19,17 +19,11 @@ export class Pixel extends ValueObject<PixelProps> {
 
   protected validate(props: PixelProps): void {
     if (![props.x, props.y].every(isPresent)) {
-      throw new ArgumentNotProvidedException(
-        "Missing property in pixel constructor"
-      );
+      throw new ArgumentNotProvidedException('Missing property in pixel constructor');
     }
 
-    if (
-      ![props.x, props.y].every((prop) => Number.isInteger(prop) && prop >= 0)
-    ) {
-      throw new ArgumentInvalidException(
-        "Invalid property in pixel constructor"
-      );
+    if (![props.x, props.y].every((prop) => Number.isInteger(prop) && prop >= 0)) {
+      throw new ArgumentInvalidException('Invalid property in pixel constructor');
     }
   }
 }
