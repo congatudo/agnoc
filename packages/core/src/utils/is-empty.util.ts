@@ -1,9 +1,9 @@
 export function isEmpty(value: unknown): boolean {
-  if (typeof value === "number" || typeof value === "boolean") {
+  if (typeof value === 'number' || typeof value === 'boolean') {
     return false;
   }
 
-  if (typeof value === "undefined" || value === null) {
+  if (typeof value === 'undefined' || value === null) {
     return true;
   }
 
@@ -25,7 +25,7 @@ export function isEmpty(value: unknown): boolean {
     return true;
   }
 
-  if (value === "") {
+  if (value === '') {
     return true;
   }
 

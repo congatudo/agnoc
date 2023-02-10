@@ -1,10 +1,7 @@
-import {
-  DomainPrimitive,
-  ValueObject,
-} from "../base-classes/value-object.base";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { isPresent } from "../utils/is-present.util";
+import { DomainPrimitive, ValueObject } from '../base-classes/value-object.base';
+import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { isPresent } from '../utils/is-present.util';
 
 const MIN_VALUE = 0;
 const MAX_VALUE = 100;
@@ -16,15 +13,11 @@ export class DeviceBattery extends ValueObject<number> {
 
   protected validate(props: DomainPrimitive<number>): void {
     if (![props.value].every(isPresent)) {
-      throw new ArgumentNotProvidedException(
-        "Missing property in device fan speed constructor"
-      );
+      throw new ArgumentNotProvidedException('Missing property in device fan speed constructor');
     }
 
     if (props.value < MIN_VALUE || props.value > MAX_VALUE) {
-      throw new ArgumentInvalidException(
-        "Invalid property in device battery constructor"
-      );
+      throw new ArgumentInvalidException('Invalid property in device battery constructor');
     }
   }
 

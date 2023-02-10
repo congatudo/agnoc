@@ -1,9 +1,9 @@
 module.exports = {
-  extends: ["./javascript"].map(require.resolve),
+  extends: ['./javascript'].map(require.resolve),
   overrides: [
     {
-      files: ["**/*.ts"],
-      extends: ["./typescript"].map(require.resolve),
+      files: ['**/*.ts'],
+      extends: ['./typescript'].map(require.resolve),
     },
   ],
 };

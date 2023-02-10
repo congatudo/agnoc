@@ -1,46 +1,31 @@
-import { ListenerSignature, TypedEmitter } from "tiny-typed-emitter";
-import { BaseEntityProps, Entity } from "./entity.base";
+import { ListenerSignature, TypedEmitter } from 'tiny-typed-emitter';
+import { BaseEntityProps, Entity } from './entity.base';
 
-export class AggregateRoot<
-    EntityProps extends BaseEntityProps,
-    EntityEvents extends ListenerSignature<EntityEvents>
-  >
+export class AggregateRoot<EntityProps extends BaseEntityProps, EntityEvents extends ListenerSignature<EntityEvents>>
   extends Entity<EntityProps>
   implements TypedEmitter<EntityEvents>
 {
   eventEmitter = new TypedEmitter<EntityEvents>();
 
-  addListener<U extends keyof EntityEvents>(
-    event: U,
-    listener: EntityEvents[U]
-  ): this {
+  addListener<U extends keyof EntityEvents>(event: U, listener: EntityEvents[U]): this {
     this.eventEmitter.addListener(event, listener);
 
     return this;
   }
 
-  prependListener<U extends keyof EntityEvents>(
-    event: U,
-    listener: EntityEvents[U]
-  ): this {
+  prependListener<U extends keyof EntityEvents>(event: U, listener: EntityEvents[U]): this {
     this.eventEmitter.prependListener(event, listener);
 
     return this;
   }
 
-  prependOnceListener<U extends keyof EntityEvents>(
-    event: U,
-    listener: EntityEvents[U]
-  ): this {
+  prependOnceListener<U extends keyof EntityEvents>(event: U, listener: EntityEvents[U]): this {
     this.eventEmitter.prependOnceListener(event, listener);
 
     return this;
   }
 
-  removeListener<U extends keyof EntityEvents>(
-    event: U,
-    listener: EntityEvents[U]
-  ): this {
+  removeListener<U extends keyof EntityEvents>(event: U, listener: EntityEvents[U]): this {
     this.eventEmitter.removeListener(event, listener);
 
     return this;
@@ -52,10 +37,7 @@ export class AggregateRoot<
     return this;
   }
 
-  once<U extends keyof EntityEvents>(
-    event: U,
-    listener: EntityEvents[U]
-  ): this {
+  once<U extends keyof EntityEvents>(event: U, listener: EntityEvents[U]): this {
     this.eventEmitter.once(event, listener);
 
     return this;
@@ -73,10 +55,7 @@ export class AggregateRoot<
     return this;
   }
 
-  emit<U extends keyof EntityEvents>(
-    event: U,
-    ...args: Parameters<EntityEvents[U]>
-  ): boolean {
+  emit<U extends keyof EntityEvents>(event: U, ...args: Parameters<EntityEvents[U]>): boolean {
     return this.eventEmitter.emit(event, ...args);
   }
 

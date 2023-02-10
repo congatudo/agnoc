@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { TypedEmitter } from "tiny-typed-emitter";
-import { OPDecoderLiteral, OPDecoders } from "../constants/opcodes.constant";
-import { bind } from "../decorators/bind.decorator";
-import { DomainException } from "../exceptions/domain.exception";
-import { debug } from "../utils/debug.util";
-import { ID } from "../value-objects/id.value-object";
-import { Packet } from "../value-objects/packet.value-object";
-import { Connection } from "./connection.emitter";
+import { TypedEmitter } from 'tiny-typed-emitter';
+import { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
+import { bind } from '../decorators/bind.decorator';
+import { DomainException } from '../exceptions/domain.exception';
+import { debug } from '../utils/debug.util';
+import { ID } from '../value-objects/id.value-object';
+import { Packet } from '../value-objects/packet.value-object';
+import { Connection } from './connection.emitter';
 
 type MultiplexerEvents<Name extends OPDecoderLiteral> = {
   [key in Name]: (packet: Packet<Name>) => void;
@@ -22,9 +22,7 @@ interface MultiplexerSendProps<Name extends OPDecoderLiteral> {
   object: OPDecoders[Name];
 }
 
-export class Multiplexer extends TypedEmitter<
-  MultiplexerEvents<OPDecoderLiteral>
-> {
+export class Multiplexer extends TypedEmitter<MultiplexerEvents<OPDecoderLiteral>> {
   private connections: Connection[] = [];
   private debug = debug(__filename);
 
@@ -38,12 +36,12 @@ export class Multiplexer extends TypedEmitter<
 
   addConnection(connection: Connection): boolean {
     if (!this.connections.includes(connection)) {
-      connection.on("data", this.handlePacket);
-      connection.on("error", (err) => this.handleError(connection, err));
-      connection.on("close", () => this.handleClose(connection));
+      connection.on('data', this.handlePacket);
+      connection.on('error', (err) => this.handleError(connection, err));
+      connection.on('close', () => this.handleClose(connection));
 
       this.connections = [...this.connections, connection];
-      this.debug("added connection");
+      this.debug('added connection');
 
       return true;
     }
@@ -55,12 +53,7 @@ export class Multiplexer extends TypedEmitter<
     const connection = this.connections[0];
 
     if (!connection) {
-      this.emit(
-        "error",
-        new DomainException(
-          `No valid connection found to send packet ${props.opname}`
-        )
-      );
+      this.emit('error', new DomainException(`No valid connection found to send packet ${props.opname}`));
 
       return false;
     }
@@ -69,7 +62,7 @@ export class Multiplexer extends TypedEmitter<
   }
 
   close(): void {
-    this.debug("closing connections...");
+    this.debug('closing connections...');
     this.connections.forEach((connection) => {
       connection.close();
     });
@@ -80,18 +73,16 @@ export class Multiplexer extends TypedEmitter<
     const opname = packet.payload.opcode.name;
 
     if (!opname) {
-      throw new DomainException(
-        `Unable to handle unknown packet ${packet.payload.opcode.toString()}`
-      );
+      throw new DomainException(`Unable to handle unknown packet ${packet.payload.opcode.toString()}`);
     }
 
     this.emit(opname, packet);
-    this.emit("data", packet);
+    this.emit('data', packet);
   }
 
   @bind
   private handleError(connection: Connection, err: Error): void {
-    this.emit("error", err);
+    this.emit('error', err);
     this.handleClose(connection);
   }
 
@@ -103,6 +94,6 @@ export class Multiplexer extends TypedEmitter<
     // connection.removeAllListeners();
 
     this.connections = this.connections.filter((conn) => conn !== connection);
-    this.debug("removed connection");
+    this.debug('removed connection');
   }
 }

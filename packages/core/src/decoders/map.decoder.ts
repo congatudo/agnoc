@@ -1,6 +1,6 @@
-import { Readable } from "stream";
-import { inflateSync } from "zlib";
-import { DomainException } from "../exceptions/domain.exception";
+import { Readable } from 'stream';
+import { inflateSync } from 'zlib';
+import { DomainException } from '../exceptions/domain.exception';
 import {
   AreaInfo,
   CleanArea,
@@ -16,15 +16,9 @@ import {
   Point,
   RoomConnection,
   RoomSegment,
-} from "../interfaces/map.interface";
-import {
-  readByte,
-  readFloat,
-  readShort,
-  readString,
-  readWord,
-} from "../utils/stream.util";
-import { toStream } from "../utils/to-stream.util";
+} from '../interfaces/map.interface';
+import { readByte, readFloat, readShort, readString, readWord } from '../utils/stream.util';
+import { toStream } from '../utils/to-stream.util';
 
 export function readMapHeadInfo(stream: Readable): MapHeadInfo {
   return {
@@ -92,21 +86,11 @@ export function readAreaInfoList(stream: Readable): AreaInfo[] {
     };
 
     if (areaInfo.points) {
-      areaInfo.x = new Array(areaInfo.points)
-        .fill(0)
-        .map(() => readFloat(stream));
-      areaInfo.y = new Array(areaInfo.points)
-        .fill(0)
-        .map(() => readFloat(stream));
-      areaInfo.unk1 = new Array(areaInfo.points)
-        .fill(0)
-        .map(() => readFloat(stream));
-      areaInfo.unk2 = new Array(areaInfo.points)
-        .fill(0)
-        .map(() => readFloat(stream));
-      areaInfo.unk3 = new Array(areaInfo.points)
-        .fill(0)
-        .map(() => readFloat(stream));
+      areaInfo.x = new Array(areaInfo.points).fill(0).map(() => readFloat(stream));
+      areaInfo.y = new Array(areaInfo.points).fill(0).map(() => readFloat(stream));
+      areaInfo.unk1 = new Array(areaInfo.points).fill(0).map(() => readFloat(stream));
+      areaInfo.unk2 = new Array(areaInfo.points).fill(0).map(() => readFloat(stream));
+      areaInfo.unk3 = new Array(areaInfo.points).fill(0).map(() => readFloat(stream));
     }
 
     list.push(areaInfo);
@@ -217,10 +201,7 @@ function readRoomSegmentList(stream: Readable): RoomSegment[] {
   return list;
 }
 
-function readRoomConnectionList(
-  stream: Readable,
-  roomList: CleanRoom[]
-): RoomConnection[] {
+function readRoomConnectionList(stream: Readable, roomList: CleanRoom[]): RoomConnection[] {
   const list = [];
 
   for (let i = 0; i < roomList.length; i++) {
@@ -299,9 +280,7 @@ function readMap(stream: Readable, mask: number): MapInfo {
 
   if (data.mask & 0x2) {
     data.mapHeadInfo = readMapHeadInfo(stream);
-    data.mapGrid = stream.read(
-      data.mapHeadInfo.sizeX * data.mapHeadInfo.sizeY
-    ) as Buffer;
+    data.mapGrid = stream.read(data.mapHeadInfo.sizeX * data.mapHeadInfo.sizeY) as Buffer;
   }
 
   if (data.mask & 0x4) {
@@ -312,10 +291,7 @@ function readMap(stream: Readable, mask: number): MapInfo {
       pointList: [],
     };
 
-    data.historyHeadInfo.pointList = readPointList(
-      stream,
-      data.historyHeadInfo.pointNumber
-    );
+    data.historyHeadInfo.pointList = readPointList(stream, data.historyHeadInfo.pointNumber);
   }
 
   if (data.mask & 0x8) {
@@ -390,10 +366,7 @@ function readMap(stream: Readable, mask: number): MapInfo {
 
   if (data.mask & 0x1000 && data.cleanRoomList) {
     // dump rooms
-    data.roomConnectionList = readRoomConnectionList(
-      stream,
-      data.cleanRoomList
-    );
+    data.roomConnectionList = readRoomConnectionList(stream, data.cleanRoomList);
   }
 
   if (data.mask & 0x2000) {
@@ -415,7 +388,7 @@ function readMap(stream: Readable, mask: number): MapInfo {
   }
 
   if (stream.readableLength) {
-    throw new DomainException("handleMap: unread bytes on stream");
+    throw new DomainException('handleMap: unread bytes on stream');
   }
 
   return data;

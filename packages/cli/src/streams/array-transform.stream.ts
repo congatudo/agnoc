@@ -1,4 +1,4 @@
-import { Transform, TransformCallback } from "stream";
+import { Transform, TransformCallback } from 'stream';
 
 export class ArrayTransform<T> extends Transform {
   private list: T[] = [];

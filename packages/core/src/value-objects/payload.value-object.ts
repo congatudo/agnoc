@@ -1,19 +1,15 @@
-import protobuf, { INamespace } from "protobufjs/light";
-import schema from "../../schemas/schema.json";
-import { ValueObject } from "../base-classes/value-object.base";
-import {
-  OPCodeLiteral,
-  OPDecoderLiteral,
-  OPDecoders,
-} from "../constants/opcodes.constant";
-import { decodeArea } from "../decoders/area.decoder";
-import { decodeChargePosition } from "../decoders/charge-position.decoder";
-import { decodeMap } from "../decoders/map.decoder";
-import { decodeRobotPosition } from "../decoders/robot-position.decoder";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { hasKey } from "../utils/has-key.util";
-import { isObject } from "../utils/is-object.util";
-import { OPCode } from "./opcode.value-object";
+import protobuf, { INamespace } from 'protobufjs/light';
+import schema from '../../schemas/schema.json';
+import { ValueObject } from '../base-classes/value-object.base';
+import { OPCodeLiteral, OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
+import { decodeArea } from '../decoders/area.decoder';
+import { decodeChargePosition } from '../decoders/charge-position.decoder';
+import { decodeMap } from '../decoders/map.decoder';
+import { decodeRobotPosition } from '../decoders/robot-position.decoder';
+import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
+import { hasKey } from '../utils/has-key.util';
+import { isObject } from '../utils/is-object.util';
+import { OPCode } from './opcode.value-object';
 
 export interface PayloadProps<Name extends OPDecoderLiteral> {
   opcode: OPCode<Name, OPCodeLiteral>;
@@ -39,7 +35,7 @@ const decoders = {
 
 function fromObject<Name extends OPDecoderLiteral>(
   opcode: OPCode<Name, OPCodeLiteral>,
-  object: OPDecoders[Name]
+  object: OPDecoders[Name],
 ): Buffer {
   if (!object) {
     return Buffer.alloc(0);
@@ -47,9 +43,7 @@ function fromObject<Name extends OPDecoderLiteral>(
 
   if (!opcode.name || !hasKey(root, opcode.name)) {
     throw new ArgumentInvalidException(
-      `Unable to create payload from unknown opcode ${opcode.toString()} from object ${JSON.stringify(
-        object
-      )}`
+      `Unable to create payload from unknown opcode ${opcode.toString()} from object ${JSON.stringify(object)}`,
     );
   }
 
@@ -57,9 +51,7 @@ function fromObject<Name extends OPDecoderLiteral>(
   const err = schema.verify(object);
 
   if (err) {
-    throw new ArgumentInvalidException(
-      `Unable to create payload from object: ${err}`
-    );
+    throw new ArgumentInvalidException(`Unable to create payload from object: ${err}`);
   }
 
   const message = schema.create(object);
@@ -69,13 +61,11 @@ function fromObject<Name extends OPDecoderLiteral>(
 
 function fromBuffer<Name extends OPDecoderLiteral>(
   opcode: OPCode<Name, OPCodeLiteral>,
-  buffer: Buffer
+  buffer: Buffer,
 ): OPDecoders[Name] {
   if (!opcode.name) {
     throw new ArgumentInvalidException(
-      `Unable to create payload from unknown opcode ${opcode.toString()} from buffer ${buffer.toString(
-        "hex"
-      )}`
+      `Unable to create payload from unknown opcode ${opcode.toString()} from buffer ${buffer.toString('hex')}`,
     );
   }
 
@@ -93,23 +83,19 @@ function fromBuffer<Name extends OPDecoderLiteral>(
   }
 
   throw new ArgumentInvalidException(
-    `Unable to find decoder for opcode ${opcode.toString()} with buffer ${buffer.toString(
-      "hex"
-    )}`
+    `Unable to find decoder for opcode ${opcode.toString()} with buffer ${buffer.toString('hex')}`,
   );
 }
 
 function filterProperties(_: string, value: unknown) {
-  if (isObject(value) && value.type === "Buffer") {
-    return "[Buffer]";
+  if (isObject(value) && value.type === 'Buffer') {
+    return '[Buffer]';
   }
 
   return value;
 }
 
-export class Payload<Name extends OPDecoderLiteral> extends ValueObject<
-  PayloadProps<Name>
-> {
+export class Payload<Name extends OPDecoderLiteral> extends ValueObject<PayloadProps<Name>> {
   constructor({ opcode, buffer, object }: PayloadProps<Name>) {
     super({
       opcode,
@@ -140,13 +126,11 @@ export class Payload<Name extends OPDecoderLiteral> extends ValueObject<
 
   protected validate(props: PayloadProps<Name>): void {
     if (!(props.opcode instanceof OPCode)) {
-      throw new ArgumentInvalidException("Wrong opcode in payload constructor");
+      throw new ArgumentInvalidException('Wrong opcode in payload constructor');
     }
   }
 
-  public static fromJSON<Name extends OPDecoderLiteral>(
-    obj: PayloadSerialized<Name>
-  ): Payload<Name> {
+  public static fromJSON<Name extends OPDecoderLiteral>(obj: PayloadSerialized<Name>): Payload<Name> {
     const opcode = OPCode.fromName(obj.opcode);
 
     return this.fromObject(opcode as OPCode<Name, OPCodeLiteral>, obj.object);
@@ -154,7 +138,7 @@ export class Payload<Name extends OPDecoderLiteral> extends ValueObject<
 
   public static fromBuffer<Name extends OPDecoderLiteral>(
     opcode: OPCode<Name, OPCodeLiteral>,
-    buffer: Buffer
+    buffer: Buffer,
   ): Payload<Name> {
     const object = fromBuffer(opcode, buffer);
 
@@ -167,7 +151,7 @@ export class Payload<Name extends OPDecoderLiteral> extends ValueObject<
 
   public static fromObject<Name extends OPDecoderLiteral>(
     opcode: OPCode<Name, OPCodeLiteral>,
-    object: OPDecoders[Name]
+    object: OPDecoders[Name],
   ): Payload<Name> {
     const buffer = fromObject(opcode, object);
 

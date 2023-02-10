@@ -1,16 +1,8 @@
-import { Readable } from "stream";
-import {
-  Decode,
-  LiveSessionOptions,
-  PacketWithHeader,
-  PcapSession,
-} from "pcap";
+import { Readable } from 'stream';
+import { Decode, LiveSessionOptions, PacketWithHeader, PcapSession } from 'pcap';
 
 interface TCPReaderOptions {
-  createSession(
-    fileOrDevice: string,
-    options?: LiveSessionOptions
-  ): PcapSession;
+  createSession(fileOrDevice: string, options?: LiveSessionOptions): PcapSession;
   decode: Decode;
 }
 
@@ -19,16 +11,13 @@ export class TCPReader extends Readable {
   decode!: Decode;
   buffers: Record<string, Buffer> = {};
 
-  constructor(
-    fileOrDevice: string,
-    options: Partial<LiveSessionOptions> & TCPReaderOptions
-  ) {
+  constructor(fileOrDevice: string, options: Partial<LiveSessionOptions> & TCPReaderOptions) {
     super({ objectMode: true });
 
     this.decode = options.decode;
     this.session = options.createSession(fileOrDevice, options);
-    this.session.on("packet", this.onPacket.bind(this));
-    this.session.on("complete", this.onComplete.bind(this));
+    this.session.on('packet', this.onPacket.bind(this));
+    this.session.on('complete', this.onComplete.bind(this));
   }
 
   onPacket(raw: PacketWithHeader): void {

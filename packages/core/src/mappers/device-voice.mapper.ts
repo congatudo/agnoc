@@ -1,6 +1,6 @@
-import { Mapper } from "../base-classes/mapper.base";
-import { interpolate } from "../utils/interpolate.util";
-import { DeviceVoice } from "../value-objects/device-voice.value-object";
+import { Mapper } from '../base-classes/mapper.base';
+import { interpolate } from '../utils/interpolate.util';
+import { DeviceVoice } from '../value-objects/device-voice.value-object';
 
 const ROBOT_MAX_VOLUME = 11;
 const ROBOT_MIN_VOLUME = 1;

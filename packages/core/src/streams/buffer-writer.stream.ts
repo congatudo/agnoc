@@ -1,4 +1,4 @@
-import { Writable } from "stream";
+import { Writable } from 'stream';
 
 type Callback = (error?: Error | null) => void;
 

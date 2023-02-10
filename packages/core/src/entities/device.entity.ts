@@ -1,21 +1,21 @@
-import { Entity } from "../base-classes/entity.base";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { isPresent } from "../utils/is-present.util";
-import { DeviceBattery } from "../value-objects/device-battery.value-object";
-import { DeviceConfig } from "../value-objects/device-config.value-object";
-import { DeviceConsumable } from "../value-objects/device-consumable.value-object";
-import { DeviceCurrentClean } from "../value-objects/device-current-clean.value-object";
-import { DeviceError } from "../value-objects/device-error.value-object";
-import { DeviceFanSpeed } from "../value-objects/device-fan-speed.value-object";
-import { DeviceMode } from "../value-objects/device-mode.value-object";
-import { DeviceState } from "../value-objects/device-state.value-object";
-import { DeviceSystem } from "../value-objects/device-system.value-object";
-import { DeviceVersion } from "../value-objects/device-version.value-object";
-import { DeviceWaterLevel } from "../value-objects/device-water-level.value-object";
-import { DeviceWlan } from "../value-objects/device-wlan.value-object";
-import { ID } from "../value-objects/id.value-object";
-import { DeviceMap } from "./device-map.entity";
-import { DeviceOrder } from "./device-order.entity";
+import { Entity } from '../base-classes/entity.base';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { isPresent } from '../utils/is-present.util';
+import { DeviceBattery } from '../value-objects/device-battery.value-object';
+import { DeviceConfig } from '../value-objects/device-config.value-object';
+import { DeviceConsumable } from '../value-objects/device-consumable.value-object';
+import { DeviceCurrentClean } from '../value-objects/device-current-clean.value-object';
+import { DeviceError } from '../value-objects/device-error.value-object';
+import { DeviceFanSpeed } from '../value-objects/device-fan-speed.value-object';
+import { DeviceMode } from '../value-objects/device-mode.value-object';
+import { DeviceState } from '../value-objects/device-state.value-object';
+import { DeviceSystem } from '../value-objects/device-system.value-object';
+import { DeviceVersion } from '../value-objects/device-version.value-object';
+import { DeviceWaterLevel } from '../value-objects/device-water-level.value-object';
+import { DeviceWlan } from '../value-objects/device-wlan.value-object';
+import { ID } from '../value-objects/id.value-object';
+import { DeviceMap } from './device-map.entity';
+import { DeviceOrder } from './device-order.entity';
 
 export interface DeviceProps {
   id: ID;
@@ -176,9 +176,7 @@ export class Device extends Entity<DeviceProps> {
 
   protected validate(props: DeviceProps): void {
     if (![props.system, props.version].every(isPresent)) {
-      throw new ArgumentNotProvidedException(
-        "Missing property in device constructor"
-      );
+      throw new ArgumentNotProvidedException('Missing property in device constructor');
     }
   }
 }

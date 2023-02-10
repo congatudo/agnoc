@@ -1,9 +1,9 @@
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { convertPropsToObject } from "../utils/convert-props-to-object.util";
-import { isObject } from "../utils/is-object.util";
-import { isPresent } from "../utils/is-present.util";
-import { ID } from "../value-objects/id.value-object";
+import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { convertPropsToObject } from '../utils/convert-props-to-object.util';
+import { isObject } from '../utils/is-object.util';
+import { isPresent } from '../utils/is-present.util';
+import { ID } from '../value-objects/id.value-object';
 
 export interface BaseEntityProps {
   id: ID;
@@ -41,10 +41,7 @@ export abstract class Entity<EntityProps extends BaseEntityProps> {
     return this.id.equals(object.id);
   }
 
-  clone<C extends Entity<EntityProps>>(
-    this: C,
-    props: Partial<EntityProps>
-  ): C {
+  clone<C extends Entity<EntityProps>>(this: C, props: Partial<EntityProps>): C {
     const ctor = this.constructor as new (props: EntityProps) => C;
 
     return new ctor({
@@ -65,15 +62,15 @@ export abstract class Entity<EntityProps extends BaseEntityProps> {
 
   private validateProps(props: EntityProps) {
     if (!isObject(props)) {
-      throw new ArgumentInvalidException("Entity props should be an object");
+      throw new ArgumentInvalidException('Entity props should be an object');
     }
 
     if (!props.id) {
-      throw new ArgumentNotProvidedException("Entity props must have an id");
+      throw new ArgumentNotProvidedException('Entity props must have an id');
     }
 
     if (!(props.id instanceof ID)) {
-      throw new ArgumentInvalidException("Entity id must a valid ID object");
+      throw new ArgumentInvalidException('Entity id must a valid ID object');
     }
   }
 }

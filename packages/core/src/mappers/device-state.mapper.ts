@@ -1,8 +1,8 @@
-import { Mapper } from "../base-classes/mapper.base";
-import { DomainException } from "../exceptions/domain.exception";
-import { NotImplementedException } from "../exceptions/not-implemented.exception";
-import { ValueOf } from "../types/value-of.type";
-import { DeviceState } from "../value-objects/device-state.value-object";
+import { Mapper } from '../base-classes/mapper.base';
+import { DomainException } from '../exceptions/domain.exception';
+import { NotImplementedException } from '../exceptions/not-implemented.exception';
+import { ValueOf } from '../types/value-of.type';
+import { DeviceState } from '../value-objects/device-state.value-object';
 
 const { VALUE } = DeviceState;
 
@@ -76,9 +76,7 @@ function getDomainValue(state: RobotState): ValueOf<typeof VALUE> {
     return VALUE.IDLE;
   }
 
-  throw new DomainException(
-    `Unable to map device state from data: ${JSON.stringify(state)}`
-  );
+  throw new DomainException(`Unable to map device state from data: ${JSON.stringify(state)}`);
 }
 
 export const DeviceStateMapper: Mapper<DeviceState, RobotState> = class {
@@ -89,6 +87,6 @@ export const DeviceStateMapper: Mapper<DeviceState, RobotState> = class {
   }
 
   static toRobot(): RobotState {
-    throw new NotImplementedException("DeviceStateMapper.toRobot");
+    throw new NotImplementedException('DeviceStateMapper.toRobot');
   }
 };

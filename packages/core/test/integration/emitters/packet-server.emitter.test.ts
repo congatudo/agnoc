@@ -1,16 +1,16 @@
-import { Socket } from "net";
-import { expect } from "chai";
-import { describe, it } from "mocha";
-import { PacketServer } from "../../../src/emitters/packet-server.emitter";
-import { PacketSocket } from "../../../src/sockets/packet.socket";
+import { Socket } from 'net';
+import { expect } from 'chai';
+import { describe, it } from 'mocha';
+import { PacketServer } from '../../../src/emitters/packet-server.emitter';
+import { PacketSocket } from '../../../src/sockets/packet.socket';
 
-declare module "mocha" {
+declare module 'mocha' {
   interface Context {
     packetServer: PacketServer;
   }
 }
 
-describe("packet-server.emitter", () => {
+describe('packet-server.emitter', () => {
   beforeEach(function () {
     this.packetServer = new PacketServer();
   });
@@ -21,8 +21,8 @@ describe("packet-server.emitter", () => {
     }
   });
 
-  it("emits listening event", function (done) {
-    this.packetServer.once("listening", () => {
+  it('emits listening event', function (done) {
+    this.packetServer.once('listening', () => {
       expect(this.packetServer.isListening).to.be.true;
       done();
     });
@@ -30,10 +30,10 @@ describe("packet-server.emitter", () => {
     void this.packetServer.listen(0);
   });
 
-  it("emits connection event", function (done) {
+  it('emits connection event', function (done) {
     const socket = new Socket();
 
-    this.packetServer.once("connection", (socket) => {
+    this.packetServer.once('connection', (socket) => {
       expect(socket).to.be.instanceof(PacketSocket);
       done();
     });
@@ -46,12 +46,12 @@ describe("packet-server.emitter", () => {
     });
   });
 
-  it("emits close event", function (done) {
-    this.packetServer.once("close", () => {
+  it('emits close event', function (done) {
+    this.packetServer.once('close', () => {
       done();
     });
 
-    this.packetServer.once("listening", () => {
+    this.packetServer.once('listening', () => {
       void this.packetServer.close();
     });
 

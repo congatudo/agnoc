@@ -1,8 +1,8 @@
-import { AddressInfo, Socket, SocketConnectOpts } from "net";
-import { Duplex } from "stream";
-import { OPDecoderLiteral } from "../constants/opcodes.constant";
-import { DomainException } from "../exceptions/domain.exception";
-import { Packet } from "../value-objects/packet.value-object";
+import { AddressInfo, Socket, SocketConnectOpts } from 'net';
+import { Duplex } from 'stream';
+import { OPDecoderLiteral } from '../constants/opcodes.constant';
+import { DomainException } from '../exceptions/domain.exception';
+import { Packet } from '../value-objects/packet.value-object';
 
 interface PacketSocketProps {
   socket?: Socket;
@@ -17,42 +17,25 @@ interface PacketSocketEvents {
   drain: () => void;
   end: () => void;
   error: (err: Error) => void;
-  lookup: (
-    err: Error | null,
-    address: string,
-    family: string | number,
-    host: string
-  ) => void;
+  lookup: (err: Error | null, address: string, family: string | number, host: string) => void;
   ready: () => void;
   timeout: () => void;
   readable: () => void;
 }
 
 export declare interface PacketSocket extends Duplex {
-  emit<U extends keyof PacketSocketEvents>(
-    event: U,
-    ...args: Parameters<PacketSocketEvents[U]>
-  ): boolean;
+  emit<U extends keyof PacketSocketEvents>(event: U, ...args: Parameters<PacketSocketEvents[U]>): boolean;
 
-  on<U extends keyof PacketSocketEvents>(
-    event: U,
-    listener: PacketSocketEvents[U]
-  ): this;
+  on<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
 
-  once<U extends keyof PacketSocketEvents>(
-    event: U,
-    listener: PacketSocketEvents[U]
-  ): this;
+  once<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
 
   write(
     packet: Packet<OPDecoderLiteral>,
     encoding?: BufferEncoding,
-    cb?: (error: Error | null | undefined) => void
+    cb?: (error: Error | null | undefined) => void,
   ): boolean;
-  write(
-    packet: Packet<OPDecoderLiteral>,
-    cb?: (error: Error | null | undefined) => void
-  ): boolean;
+  write(packet: Packet<OPDecoderLiteral>, cb?: (error: Error | null | undefined) => void): boolean;
   end(cb?: () => void): this;
   end(packet: Packet<OPDecoderLiteral>, cb?: () => void): this;
 }
@@ -75,20 +58,17 @@ export class PacketSocket extends Duplex {
   connect(port: number, host: string): Promise<void>;
   connect(path: string): Promise<void>;
   connect(options: SocketConnectOpts): Promise<void>;
-  connect(
-    portOrPathOrOptions: number | string | SocketConnectOpts,
-    host?: string
-  ): Promise<void> {
+  connect(portOrPathOrOptions: number | string | SocketConnectOpts, host?: string): Promise<void> {
     const socket = new Socket();
 
     this.wrapSocket(socket);
 
     return new Promise((resolve) => {
-      if (typeof portOrPathOrOptions === "number" && host) {
+      if (typeof portOrPathOrOptions === 'number' && host) {
         socket.connect(portOrPathOrOptions, host, resolve);
-      } else if (typeof portOrPathOrOptions === "number") {
+      } else if (typeof portOrPathOrOptions === 'number') {
         socket.connect(portOrPathOrOptions, resolve);
-      } else if (typeof portOrPathOrOptions === "string") {
+      } else if (typeof portOrPathOrOptions === 'string') {
         socket.connect(portOrPathOrOptions, resolve);
       } else {
         socket.connect(portOrPathOrOptions, resolve);
@@ -122,15 +102,15 @@ export class PacketSocket extends Duplex {
 
   private wrapSocket(socket: Socket): void {
     this.socket = socket;
-    this.socket.on("close", (hadError) => this.emit("close", hadError));
-    this.socket.on("connect", () => this.emit("connect"));
-    this.socket.on("drain", () => this.emit("drain"));
-    this.socket.on("end", () => this.emit("end"));
-    this.socket.on("error", (err) => this.emit("error", err));
+    this.socket.on('close', (hadError) => this.emit('close', hadError));
+    this.socket.on('connect', () => this.emit('connect'));
+    this.socket.on('drain', () => this.emit('drain'));
+    this.socket.on('end', () => this.emit('end'));
+    this.socket.on('error', (err) => this.emit('error', err));
     this.socket.on('lookup', (err, address, family, host) => this.emit('lookup', err, address, family, host)); // prettier-ignore
-    this.socket.on("ready", () => this.emit("ready"));
-    this.socket.on("timeout", () => this.emit("timeout"));
-    this.socket.on("readable", () => setImmediate(this.onReadable.bind(this)));
+    this.socket.on('ready', () => this.emit('ready'));
+    this.socket.on('timeout', () => this.emit('timeout'));
+    this.socket.on('readable', () => setImmediate(this.onReadable.bind(this)));
   }
 
   private onReadable(): void {
@@ -148,7 +128,7 @@ export class PacketSocket extends Duplex {
       const len = lenBuf.readUInt32LE();
 
       if (len > 2 ** 20) {
-        this.socket.destroy(new DomainException("Max length exceeded"));
+        this.socket.destroy(new DomainException('Max length exceeded'));
         return;
       }
 
@@ -182,13 +162,9 @@ export class PacketSocket extends Duplex {
     setImmediate(this.onReadable.bind(this));
   }
 
-  override _write(
-    packet: Packet<OPDecoderLiteral>,
-    _: BufferEncoding,
-    done: Callback
-  ): void {
+  override _write(packet: Packet<OPDecoderLiteral>, _: BufferEncoding, done: Callback): void {
     if (!this.socket) {
-      done(new DomainException("Called _write without connection"));
+      done(new DomainException('Called _write without connection'));
       return;
     }
 
@@ -203,7 +179,7 @@ export class PacketSocket extends Duplex {
 
   override _final(done: Callback): void {
     if (!this.socket) {
-      done(new DomainException("Called _final without connection"));
+      done(new DomainException('Called _final without connection'));
       return;
     }
 
