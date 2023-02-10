@@ -34,8 +34,9 @@ describe("packet.socket", () => {
 
     socket.once("connect", () => {
       socket.end();
-      done();
     });
+
+    socket.once("end", done);
 
     this.server.listen(0);
   });
