@@ -23,7 +23,7 @@ runs:
         path: |
           node_modules
           packages/*/node_modules
-        key: cache-dependencies-${{ hashFiles('**/yarn.lock') }}
+        key: cache-dependencies-${{ hashFiles('**/package.json', '**/yarn.lock') }}
         restore-keys: |
           cache-dependencies-
     - name: Install dependencies
