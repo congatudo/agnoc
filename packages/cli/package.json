@@ -35,12 +35,13 @@
     "build:lib:ts": "tsc -b tsconfig.build.json",
     "clean": "rm -rf .build-cache lib",
     "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
-    "test": "nyc mocha --reporter spec --recursive"
+    "test": "nyc mocha test"
   },
   "nx": {
     "targets": {
       "build": {
         "inputs": [
+          "{workspaceRoot}/package.json",
           "{projectRoot}/src",
           "{projectRoot}/package.json",
           "{projectRoot}/tsconfig.*"
@@ -52,6 +53,7 @@
       },
       "test": {
         "inputs": [
+          "{workspaceRoot}/.mocharc.yml",
           "{projectRoot}/test"
         ],
         "outputs": [

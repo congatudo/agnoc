@@ -1,6 +1,6 @@
-import { bind } from "@agnoc/core/decorators/bind.decorator";
 import { expect } from "chai";
 import { describe, it } from "mocha";
+import { bind } from "./bind.decorator";
 
 describe("bind.decorator", () => {
   it("binds a class method", () => {

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { flipObject } from "../../../src/utils/flip-object.util";
+import { flipObject } from "./flip-object.util";
 
 describe("flip-object.util", () => {
   it("flips object keys", () => {

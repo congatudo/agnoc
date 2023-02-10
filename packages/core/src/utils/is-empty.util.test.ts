@@ -1,7 +1,7 @@
 /* eslint-disable mocha/no-setup-in-describe, @typescript-eslint/restrict-template-expressions */
-import { isEmpty } from "@agnoc/core/utils/is-empty.util";
 import { expect } from "chai";
 import { describe, it } from "mocha";
+import { isEmpty } from "./is-empty.util";
 
 const emptyList = [null, undefined, [], "", new Object(null), {}];
 const presentList = [true, "foo", { foo: "bar" }, [1, 2, 3], new Date()];
