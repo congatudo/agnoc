@@ -38,12 +38,13 @@
     "build:schemas:ts": "pbts -o schemas/schema.d.ts schemas/schema.js",
     "clean": "rm -rf .build-cache lib schemas/schema.json schemas/schema.js schemas/schema.d.ts",
     "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
-    "test": "nyc mocha --reporter spec --recursive"
+    "test": "nyc mocha src test"
   },
   "nx": {
     "targets": {
       "build": {
         "inputs": [
+          "{workspaceRoot}/package.json",
           "{projectRoot}/schemas/schema.proto",
           "{projectRoot}/src",
           "{projectRoot}/package.json",
@@ -59,6 +60,7 @@
       },
       "test": {
         "inputs": [
+          "{workspaceRoot}/.mocharc.yml",
           "{projectRoot}/test"
         ],
         "outputs": [

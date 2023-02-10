@@ -1,8 +1,8 @@
-import { ValueObject } from "@agnoc/core/base-classes/value-object.base";
-import { ArgumentInvalidException } from "@agnoc/core/exceptions/argument-invalid.exception";
-import { ID } from "@agnoc/core/value-objects/id.value-object";
 import { expect } from "chai";
 import { describe, it } from "mocha";
+import { ValueObject } from "../base-classes/value-object.base";
+import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
+import { ID } from "./id.value-object";
 
 describe("id.value-object", () => {
   it("inherits value object", () => {

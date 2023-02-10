@@ -63,5 +63,9 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ["src/**/*.test.{js,ts}", "test/**/*.test.{js,ts}"],
+      extends: ["plugin:mocha/recommended", "plugin:chai-friendly/recommended"],
+    },
   ],
 };

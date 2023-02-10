@@ -1,8 +1,8 @@
-import { DomainException } from "@agnoc/core/exceptions/domain.exception";
-import { waitFor } from "@agnoc/core/utils/wait-for.util";
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import sinon, { SinonFakeTimers } from "sinon";
+import { DomainException } from "../exceptions/domain.exception";
+import { waitFor } from "./wait-for.util";
 
 describe("wait-for.util", () => {
   let timer: SinonFakeTimers;

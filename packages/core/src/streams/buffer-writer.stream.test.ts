@@ -1,6 +1,6 @@
-import { BufferWriter } from "@agnoc/core/streams/buffer-writer.stream";
 import { expect } from "chai";
 import { describe, it } from "mocha";
+import { BufferWriter } from "./buffer-writer.stream";
 
 describe("buffer-writer.stream", () => {
   it("creates an empty writable stream", () => {
