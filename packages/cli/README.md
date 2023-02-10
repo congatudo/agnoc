@@ -34,7 +34,8 @@ $ agnoc wlan my-wifi my-password
 
 ### Read
 
-This command reads a binary pcap dump file generated with [tcpdump](https://www.tcpdump.org/) and prints packets to stdout.
+This command reads a binary pcap dump file generated with [tcpdump](https://www.tcpdump.org/) and prints packets to
+stdout.
 
 ```
 $ agnoc read dump.pcap
@@ -80,7 +81,8 @@ $ cat dump.pcap | agnoc read -
 
 ### Decode
 
-This command reads a binary tcp flow file generated with [WireShark](https://www.wireshark.org/) or [TShark](https://www.wireshark.org/docs/man-pages/tshark.html) and prints packets to stdout.
+This command reads a binary tcp flow file generated with [WireShark](https://www.wireshark.org/) or
+[TShark](https://www.wireshark.org/docs/man-pages/tshark.html) and prints packets to stdout.
 
 ```
 $ agnoc decode example.bin

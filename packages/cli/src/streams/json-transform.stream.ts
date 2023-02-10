@@ -1,19 +1,15 @@
-import { Transform, TransformCallback } from "stream";
-import { ObjectLiteral } from "@agnoc/core/types/object-literal.type";
+import { Transform, TransformCallback } from 'stream';
+import { ObjectLiteral } from '@agnoc/core/types/object-literal.type';
 
 export class JSONTransform extends Transform {
-  private buffer = "";
+  private buffer = '';
 
   constructor() {
     super({ objectMode: true });
   }
 
-  override _transform(
-    chunk: Buffer,
-    _: BufferEncoding,
-    done: TransformCallback
-  ): void {
-    this.buffer += chunk.toString("utf8");
+  override _transform(chunk: Buffer, _: BufferEncoding, done: TransformCallback): void {
+    this.buffer += chunk.toString('utf8');
     done();
   }
 

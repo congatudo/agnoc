@@ -2,7 +2,7 @@ name: Prerelease
 on:
   push:
     branches:
-      - "next"
+      - 'next'
 jobs:
   prerelease:
     name: Prerelease

@@ -1,11 +1,11 @@
-import { Duplex, PassThrough } from "stream";
-import { expect } from "chai";
-import { describe, it } from "mocha";
-import mockFS from "mock-fs";
-import { decode } from "../../../src/commands/decode.command";
-import { readStream } from "../../helpers/read-stream.helper";
+import { Duplex, PassThrough } from 'stream';
+import { expect } from 'chai';
+import { describe, it } from 'mocha';
+import mockFS from 'mock-fs';
+import { decode } from '../../../src/commands/decode.command';
+import { readStream } from '../../helpers/read-stream.helper';
 
-declare module "mocha" {
+declare module 'mocha' {
   interface Context {
     buffer: Buffer;
     stdio: {
@@ -16,12 +16,9 @@ declare module "mocha" {
   }
 }
 
-describe("decode", () => {
+describe('decode', () => {
   beforeEach(function () {
-    this.buffer = Buffer.from(
-      "2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c",
-      "hex"
-    );
+    this.buffer = Buffer.from('2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c', 'hex');
 
     this.stdio = {
       stdin: new PassThrough(),
@@ -30,7 +27,7 @@ describe("decode", () => {
     };
 
     mockFS({
-      "example.bin": this.buffer,
+      'example.bin': this.buffer,
     });
   });
 
@@ -38,8 +35,8 @@ describe("decode", () => {
     mockFS.restore();
   });
 
-  it("decodes a tcp flow from stdin", async function () {
-    decode("-", { ...this.stdio, json: undefined });
+  it('decodes a tcp flow from stdin', async function () {
+    decode('-', { ...this.stdio, json: undefined });
 
     this.stdio.stdin.write(this.buffer);
     this.stdio.stdin.end();
@@ -47,12 +44,12 @@ describe("decode", () => {
     const data = await readStream(this.stdio.stdout);
 
     expect(data).to.be.equal(
-      '[id: 7a479a0fbb978c12] [ctype: 2] [flow: 1] [userId: 2] [deviceId: 1] [opcode: DEVICE_GETTIME_RSP] {"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}\n'
+      '[id: 7a479a0fbb978c12] [ctype: 2] [flow: 1] [userId: 2] [deviceId: 1] [opcode: DEVICE_GETTIME_RSP] {"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}\n',
     );
   });
 
-  it("decodes a tcp flow from stdin to json", async function () {
-    decode("-", { ...this.stdio, json: true });
+  it('decodes a tcp flow from stdin to json', async function () {
+    decode('-', { ...this.stdio, json: true });
 
     this.stdio.stdin.write(this.buffer);
     this.stdio.stdin.end();
@@ -65,9 +62,9 @@ describe("decode", () => {
         flow: 1,
         deviceId: 1,
         userId: 2,
-        sequence: "7a479a0fbb978c12",
+        sequence: '7a479a0fbb978c12',
         payload: {
-          opcode: "DEVICE_GETTIME_RSP",
+          opcode: 'DEVICE_GETTIME_RSP',
           object: {
             result: 0,
             body: {
@@ -80,18 +77,18 @@ describe("decode", () => {
     ]);
   });
 
-  it("decodes a tcp flow from file", async function () {
-    decode("example.bin", { ...this.stdio, json: undefined });
+  it('decodes a tcp flow from file', async function () {
+    decode('example.bin', { ...this.stdio, json: undefined });
 
     const data = await readStream(this.stdio.stdout);
 
     expect(data).to.be.equal(
-      '[id: 7a479a0fbb978c12] [ctype: 2] [flow: 1] [userId: 2] [deviceId: 1] [opcode: DEVICE_GETTIME_RSP] {"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}\n'
+      '[id: 7a479a0fbb978c12] [ctype: 2] [flow: 1] [userId: 2] [deviceId: 1] [opcode: DEVICE_GETTIME_RSP] {"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}\n',
     );
   });
 
-  it("decodes a tcp flow from file to json", async function () {
-    decode("example.bin", { ...this.stdio, json: true });
+  it('decodes a tcp flow from file to json', async function () {
+    decode('example.bin', { ...this.stdio, json: true });
 
     const data = await readStream(this.stdio.stdout);
 
@@ -101,9 +98,9 @@ describe("decode", () => {
         flow: 1,
         deviceId: 1,
         userId: 2,
-        sequence: "7a479a0fbb978c12",
+        sequence: '7a479a0fbb978c12',
         payload: {
-          opcode: "DEVICE_GETTIME_RSP",
+          opcode: 'DEVICE_GETTIME_RSP',
           object: {
             result: 0,
             body: {

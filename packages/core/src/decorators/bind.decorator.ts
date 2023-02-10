@@ -2,12 +2,10 @@
 export function bind<T extends Function>(
   _: unknown,
   propertyKey: string,
-  descriptor: TypedPropertyDescriptor<T>
+  descriptor: TypedPropertyDescriptor<T>,
 ): TypedPropertyDescriptor<T> {
-  if (!descriptor || typeof descriptor.value !== "function") {
-    throw new TypeError(
-      `Only methods can be decorated with @bind. <${propertyKey}> is not a method!`
-    );
+  if (!descriptor || typeof descriptor.value !== 'function') {
+    throw new TypeError(`Only methods can be decorated with @bind. <${propertyKey}> is not a method!`);
   }
 
   return {

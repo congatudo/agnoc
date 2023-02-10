@@ -1,9 +1,6 @@
-import { randomBytes } from "crypto";
-import {
-  ValueObject,
-  DomainPrimitive,
-} from "../base-classes/value-object.base";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
+import { randomBytes } from 'crypto';
+import { ValueObject, DomainPrimitive } from '../base-classes/value-object.base';
+import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 
 export type BigNumberSerialized = string;
 
@@ -25,13 +22,13 @@ export class BigNumber extends ValueObject<bigint> {
   }
 
   protected validate(props: DomainPrimitive<bigint>): void {
-    if (typeof props.value !== "bigint") {
-      throw new ArgumentInvalidException("Invalid bigint");
+    if (typeof props.value !== 'bigint') {
+      throw new ArgumentInvalidException('Invalid bigint');
     }
   }
 
   public static generate(): BigNumber {
-    const str = randomBytes(8).toString("hex");
+    const str = randomBytes(8).toString('hex');
     const value = BigInt(`0x${str}`);
 
     return new BigNumber(value);

@@ -1,6 +1,6 @@
-import { ValueObject } from "../base-classes/value-object.base";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { isPresent } from "../utils/is-present.util";
+import { ValueObject } from '../base-classes/value-object.base';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { isPresent } from '../utils/is-present.util';
 
 export interface DeviceTimeProps {
   hour: number;
@@ -29,9 +29,7 @@ export class DeviceTime extends ValueObject<DeviceTimeProps> {
 
   protected validate(props: DeviceTimeProps): void {
     if (![props.hour, props.minute].every(isPresent)) {
-      throw new ArgumentNotProvidedException(
-        "Missing property in device time constructor"
-      );
+      throw new ArgumentNotProvidedException('Missing property in device time constructor');
     }
   }
 }

@@ -1,8 +1,8 @@
-const { readdir } = require("fs").promises;
-const path = require("path");
+const { readdir } = require('fs').promises;
+const path = require('path');
 
 async function getPackageList() {
-  const packages = path.resolve(__dirname, "..", "..", "packages");
+  const packages = path.resolve(__dirname, '..', '..', 'packages');
 
   return await readdir(packages);
 }
@@ -10,9 +10,9 @@ async function getPackageList() {
 module.exports = async function pickPackage({ prompter, args }) {
   const packages = await getPackageList();
   const prompt = {
-    type: "select",
-    name: "package",
-    message: "Choose destination package",
+    type: 'select',
+    name: 'package',
+    message: 'Choose destination package',
     choices: packages,
     skip() {
       return Boolean(args.package);
@@ -27,9 +27,7 @@ module.exports = async function pickPackage({ prompter, args }) {
   }
 
   if (!packages.includes(package)) {
-    throw new Error(
-      `Invalid 'package' parameter. Possible values: ${packages.join(", ")}`
-    );
+    throw new Error(`Invalid 'package' parameter. Possible values: ${packages.join(', ')}`);
   }
 
   return { package };

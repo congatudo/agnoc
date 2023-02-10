@@ -1,4 +1,4 @@
-declare module "node-wifi" {
+declare module 'node-wifi' {
   interface InitOptions {
     iface: string | null;
   }

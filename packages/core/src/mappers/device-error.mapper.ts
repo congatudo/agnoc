@@ -1,7 +1,7 @@
-import { Mapper } from "../base-classes/mapper.base";
-import { DomainException } from "../exceptions/domain.exception";
-import { NotImplementedException } from "../exceptions/not-implemented.exception";
-import { DeviceError } from "../value-objects/device-error.value-object";
+import { Mapper } from '../base-classes/mapper.base';
+import { DomainException } from '../exceptions/domain.exception';
+import { NotImplementedException } from '../exceptions/not-implemented.exception';
+import { DeviceError } from '../value-objects/device-error.value-object';
 
 const ROBOT_TO_DOMAIN = {
   0: DeviceError.VALUE.NONE,
@@ -51,9 +51,7 @@ const ROBOT_TO_DOMAIN = {
 export const DeviceErrorMapper: Mapper<DeviceError, number> = class {
   static toDomain(error: number): DeviceError {
     if (!(error in ROBOT_TO_DOMAIN)) {
-      throw new DomainException(
-        `Unable to map error code '${error}' to domain value`
-      );
+      throw new DomainException(`Unable to map error code '${error}' to domain value`);
     }
 
     const value = ROBOT_TO_DOMAIN[error as keyof typeof ROBOT_TO_DOMAIN];
@@ -63,6 +61,6 @@ export const DeviceErrorMapper: Mapper<DeviceError, number> = class {
   }
 
   static toRobot(): never {
-    throw new NotImplementedException("DeviceErrorMapper.toRobot");
+    throw new NotImplementedException('DeviceErrorMapper.toRobot');
   }
 };

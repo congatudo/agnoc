@@ -1,16 +1,16 @@
-import { AddressInfo, Server } from "net";
-import { expect } from "chai";
-import { describe, it } from "mocha";
-import { PacketSocket } from "../../../src/sockets/packet.socket";
-import { Packet } from "../../../src/value-objects/packet.value-object";
+import { AddressInfo, Server } from 'net';
+import { expect } from 'chai';
+import { describe, it } from 'mocha';
+import { PacketSocket } from '../../../src/sockets/packet.socket';
+import { Packet } from '../../../src/value-objects/packet.value-object';
 
-declare module "mocha" {
+declare module 'mocha' {
   interface Context {
     server: Server;
   }
 }
 
-describe("packet.socket", () => {
+describe('packet.socket', () => {
   beforeEach(function () {
     this.server = new Server();
   });
@@ -23,51 +23,51 @@ describe("packet.socket", () => {
     }
   });
 
-  it("connects to a server", function (done) {
+  it('connects to a server', function (done) {
     const socket = new PacketSocket();
 
-    this.server.once("listening", () => {
+    this.server.once('listening', () => {
       void socket.connect({
         port: (this.server.address() as AddressInfo).port,
       });
     });
 
-    socket.once("connect", () => {
+    socket.once('connect', () => {
       socket.end();
     });
 
-    socket.once("end", done);
+    socket.once('end', done);
 
     this.server.listen(0);
   });
 
-  it("writes packets to a server", function (done) {
+  it('writes packets to a server', function (done) {
     const socket = new PacketSocket();
 
-    this.server.once("listening", () => {
+    this.server.once('listening', () => {
       void socket.connect({
         port: (this.server.address() as AddressInfo).port,
       });
     });
 
-    this.server.once("connection", (socket) => {
-      socket.once("data", (data) => {
-        expect(data.toString("hex")).to.be.equal(
-          "2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c"
+    this.server.once('connection', (socket) => {
+      socket.once('data', (data) => {
+        expect(data.toString('hex')).to.be.equal(
+          '2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c',
         );
         done();
       });
     });
 
-    socket.once("connect", () => {
+    socket.once('connect', () => {
       const packet = Packet.fromJSON({
         ctype: 2,
         flow: 1,
         deviceId: 1,
         userId: 2,
-        sequence: "7a479a0fbb978c12",
+        sequence: '7a479a0fbb978c12',
         payload: {
-          opcode: "DEVICE_GETTIME_RSP",
+          opcode: 'DEVICE_GETTIME_RSP',
           object: {
             result: 0,
             body: {
@@ -84,35 +84,30 @@ describe("packet.socket", () => {
     this.server.listen(0);
   });
 
-  it("writes packets to a client", function (done) {
+  it('writes packets to a client', function (done) {
     const socket = new PacketSocket();
 
-    this.server.once("listening", () => {
+    this.server.once('listening', () => {
       void socket.connect({
         port: (this.server.address() as AddressInfo).port,
       });
     });
 
-    this.server.once("connection", (socket) => {
-      socket.end(
-        Buffer.from(
-          "2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c",
-          "hex"
-        )
-      );
+    this.server.once('connection', (socket) => {
+      socket.end(Buffer.from('2500000002010100000002000000128c97bb0f9a477a121008001a090893afeefd0510901c', 'hex'));
     });
 
-    socket.once("connect", () => {
-      socket.once("data", (packet) => {
+    socket.once('connect', () => {
+      socket.once('data', (packet) => {
         expect(packet).to.be.instanceof(Packet);
         expect(packet.toJSON()).to.be.deep.equal({
           ctype: 2,
           flow: 1,
           deviceId: 1,
           userId: 2,
-          sequence: "7a479a0fbb978c12",
+          sequence: '7a479a0fbb978c12',
           payload: {
-            opcode: "DEVICE_GETTIME_RSP",
+            opcode: 'DEVICE_GETTIME_RSP',
             object: {
               result: 0,
               body: {

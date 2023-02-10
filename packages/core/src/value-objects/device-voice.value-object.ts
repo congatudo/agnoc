@@ -1,7 +1,7 @@
-import { ValueObject } from "../base-classes/value-object.base";
-import { ArgumentInvalidException } from "../exceptions/argument-invalid.exception";
-import { ArgumentNotProvidedException } from "../exceptions/argument-not-provided.exception";
-import { isPresent } from "../utils/is-present.util";
+import { ValueObject } from '../base-classes/value-object.base';
+import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
+import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { isPresent } from '../utils/is-present.util';
 
 export interface DeviceVoiceProps {
   isEnabled: boolean;
@@ -22,15 +22,11 @@ export class DeviceVoice extends ValueObject<DeviceVoiceProps> {
 
   protected validate(props: DeviceVoiceProps): void {
     if (![props.isEnabled, props.volume].every(isPresent)) {
-      throw new ArgumentNotProvidedException(
-        "Missing property in device voice constructor"
-      );
+      throw new ArgumentNotProvidedException('Missing property in device voice constructor');
     }
 
     if (props.volume < MIN_VOLUME || props.volume > MAX_VOLUME) {
-      throw new ArgumentInvalidException(
-        "Invalid property in device voice constructor"
-      );
+      throw new ArgumentInvalidException('Invalid property in device voice constructor');
     }
   }
 
