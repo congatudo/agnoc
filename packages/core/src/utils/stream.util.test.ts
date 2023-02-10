@@ -1,22 +1,22 @@
 import { AssertionError } from "assert";
 import { Readable } from "stream";
-import { BufferWriter } from "@agnoc/core/streams/buffer-writer.stream";
-import {
-  readByte,
-  readFloat,
-  readLong,
-  readShort,
-  readString,
-  readWord,
-  writeByte,
-  writeFloat,
-  writeLong,
-  writeShort,
-  writeString,
-  writeWord,
-} from "@agnoc/core/utils/stream.util";
 import { expect } from "chai";
 import { describe, it } from "mocha";
+import { BufferWriter } from "../streams/buffer-writer.stream";
+import {
+  readWord,
+  readShort,
+  readByte,
+  readLong,
+  readFloat,
+  readString,
+  writeWord,
+  writeShort,
+  writeByte,
+  writeLong,
+  writeFloat,
+  writeString,
+} from "./stream.util";
 
 declare module "mocha" {
   interface Context {
