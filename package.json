@@ -1,9 +1,7 @@
 {
   "name": "agnoc",
-  "version": "0.0.0",
   "private": true,
   "license": "MIT",
-  "type": "commonjs",
   "scripts": {
     "build": "npm-run-all 'build:*'",
     "build:packages": "lerna run build",
