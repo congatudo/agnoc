@@ -46,7 +46,7 @@
       "build": {
         "inputs": [
           "{workspaceRoot}/package.json",
-          "{projectRoot}/src",
+          "{projectRoot}/src/**/*",
           "{projectRoot}/package.json",
           "{projectRoot}/tsconfig.*"
         ],
@@ -61,8 +61,8 @@
         ],
         "inputs": [
           "{workspaceRoot}/.mocharc.yml",
-          "{projectRoot}/src",
-          "{projectRoot}/test"
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/test/**/*"
         ],
         "outputs": [
           "{projectRoot}/coverage"
