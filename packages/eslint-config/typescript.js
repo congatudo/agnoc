@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 2022,
     project: path.resolve(__dirname, '../../tsconfig.json'),
     sourceType: 'module',
   },
@@ -23,12 +23,14 @@ module.exports = {
       'babel-module': {
         extensions: ['.js', '.ts', '.json'],
         alias: {
-          '^(@agnoc/[^/]+)/(?!lib)(.+)$': '\\1/src/\\2',
+          '^(@agnoc/[^/]+)$': '\\1/src',
         },
       },
     },
   },
   rules: {
+    'node/no-missing-import': 'off',
+    'node/no-extraneous-import': 'off',
     'node/no-unsupported-features/es-syntax': 'off',
     'security/detect-object-injection': 'off',
     '@typescript-eslint/no-unused-vars': [
