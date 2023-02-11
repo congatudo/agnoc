@@ -1,6 +1,5 @@
-import { Mapper } from '../base-classes/mapper.base';
-import { flipObject } from '../utils/flip-object.util';
-import { DeviceFanSpeed } from '../value-objects/device-fan-speed.value-object';
+import { DeviceFanSpeed } from '@agnoc/domain';
+import { flipObject, Mapper } from '@agnoc/toolkit';
 
 const DOMAIN_TO_ROBOT = {
   [DeviceFanSpeed.VALUE.OFF]: 0,
@@ -18,7 +17,7 @@ export const DeviceFanSpeedMapper: Mapper<DeviceFanSpeed, number> = class {
     });
   }
 
-  static toRobot(fanSpeed: DeviceFanSpeed): number {
+  static fromDomain(fanSpeed: DeviceFanSpeed): number {
     return DOMAIN_TO_ROBOT[fanSpeed.value];
   }
 };

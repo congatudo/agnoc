@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/unbound-method */
+import { Device, DeviceSystem, DeviceVersion, User } from '@agnoc/domain';
+import { ID, bind } from '@agnoc/toolkit';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { OPDecoderLiteral } from '../constants/opcodes.constant';
-import { bind } from '../decorators/bind.decorator';
-import { Device } from '../entities/device.entity';
-import { User } from '../entities/user.entity';
 import { PacketSocket } from '../sockets/packet.socket';
-import { DeviceSystem } from '../value-objects/device-system.value-object';
-import { DeviceVersion } from '../value-objects/device-version.value-object';
-import { ID } from '../value-objects/id.value-object';
 import { Message, MessageHandlers } from '../value-objects/message.value-object';
 import { Connection } from './connection.emitter';
 import { Multiplexer } from './multiplexer.emitter';

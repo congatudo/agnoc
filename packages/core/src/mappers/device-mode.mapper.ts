@@ -1,8 +1,5 @@
-import { Mapper } from '../base-classes/mapper.base';
-import { DomainException } from '../exceptions/domain.exception';
-import { NotImplementedException } from '../exceptions/not-implemented.exception';
-import { ValueOf } from '../types/value-of.type';
-import { DeviceMode } from '../value-objects/device-mode.value-object';
+import { DeviceMode } from '@agnoc/domain';
+import { ValueOf, DomainException, Mapper, NotImplementedException } from '@agnoc/toolkit';
 
 const { VALUE } = DeviceMode;
 
@@ -33,7 +30,7 @@ export const DeviceModeMapper: Mapper<DeviceMode, number> = class {
     });
   }
 
-  static toRobot(): number {
+  static fromDomain(): number {
     throw new NotImplementedException('DeviceModeMapper.toRobot');
   }
 };

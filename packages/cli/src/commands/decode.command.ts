@@ -1,7 +1,7 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 import { createReadStream } from 'fs';
 import { Duplex, pipeline } from 'stream';
-import { PacketDecodeTransform } from '@agnoc/cli/streams/packet-decode-transform.stream';
+import { PacketDecodeTransform } from '../streams/packet-decode-transform.stream';
 import { toJSONStream } from '../utils/to-json-stream.util';
 import { toStringStream } from '../utils/to-string-stream.util';
 

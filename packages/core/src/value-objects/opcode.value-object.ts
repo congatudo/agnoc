@@ -1,7 +1,5 @@
-import { DomainPrimitive, ValueObject } from '../base-classes/value-object.base';
-import { OPNameLiteral, OPNAMES, OPCODES, OPCodeLiteral } from '../constants/opcodes.constant';
-import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
-import { ArgumentOutOfRangeException } from '../exceptions/argument-out-of-range.exception';
+import { ValueObject, DomainPrimitive, ArgumentOutOfRangeException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { OPNAMES, OPCodeLiteral, OPNameLiteral, OPCODES } from '../constants/opcodes.constant';
 
 const MIN_OPCODE = 0;
 const MAX_OPCODE = 0xffff;

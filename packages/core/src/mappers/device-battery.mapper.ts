@@ -1,6 +1,5 @@
-import { Mapper } from '../base-classes/mapper.base';
-import { interpolate } from '../utils/interpolate.util';
-import { DeviceBattery } from '../value-objects/device-battery.value-object';
+import { DeviceBattery } from '@agnoc/domain';
+import { interpolate, Mapper } from '@agnoc/toolkit';
 
 const ROBOT_MAX_VALUE = 200;
 const ROBOT_MIN_VALUE = 100;
@@ -29,7 +28,7 @@ export const DeviceBatteryMapper: Mapper<DeviceBattery, number> = class {
     });
   }
 
-  static toRobot(battery: DeviceBattery): number {
+  static fromDomain(battery: DeviceBattery): number {
     return Math.floor(interpolate(battery.value, DEVICE, ROBOT));
   }
 };

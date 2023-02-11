@@ -1,3 +1,4 @@
+import { flipObject } from '@agnoc/toolkit';
 import {
   ICLIENT_HEARTBEAT_REQ,
   ICLIENT_HEARTBEAT_RSP,
@@ -94,7 +95,6 @@ import {
   IUSER_SET_DEVICE_QUIETHOURS_RSP,
 } from '../../schemas/schema';
 import { ChargePoseInfo, MapInfo, RobotPoseInfo } from '../interfaces/map.interface';
-import { flipObject } from '../utils/flip-object.util';
 
 export const OPCODES = {
   COMMON_ERROR_REPLY: 0x0001,

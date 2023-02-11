@@ -1,7 +1,7 @@
 import { AddressInfo, Socket, SocketConnectOpts } from 'net';
 import { Duplex } from 'stream';
+import { DomainException } from '@agnoc/toolkit';
 import { OPDecoderLiteral } from '../constants/opcodes.constant';
-import { DomainException } from '../exceptions/domain.exception';
 import { Packet } from '../value-objects/packet.value-object';
 
 interface PacketSocketProps {

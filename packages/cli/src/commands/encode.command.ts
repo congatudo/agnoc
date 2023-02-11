@@ -1,8 +1,8 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 import { createReadStream } from 'fs';
 import { Duplex, pipeline } from 'stream';
-import { JSONTransform } from '@agnoc/cli/streams/json-transform.stream';
-import { PacketEncodeTransform } from '@agnoc/cli/streams/packet-encode-transform.stream';
+import { JSONTransform } from '../streams/json-transform.stream';
+import { PacketEncodeTransform } from '../streams/packet-encode-transform.stream';
 
 interface EncodeOptions {
   stdin: Duplex;

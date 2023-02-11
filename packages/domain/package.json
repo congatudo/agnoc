@@ -1,0 +1,77 @@
+{
+  "name": "@agnoc/domain",
+  "version": "0.16.0",
+  "description": "Agnoc domain library",
+  "keywords": [
+    "agnoc",
+    "domain",
+    "conga",
+    "cecotec",
+    "driver",
+    "reverse",
+    "engineering"
+  ],
+  "homepage": "https://github.com/adrigzr/agnoc",
+  "bugs": {
+    "url": "https://github.com/adrigzr/agnoc/issues"
+  },
+  "license": "MIT",
+  "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrigzr/agnoc.git",
+    "directory": "packages/domain"
+  },
+  "scripts": {
+    "build": "npm-run-all build:lib",
+    "build:lib": "npm-run-all build:lib:js build:lib:ts",
+    "build:lib:js": "NODE_ENV=production babel --out-dir lib --root-mode upward --extensions '.ts' src",
+    "build:lib:ts": "tsc -b tsconfig.build.json",
+    "clean": "rm -rf .build-cache lib",
+    "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
+    "test": "nyc mocha src"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "inputs": [
+          "{workspaceRoot}/package.json",
+          "{projectRoot}/src",
+          "{projectRoot}/package.json",
+          "{projectRoot}/tsconfig.*"
+        ],
+        "outputs": [
+          "{projectRoot}/lib",
+          "{projectRoot}/.build-cache"
+        ]
+      },
+      "test": {
+        "inputs": [
+          "{workspaceRoot}/.mocharc.yml",
+          "{projectRoot}/src"
+        ],
+        "outputs": [
+          "{projectRoot}/coverage"
+        ]
+      }
+    }
+  },
+  "dependencies": {
+    "@agnoc/toolkit": "^0.16.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
+  },
+  "engines": {
+    "node": ">=12.3"
+  }
+}

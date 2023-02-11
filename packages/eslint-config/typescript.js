@@ -38,6 +38,9 @@ module.exports = {
         varsIgnorePattern: '^_.*$',
       },
     ],
+    'import/no-absolute-path': 'error',
+    'import/no-relative-packages': 'error',
+    'import/no-useless-path-segments': 'error',
     'import/order': [
       'warn',
       {

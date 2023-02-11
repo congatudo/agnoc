@@ -1,7 +1,5 @@
 import { Socket } from 'net';
-import { BufferWriter } from '@agnoc/core/streams/buffer-writer.stream';
-import { debug as debugFactory } from '@agnoc/core/utils/debug.util';
-import { writeWord } from '@agnoc/core/utils/stream.util';
+import { BufferWriter, writeWord, debug } from '@agnoc/toolkit';
 
 function buildHeaders() {
   const stream = new BufferWriter();
@@ -40,21 +38,21 @@ interface WlanConfigOptions {
 
 export function wlanConfig(ssid: string, pass: string, { timeout }: WlanConfigOptions): Promise<void> {
   return new Promise((resolve, reject) => {
-    const debug = debugFactory('wlan:config');
+    const debugInstance = debug('wlan:config');
     const socket = new Socket();
     const gateway = '192.168.5.1';
     const port = 6008;
 
     socket.on('data', (data) => {
-      debug(`Received data: ${data.toString('hex')}`);
+      debugInstance(`Received data: ${data.toString('hex')}`);
       socket.end();
       resolve();
     });
 
     socket.on('connect', () => {
-      debug('Sending wifi headers...');
+      debugInstance('Sending wifi headers...');
       socket.write(buildHeaders());
-      debug('Sending wifi payload...');
+      debugInstance('Sending wifi payload...');
       socket.write(buildPayload(ssid, pass));
     });
 
@@ -73,6 +71,6 @@ export function wlanConfig(ssid: string, pass: string, { timeout }: WlanConfigOp
       family: 4,
     });
 
-    debug(`Connecting to robot at ${gateway}`);
+    debugInstance(`Connecting to robot at ${gateway}`);
   });
 }
