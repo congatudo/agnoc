@@ -3,7 +3,6 @@ export * from './base-classes/entity.base';
 export * from './base-classes/exception.base';
 export * from './base-classes/mapper.base';
 export * from './base-classes/value-object.base';
-export * from './constants/exception.constant';
 export * from './decorators/bind.decorator';
 export * from './exceptions/argument-invalid.exception';
 export * from './exceptions/argument-not-provided.exception';

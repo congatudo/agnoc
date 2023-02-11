@@ -1,4 +1,3 @@
-import { ExceptionName } from '../constants/exception.constant';
 import { ObjectLiteral } from '../types/object-literal.type';
 
 export interface SerializedException {
@@ -6,27 +5,43 @@ export interface SerializedException {
   message: string;
   stack?: string;
   metadata?: ObjectLiteral;
+  cause?: SerializedException | unknown;
 }
 
 export abstract class Exception extends Error {
-  override readonly message: string;
+  override readonly name = this.constructor.name;
   readonly metadata?: ObjectLiteral;
 
-  constructor(message: string, metadata?: ObjectLiteral) {
-    super(message);
-    this.message = message;
+  constructor(message: string, metadata?: ObjectLiteral, options?: ErrorOptions) {
+    super(message, options);
     this.metadata = metadata;
     Error.captureStackTrace(this, this.constructor);
   }
-
-  abstract override name: ExceptionName;
 
   toJSON(): SerializedException {
     return {
       name: this.name,
       message: this.message,
-      stack: this.stack,
-      metadata: this.metadata,
+      ...(this.stack && { stack: this.stack }),
+      ...(this.metadata && { metadata: this.metadata }),
+      ...(this.cause ? { cause: serializeError(this.cause) } : {}),
     };
   }
+}
+
+function serializeError(error: unknown): SerializedException | unknown | undefined {
+  if (!(error instanceof Error)) {
+    return error;
+  }
+
+  if (error instanceof Exception) {
+    return error.toJSON();
+  }
+
+  return {
+    name: error.name,
+    message: error.message,
+    ...(error.stack && { stack: error.stack }),
+    ...(error.cause ? { cause: serializeError(error.cause) } : {}),
+  };
 }
