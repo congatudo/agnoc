@@ -19,6 +19,10 @@
   "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "schemas"
+  ],
   "publishConfig": {
     "access": "public"
   },

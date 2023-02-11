@@ -20,6 +20,10 @@
   "bin": {
     "agnoc": "./bin/agnoc.js"
   },
+  "files": [
+    "bin",
+    "lib"
+  ],
   "publishConfig": {
     "access": "public"
   },
