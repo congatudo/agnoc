@@ -1,47 +1,55 @@
 /* eslint-disable @typescript-eslint/unbound-method */
+import {
+  Device,
+  User,
+  CONSUMABLE_TYPE,
+  DeviceMode,
+  DEVICE_CAPABILITY,
+  DeviceState,
+  DeviceFanSpeed,
+  DeviceWaterLevel,
+  DeviceConsumable,
+  ConsumableType,
+  DeviceWlan,
+  DeviceOrder,
+  Position,
+  Coordinate,
+  DeviceQuietHours,
+  DeviceTime,
+  DeviceVoice,
+  Room,
+  DeviceVersion,
+  DeviceConfig,
+  DeviceCurrentClean,
+  Pixel,
+  DeviceMap,
+  Zone,
+} from '@agnoc/domain';
+import {
+  ArgumentInvalidException,
+  waitFor,
+  DomainException,
+  ID,
+  writeByte,
+  writeFloat,
+  isPresent,
+  debug,
+  bind,
+  BufferWriter,
+} from '@agnoc/toolkit';
 import { Debugger } from 'debug';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
-import { bind } from '../decorators/bind.decorator';
-import { DeviceMap } from '../entities/device-map.entity';
-import { DeviceOrder } from '../entities/device-order.entity';
-import { Device } from '../entities/device.entity';
-import { Room } from '../entities/room.entity';
-import { User } from '../entities/user.entity';
-import { Zone } from '../entities/zone.entity';
-import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
-import { DomainException } from '../exceptions/domain.exception';
 import { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
 import { DeviceErrorMapper } from '../mappers/device-error.mapper';
 import { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
 import { DeviceModeMapper } from '../mappers/device-mode.mapper';
+import { DeviceOrderMapper } from '../mappers/device-order.mapper';
 import { DeviceStateMapper } from '../mappers/device-state.mapper';
 import { DeviceVoiceMapper } from '../mappers/device-voice.mapper';
 import { DeviceWaterLevelMapper } from '../mappers/device-water-level.mapper';
-import { BufferWriter } from '../streams/buffer-writer.stream';
-import { debug } from '../utils/debug.util';
-import { isPresent } from '../utils/is-present.util';
-import { writeByte, writeFloat } from '../utils/stream.util';
-import { waitFor } from '../utils/wait-for.util';
-import { Coordinate } from '../value-objects/coordinate.value-object';
-import { DeviceConfig } from '../value-objects/device-config.value-object';
-import { ConsumableType, CONSUMABLE_TYPE, DeviceConsumable } from '../value-objects/device-consumable.value-object';
-import { DeviceCurrentClean } from '../value-objects/device-current-clean.value-object';
-import { DeviceFanSpeed } from '../value-objects/device-fan-speed.value-object';
-import { DeviceMode } from '../value-objects/device-mode.value-object';
-import { DeviceQuietHours } from '../value-objects/device-quiet-hours.value-object';
-import { DeviceState } from '../value-objects/device-state.value-object';
-import { DEVICE_CAPABILITY } from '../value-objects/device-system.value-object';
-import { DeviceTime } from '../value-objects/device-time.value-object';
-import { DeviceVersion } from '../value-objects/device-version.value-object';
-import { DeviceVoice } from '../value-objects/device-voice.value-object';
-import { DeviceWaterLevel } from '../value-objects/device-water-level.value-object';
-import { DeviceWlan } from '../value-objects/device-wlan.value-object';
-import { ID } from '../value-objects/id.value-object';
 import { Message, MessageHandlers } from '../value-objects/message.value-object';
 import { Packet } from '../value-objects/packet.value-object';
-import { Pixel } from '../value-objects/pixel.value-object';
-import { Position } from '../value-objects/position.value-object';
 import { Connection } from './connection.emitter';
 import { Multiplexer } from './multiplexer.emitter';
 
@@ -308,13 +316,13 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async setFanSpeed(fanSpeed: DeviceFanSpeed): Promise<void> {
     await this.sendRecv('DEVICE_SET_CLEAN_PREFERENCE_REQ', 'DEVICE_SET_CLEAN_PREFERENCE_RSP', {
-      mode: DeviceFanSpeedMapper.toRobot(fanSpeed),
+      mode: DeviceFanSpeedMapper.fromDomain(fanSpeed),
     });
   }
 
   async setWaterLevel(waterLevel: DeviceWaterLevel): Promise<void> {
     await this.sendRecv('DEVICE_SET_CLEAN_PREFERENCE_REQ', 'DEVICE_SET_CLEAN_PREFERENCE_RSP', {
-      mode: DeviceWaterLevelMapper.toRobot(waterLevel),
+      mode: DeviceWaterLevelMapper.fromDomain(waterLevel),
     });
   }
 
@@ -416,7 +424,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   async getOrders(): Promise<DeviceOrder[]> {
     const packet = await this.sendRecv('DEVICE_ORDERLIST_GETTING_REQ', 'DEVICE_ORDERLIST_GETTING_RSP', {});
     const object = packet.payload.object;
-    const orders = object.orderList?.map(DeviceOrder.fromOrderList) || [];
+    const orders = object.orderList?.map(DeviceOrderMapper.toDomain) || [];
 
     this.device.updateOrders(orders);
 
@@ -424,7 +432,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async setOrder(order: DeviceOrder): Promise<void> {
-    const orderList = order.toOrderList();
+    const orderList = DeviceOrderMapper.fromDomain(order);
 
     await this.sendRecv('DEVICE_ORDERLIST_SETTING_REQ', 'DEVICE_ORDERLIST_SETTING_RSP', orderList);
   }
@@ -574,7 +582,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async setVoice(voice: DeviceVoice): Promise<void> {
-    const robotVoice = DeviceVoiceMapper.toRobot(voice);
+    const robotVoice = DeviceVoiceMapper.fromDomain(voice);
 
     await this.sendRecv('USER_SET_DEVICE_CTRL_SETTING_REQ', 'USER_SET_DEVICE_CTRL_SETTING_RSP', {
       voiceMode: robotVoice.isEnabled,

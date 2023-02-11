@@ -56,8 +56,12 @@
         ]
       },
       "test": {
+        "dependsOn": [
+          "build"
+        ],
         "inputs": [
           "{workspaceRoot}/.mocharc.yml",
+          "{projectRoot}/src",
           "{projectRoot}/test"
         ],
         "outputs": [
@@ -67,7 +71,7 @@
     }
   },
   "dependencies": {
-    "@agnoc/core": "^0.17.1",
+    "@agnoc/toolkit": "^0.16.0",
     "chalk": "^4.1.1",
     "cli-ux": "^5.5.1",
     "commander": "^10.0.0",

@@ -1,7 +1,5 @@
-import { Mapper } from '../base-classes/mapper.base';
-import { DomainException } from '../exceptions/domain.exception';
-import { NotImplementedException } from '../exceptions/not-implemented.exception';
-import { DeviceError } from '../value-objects/device-error.value-object';
+import { DeviceError } from '@agnoc/domain';
+import { Mapper, DomainException, NotImplementedException } from '@agnoc/toolkit';
 
 const ROBOT_TO_DOMAIN = {
   0: DeviceError.VALUE.NONE,
@@ -60,7 +58,7 @@ export const DeviceErrorMapper: Mapper<DeviceError, number> = class {
     return new DeviceError({ value });
   }
 
-  static toRobot(): never {
+  static fromDomain(): never {
     throw new NotImplementedException('DeviceErrorMapper.toRobot');
   }
 };

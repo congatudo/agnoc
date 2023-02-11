@@ -1,6 +1,5 @@
-import { Mapper } from '../base-classes/mapper.base';
-import { flipObject } from '../utils/flip-object.util';
-import { DeviceWaterLevel } from '../value-objects/device-water-level.value-object';
+import { DeviceWaterLevel } from '@agnoc/domain';
+import { flipObject, Mapper } from '@agnoc/toolkit';
 
 const DOMAIN_TO_ROBOT = {
   [DeviceWaterLevel.VALUE.OFF]: 10,
@@ -18,7 +17,7 @@ export const DeviceWaterLevelMapper: Mapper<DeviceWaterLevel, number> = class {
     });
   }
 
-  static toRobot(waterLevel: DeviceWaterLevel): number {
+  static fromDomain(waterLevel: DeviceWaterLevel): number {
     return DOMAIN_TO_ROBOT[waterLevel.value];
   }
 };

@@ -63,8 +63,12 @@
         ]
       },
       "test": {
+        "dependsOn": [
+          "build"
+        ],
         "inputs": [
           "{workspaceRoot}/.mocharc.yml",
+          "{projectRoot}/src",
           "{projectRoot}/test"
         ],
         "outputs": [
@@ -74,6 +78,8 @@
     }
   },
   "dependencies": {
+    "@agnoc/domain": "^0.16.0",
+    "@agnoc/toolkit": "^0.16.0",
     "debug": "^4.3.4",
     "protobufjs": "^7.2.2",
     "tiny-typed-emitter": "^2.1.0"

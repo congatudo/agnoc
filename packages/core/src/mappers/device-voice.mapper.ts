@@ -1,6 +1,5 @@
-import { Mapper } from '../base-classes/mapper.base';
-import { interpolate } from '../utils/interpolate.util';
-import { DeviceVoice } from '../value-objects/device-voice.value-object';
+import { DeviceVoice } from '@agnoc/domain';
+import { Mapper, interpolate } from '@agnoc/toolkit';
 
 const ROBOT_MAX_VOLUME = 11;
 const ROBOT_MIN_VOLUME = 1;
@@ -27,7 +26,7 @@ export const DeviceVoiceMapper: Mapper<DeviceVoice, RobotVoice> = class {
     });
   }
 
-  static toRobot({ isEnabled, volume }: DeviceVoice): RobotVoice {
+  static fromDomain({ isEnabled, volume }: DeviceVoice): RobotVoice {
     return {
       isEnabled,
       volume: Math.floor(interpolate(volume, DEVICE, ROBOT)),
