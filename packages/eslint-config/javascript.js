@@ -9,10 +9,4 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:prettier/recommended',
   ],
-  settings: {
-    node: {
-      allowModules: ['@agnoc/core', '@agnoc/cli'],
-      tryExtensions: ['.js', '.ts', '.json'],
-    },
-  },
 };
