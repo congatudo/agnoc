@@ -1,12 +1,13 @@
 import { hasKey, ArgumentInvalidException, isObject, ValueObject } from '@agnoc/toolkit';
-import protobuf, { INamespace } from 'protobufjs/light';
+import protobuf from 'protobufjs/light';
 import schema from '../../schemas/schema.json';
-import { OPDecoderLiteral, OPCodeLiteral, OPDecoders } from '../constants/opcodes.constant';
 import { decodeArea } from '../decoders/area.decoder';
 import { decodeChargePosition } from '../decoders/charge-position.decoder';
 import { decodeMap } from '../decoders/map.decoder';
 import { decodeRobotPosition } from '../decoders/robot-position.decoder';
 import { OPCode } from './opcode.value-object';
+import type { OPDecoderLiteral, OPCodeLiteral, OPDecoders } from '../constants/opcodes.constant';
+import type { INamespace } from 'protobufjs/light';
 
 export interface PayloadProps<Name extends OPDecoderLiteral> {
   opcode: OPCode<Name, OPCodeLiteral>;

@@ -1,11 +1,5 @@
-import {
-  ValueOf,
-  ValueObject,
-  DomainPrimitive,
-  isPresent,
-  ArgumentNotProvidedException,
-  ArgumentInvalidException,
-} from '@agnoc/toolkit';
+import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import type { ValueOf, DomainPrimitive } from '@agnoc/toolkit';
 
 const VALUE = {
   OFF: 'off',
@@ -14,14 +8,14 @@ const VALUE = {
   HIGH: 'high',
 } as const;
 
-type Value = ValueOf<typeof VALUE>;
+export type DeviceFanSpeedValue = ValueOf<typeof VALUE>;
 
-export class DeviceFanSpeed extends ValueObject<Value> {
-  get value(): Value {
+export class DeviceFanSpeed extends ValueObject<DeviceFanSpeedValue> {
+  get value(): DeviceFanSpeedValue {
     return this.props.value;
   }
 
-  protected validate(props: DomainPrimitive<Value>): void {
+  protected validate(props: DomainPrimitive<DeviceFanSpeedValue>): void {
     if (![props.value].every(isPresent)) {
       throw new ArgumentNotProvidedException('Missing property in device fan speed constructor');
     }

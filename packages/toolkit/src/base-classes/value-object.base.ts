@@ -8,8 +8,8 @@ export interface DomainPrimitive<T extends Primitives | Date> {
   value: T;
 }
 
-type ValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T> : T;
-type PartialValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T> : Partial<T>;
+export type ValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T> : T;
+export type PartialValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T> : Partial<T>;
 
 export abstract class ValueObject<T> {
   protected readonly props: ValueObjectProps<T>;

@@ -1,6 +1,6 @@
 import { ID, Entity, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 import { Coordinate } from '../value-objects/coordinate.value-object';
-import { Pixel } from '../value-objects/pixel.value-object';
+import type { Pixel } from '../value-objects/pixel.value-object';
 
 export interface RoomProps {
   id: ID;

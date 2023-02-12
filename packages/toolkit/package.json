@@ -74,5 +74,10 @@
   },
   "engines": {
     "node": ">=18.12"
+  },
+  "typedoc": {
+    "entryPoint": "./src/index.ts",
+    "readmeFile": "./README.md",
+    "displayName": "Toolkit"
   }
 }

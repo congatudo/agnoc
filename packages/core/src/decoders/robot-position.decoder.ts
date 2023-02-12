@@ -1,5 +1,5 @@
 import { toStream, readWord, readByte, readFloat } from '@agnoc/toolkit';
-import { RobotPoseInfo } from '../interfaces/map.interface';
+import type { RobotPoseInfo } from '../interfaces/map.interface';
 
 export function decodeRobotPosition(payload: Buffer): RobotPoseInfo {
   const stream = toStream(payload);

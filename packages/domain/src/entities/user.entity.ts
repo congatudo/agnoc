@@ -1,4 +1,5 @@
-import { ID, Entity } from '@agnoc/toolkit';
+import { Entity } from '@agnoc/toolkit';
+import type { ID } from '@agnoc/toolkit';
 
 export type UserProps = {
   id: ID;

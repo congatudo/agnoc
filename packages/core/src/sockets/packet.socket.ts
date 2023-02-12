@@ -1,16 +1,17 @@
-import { AddressInfo, Socket, SocketConnectOpts } from 'net';
+import { Socket } from 'net';
 import { Duplex } from 'stream';
 import { DomainException } from '@agnoc/toolkit';
-import { OPDecoderLiteral } from '../constants/opcodes.constant';
 import { Packet } from '../value-objects/packet.value-object';
+import type { OPDecoderLiteral } from '../constants/opcodes.constant';
+import type { AddressInfo, SocketConnectOpts } from 'net';
 
-interface PacketSocketProps {
+export interface PacketSocketProps {
   socket?: Socket;
 }
 
-type Callback = (error?: Error | null) => void;
+export type Callback = (error?: Error | null) => void;
 
-interface PacketSocketEvents {
+export interface PacketSocketEvents {
   data: (packet: Packet<OPDecoderLiteral>) => void;
   connect: () => void;
   close: (hasError: boolean) => void;

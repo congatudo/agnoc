@@ -1,5 +1,6 @@
 import { DeviceError } from '@agnoc/domain';
-import { Mapper, DomainException, NotImplementedException } from '@agnoc/toolkit';
+import { DomainException, NotImplementedException } from '@agnoc/toolkit';
+import type { Mapper } from '@agnoc/toolkit';
 
 const ROBOT_TO_DOMAIN = {
   0: DeviceError.VALUE.NONE,

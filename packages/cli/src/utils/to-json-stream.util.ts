@@ -1,7 +1,7 @@
 import { Transform } from 'stream';
-import { Packet, OPDecoderLiteral } from '@agnoc/core';
 import { isObject } from '@agnoc/toolkit';
 import { ArrayTransform } from '../streams/array-transform.stream';
+import type { Packet, OPDecoderLiteral } from '@agnoc/core';
 
 function filterProperties(_: string, value: unknown) {
   if (isObject(value) && value.type === 'Buffer') {

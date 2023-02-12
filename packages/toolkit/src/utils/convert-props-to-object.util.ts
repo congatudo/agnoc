@@ -1,5 +1,5 @@
-import { ObjectLiteral } from '../types/object-literal.type';
 import { isObject } from './is-object.util';
+import type { ObjectLiteral } from '../types/object-literal.type';
 
 function convertToRaw(item: unknown): unknown {
   if (isObject(item) && typeof item.toJSON === 'function') {

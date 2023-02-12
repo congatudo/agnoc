@@ -1,5 +1,7 @@
-import { ListenerSignature, TypedEmitter } from 'tiny-typed-emitter';
-import { BaseEntityProps, Entity } from './entity.base';
+import { TypedEmitter } from 'tiny-typed-emitter';
+import { Entity } from './entity.base';
+import type { BaseEntityProps } from './entity.base';
+import type { ListenerSignature } from 'tiny-typed-emitter';
 
 export class AggregateRoot<EntityProps extends BaseEntityProps, EntityEvents extends ListenerSignature<EntityEvents>>
   extends Entity<EntityProps>

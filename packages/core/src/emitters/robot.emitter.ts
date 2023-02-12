@@ -1,22 +1,15 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
-  Device,
-  User,
   CONSUMABLE_TYPE,
   DeviceMode,
   DEVICE_CAPABILITY,
   DeviceState,
-  DeviceFanSpeed,
-  DeviceWaterLevel,
   DeviceConsumable,
-  ConsumableType,
   DeviceWlan,
-  DeviceOrder,
   Position,
   Coordinate,
   DeviceQuietHours,
   DeviceTime,
-  DeviceVoice,
   Room,
   DeviceVersion,
   DeviceConfig,
@@ -37,9 +30,7 @@ import {
   bind,
   BufferWriter,
 } from '@agnoc/toolkit';
-import { Debugger } from 'debug';
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
 import { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
 import { DeviceErrorMapper } from '../mappers/device-error.mapper';
 import { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
@@ -48,10 +39,21 @@ import { DeviceOrderMapper } from '../mappers/device-order.mapper';
 import { DeviceStateMapper } from '../mappers/device-state.mapper';
 import { DeviceVoiceMapper } from '../mappers/device-voice.mapper';
 import { DeviceWaterLevelMapper } from '../mappers/device-water-level.mapper';
-import { Message, MessageHandlers } from '../value-objects/message.value-object';
-import { Packet } from '../value-objects/packet.value-object';
-import { Connection } from './connection.emitter';
-import { Multiplexer } from './multiplexer.emitter';
+import type { Connection } from './connection.emitter';
+import type { Multiplexer } from './multiplexer.emitter';
+import type { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
+import type { Message, MessageHandlers } from '../value-objects/message.value-object';
+import type { Packet } from '../value-objects/packet.value-object';
+import type {
+  Device,
+  User,
+  DeviceFanSpeed,
+  DeviceWaterLevel,
+  ConsumableType,
+  DeviceOrder,
+  DeviceVoice,
+} from '@agnoc/domain';
+import type { Debugger } from 'debug';
 
 export interface RobotProps {
   device: Device;
@@ -59,12 +61,12 @@ export interface RobotProps {
   multiplexer: Multiplexer;
 }
 
-interface DeviceTimestamp {
+export interface DeviceTimestamp {
   timestamp: number;
   offset: number;
 }
 
-interface RobotEvents {
+export interface RobotEvents {
   updateDevice: () => void;
   updateMap: () => void;
   updateRobotPosition: () => void;

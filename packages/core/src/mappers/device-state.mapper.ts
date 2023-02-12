@@ -1,9 +1,10 @@
 import { DeviceState } from '@agnoc/domain';
-import { ValueOf, DomainException, Mapper, NotImplementedException } from '@agnoc/toolkit';
+import { DomainException, NotImplementedException } from '@agnoc/toolkit';
+import type { ValueOf, Mapper } from '@agnoc/toolkit';
 
 const { VALUE } = DeviceState;
 
-interface RobotState {
+export interface RobotState {
   type: number;
   workMode: number;
   chargeStatus: boolean;

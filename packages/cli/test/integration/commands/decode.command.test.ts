@@ -1,9 +1,10 @@
-import { Duplex, PassThrough } from 'stream';
+import { PassThrough } from 'stream';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import mockFS from 'mock-fs';
 import { decode } from '../../../src/commands/decode.command';
 import { readStream } from '../../helpers/read-stream.helper';
+import type { Duplex } from 'stream';
 
 declare module 'mocha' {
   interface Context {

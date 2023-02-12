@@ -1,4 +1,5 @@
-import { ValueOf, ValueObject, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
+import { ValueObject, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
+import type { ValueOf } from '@agnoc/toolkit';
 
 export interface DeviceSystemProps {
   deviceSerialNumber: string;

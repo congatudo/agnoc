@@ -1,10 +1,5 @@
-import {
-  ValueObject,
-  DomainPrimitive,
-  isPresent,
-  ArgumentInvalidException,
-  ArgumentNotProvidedException,
-} from '@agnoc/toolkit';
+import { ValueObject, isPresent, ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
+import type { DomainPrimitive } from '@agnoc/toolkit';
 
 const MIN_VALUE = 0;
 const MAX_VALUE = 100;

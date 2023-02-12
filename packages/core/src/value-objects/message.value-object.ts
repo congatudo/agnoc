@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { OPDecoderLiteral, OPDecoders } from '@agnoc/core';
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 import { Connection } from '../emitters/connection.emitter';
 import { Packet } from './packet.value-object';
+import type { OPDecoderLiteral, OPDecoders } from '@agnoc/core';
 
-interface MessageProps<Name extends OPDecoderLiteral> {
+export interface MessageProps<Name extends OPDecoderLiteral> {
   connection: Connection;
   packet: Packet<Name>;
 }

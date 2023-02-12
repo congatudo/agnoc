@@ -1,5 +1,6 @@
 import { DeviceBattery } from '@agnoc/domain';
-import { interpolate, Mapper } from '@agnoc/toolkit';
+import { interpolate } from '@agnoc/toolkit';
+import type { Mapper } from '@agnoc/toolkit';
 
 const ROBOT_MAX_VALUE = 200;
 const ROBOT_MIN_VALUE = 100;

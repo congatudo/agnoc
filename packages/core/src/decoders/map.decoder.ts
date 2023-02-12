@@ -1,7 +1,6 @@
-import { Readable } from 'stream';
 import { inflateSync } from 'zlib';
 import { readWord, readFloat, readShort, readByte, readString, DomainException, toStream } from '@agnoc/toolkit';
-import {
+import type {
   AreaInfo,
   CleanArea,
   CleanAreaInfo,
@@ -17,6 +16,7 @@ import {
   RoomConnection,
   RoomSegment,
 } from '../interfaces/map.interface';
+import type { Readable } from 'stream';
 
 export function readMapHeadInfo(stream: Readable): MapHeadInfo {
   return {

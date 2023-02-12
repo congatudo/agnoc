@@ -1,6 +1,5 @@
 import { inflateSync } from 'zlib';
 import { toStream, readWord } from '@agnoc/toolkit';
-import { CleanPlan, CleanPlanInfo, CleanRoom, MapHeadInfo, MapPlanInfo } from '../interfaces/map.interface';
 import {
   readMapHeadInfo,
   readCleanPlanInfo,
@@ -8,13 +7,14 @@ import {
   readCleanRoomList,
   readCleanPlanList,
 } from './map.decoder';
+import type { CleanPlan, CleanPlanInfo, CleanRoom, MapHeadInfo, MapPlanInfo } from '../interfaces/map.interface';
 
 interface Unk1 {
   unk1: number;
   unk2: number;
 }
 
-interface AreaListInfo {
+export interface AreaListInfo {
   count: number;
   mapHeadId?: number;
   unk2?: Unk1[];

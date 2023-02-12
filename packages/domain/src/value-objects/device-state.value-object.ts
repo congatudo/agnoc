@@ -1,11 +1,5 @@
-import {
-  ValueOf,
-  ValueObject,
-  DomainPrimitive,
-  isPresent,
-  ArgumentNotProvidedException,
-  ArgumentInvalidException,
-} from '@agnoc/toolkit';
+import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import type { ValueOf, DomainPrimitive } from '@agnoc/toolkit';
 
 const VALUE = {
   ERROR: 'error',
@@ -18,14 +12,14 @@ const VALUE = {
   MOVING: 'moving',
 } as const;
 
-type Value = ValueOf<typeof VALUE>;
+export type DeviceStateValue = ValueOf<typeof VALUE>;
 
-export class DeviceState extends ValueObject<Value> {
-  get value(): Value {
+export class DeviceState extends ValueObject<DeviceStateValue> {
+  get value(): DeviceStateValue {
     return this.props.value;
   }
 
-  protected validate(props: DomainPrimitive<Value>): void {
+  protected validate(props: DomainPrimitive<DeviceStateValue>): void {
     if (![props.value].every(isPresent)) {
       throw new ArgumentNotProvidedException('Missing property in device state constructor');
     }

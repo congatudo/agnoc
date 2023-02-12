@@ -18,6 +18,7 @@ module.exports = {
     'plugin:chai-friendly/recommended',
     'plugin:prettier/recommended',
   ],
+  plugins: ['eslint-plugin-tsdoc'],
   settings: {
     'import/resolver': {
       'babel-module': {
@@ -29,10 +30,14 @@ module.exports = {
     },
   },
   rules: {
+    'tsdoc/syntax': 'warn',
     'node/no-missing-import': 'off',
     'node/no-extraneous-import': 'off',
     'node/no-unsupported-features/es-syntax': 'off',
     'security/detect-object-injection': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'error',
+    '@typescript-eslint/consistent-type-imports': 'warn',
+    '@typescript-eslint/consistent-type-exports': 'warn',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {
@@ -43,6 +48,7 @@ module.exports = {
     'import/no-absolute-path': 'error',
     'import/no-relative-packages': 'error',
     'import/no-useless-path-segments': 'error',
+    'import/no-unused-modules': 'warn',
     'import/order': [
       'warn',
       {

@@ -1,5 +1,5 @@
 import { flipObject } from '@agnoc/toolkit';
-import {
+import type {
   ICLIENT_HEARTBEAT_REQ,
   ICLIENT_HEARTBEAT_RSP,
   ICLIENT_IDLE_TIMEOUT,
@@ -94,7 +94,7 @@ import {
   IUSER_SET_DEVICE_QUIETHOURS_REQ,
   IUSER_SET_DEVICE_QUIETHOURS_RSP,
 } from '../../schemas/schema';
-import { ChargePoseInfo, MapInfo, RobotPoseInfo } from '../interfaces/map.interface';
+import type { ChargePoseInfo, MapInfo, RobotPoseInfo } from '../interfaces/map.interface';
 
 export const OPCODES = {
   COMMON_ERROR_REPLY: 0x0001,
