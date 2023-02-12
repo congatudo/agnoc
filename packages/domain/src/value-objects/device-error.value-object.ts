@@ -1,11 +1,5 @@
-import {
-  ValueOf,
-  ValueObject,
-  DomainPrimitive,
-  isPresent,
-  ArgumentNotProvidedException,
-  ArgumentInvalidException,
-} from '@agnoc/toolkit';
+import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import type { ValueOf, DomainPrimitive } from '@agnoc/toolkit';
 
 const VALUE = {
   BATTERY_TEMPERATURE: 'battery_temperature',
@@ -49,7 +43,7 @@ const VALUE = {
   WHEEL_UP: 'wheel_up',
 } as const;
 
-type Value = ValueOf<typeof VALUE>;
+export type Value = ValueOf<typeof VALUE>;
 
 export class DeviceError extends ValueObject<Value> {
   get value(): Value {

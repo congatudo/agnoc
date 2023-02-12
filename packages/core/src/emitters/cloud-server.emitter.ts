@@ -2,13 +2,14 @@
 import { Device, DeviceSystem, DeviceVersion, User } from '@agnoc/domain';
 import { ID, bind } from '@agnoc/toolkit';
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { OPDecoderLiteral } from '../constants/opcodes.constant';
-import { PacketSocket } from '../sockets/packet.socket';
-import { Message, MessageHandlers } from '../value-objects/message.value-object';
+import { Message } from '../value-objects/message.value-object';
 import { Connection } from './connection.emitter';
 import { Multiplexer } from './multiplexer.emitter';
 import { PacketServer } from './packet-server.emitter';
 import { Robot } from './robot.emitter';
+import type { OPDecoderLiteral } from '../constants/opcodes.constant';
+import type { PacketSocket } from '../sockets/packet.socket';
+import type { MessageHandlers } from '../value-objects/message.value-object';
 
 interface Servers {
   cmd: PacketServer;
@@ -16,7 +17,7 @@ interface Servers {
   rtc: PacketServer;
 }
 
-interface CloudServerEvents {
+export interface CloudServerEvents {
   addRobot: (robot: Robot) => void;
   error: (err: Error) => void;
 }

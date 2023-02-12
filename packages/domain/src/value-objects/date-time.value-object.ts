@@ -1,4 +1,5 @@
-import { ValueObject, DomainPrimitive, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject, ArgumentInvalidException } from '@agnoc/toolkit';
+import type { DomainPrimitive } from '@agnoc/toolkit';
 
 export class DateTime extends ValueObject<Date> {
   constructor(value: Date | string | number) {

@@ -90,5 +90,10 @@
   },
   "engines": {
     "node": ">=18.12"
+  },
+  "typedoc": {
+    "entryPoint": "./src/cli.ts",
+    "readmeFile": "./README.md",
+    "displayName": "CLI"
   }
 }

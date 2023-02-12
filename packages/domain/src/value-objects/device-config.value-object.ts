@@ -1,6 +1,6 @@
 import { ValueObject, isPresent, ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
 import { DeviceQuietHours } from './device-quiet-hours.value-object';
-import { DeviceVoice } from './device-voice.value-object';
+import type { DeviceVoice } from './device-voice.value-object';
 
 export interface DeviceConfigProps {
   voice: DeviceVoice;

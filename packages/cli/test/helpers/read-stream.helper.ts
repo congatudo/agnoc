@@ -1,4 +1,4 @@
-import { Readable } from 'stream';
+import type { Readable } from 'stream';
 
 export function readStream(stream: Readable, encoding: BufferEncoding = 'utf8'): Promise<string> {
   stream.setEncoding(encoding);

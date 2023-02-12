@@ -1,8 +1,10 @@
-import { DeviceOrder, DeviceOrderProps, CLEAN_MODE, CleanMode, DeviceTime, DeviceWaterLevel } from '@agnoc/domain';
-import { Mapper, ArgumentNotProvidedException, ID } from '@agnoc/toolkit';
-import { IDEVICE_ORDERLIST_SETTING_REQ } from '../../schemas/schema';
+import { DeviceOrder, CLEAN_MODE, DeviceTime, DeviceWaterLevel } from '@agnoc/domain';
+import { ArgumentNotProvidedException, ID } from '@agnoc/toolkit';
 import { DeviceFanSpeedMapper } from './device-fan-speed.mapper';
 import { DeviceWaterLevelMapper } from './device-water-level.mapper';
+import type { IDEVICE_ORDERLIST_SETTING_REQ } from '../../schemas/schema';
+import type { DeviceOrderProps, CleanMode } from '@agnoc/domain';
+import type { Mapper } from '@agnoc/toolkit';
 
 export const DeviceOrderMapper: Mapper<DeviceOrder, IDEVICE_ORDERLIST_SETTING_REQ> = class {
   static toDomain(orderList: IDEVICE_ORDERLIST_SETTING_REQ): DeviceOrder {

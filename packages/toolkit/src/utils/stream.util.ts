@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Readable, Writable } from 'stream';
+import type { Readable, Writable } from 'stream';
 
 const ALLOWED_READ_METHODS = [
   'readBigInt64BE',

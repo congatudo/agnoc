@@ -1,8 +1,9 @@
-import { Duplex, pipeline } from 'stream';
+import { pipeline } from 'stream';
 import { PacketDecodeTransform } from '../streams/packet-decode-transform.stream';
 import { TCPReader } from '../streams/tcp-reader.stream';
 import { toJSONStream } from '../utils/to-json-stream.util';
 import { toStringStream } from '../utils/to-string-stream.util';
+import type { Duplex } from 'stream';
 
 interface ReadOptions {
   json: true | undefined;

@@ -1,5 +1,5 @@
 import { ID, Entity, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
-import { Coordinate } from '../value-objects/coordinate.value-object';
+import type { Coordinate } from '../value-objects/coordinate.value-object';
 
 export interface ZoneProps {
   id: ID;

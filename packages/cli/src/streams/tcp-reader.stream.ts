@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import { Decode, LiveSessionOptions, PacketWithHeader, PcapSession } from 'pcap';
+import type { Decode, LiveSessionOptions, PacketWithHeader, PcapSession } from 'pcap';
 
 interface TCPReaderOptions {
   createSession(fileOrDevice: string, options?: LiveSessionOptions): PcapSession;

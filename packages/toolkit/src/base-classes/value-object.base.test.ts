@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
-import { ValueObject, DomainPrimitive } from './value-object.base';
+import { ValueObject } from './value-object.base';
+import type { DomainPrimitive } from './value-object.base';
 
 describe('value-object.base', () => {
   it('throws an error when has no props', () => {

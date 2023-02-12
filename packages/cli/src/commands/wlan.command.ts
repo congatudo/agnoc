@@ -1,6 +1,7 @@
 import cli from 'cli-ux';
-import wifi, { Network } from 'node-wifi';
+import wifi from 'node-wifi';
 import { wlanConfig } from './wlan-config.command';
+import type { Network } from 'node-wifi';
 
 interface WlanOptions {
   timeout: number;

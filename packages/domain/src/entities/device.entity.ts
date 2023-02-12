@@ -1,18 +1,19 @@
-import { ID, Entity, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
-import { DeviceBattery } from '../value-objects/device-battery.value-object';
-import { DeviceConfig } from '../value-objects/device-config.value-object';
-import { DeviceConsumable } from '../value-objects/device-consumable.value-object';
-import { DeviceCurrentClean } from '../value-objects/device-current-clean.value-object';
-import { DeviceError } from '../value-objects/device-error.value-object';
-import { DeviceFanSpeed } from '../value-objects/device-fan-speed.value-object';
-import { DeviceMode } from '../value-objects/device-mode.value-object';
-import { DeviceState } from '../value-objects/device-state.value-object';
-import { DeviceSystem } from '../value-objects/device-system.value-object';
-import { DeviceVersion } from '../value-objects/device-version.value-object';
-import { DeviceWaterLevel } from '../value-objects/device-water-level.value-object';
-import { DeviceWlan } from '../value-objects/device-wlan.value-object';
-import { DeviceMap } from './device-map.entity';
-import { DeviceOrder } from './device-order.entity';
+import { Entity, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
+import type { DeviceMap } from './device-map.entity';
+import type { DeviceOrder } from './device-order.entity';
+import type { DeviceBattery } from '../value-objects/device-battery.value-object';
+import type { DeviceConfig } from '../value-objects/device-config.value-object';
+import type { DeviceConsumable } from '../value-objects/device-consumable.value-object';
+import type { DeviceCurrentClean } from '../value-objects/device-current-clean.value-object';
+import type { DeviceError } from '../value-objects/device-error.value-object';
+import type { DeviceFanSpeed } from '../value-objects/device-fan-speed.value-object';
+import type { DeviceMode } from '../value-objects/device-mode.value-object';
+import type { DeviceState } from '../value-objects/device-state.value-object';
+import type { DeviceSystem } from '../value-objects/device-system.value-object';
+import type { DeviceVersion } from '../value-objects/device-version.value-object';
+import type { DeviceWaterLevel } from '../value-objects/device-water-level.value-object';
+import type { DeviceWlan } from '../value-objects/device-wlan.value-object';
+import type { ID } from '@agnoc/toolkit';
 
 export interface DeviceProps {
   id: ID;

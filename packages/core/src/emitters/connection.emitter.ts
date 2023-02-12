@@ -3,34 +3,34 @@ import { BigNumber } from '@agnoc/domain';
 import {
   debug,
   bind,
-  ID,
   DomainException,
   isPresent,
   ArgumentNotProvidedException,
   ArgumentInvalidException,
 } from '@agnoc/toolkit';
-import { Debugger } from 'debug';
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { OPCodeLiteral, OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
 import { PacketSocket } from '../sockets/packet.socket';
 import { OPCode } from '../value-objects/opcode.value-object';
 import { Packet } from '../value-objects/packet.value-object';
 import { Payload } from '../value-objects/payload.value-object';
+import type { OPCodeLiteral, OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
+import type { ID } from '@agnoc/toolkit';
+import type { Debugger } from 'debug';
 
-interface ConnectionSendProps<Name extends OPDecoderLiteral> {
+export interface ConnectionSendProps<Name extends OPDecoderLiteral> {
   opname: Name;
   userId: ID;
   deviceId: ID;
   object: OPDecoders[Name];
 }
 
-interface ConnectionRespondProps<Name extends OPDecoderLiteral> {
+export interface ConnectionRespondProps<Name extends OPDecoderLiteral> {
   packet: Packet<OPDecoderLiteral>;
   opname: Name;
   object: OPDecoders[Name];
 }
 
-type ConnectionEvents<Name extends OPDecoderLiteral> = {
+export type ConnectionEvents<Name extends OPDecoderLiteral> = {
   [key in Name]: (packet: Packet<Name>) => void;
 } & {
   data: (packet: Packet<OPDecoderLiteral>) => void;

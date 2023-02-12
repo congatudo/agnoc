@@ -1,7 +1,8 @@
-import { AddressInfo, Server } from 'net';
+import { Server } from 'net';
 import { PacketSocket, Packet } from '@agnoc/core';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
+import type { AddressInfo } from 'net';
 
 declare module 'mocha' {
   interface Context {

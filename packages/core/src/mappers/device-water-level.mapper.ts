@@ -1,5 +1,6 @@
 import { DeviceWaterLevel } from '@agnoc/domain';
-import { flipObject, Mapper } from '@agnoc/toolkit';
+import { flipObject } from '@agnoc/toolkit';
+import type { Mapper } from '@agnoc/toolkit';
 
 const DOMAIN_TO_ROBOT = {
   [DeviceWaterLevel.VALUE.OFF]: 10,

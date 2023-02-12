@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { ID, DomainException, debug, bind } from '@agnoc/toolkit';
+import { DomainException, debug, bind } from '@agnoc/toolkit';
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
-import { Packet } from '../value-objects/packet.value-object';
-import { Connection } from './connection.emitter';
+import type { Connection } from './connection.emitter';
+import type { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
+import type { Packet } from '../value-objects/packet.value-object';
+import type { ID } from '@agnoc/toolkit';
 
-type MultiplexerEvents<Name extends OPDecoderLiteral> = {
+export type MultiplexerEvents<Name extends OPDecoderLiteral> = {
   [key in Name]: (packet: Packet<Name>) => void;
 } & {
   data: (packet: Packet<OPDecoderLiteral>) => void;
   error: (err: Error) => void;
 };
 
-interface MultiplexerSendProps<Name extends OPDecoderLiteral> {
+export interface MultiplexerSendProps<Name extends OPDecoderLiteral> {
   opname: Name;
   userId: ID;
   deviceId: ID;

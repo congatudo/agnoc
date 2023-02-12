@@ -1,9 +1,10 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 import { createReadStream } from 'fs';
-import { Duplex, pipeline } from 'stream';
+import { pipeline } from 'stream';
 import { PacketDecodeTransform } from '../streams/packet-decode-transform.stream';
 import { toJSONStream } from '../utils/to-json-stream.util';
 import { toStringStream } from '../utils/to-string-stream.util';
+import type { Duplex } from 'stream';
 
 interface DecodeOptions {
   json: true | undefined;

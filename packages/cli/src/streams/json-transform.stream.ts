@@ -1,5 +1,6 @@
-import { Transform, TransformCallback } from 'stream';
-import { ObjectLiteral } from '@agnoc/toolkit';
+import { Transform } from 'stream';
+import type { ObjectLiteral } from '@agnoc/toolkit';
+import type { TransformCallback } from 'stream';
 
 export class JSONTransform extends Transform {
   private buffer = '';

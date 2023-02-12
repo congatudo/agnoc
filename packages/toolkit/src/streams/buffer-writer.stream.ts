@@ -1,6 +1,6 @@
 import { Writable } from 'stream';
 
-type Callback = (error?: Error | null) => void;
+export type Callback = (error?: Error | null) => void;
 
 export class BufferWriter extends Writable {
   buffer: Buffer;

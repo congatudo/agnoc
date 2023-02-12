@@ -3,5 +3,17 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["packages/*/src", "packages/*/test", "packages/**/typings.d.ts"]
+  "include": ["packages/*/src", "packages/*/test", "packages/**/typings.d.ts"],
+  "typedocOptions": {
+    "entryPoints": ["packages/core", "packages/domain", "packages/toolkit"],
+    "entryPointStrategy": "packages",
+    "out": "public/typedoc",
+    "excludePrivate": false,
+    "excludeProtected": false,
+    "excludeInternal": false,
+    "includeVersion": true,
+    "sort": ["static-first", "instance-first"],
+    "hideGenerator": true,
+    "noMissingExports": true
+  }
 }

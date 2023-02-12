@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto';
-import { ValueObject, DomainPrimitive } from '../base-classes/value-object.base';
+import { ValueObject } from '../base-classes/value-object.base';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
+import type { DomainPrimitive } from '../base-classes/value-object.base';
 
 export type IDSerialized = number;
 

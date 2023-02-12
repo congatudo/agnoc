@@ -1,9 +1,9 @@
 import { Entity, isPresent, ArgumentNotProvidedException, ArgumentInvalidException, ID } from '@agnoc/toolkit';
 import { Coordinate } from '../value-objects/coordinate.value-object';
 import { Pixel } from '../value-objects/pixel.value-object';
-import { Position } from '../value-objects/position.value-object';
-import { Room } from './room.entity';
-import { Zone } from './zone.entity';
+import type { Room } from './room.entity';
+import type { Zone } from './zone.entity';
+import type { Position } from '../value-objects/position.value-object';
 
 export interface DeviceMapProps {
   id: ID;
