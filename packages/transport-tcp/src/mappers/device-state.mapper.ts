@@ -1,8 +1,6 @@
-import { DeviceState } from '@agnoc/domain';
+import { DeviceState, DeviceStateValue } from '@agnoc/domain';
 import { DomainException, NotImplementedException } from '@agnoc/toolkit';
-import type { ValueOf, Mapper } from '@agnoc/toolkit';
-
-const { VALUE } = DeviceState;
+import type { Mapper } from '@agnoc/toolkit';
 
 export interface RobotState {
   type: number;
@@ -43,35 +41,35 @@ Conga 5090 workMode codes, should be compatible with other congas.
 
 */
 
-function getDomainValue(state: RobotState): ValueOf<typeof VALUE> {
+function getDomainValue(state: RobotState): DeviceStateValue {
   const { type, workMode, chargeStatus } = state;
 
   if (![0, 3].includes(type)) {
-    return VALUE.ERROR;
+    return DeviceStateValue.Error;
   }
 
   if ([2].includes(workMode)) {
-    return VALUE.MANUAL_CONTROL;
+    return DeviceStateValue.ManualControl;
   }
 
   if ([5, 10, 12, 27, 32, 38].includes(workMode)) {
-    return VALUE.RETURNING;
+    return DeviceStateValue.Returning;
   }
 
   if ([4, 9, 26, 31, 37].includes(workMode)) {
-    return VALUE.PAUSED;
+    return DeviceStateValue.Paused;
   }
 
   if ([1, 6, 7, 11, 20, 25, 30, 36].includes(workMode)) {
-    return VALUE.CLEANING;
+    return DeviceStateValue.Cleaning;
   }
 
   if (chargeStatus) {
-    return VALUE.DOCKED;
+    return DeviceStateValue.Docked;
   }
 
   if ([0, 14, 23, 29, 35, 40].includes(workMode)) {
-    return VALUE.IDLE;
+    return DeviceStateValue.Idle;
   }
 
   throw new DomainException(`Unable to map device state from data: ${JSON.stringify(state)}`);

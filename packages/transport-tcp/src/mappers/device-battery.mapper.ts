@@ -1,4 +1,4 @@
-import { DeviceBattery } from '@agnoc/domain';
+import { DeviceBattery, DeviceBatteryMaxValue, DeviceBatteryMinValue } from '@agnoc/domain';
 import { interpolate } from '@agnoc/toolkit';
 import type { Mapper } from '@agnoc/toolkit';
 
@@ -10,8 +10,8 @@ const ROBOT = {
   max: ROBOT_MAX_VALUE,
 };
 const DEVICE = {
-  min: DeviceBattery.MIN_VALUE,
-  max: DeviceBattery.MAX_VALUE,
+  min: DeviceBatteryMinValue,
+  max: DeviceBatteryMaxValue,
 };
 
 export const DeviceBatteryMapper: Mapper<DeviceBattery, number> = class {

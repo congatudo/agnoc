@@ -1,18 +1,16 @@
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
-import type { ValueOf, DomainPrimitive } from '@agnoc/toolkit';
+import type { DomainPrimitive } from '@agnoc/toolkit';
 
-const VALUE = {
-  ERROR: 'error',
-  DOCKED: 'docked',
-  IDLE: 'idle',
-  RETURNING: 'returning',
-  CLEANING: 'cleaning',
-  PAUSED: 'paused',
-  MANUAL_CONTROL: 'manual_control',
-  MOVING: 'moving',
-} as const;
-
-export type DeviceStateValue = ValueOf<typeof VALUE>;
+export enum DeviceStateValue {
+  Error = 'error',
+  Docked = 'docked',
+  Idle = 'idle',
+  Returning = 'returning',
+  Cleaning = 'cleaning',
+  Paused = 'paused',
+  ManualControl = 'manual_control',
+  Moving = 'moving',
+}
 
 export class DeviceState extends ValueObject<DeviceStateValue> {
   get value(): DeviceStateValue {
@@ -24,10 +22,8 @@ export class DeviceState extends ValueObject<DeviceStateValue> {
       throw new ArgumentNotProvidedException('Missing property in device state constructor');
     }
 
-    if (!Object.values(VALUE).includes(props.value)) {
+    if (!Object.values(DeviceStateValue).includes(props.value)) {
       throw new ArgumentInvalidException('Invalid property in device state constructor');
     }
   }
-
-  static VALUE = VALUE;
 }

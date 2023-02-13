@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
-  CONSUMABLE_TYPE,
   DeviceMode,
-  DEVICE_CAPABILITY,
-  DeviceState,
+  DeviceCapability,
   DeviceConsumable,
   DeviceWlan,
   Position,
@@ -17,6 +15,9 @@ import {
   Pixel,
   DeviceMap,
   Zone,
+  DeviceModeValue,
+  DeviceConsumableType,
+  DeviceStateValue,
 } from '@agnoc/domain';
 import {
   ArgumentInvalidException,
@@ -44,15 +45,7 @@ import type { Multiplexer } from './multiplexer.emitter';
 import type { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
 import type { Message, MessageHandlers } from '../value-objects/message.value-object';
 import type { Packet } from '../value-objects/packet.value-object';
-import type {
-  Device,
-  User,
-  DeviceFanSpeed,
-  DeviceWaterLevel,
-  ConsumableType,
-  DeviceOrder,
-  DeviceVoice,
-} from '@agnoc/domain';
+import type { Device, User, DeviceFanSpeed, DeviceWaterLevel, DeviceOrder, DeviceVoice } from '@agnoc/domain';
 import type { Debugger } from 'debug';
 
 export interface RobotProps {
@@ -88,10 +81,10 @@ const MODE_CHANGE_TIMEOUT = 5000;
 const RECV_TIMEOUT = 5000;
 
 const CONSUMABLE_TYPE_RESET = {
-  [CONSUMABLE_TYPE.MAIN_BRUSH]: 1,
-  [CONSUMABLE_TYPE.SIDE_BRUSH]: 2,
-  [CONSUMABLE_TYPE.FILTER]: 3,
-  [CONSUMABLE_TYPE.DISHCLOTH]: 4,
+  [DeviceConsumableType.MainBrush]: 1,
+  [DeviceConsumableType.SideBrush]: 2,
+  [DeviceConsumableType.Filter]: 3,
+  [DeviceConsumableType.Dishcloth]: 4,
 };
 
 const CTRL_VALUE = {
@@ -139,21 +132,21 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async start(): Promise<void> {
-    if (this.device.hasMopAttached && this.device.mode?.value !== DeviceMode.VALUE.MOP) {
-      await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.MOP }));
-    } else if (!this.device.hasMopAttached && this.device.mode?.value === DeviceMode.VALUE.MOP) {
-      await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.NONE }));
+    if (this.device.hasMopAttached && this.device.mode?.value !== DeviceModeValue.Mop) {
+      await this.setMode(new DeviceMode({ value: DeviceModeValue.Mop }));
+    } else if (!this.device.hasMopAttached && this.device.mode?.value === DeviceModeValue.Mop) {
+      await this.setMode(new DeviceMode({ value: DeviceModeValue.None }));
     }
 
-    if (this.device.mode?.value === DeviceMode.VALUE.ZONE) {
+    if (this.device.mode?.value === DeviceModeValue.Zone) {
       await this.sendRecv('DEVICE_AREA_CLEAN_REQ', 'DEVICE_AREA_CLEAN_RSP', {
         ctrlValue: CTRL_VALUE.START,
       });
-    } else if (this.device.mode?.value === DeviceMode.VALUE.MOP) {
+    } else if (this.device.mode?.value === DeviceModeValue.Mop) {
       await this.sendRecv('DEVICE_MOP_FLOOR_CLEAN_REQ', 'DEVICE_MOP_FLOOR_CLEAN_RSP', {
         ctrlValue: CTRL_VALUE.START,
       });
-    } else if (this.device.mode?.value === DeviceMode.VALUE.SPOT && this.device.map?.currentSpot) {
+    } else if (this.device.mode?.value === DeviceModeValue.Spot && this.device.map?.currentSpot) {
       await this.sendRecv('DEVICE_MAPID_SET_NAVIGATION_REQ', 'DEVICE_MAPID_SET_NAVIGATION_RSP', {
         mapHeadId: this.device.map.id.value,
         poseX: this.device.map.currentSpot.x,
@@ -163,8 +156,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       });
     } else {
       if (
-        this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS) &&
-        this.device.state?.value === DeviceState.VALUE.DOCKED &&
+        this.device.system.supports(DeviceCapability.MAP_PLANS) &&
+        this.device.state?.value === DeviceStateValue.Docked &&
         this.device.map
       ) {
         const { id, restrictedZones } = this.device.map;
@@ -203,15 +196,15 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async pause(): Promise<void> {
-    if (this.device.mode?.value === DeviceMode.VALUE.ZONE) {
+    if (this.device.mode?.value === DeviceModeValue.Zone) {
       await this.sendRecv('DEVICE_AREA_CLEAN_REQ', 'DEVICE_AREA_CLEAN_RSP', {
         ctrlValue: CTRL_VALUE.PAUSE,
       });
-    } else if (this.device.mode?.value === DeviceMode.VALUE.MOP) {
+    } else if (this.device.mode?.value === DeviceModeValue.Mop) {
       await this.sendRecv('DEVICE_MOP_FLOOR_CLEAN_REQ', 'DEVICE_MOP_FLOOR_CLEAN_RSP', {
         ctrlValue: CTRL_VALUE.PAUSE,
       });
-    } else if (this.device.mode?.value === DeviceMode.VALUE.SPOT && this.device.map?.currentSpot) {
+    } else if (this.device.mode?.value === DeviceModeValue.Spot && this.device.map?.currentSpot) {
       await this.sendRecv('DEVICE_MAPID_SET_NAVIGATION_REQ', 'DEVICE_MAPID_SET_NAVIGATION_RSP', {
         mapHeadId: this.device.map.id.value,
         poseX: this.device.map.currentSpot.x,
@@ -233,7 +226,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       cleanType: 2,
     });
 
-    if (this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS) && this.device.map) {
+    if (this.device.system.supports(DeviceCapability.MAP_PLANS) && this.device.map) {
       const { id, restrictedZones } = this.device.map;
 
       await this.sendRecv('DEVICE_MAPID_SET_PLAN_PARAMS_REQ', 'DEVICE_MAPID_SET_PLAN_PARAMS_RSP', {
@@ -276,32 +269,32 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async setMode(mode: DeviceMode): Promise<void> {
-    if (mode.value === DeviceMode.VALUE.NONE) {
+    if (mode.value === DeviceModeValue.None) {
       await this.sendRecv('DEVICE_AUTO_CLEAN_REQ', 'DEVICE_AUTO_CLEAN_RSP', {
         ctrlValue: CTRL_VALUE.STOP,
         cleanType: 2,
       });
-    } else if (mode.value === DeviceMode.VALUE.SPOT) {
+    } else if (mode.value === DeviceModeValue.Spot) {
       let mask = 0x78ff | 0x200;
 
-      if (!this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS)) {
+      if (!this.device.system.supports(DeviceCapability.MAP_PLANS)) {
         mask = 0xff | 0x200;
       }
 
       await this.sendRecv('DEVICE_MAPID_GET_GLOBAL_INFO_REQ', 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP', { mask });
-    } else if (mode.value === DeviceMode.VALUE.ZONE) {
+    } else if (mode.value === DeviceModeValue.Zone) {
       await this.sendRecv('DEVICE_AREA_CLEAN_REQ', 'DEVICE_AREA_CLEAN_RSP', {
         ctrlValue: CTRL_VALUE.STOP,
       });
 
       let mask = 0x78ff | 0x100;
 
-      if (!this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS)) {
+      if (!this.device.system.supports(DeviceCapability.MAP_PLANS)) {
         mask = 0xff | 0x100;
       }
 
       await this.sendRecv('DEVICE_MAPID_GET_GLOBAL_INFO_REQ', 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP', { mask });
-    } else if (mode.value === DeviceMode.VALUE.MOP) {
+    } else if (mode.value === DeviceModeValue.Mop) {
       await this.sendRecv('DEVICE_MAPID_INTO_MODEIDLE_INFO_REQ', 'DEVICE_MAPID_INTO_MODEIDLE_INFO_RSP', {
         mode: 7,
       });
@@ -339,7 +332,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async getConsumables(): Promise<DeviceConsumable[]> {
-    if (!this.device.system.supports(DEVICE_CAPABILITY.CONSUMABLES)) {
+    if (!this.device.system.supports(DeviceCapability.CONSUMABLES)) {
       return [];
     }
 
@@ -351,19 +344,19 @@ export class Robot extends TypedEmitter<RobotEvents> {
     const object = packet.payload.object;
     const consumables = [
       new DeviceConsumable({
-        type: CONSUMABLE_TYPE.MAIN_BRUSH,
+        type: DeviceConsumableType.MainBrush,
         used: object.mainBrushTime,
       }),
       new DeviceConsumable({
-        type: CONSUMABLE_TYPE.SIDE_BRUSH,
+        type: DeviceConsumableType.SideBrush,
         used: object.sideBrushTime,
       }),
       new DeviceConsumable({
-        type: CONSUMABLE_TYPE.FILTER,
+        type: DeviceConsumableType.Filter,
         used: object.filterTime,
       }),
       new DeviceConsumable({
-        type: CONSUMABLE_TYPE.DISHCLOTH,
+        type: DeviceConsumableType.Dishcloth,
         used: object.dishclothTime,
       }),
     ];
@@ -373,7 +366,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     return consumables;
   }
 
-  async resetConsumable(consumable: ConsumableType): Promise<void> {
+  async resetConsumable(consumable: DeviceConsumableType): Promise<void> {
     if (!(consumable in CONSUMABLE_TYPE_RESET)) {
       throw new ArgumentInvalidException('Invalid consumable');
     }
@@ -386,7 +379,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   async updateMap(): Promise<void> {
     let mask = 0x78ff;
 
-    if (!this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS)) {
+    if (!this.device.system.supports(DeviceCapability.MAP_PLANS)) {
       mask = 0xff;
     }
 
@@ -451,8 +444,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       throw new DomainException('Unable to set robot position: map not loaded');
     }
 
-    if (this.device.mode?.value !== DeviceMode.VALUE.SPOT) {
-      await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.SPOT }));
+    if (this.device.mode?.value !== DeviceModeValue.Spot) {
+      await this.setMode(new DeviceMode({ value: DeviceModeValue.Spot }));
     }
 
     await this.sendRecv('DEVICE_MAPID_SET_NAVIGATION_REQ', 'DEVICE_MAPID_SET_NAVIGATION_RSP', {
@@ -474,8 +467,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
       return;
     }
 
-    if (this.device.mode?.value !== DeviceMode.VALUE.ZONE) {
-      await this.setMode(new DeviceMode({ value: DeviceMode.VALUE.ZONE }));
+    if (this.device.mode?.value !== DeviceModeValue.Zone) {
+      await this.setMode(new DeviceMode({ value: DeviceModeValue.Zone }));
     }
 
     const req = {
@@ -512,7 +505,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       areas.push([]);
     }
 
-    if (!this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS)) {
+    if (!this.device.system.supports(DeviceCapability.MAP_PLANS)) {
       await this.sendRecv('DEVICE_MAPID_GET_GLOBAL_INFO_REQ', 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP', {
         mask: 0xff | 0x400,
       });

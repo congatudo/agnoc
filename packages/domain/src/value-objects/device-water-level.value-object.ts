@@ -1,14 +1,12 @@
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
-import type { ValueOf, DomainPrimitive } from '@agnoc/toolkit';
+import type { DomainPrimitive } from '@agnoc/toolkit';
 
-const VALUE = {
-  OFF: 'off',
-  LOW: 'low',
-  MEDIUM: 'medium',
-  HIGH: 'high',
-} as const;
-
-export type DeviceWaterLevelValue = ValueOf<typeof VALUE>;
+export enum DeviceWaterLevelValue {
+  Off = 'off',
+  Low = 'low',
+  Medium = 'medium',
+  High = 'high',
+}
 
 export class DeviceWaterLevel extends ValueObject<DeviceWaterLevelValue> {
   get value(): DeviceWaterLevelValue {
@@ -20,10 +18,8 @@ export class DeviceWaterLevel extends ValueObject<DeviceWaterLevelValue> {
       throw new ArgumentNotProvidedException('Missing property in device water level constructor');
     }
 
-    if (!Object.values(VALUE).includes(props.value)) {
+    if (!Object.values(DeviceWaterLevelValue).includes(props.value)) {
       throw new ArgumentInvalidException('Invalid property in device water level constructor');
     }
   }
-
-  static VALUE = VALUE;
 }

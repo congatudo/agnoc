@@ -1,12 +1,12 @@
-import { DeviceWaterLevel } from '@agnoc/domain';
+import { DeviceWaterLevel, DeviceWaterLevelValue } from '@agnoc/domain';
 import { flipObject } from '@agnoc/toolkit';
 import type { Mapper } from '@agnoc/toolkit';
 
 const DOMAIN_TO_ROBOT = {
-  [DeviceWaterLevel.VALUE.OFF]: 10,
-  [DeviceWaterLevel.VALUE.LOW]: 11,
-  [DeviceWaterLevel.VALUE.MEDIUM]: 12,
-  [DeviceWaterLevel.VALUE.HIGH]: 13,
+  [DeviceWaterLevelValue.Off]: 10,
+  [DeviceWaterLevelValue.Low]: 11,
+  [DeviceWaterLevelValue.Medium]: 12,
+  [DeviceWaterLevelValue.High]: 13,
 };
 
 const ROBOT_TO_DOMAIN = flipObject(DOMAIN_TO_ROBOT);
