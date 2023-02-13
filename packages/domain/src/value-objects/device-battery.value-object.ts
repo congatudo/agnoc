@@ -1,8 +1,8 @@
 import { ValueObject, isPresent, ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
 import type { DomainPrimitive } from '@agnoc/toolkit';
 
-const MIN_VALUE = 0;
-const MAX_VALUE = 100;
+export const DeviceBatteryMinValue = 0;
+export const DeviceBatteryMaxValue = 100;
 
 export class DeviceBattery extends ValueObject<number> {
   get value(): number {
@@ -14,11 +14,8 @@ export class DeviceBattery extends ValueObject<number> {
       throw new ArgumentNotProvidedException('Missing property in device fan speed constructor');
     }
 
-    if (props.value < MIN_VALUE || props.value > MAX_VALUE) {
+    if (props.value < DeviceBatteryMinValue || props.value > DeviceBatteryMaxValue) {
       throw new ArgumentInvalidException('Invalid property in device battery constructor');
     }
   }
-
-  static MIN_VALUE = MIN_VALUE;
-  static MAX_VALUE = MAX_VALUE;
 }

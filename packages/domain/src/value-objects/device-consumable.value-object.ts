@@ -1,21 +1,19 @@
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 
-export const CONSUMABLE_TYPE = {
-  MAIN_BRUSH: 'mainBrush',
-  SIDE_BRUSH: 'sideBrush',
-  FILTER: 'filter',
-  DISHCLOTH: 'dishcloth',
-} as const;
-
-export type ConsumableType = (typeof CONSUMABLE_TYPE)[keyof typeof CONSUMABLE_TYPE];
+export enum DeviceConsumableType {
+  MainBrush = 'mainBrush',
+  SideBrush = 'sideBrush',
+  Filter = 'filter',
+  Dishcloth = 'dishcloth',
+}
 
 export interface DeviceConsumableProps {
-  type: ConsumableType;
+  type: DeviceConsumableType;
   used: number;
 }
 
 export class DeviceConsumable extends ValueObject<DeviceConsumableProps> {
-  get type(): ConsumableType {
+  get type(): DeviceConsumableType {
     return this.props.type;
   }
 
@@ -28,7 +26,7 @@ export class DeviceConsumable extends ValueObject<DeviceConsumableProps> {
       throw new ArgumentNotProvidedException('Missing property in device consumable constructor');
     }
 
-    if (!Object.values(CONSUMABLE_TYPE).includes(props.type)) {
+    if (!Object.values(DeviceConsumableType).includes(props.type)) {
       throw new ArgumentInvalidException('Invalid property type in device consumable constructor');
     }
   }

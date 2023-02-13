@@ -9,42 +9,40 @@ export interface DeviceSystemProps {
   ctrlVersion: string;
 }
 
-export const DEVICE_MODEL = {
-  C3090: 'C3090',
-  C3490: 'C3490',
-  UNKNOWN: 'unknown',
+export enum DeviceModel {
+  C3090 = 'C3090',
+  C3490 = 'C3490',
+  UNKNOWN = 'unknown',
+}
+
+export const DeviceType = {
+  3: DeviceModel.C3090,
+  9: DeviceModel.C3490,
 } as const;
 
-export type DeviceModel = (typeof DEVICE_MODEL)[keyof typeof DEVICE_MODEL];
+export type DeviceType = keyof typeof DeviceType;
 
-export const DEVICE_TYPE = {
-  3: DEVICE_MODEL.C3090,
-  9: DEVICE_MODEL.C3490,
-} as const;
-
-export type DeviceType = keyof typeof DEVICE_TYPE;
-
-export const DEVICE_CAPABILITY = {
+export const DeviceCapability = {
   MAP_PLANS: 0x0001,
   WATER_SENSOR: 0x0002,
   CONSUMABLES: 0x0004,
 } as const;
 
-export type DeviceCapability = ValueOf<typeof DEVICE_CAPABILITY>;
+export type DeviceCapability = ValueOf<typeof DeviceCapability>;
 
-export const MODEL_CAPABILITY = {
-  [DEVICE_MODEL.C3090]: 0,
-  [DEVICE_MODEL.C3490]: DEVICE_CAPABILITY.MAP_PLANS | DEVICE_CAPABILITY.WATER_SENSOR | DEVICE_CAPABILITY.CONSUMABLES,
-  [DEVICE_MODEL.UNKNOWN]: DEVICE_CAPABILITY.MAP_PLANS | DEVICE_CAPABILITY.WATER_SENSOR | DEVICE_CAPABILITY.CONSUMABLES,
+export const DeviceModelCapability = {
+  [DeviceModel.C3090]: 0,
+  [DeviceModel.C3490]: DeviceCapability.MAP_PLANS | DeviceCapability.WATER_SENSOR | DeviceCapability.CONSUMABLES,
+  [DeviceModel.UNKNOWN]: DeviceCapability.MAP_PLANS | DeviceCapability.WATER_SENSOR | DeviceCapability.CONSUMABLES,
 } as const;
 
 export class DeviceSystem extends ValueObject<DeviceSystemProps> {
   get model(): DeviceModel {
-    return DEVICE_TYPE[this.props.deviceType as DeviceType] || DEVICE_MODEL.UNKNOWN;
+    return DeviceType[this.props.deviceType as DeviceType] || DeviceModel.UNKNOWN;
   }
 
   get capabilities(): number {
-    return MODEL_CAPABILITY[this.model];
+    return DeviceModelCapability[this.model];
   }
 
   supports(capability: DeviceCapability): boolean {

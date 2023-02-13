@@ -1,64 +1,60 @@
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
-import type { ValueOf, DomainPrimitive } from '@agnoc/toolkit';
+import type { DomainPrimitive } from '@agnoc/toolkit';
 
-const VALUE = {
-  BATTERY_TEMPERATURE: 'battery_temperature',
-  BROKEN_CHARGING: 'broken_charging',
-  BROKEN_CHARGING_WAIT: 'broken_charging_wait',
-  BROKEN_GO_HOME: 'broken_go_home',
-  BUMPER_STRUCT: 'bumper_struct',
-  CHECK_NET_AVAILABLE: 'check_net_available',
-  CLIFF_IR_STRUCT: 'cliff_ir_struct',
-  DISHCLOTH_DIRTY: 'dishcloth_dirty',
-  DOCK_CLIP_EXCEPTION: 'dock_clip_exception',
-  DUSTBOX_NOT_EXIST: 'dustbox_not_exist',
-  DUST_BOX_FULL: 'dust_box_full',
-  ESCAPE_FAILED: 'escape_failed',
-  FOLLOWE_IR_EXCEPTION: 'followe_ir_exception',
-  GEOMAGETISM_STRUCT: 'geomagetism_struct',
-  GIVE_BACK: 'give_back',
-  GLOBAL_APPOINT_CLEAN: 'global_appoint_clean',
-  GO_DOCK_FAILED: 'go_dock_failed',
-  HANDPPEN_DUST_BOX_FULL: 'handppen_dust_box_full',
-  HUICHENGHE_FULL: 'huichenghe_full',
-  LIDAR_TIME_OUT: 'lidar_time_out',
-  LOW_POWER_PLAN_DIS: 'low_power_plan_dis',
-  LOW_START_BATTERY: 'low_start_battery',
-  MOPPING_NOT_EXIST: 'mopping_not_exist',
-  NONE: 'none',
-  PUT_MACHINE_DOCK: 'put_machine_dock',
-  RELOCALIZATION_FAILED: 'relocalization_failed',
-  ROBOT_CHANGING_FINISH: 'robot_changing_finish',
-  ROBOT_RELOCALITION_ING: 'robot_relocalition_ing',
-  ROBOT_REPEAT_CLEANING: 'robot_repeat_cleaning',
-  ROBOT_SELF_CHECKING: 'robot_self_checking',
-  ROLL_BRUSH_STALL: 'roll_brush_stall',
-  SIDE_BRUSH_STALL: 'side_brush_stall',
-  SLOPE_START_FAILED: 'slope_start_failed',
-  START_DOCK_FAILED: 'start_dock_failed',
-  SYSTEM_UPGRADE: 'system_upgrade',
-  WAIT_CHARGE_FINISH: 'wait_charge_finish',
-  WATER_BOX_NOT_EXIST: 'water_box_not_exist',
-  WATER_TRUNK_EMPTY: 'water_trunk_empty',
-  WHEEL_UP: 'wheel_up',
-} as const;
+export enum DeviceErrorValue {
+  BatteryTemperature = 'battery_temperature',
+  BrokenCharging = 'broken_charging',
+  BrokenChargingWait = 'broken_charging_wait',
+  BrokenGoHome = 'broken_go_home',
+  BumperStruct = 'bumper_struct',
+  CheckNetAvailable = 'check_net_available',
+  CliffIrStruct = 'cliff_ir_struct',
+  DishclothDirty = 'dishcloth_dirty',
+  DockClipException = 'dock_clip_exception',
+  DustboxNotExist = 'dustbox_not_exist',
+  DustBoxFull = 'dust_box_full',
+  EscapeFailed = 'escape_failed',
+  FolloweIrException = 'followe_ir_exception',
+  GeomagetismStruct = 'geomagetism_struct',
+  GiveBack = 'give_back',
+  GlobalAppointClean = 'global_appoint_clean',
+  GoDockFailed = 'go_dock_failed',
+  HandppenDustBoxFull = 'handppen_dust_box_full',
+  HuichengheFull = 'huichenghe_full',
+  LidarTimeOut = 'lidar_time_out',
+  LowPowerPlanDis = 'low_power_plan_dis',
+  LowStartBattery = 'low_start_battery',
+  MoppingNotExist = 'mopping_not_exist',
+  None = 'none',
+  PutMachineDock = 'put_machine_dock',
+  RelocalizationFailed = 'relocalization_failed',
+  RobotChangingFinish = 'robot_changing_finish',
+  RobotRelocalitionIng = 'robot_relocalition_ing',
+  RobotRepeatCleaning = 'robot_repeat_cleaning',
+  RobotSelfChecking = 'robot_self_checking',
+  RollBrushStall = 'roll_brush_stall',
+  SideBrushStall = 'side_brush_stall',
+  SlopeStartFailed = 'slope_start_failed',
+  StartDockFailed = 'start_dock_failed',
+  SystemUpgrade = 'system_upgrade',
+  WaitChargeFinish = 'wait_charge_finish',
+  WaterBoxNotExist = 'water_box_not_exist',
+  WaterTrunkEmpty = 'water_trunk_empty',
+  WheelUp = 'wheel_up',
+}
 
-export type Value = ValueOf<typeof VALUE>;
-
-export class DeviceError extends ValueObject<Value> {
-  get value(): Value {
+export class DeviceError extends ValueObject<DeviceErrorValue> {
+  get value(): DeviceErrorValue {
     return this.props.value;
   }
 
-  protected validate(props: DomainPrimitive<Value>): void {
+  protected validate(props: DomainPrimitive<DeviceErrorValue>): void {
     if (![props.value].every(isPresent)) {
       throw new ArgumentNotProvidedException('Missing property in device error constructor');
     }
 
-    if (!Object.values(VALUE).includes(props.value)) {
+    if (!Object.values(DeviceErrorValue).includes(props.value)) {
       throw new ArgumentInvalidException('Invalid property in device error constructor');
     }
   }
-
-  static VALUE = VALUE;
 }

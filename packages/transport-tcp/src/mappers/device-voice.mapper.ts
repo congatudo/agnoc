@@ -1,4 +1,4 @@
-import { DeviceVoice } from '@agnoc/domain';
+import { DeviceVoice, DeviceVoiceMaxVolume, DeviceVoiceMinVolume } from '@agnoc/domain';
 import { interpolate } from '@agnoc/toolkit';
 import type { Mapper } from '@agnoc/toolkit';
 
@@ -10,8 +10,8 @@ const ROBOT = {
   max: ROBOT_MAX_VOLUME,
 };
 const DEVICE = {
-  min: DeviceVoice.MIN_VOLUME,
-  max: DeviceVoice.MAX_VOLUME,
+  min: DeviceVoiceMinVolume,
+  max: DeviceVoiceMaxVolume,
 };
 
 export interface RobotVoice {

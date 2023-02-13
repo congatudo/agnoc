@@ -5,8 +5,8 @@ export interface DeviceVoiceProps {
   volume: number;
 }
 
-const MIN_VOLUME = 0;
-const MAX_VOLUME = 100;
+export const DeviceVoiceMinVolume = 0;
+export const DeviceVoiceMaxVolume = 100;
 
 export class DeviceVoice extends ValueObject<DeviceVoiceProps> {
   get isEnabled(): boolean {
@@ -22,11 +22,8 @@ export class DeviceVoice extends ValueObject<DeviceVoiceProps> {
       throw new ArgumentNotProvidedException('Missing property in device voice constructor');
     }
 
-    if (props.volume < MIN_VOLUME || props.volume > MAX_VOLUME) {
+    if (props.volume < DeviceVoiceMinVolume || props.volume > DeviceVoiceMaxVolume) {
       throw new ArgumentInvalidException('Invalid property in device voice constructor');
     }
   }
-
-  static MIN_VOLUME = MIN_VOLUME;
-  static MAX_VOLUME = MAX_VOLUME;
 }

@@ -1,14 +1,12 @@
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
-import type { ValueOf, DomainPrimitive } from '@agnoc/toolkit';
+import type { DomainPrimitive } from '@agnoc/toolkit';
 
-const VALUE = {
-  NONE: 'none',
-  SPOT: 'spot',
-  ZONE: 'zone',
-  MOP: 'mop',
-} as const;
-
-export type DeviceModeValue = ValueOf<typeof VALUE>;
+export enum DeviceModeValue {
+  None = 'none',
+  Spot = 'spot',
+  Zone = 'zone',
+  Mop = 'mop',
+}
 
 export class DeviceMode extends ValueObject<DeviceModeValue> {
   get value(): DeviceModeValue {
@@ -20,10 +18,8 @@ export class DeviceMode extends ValueObject<DeviceModeValue> {
       throw new ArgumentNotProvidedException('Missing property in device mode constructor');
     }
 
-    if (!Object.values(VALUE).includes(props.value)) {
+    if (!Object.values(DeviceModeValue).includes(props.value)) {
       throw new ArgumentInvalidException('Invalid property in device mode constructor');
     }
   }
-
-  static VALUE = VALUE;
 }

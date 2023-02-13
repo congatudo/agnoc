@@ -1,4 +1,4 @@
-import { DeviceOrder, CLEAN_MODE, DeviceTime, DeviceWaterLevel } from '@agnoc/domain';
+import { DeviceOrder, CLEAN_MODE, DeviceTime, DeviceWaterLevel, DeviceWaterLevelValue } from '@agnoc/domain';
 import { ArgumentNotProvidedException, ID } from '@agnoc/toolkit';
 import { DeviceFanSpeedMapper } from './device-fan-speed.mapper';
 import { DeviceWaterLevelMapper } from './device-water-level.mapper';
@@ -26,7 +26,7 @@ export const DeviceOrderMapper: Mapper<DeviceOrder, IDEVICE_ORDERLIST_SETTING_RE
       fanSpeed: DeviceFanSpeedMapper.toDomain(orderList.cleanInfo.windPower),
       waterLevel: orderList.cleanInfo.waterLevel
         ? DeviceWaterLevelMapper.toDomain(orderList.cleanInfo.waterLevel)
-        : new DeviceWaterLevel({ value: DeviceWaterLevel.VALUE.OFF }),
+        : new DeviceWaterLevel({ value: DeviceWaterLevelValue.Off }),
     };
 
     return new DeviceOrder(props);

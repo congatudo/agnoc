@@ -1,24 +1,22 @@
-import { DeviceMode } from '@agnoc/domain';
+import { DeviceMode, DeviceModeValue } from '@agnoc/domain';
 import { DomainException, NotImplementedException } from '@agnoc/toolkit';
-import type { ValueOf, Mapper } from '@agnoc/toolkit';
+import type { Mapper } from '@agnoc/toolkit';
 
-const { VALUE } = DeviceMode;
-
-function getDomainValue(mode: number): ValueOf<typeof VALUE> {
+function getDomainValue(mode: number): DeviceModeValue {
   if ([0, 1, 2, 4, 5, 10, 11].includes(mode)) {
-    return VALUE.NONE;
+    return DeviceModeValue.None;
   }
 
   if ([30, 31, 32, 35].includes(mode)) {
-    return VALUE.ZONE;
+    return DeviceModeValue.Zone;
   }
 
   if ([7, 9, 12, 14].includes(mode)) {
-    return VALUE.SPOT;
+    return DeviceModeValue.Spot;
   }
 
   if ([36, 37, 40].includes(mode)) {
-    return VALUE.MOP;
+    return DeviceModeValue.Mop;
   }
 
   throw new DomainException(`Unable to map device mode from mode ${mode}`);
