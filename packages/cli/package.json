@@ -73,6 +73,7 @@
     }
   },
   "dependencies": {
+    "@agnoc/transport-tcp": "^0.16.0",
     "@agnoc/toolkit": "^0.16.0",
     "chalk": "^4.1.1",
     "cli-ux": "^5.5.1",

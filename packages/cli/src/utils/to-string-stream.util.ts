@@ -1,5 +1,5 @@
 import { Transform } from 'stream';
-import type { Packet, OPDecoderLiteral } from '@agnoc/core';
+import type { Packet, OPDecoderLiteral } from '@agnoc/transport-tcp';
 
 export function toStringStream(): Transform[] {
   return [

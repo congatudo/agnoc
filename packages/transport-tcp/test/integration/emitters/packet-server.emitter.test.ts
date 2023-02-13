@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import { PacketServer, PacketSocket } from '@agnoc/core';
+import { PacketServer, PacketSocket } from '@agnoc/transport-tcp';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 

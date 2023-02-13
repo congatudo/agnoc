@@ -2,7 +2,7 @@
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 import { Connection } from '../emitters/connection.emitter';
 import { Packet } from './packet.value-object';
-import type { OPDecoderLiteral, OPDecoders } from '@agnoc/core';
+import type { OPDecoderLiteral, OPDecoders } from '@agnoc/transport-tcp';
 
 export interface MessageProps<Name extends OPDecoderLiteral> {
   connection: Connection;

@@ -1,10 +1,11 @@
 {
-  "name": "@agnoc/core",
-  "version": "0.17.1",
-  "description": "Agnoc core library",
+  "name": "@agnoc/transport-tcp",
+  "version": "0.16.0",
+  "description": "Agnoc transport TCP library",
   "keywords": [
     "agnoc",
-    "core",
+    "transport",
+    "tcp",
     "conga",
     "cecotec",
     "driver",
@@ -29,7 +30,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/adrigzr/agnoc.git",
-    "directory": "packages/core"
+    "directory": "packages/transport-tcp"
   },
   "scripts": {
     "build": "npm-run-all build:schemas build:lib",
@@ -97,6 +98,6 @@
   "typedoc": {
     "entryPoint": "./src/index.ts",
     "readmeFile": "./README.md",
-    "displayName": "Core"
+    "displayName": "Transport TCP"
   }
 }

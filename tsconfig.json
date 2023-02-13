@@ -5,7 +5,7 @@
   },
   "include": ["packages/*/src", "packages/*/test", "packages/**/typings.d.ts"],
   "typedocOptions": {
-    "entryPoints": ["packages/cli", "packages/core", "packages/domain", "packages/toolkit"],
+    "entryPoints": ["packages/cli", "packages/transport-tcp", "packages/domain", "packages/toolkit"],
     "entryPointStrategy": "packages",
     "out": "public/typedoc",
     "excludePrivate": false,
