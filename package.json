@@ -49,7 +49,6 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "husky": "^8.0.3",
-    "hygen": "^6.2.11",
     "json": "^11.0.0",
     "lerna": "^6.4.1",
     "lint-staged": ">=13.1.1",
