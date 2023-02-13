@@ -1,7 +1,7 @@
 {
   "name": "@agnoc/cli",
   "version": "0.17.1",
-  "description": "Agnoc command line",
+  "description": "Agnoc command line interface",
   "keywords": [
     "agnoc",
     "cli",
@@ -17,6 +17,8 @@
   },
   "license": "MIT",
   "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "bin": {
     "agnoc": "./bin/agnoc.js"
   },
@@ -92,7 +94,7 @@
     "node": ">=18.12"
   },
   "typedoc": {
-    "entryPoint": "./src/cli.ts",
+    "entryPoint": "./src/index.ts",
     "readmeFile": "./README.md",
     "displayName": "CLI"
   }

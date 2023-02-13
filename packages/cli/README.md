@@ -1,6 +1,6 @@
 # @agnoc/cli
 
-[Agnoc](https://github.com/adrigzr/agnoc) command line tool.
+[Agnoc](https://github.com/adrigzr/agnoc) command line interface (CLI).
 
 ## Install
 

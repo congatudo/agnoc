@@ -5,26 +5,25 @@ on:
       - 'next'
 jobs:
   prerelease:
-    name: Prerelease
+    name: Prerelease packages
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/next'
     environment: development
     concurrency: development
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
-      - name: Install
+      - name: Install dependencies
         uses: ./.github/actions/install
-      - name: Build
+      - name: Build packages
         run: yarn build
-      - name: Version
+      - name: Version packages
         run: lerna version --conventional-prerelease --yes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      - name: Publish
+      - name: Publish packages
         run: lerna publish from-package --dist-tag next --yes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
