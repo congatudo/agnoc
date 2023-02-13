@@ -1,5 +1,5 @@
 import { Server } from 'net';
-import { PacketSocket, Packet } from '@agnoc/core';
+import { PacketSocket, Packet } from '@agnoc/transport-tcp';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import type { AddressInfo } from 'net';

@@ -1,6 +1,6 @@
 import { Transform } from 'stream';
-import { Packet } from '@agnoc/core';
-import type { PacketSerialized, OPDecoderLiteral } from '@agnoc/core';
+import { Packet } from '@agnoc/transport-tcp';
+import type { PacketSerialized, OPDecoderLiteral } from '@agnoc/transport-tcp';
 import type { TransformCallback } from 'stream';
 
 export class PacketEncodeTransform extends Transform {

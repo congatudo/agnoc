@@ -1,6 +1,6 @@
 import { Transform } from 'stream';
-import { Packet } from '@agnoc/core';
 import { DomainException } from '@agnoc/toolkit';
+import { Packet } from '@agnoc/transport-tcp';
 import type { TransformCallback } from 'stream';
 
 export class PacketDecodeTransform extends Transform {
