@@ -7,33 +7,33 @@ on:
       - 'next'
 jobs:
   install:
-    name: Install
+    name: Install dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install
+      - name: Install dependencies
         uses: ./.github/actions/install
   commitlint:
-    name: Commit lint
+    name: Lint commits
     runs-on: ubuntu-latest
     needs: install
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Bootstrap
         uses: ./.github/actions/bootstrap
-      - name: Commit lint
+      - name: Lint commits
         run: yarn commitlint --from "origin/${GITHUB_BASE_REF}"
   build:
-    name: Build
+    name: Build packages
     runs-on: ubuntu-latest
     needs: install
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
       - name: Bootstrap
         uses: ./.github/actions/bootstrap
@@ -45,32 +45,33 @@ jobs:
             packages/*/lib
             packages/core/schemas
           key: cache-build-${{ github.sha }}
-      - name: Build
+      - name: Build packages
         run: yarn build
   lint:
-    name: Lint
+    name: Lint code
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
       - name: Bootstrap
         uses: ./.github/actions/bootstrap
-      - name: Lint
+      - name: Lint code
         run: yarn lint
   test:
-    name: Test
+    name: Test code
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
       - name: Bootstrap
         uses: ./.github/actions/bootstrap
-      - name: Test
+      - name: Test code
         run: yarn test
-      - uses: codecov/codecov-action@v3
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./packages/core/coverage/lcov.info,./packages/cli/coverage/lcov.info
+          files: ./packages/cli/coverage/lcov.info,./packages/core/coverage/lcov.info,./packages/toolkit/coverage/lcov.info,core
           fail_ci_if_error: true
