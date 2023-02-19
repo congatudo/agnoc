@@ -893,6 +893,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
           x: mapHeadInfo.maxX,
           y: mapHeadInfo.maxY,
         }),
+        resolution: mapHeadInfo.resolution,
         grid: mapGrid,
         rooms: [],
         restrictedZones: [],

@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: ['@agnoc/eslint-config'],
+  extends: ['./packages/eslint-config/index.js'],
 };

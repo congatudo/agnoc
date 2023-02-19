@@ -14,6 +14,7 @@ export interface DeviceMapProps {
   size: Pixel;
   min: Coordinate;
   max: Coordinate;
+  resolution: number;
   grid: Buffer;
   robot?: Position;
   charger?: Position;
@@ -43,6 +44,10 @@ export class DeviceMap extends Entity<DeviceMapProps> {
 
   get max(): Coordinate {
     return this.props.max;
+  }
+
+  get resolution(): number {
+    return this.props.resolution;
   }
 
   get grid(): Buffer {
