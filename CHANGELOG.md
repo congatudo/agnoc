@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.17.1](https://github.com/congatudo/agnoc/compare/v0.17.0...v0.17.1) (2023-02-20)
+
+### Bug Fixes
+
+- force publish ([ea7fad0](https://github.com/congatudo/agnoc/commit/ea7fad01d6a3b3f8cd5a0afa44f8b507eb263fb4))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 # [0.17.0](https://github.com/congatudo/agnoc/compare/v0.16.0...v0.17.0) (2023-02-19)
 
 ### Features
