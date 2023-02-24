@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { BigNumber } from '@agnoc/domain';
 import {
   ID,
   toStream,
@@ -17,11 +16,12 @@ import {
   ArgumentInvalidException,
   BufferWriter,
 } from '@agnoc/toolkit';
+import { BigNumber } from './big-number.value-object';
 import { OPCode } from './opcode.value-object';
 import { Payload } from './payload.value-object';
+import type { BigNumberSerialized } from './big-number.value-object';
 import type { PayloadSerialized } from './payload.value-object';
 import type { OPDecoderLiteral, OPCodeLiteral } from '../constants/opcodes.constant';
-import type { BigNumberSerialized } from '@agnoc/domain';
 import type { IDSerialized } from '@agnoc/toolkit';
 
 export interface PacketProps<Name extends OPDecoderLiteral> {

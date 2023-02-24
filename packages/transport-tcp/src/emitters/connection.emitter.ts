@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { BigNumber } from '@agnoc/domain';
 import {
   debug,
   bind,
@@ -10,6 +9,7 @@ import {
 } from '@agnoc/toolkit';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { PacketSocket } from '../sockets/packet.socket';
+import { BigNumber } from '../value-objects/big-number.value-object';
 import { OPCode } from '../value-objects/opcode.value-object';
 import { Packet } from '../value-objects/packet.value-object';
 import { Payload } from '../value-objects/payload.value-object';

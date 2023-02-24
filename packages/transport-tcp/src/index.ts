@@ -18,6 +18,7 @@ export * from './mappers/device-state.mapper';
 export * from './mappers/device-voice.mapper';
 export * from './mappers/device-water-level.mapper';
 export * from './sockets/packet.socket';
+export * from './value-objects/big-number.value-object';
 export * from './value-objects/message.value-object';
 export * from './value-objects/opcode.value-object';
 export * from './value-objects/packet.value-object';
