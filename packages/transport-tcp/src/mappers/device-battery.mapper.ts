@@ -14,8 +14,8 @@ const DEVICE = {
   max: DeviceBatteryMaxValue,
 };
 
-export const DeviceBatteryMapper: Mapper<DeviceBattery, number> = class {
-  static toDomain(battery: number): DeviceBattery {
+export class DeviceBatteryMapper implements Mapper<DeviceBattery, number> {
+  toDomain(battery: number): DeviceBattery {
     if (battery < ROBOT_MIN_VALUE) {
       battery = ROBOT_MIN_VALUE;
     }
@@ -29,7 +29,7 @@ export const DeviceBatteryMapper: Mapper<DeviceBattery, number> = class {
     });
   }
 
-  static fromDomain(battery: DeviceBattery): number {
+  fromDomain(battery: DeviceBattery): number {
     return Math.floor(interpolate(battery.value, DEVICE, ROBOT));
   }
-};
+}

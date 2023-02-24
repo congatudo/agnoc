@@ -47,8 +47,8 @@ const ROBOT_TO_DOMAIN = {
   527: DeviceErrorValue.DustBoxFull,
 } as const;
 
-export const DeviceErrorMapper: Mapper<DeviceError, number> = class {
-  static toDomain(error: number): DeviceError {
+export class DeviceErrorMapper implements Mapper<DeviceError, number> {
+  toDomain(error: number): DeviceError {
     if (!(error in ROBOT_TO_DOMAIN)) {
       throw new DomainException(`Unable to map error code '${error}' to domain value`);
     }
@@ -59,7 +59,7 @@ export const DeviceErrorMapper: Mapper<DeviceError, number> = class {
     return new DeviceError({ value });
   }
 
-  static fromDomain(): never {
+  fromDomain(): never {
     throw new NotImplementedException('DeviceErrorMapper.toRobot');
   }
-};
+}

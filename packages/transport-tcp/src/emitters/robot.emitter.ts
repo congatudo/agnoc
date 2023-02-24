@@ -93,6 +93,16 @@ const CTRL_VALUE = {
   PAUSE: 2,
 };
 
+// TODO: move to constructor
+const deviceFanSpeedMapper = new DeviceFanSpeedMapper();
+const deviceWaterLevelMapper = new DeviceWaterLevelMapper();
+const deviceOrderMapper = new DeviceOrderMapper(deviceFanSpeedMapper, deviceWaterLevelMapper);
+const deviceVoiceMapper = new DeviceVoiceMapper();
+const deviceStateMapper = new DeviceStateMapper();
+const deviceModeMapper = new DeviceModeMapper();
+const deviceErrorMapper = new DeviceErrorMapper();
+const deviceBatteryMapper = new DeviceBatteryMapper();
+
 export class Robot extends TypedEmitter<RobotEvents> {
   public readonly device: Device;
   public readonly user: User;
@@ -311,13 +321,13 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async setFanSpeed(fanSpeed: DeviceFanSpeed): Promise<void> {
     await this.sendRecv('DEVICE_SET_CLEAN_PREFERENCE_REQ', 'DEVICE_SET_CLEAN_PREFERENCE_RSP', {
-      mode: DeviceFanSpeedMapper.fromDomain(fanSpeed),
+      mode: deviceFanSpeedMapper.fromDomain(fanSpeed),
     });
   }
 
   async setWaterLevel(waterLevel: DeviceWaterLevel): Promise<void> {
     await this.sendRecv('DEVICE_SET_CLEAN_PREFERENCE_REQ', 'DEVICE_SET_CLEAN_PREFERENCE_RSP', {
-      mode: DeviceWaterLevelMapper.fromDomain(waterLevel),
+      mode: deviceWaterLevelMapper.fromDomain(waterLevel),
     });
   }
 
@@ -419,7 +429,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   async getOrders(): Promise<DeviceOrder[]> {
     const packet = await this.sendRecv('DEVICE_ORDERLIST_GETTING_REQ', 'DEVICE_ORDERLIST_GETTING_RSP', {});
     const object = packet.payload.object;
-    const orders = object.orderList?.map(DeviceOrderMapper.toDomain) || [];
+    const orders = object.orderList?.map(deviceOrderMapper.toDomain) || [];
 
     this.device.updateOrders(orders);
 
@@ -427,7 +437,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async setOrder(order: DeviceOrder): Promise<void> {
-    const orderList = DeviceOrderMapper.fromDomain(order);
+    const orderList = deviceOrderMapper.fromDomain(order);
 
     await this.sendRecv('DEVICE_ORDERLIST_SETTING_REQ', 'DEVICE_ORDERLIST_SETTING_RSP', orderList);
   }
@@ -577,7 +587,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async setVoice(voice: DeviceVoice): Promise<void> {
-    const robotVoice = DeviceVoiceMapper.fromDomain(voice);
+    const robotVoice = deviceVoiceMapper.fromDomain(voice);
 
     await this.sendRecv('USER_SET_DEVICE_CTRL_SETTING_REQ', 'USER_SET_DEVICE_CTRL_SETTING_RSP', {
       voiceMode: robotVoice.isEnabled,
@@ -774,7 +784,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   handleDeviceAgentSetting(message: Message<'PUSH_DEVICE_AGENT_SETTING_REQ'>): void {
     const object = message.packet.payload.object;
     const props = {
-      voice: DeviceVoiceMapper.toDomain({
+      voice: deviceVoiceMapper.toDomain({
         isEnabled: object.voice.voiceMode || false,
         volume: object.voice.volume || 1,
       }),
@@ -820,18 +830,18 @@ export class Robot extends TypedEmitter<RobotEvents> {
         time: object.cleanTime,
       }),
     );
-    this.device.updateState(DeviceStateMapper.toDomain({ type, workMode, chargeStatus }));
-    this.device.updateMode(DeviceModeMapper.toDomain(workMode));
-    this.device.updateError(DeviceErrorMapper.toDomain(faultCode));
-    this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
-    this.device.updateFanSpeed(DeviceFanSpeedMapper.toDomain(cleanPreference));
+    this.device.updateState(deviceStateMapper.toDomain({ type, workMode, chargeStatus }));
+    this.device.updateMode(deviceModeMapper.toDomain(workMode));
+    this.device.updateError(deviceErrorMapper.toDomain(faultCode));
+    this.device.updateBattery(deviceBatteryMapper.toDomain(battery));
+    this.device.updateFanSpeed(deviceFanSpeedMapper.toDomain(cleanPreference));
 
     if (isPresent(mopType)) {
       this.device.updateHasMopAttached(mopType);
     }
 
     if (isPresent(waterLevel)) {
-      this.device.updateWaterLevel(DeviceWaterLevelMapper.toDomain(waterLevel));
+      this.device.updateWaterLevel(deviceWaterLevelMapper.toDomain(waterLevel));
     }
 
     this.emit('updateDevice');
@@ -871,11 +881,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
           time: statusInfo.cleanTime,
         }),
       );
-      this.device.updateBattery(DeviceBatteryMapper.toDomain(battery));
-      this.device.updateMode(DeviceModeMapper.toDomain(workMode));
-      this.device.updateState(DeviceStateMapper.toDomain({ type, workMode, chargeStatus }));
-      this.device.updateError(DeviceErrorMapper.toDomain(faultCode));
-      this.device.updateFanSpeed(DeviceFanSpeedMapper.toDomain(cleanPreference));
+      this.device.updateBattery(deviceBatteryMapper.toDomain(battery));
+      this.device.updateMode(deviceModeMapper.toDomain(workMode));
+      this.device.updateState(deviceStateMapper.toDomain({ type, workMode, chargeStatus }));
+      this.device.updateError(deviceErrorMapper.toDomain(faultCode));
+      this.device.updateFanSpeed(deviceFanSpeedMapper.toDomain(cleanPreference));
       this.emit('updateDevice');
     }
 
@@ -1049,7 +1059,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     const object = message.packet.payload.object;
 
-    this.device.updateBattery(DeviceBatteryMapper.toDomain(object.battery.level));
+    this.device.updateBattery(deviceBatteryMapper.toDomain(object.battery.level));
 
     this.emit('updateDevice');
   }

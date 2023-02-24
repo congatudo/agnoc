@@ -11,14 +11,14 @@ const DOMAIN_TO_ROBOT = {
 
 const ROBOT_TO_DOMAIN = flipObject(DOMAIN_TO_ROBOT);
 
-export const DeviceFanSpeedMapper: Mapper<DeviceFanSpeed, number> = class {
-  static toDomain(fanSpeed: number): DeviceFanSpeed {
+export class DeviceFanSpeedMapper implements Mapper<DeviceFanSpeed, number> {
+  toDomain(fanSpeed: number): DeviceFanSpeed {
     return new DeviceFanSpeed({
       value: ROBOT_TO_DOMAIN[fanSpeed],
     });
   }
 
-  static fromDomain(fanSpeed: DeviceFanSpeed): number {
+  fromDomain(fanSpeed: DeviceFanSpeed): number {
     return DOMAIN_TO_ROBOT[fanSpeed.value];
   }
-};
+}
