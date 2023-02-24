@@ -75,14 +75,14 @@ function getDomainValue(state: RobotState): DeviceStateValue {
   throw new DomainException(`Unable to map device state from data: ${JSON.stringify(state)}`);
 }
 
-export const DeviceStateMapper: Mapper<DeviceState, RobotState> = class {
-  static toDomain(state: RobotState): DeviceState {
+export class DeviceStateMapper implements Mapper<DeviceState, RobotState> {
+  toDomain(state: RobotState): DeviceState {
     return new DeviceState({
       value: getDomainValue(state),
     });
   }
 
-  static fromDomain(): RobotState {
+  fromDomain(): RobotState {
     throw new NotImplementedException('DeviceStateMapper.toRobot');
   }
-};
+}

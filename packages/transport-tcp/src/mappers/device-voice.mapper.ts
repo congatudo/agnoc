@@ -19,18 +19,18 @@ export interface RobotVoice {
   volume: number;
 }
 
-export const DeviceVoiceMapper: Mapper<DeviceVoice, RobotVoice> = class {
-  static toDomain({ isEnabled, volume }: RobotVoice): DeviceVoice {
+export class DeviceVoiceMapper implements Mapper<DeviceVoice, RobotVoice> {
+  toDomain({ isEnabled, volume }: RobotVoice): DeviceVoice {
     return new DeviceVoice({
       isEnabled,
       volume: interpolate(volume, ROBOT, DEVICE),
     });
   }
 
-  static fromDomain({ isEnabled, volume }: DeviceVoice): RobotVoice {
+  fromDomain({ isEnabled, volume }: DeviceVoice): RobotVoice {
     return {
       isEnabled,
       volume: Math.floor(interpolate(volume, DEVICE, ROBOT)),
     };
   }
-};
+}

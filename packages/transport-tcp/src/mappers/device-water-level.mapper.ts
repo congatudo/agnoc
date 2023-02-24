@@ -11,14 +11,14 @@ const DOMAIN_TO_ROBOT = {
 
 const ROBOT_TO_DOMAIN = flipObject(DOMAIN_TO_ROBOT);
 
-export const DeviceWaterLevelMapper: Mapper<DeviceWaterLevel, number> = class {
-  static toDomain(waterLevel: number): DeviceWaterLevel {
+export class DeviceWaterLevelMapper implements Mapper<DeviceWaterLevel, number> {
+  toDomain(waterLevel: number): DeviceWaterLevel {
     return new DeviceWaterLevel({
       value: ROBOT_TO_DOMAIN[waterLevel],
     });
   }
 
-  static fromDomain(waterLevel: DeviceWaterLevel): number {
+  fromDomain(waterLevel: DeviceWaterLevel): number {
     return DOMAIN_TO_ROBOT[waterLevel.value];
   }
-};
+}

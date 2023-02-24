@@ -22,14 +22,14 @@ function getDomainValue(mode: number): DeviceModeValue {
   throw new DomainException(`Unable to map device mode from mode ${mode}`);
 }
 
-export const DeviceModeMapper: Mapper<DeviceMode, number> = class {
-  static toDomain(mode: number): DeviceMode {
+export class DeviceModeMapper implements Mapper<DeviceMode, number> {
+  toDomain(mode: number): DeviceMode {
     return new DeviceMode({
       value: getDomainValue(mode),
     });
   }
 
-  static fromDomain(): number {
+  fromDomain(): number {
     throw new NotImplementedException('DeviceModeMapper.toRobot');
   }
-};
+}
