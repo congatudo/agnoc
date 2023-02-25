@@ -4,20 +4,22 @@ import {
   DeviceCapability,
   DeviceConsumable,
   DeviceWlan,
-  Position,
-  Coordinate,
-  DeviceQuietHours,
+  MapPosition,
+  MapCoordinate,
+  QuietHoursSetting,
   DeviceTime,
   Room,
   DeviceVersion,
-  DeviceConfig,
-  DeviceCurrentClean,
-  Pixel,
+  DeviceSettings,
+  DeviceCleanWork,
+  MapPixel,
   DeviceMap,
   Zone,
   DeviceModeValue,
   DeviceConsumableType,
   DeviceStateValue,
+  CleanSize,
+  DeviceSetting,
 } from '@agnoc/domain';
 import {
   ArgumentInvalidException,
@@ -45,7 +47,15 @@ import type { Multiplexer } from './multiplexer.emitter';
 import type { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
 import type { Message, MessageHandlers } from '../value-objects/message.value-object';
 import type { Packet } from '../value-objects/packet.value-object';
-import type { Device, User, DeviceFanSpeed, DeviceWaterLevel, DeviceOrder, DeviceVoice } from '@agnoc/domain';
+import type {
+  Device,
+  User,
+  DeviceFanSpeed,
+  DeviceWaterLevel,
+  DeviceOrder,
+  VoiceSetting,
+  DeviceSettingsProps,
+} from '@agnoc/domain';
 import type { Debugger } from 'debug';
 
 export interface RobotProps {
@@ -355,19 +365,19 @@ export class Robot extends TypedEmitter<RobotEvents> {
     const consumables = [
       new DeviceConsumable({
         type: DeviceConsumableType.MainBrush,
-        used: object.mainBrushTime,
+        minutesUsed: object.mainBrushTime,
       }),
       new DeviceConsumable({
         type: DeviceConsumableType.SideBrush,
-        used: object.sideBrushTime,
+        minutesUsed: object.sideBrushTime,
       }),
       new DeviceConsumable({
         type: DeviceConsumableType.Filter,
-        used: object.filterTime,
+        minutesUsed: object.filterTime,
       }),
       new DeviceConsumable({
         type: DeviceConsumableType.Dishcloth,
-        used: object.dishclothTime,
+        minutesUsed: object.dishclothTime,
       }),
     ];
 
@@ -449,7 +459,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
   }
 
-  async cleanPosition(position: Position): Promise<void> {
+  async cleanPosition(position: MapPosition): Promise<void> {
     if (!this.device.map) {
       throw new DomainException('Unable to set robot position: map not loaded');
     }
@@ -472,7 +482,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
    *   │   │
    * B └───┘ C
    */
-  async cleanAreas(areas: Coordinate[][]): Promise<void> {
+  async cleanAreas(areas: MapCoordinate[][]): Promise<void> {
     if (!this.device.map) {
       return;
     }
@@ -506,7 +516,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
    *   │   │
    * B └───┘ C
    */
-  async setRestrictedZones(areas: Coordinate[][]): Promise<void> {
+  async setRestrictedZones(areas: MapCoordinate[][]): Promise<void> {
     if (!this.device.map) {
       return;
     }
@@ -544,28 +554,28 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
   }
 
-  async getQuietHours(): Promise<DeviceQuietHours> {
+  async getQuietHours(): Promise<QuietHoursSetting> {
     const packet = await this.sendRecv('USER_GET_DEVICE_QUIETHOURS_REQ', 'USER_GET_DEVICE_QUIETHOURS_RSP', {});
     const object = packet.payload.object;
-    const quietHours = new DeviceQuietHours({
+    const quietHours = new QuietHoursSetting({
       isEnabled: object.isOpen,
-      begin: DeviceTime.fromMinutes(object.beginTime),
-      end: DeviceTime.fromMinutes(object.endTime),
+      beginTime: DeviceTime.fromMinutes(object.beginTime),
+      endTime: DeviceTime.fromMinutes(object.endTime),
     });
 
-    this.device.config?.updateQuietHours(quietHours);
+    this.device.updateConfig(this.device.config?.clone({ quietHours }));
 
     return quietHours;
   }
 
-  async setQuietHours(quietHours: DeviceQuietHours): Promise<void> {
+  async setQuietHours(quietHours: QuietHoursSetting): Promise<void> {
     await this.sendRecv('USER_SET_DEVICE_QUIETHOURS_REQ', 'USER_SET_DEVICE_QUIETHOURS_RSP', {
       isOpen: quietHours.isEnabled,
-      beginTime: quietHours.begin.toMinutes(),
-      endTime: quietHours.end.toMinutes(),
+      beginTime: quietHours.beginTime.toMinutes(),
+      endTime: quietHours.endTime.toMinutes(),
     });
 
-    this.device.config?.updateQuietHours(quietHours);
+    this.device.updateConfig(this.device.config?.clone({ quietHours }));
   }
 
   async setCarpetMode(enable: boolean): Promise<void> {
@@ -573,7 +583,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       carpetTurbo: enable,
     });
 
-    this.device.config?.updateCarpetMode(enable);
+    this.device.updateConfig(this.device.config?.clone({ carpetMode: new DeviceSetting({ isEnabled: enable }) }));
     this.emit('updateDevice');
   }
 
@@ -582,11 +592,11 @@ export class Robot extends TypedEmitter<RobotEvents> {
       historyMap: enable,
     });
 
-    this.device.config?.updateHistoryMap(enable);
+    this.device.updateConfig(this.device.config?.clone({ historyMap: new DeviceSetting({ isEnabled: enable }) }));
     this.emit('updateDevice');
   }
 
-  async setVoice(voice: DeviceVoice): Promise<void> {
+  async setVoice(voice: VoiceSetting): Promise<void> {
     const robotVoice = deviceVoiceMapper.fromDomain(voice);
 
     await this.sendRecv('USER_SET_DEVICE_CTRL_SETTING_REQ', 'USER_SET_DEVICE_CTRL_SETTING_RSP', {
@@ -594,7 +604,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       volume: robotVoice.volume,
     });
 
-    this.device.config?.updateVoice(voice);
+    this.device.updateConfig(this.device.config?.clone({ voice }));
     this.emit('updateDevice');
   }
 
@@ -668,7 +678,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
   }
 
-  async splitRoom(room: Room, pointA: Coordinate, pointB: Coordinate): Promise<void> {
+  async splitRoom(room: Room, pointA: MapCoordinate, pointB: MapCoordinate): Promise<void> {
     if (!this.device.map) {
       return;
     }
@@ -783,24 +793,24 @@ export class Robot extends TypedEmitter<RobotEvents> {
   @bind
   handleDeviceAgentSetting(message: Message<'PUSH_DEVICE_AGENT_SETTING_REQ'>): void {
     const object = message.packet.payload.object;
-    const props = {
+    const props: DeviceSettingsProps = {
       voice: deviceVoiceMapper.toDomain({
         isEnabled: object.voice.voiceMode || false,
         volume: object.voice.volume || 1,
       }),
-      quietHours: new DeviceQuietHours({
+      quietHours: new QuietHoursSetting({
         isEnabled: object.quietHours.isOpen,
-        begin: DeviceTime.fromMinutes(object.quietHours.beginTime),
-        end: DeviceTime.fromMinutes(object.quietHours.endTime),
+        beginTime: DeviceTime.fromMinutes(object.quietHours.beginTime),
+        endTime: DeviceTime.fromMinutes(object.quietHours.endTime),
       }),
-      isEcoModeEnabled: object.cleanPreference.ecoMode || false,
-      isRepeatCleanEnabled: object.cleanPreference.repeatClean || false,
-      isBrokenCleanEnabled: object.cleanPreference.cleanBroken || false,
-      isCarpetModeEnabled: object.cleanPreference.carpetTurbo || false,
-      isHistoryMapEnabled: object.cleanPreference.historyMap || false,
+      ecoMode: new DeviceSetting({ isEnabled: object.cleanPreference.ecoMode ?? false }),
+      repeatClean: new DeviceSetting({ isEnabled: object.cleanPreference.repeatClean ?? false }),
+      brokenClean: new DeviceSetting({ isEnabled: object.cleanPreference.cleanBroken ?? false }),
+      carpetMode: new DeviceSetting({ isEnabled: object.cleanPreference.carpetTurbo ?? false }),
+      historyMap: new DeviceSetting({ isEnabled: object.cleanPreference.historyMap ?? false }),
     };
 
-    this.device.updateConfig(new DeviceConfig(props));
+    this.device.updateConfig(new DeviceSettings(props));
 
     message.respond('PUSH_DEVICE_AGENT_SETTING_RSP', {
       result: 0,
@@ -825,9 +835,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
     const { battery, type, workMode, chargeStatus, cleanPreference, faultCode, waterLevel, mopType } = object;
 
     this.device.updateCurrentClean(
-      new DeviceCurrentClean({
-        size: object.cleanSize,
-        time: object.cleanTime,
+      new DeviceCleanWork({
+        size: new CleanSize({ value: object.cleanSize }),
+        time: DeviceTime.fromMinutes(object.cleanTime),
       }),
     );
     this.device.updateState(deviceStateMapper.toDomain({ type, workMode, chargeStatus }));
@@ -876,9 +886,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
       } = statusInfo;
 
       this.device.updateCurrentClean(
-        new DeviceCurrentClean({
-          size: statusInfo.cleanSize,
-          time: statusInfo.cleanTime,
+        new DeviceCleanWork({
+          size: new CleanSize({ value: statusInfo.cleanSize }),
+          time: DeviceTime.fromMinutes(statusInfo.cleanTime),
         }),
       );
       this.device.updateBattery(deviceBatteryMapper.toDomain(battery));
@@ -894,15 +904,15 @@ export class Robot extends TypedEmitter<RobotEvents> {
     if (mapHeadInfo && mapGrid) {
       const props = {
         id: new ID(mapHeadInfo.mapHeadId),
-        size: new Pixel({
+        size: new MapPixel({
           x: mapHeadInfo.sizeX,
           y: mapHeadInfo.sizeY,
         }),
-        min: new Coordinate({
+        min: new MapCoordinate({
           x: mapHeadInfo.minX,
           y: mapHeadInfo.minY,
         }),
-        max: new Coordinate({
+        max: new MapCoordinate({
           x: mapHeadInfo.maxX,
           y: mapHeadInfo.maxY,
         }),
@@ -924,14 +934,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
         map.updateRobotPath(
           map.robotPath.concat(
-            historyHeadInfo.pointList.slice(currentIndex).map(({ x, y }) => new Coordinate({ x, y })),
+            historyHeadInfo.pointList.slice(currentIndex).map(({ x, y }) => new MapCoordinate({ x, y })),
           ),
         );
       }
 
       if (robotPoseInfo) {
         map.updateRobot(
-          new Position({
+          new MapPosition({
             x: robotPoseInfo.poseX,
             y: robotPoseInfo.poseY,
             phi: robotPoseInfo.posePhi,
@@ -941,7 +951,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
       if (robotChargeInfo) {
         map.updateCharger(
-          new Position({
+          new MapPosition({
             x: robotChargeInfo.poseX,
             y: robotChargeInfo.poseY,
             phi: robotChargeInfo.posePhi,
@@ -951,7 +961,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
       if (spotInfo) {
         map.updateCurrentSpot(
-          new Position({
+          new MapPosition({
             x: spotInfo.poseX,
             y: spotInfo.poseY,
             phi: spotInfo.posePhi,
@@ -965,7 +975,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
             return new Zone({
               id: new ID(cleanArea.cleanAreaId),
               coordinates: cleanArea.coordinateList.map(({ x, y }) => {
-                return new Coordinate({
+                return new MapCoordinate({
                   x,
                   y,
                 });
@@ -992,12 +1002,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
                 id: new ID(cleanRoom.roomId),
                 name: cleanRoom.roomName,
                 isEnabled: Boolean(roomInfo?.enable),
-                center: new Coordinate({
+                center: new MapCoordinate({
                   x: cleanRoom.roomX,
                   y: cleanRoom.roomY,
                 }),
                 pixels: segment?.roomPixelList.map((pixel) => {
-                  return new Pixel({
+                  return new MapPixel({
                     x: pixel.x,
                     y: pixel.y,
                   });
@@ -1022,7 +1032,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     if (object.update) {
       this.device.map.updateRobot(
-        new Position({
+        new MapPosition({
           x: object.poseX,
           y: object.poseY,
           phi: object.posePhi,
@@ -1042,7 +1052,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     const object = message.packet.payload.object;
 
     this.device.map.updateCharger(
-      new Position({
+      new MapPosition({
         x: object.poseX,
         y: object.poseY,
         phi: object.posePhi,

@@ -1,13 +1,13 @@
 import { ID, Entity, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
-import { Coordinate } from '../value-objects/coordinate.value-object';
-import type { Pixel } from '../value-objects/pixel.value-object';
+import { MapCoordinate } from '../value-objects/map-coordinate.value-object';
+import type { MapPixel } from '../value-objects/map-pixel.value-object';
 
 export interface RoomProps {
   id: ID;
   name: string;
   isEnabled: boolean;
-  center: Coordinate;
-  pixels: Pixel[];
+  center: MapCoordinate;
+  pixels: MapPixel[];
 }
 
 export class Room extends Entity<RoomProps> {
@@ -28,11 +28,11 @@ export class Room extends Entity<RoomProps> {
     return this.props.isEnabled;
   }
 
-  get center(): Coordinate {
+  get center(): MapCoordinate {
     return this.props.center;
   }
 
-  get pixels(): Pixel[] {
+  get pixels(): MapPixel[] {
     return this.props.pixels;
   }
 
@@ -45,7 +45,7 @@ export class Room extends Entity<RoomProps> {
       throw new ArgumentInvalidException('Invalid id in room constructor');
     }
 
-    if (!(props.center instanceof Coordinate)) {
+    if (!(props.center instanceof MapCoordinate)) {
       throw new ArgumentInvalidException('Invalid center in room constructor');
     }
 

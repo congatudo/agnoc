@@ -1,9 +1,9 @@
 import { ID, Entity, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
-import type { Coordinate } from '../value-objects/coordinate.value-object';
+import type { MapCoordinate } from '../value-objects/map-coordinate.value-object';
 
 export interface ZoneProps {
   id: ID;
-  coordinates: Coordinate[];
+  coordinates: MapCoordinate[];
 }
 
 export class Zone extends Entity<ZoneProps> {
@@ -16,7 +16,7 @@ export class Zone extends Entity<ZoneProps> {
     return this.props.id;
   }
 
-  get coordinates(): Coordinate[] {
+  get coordinates(): MapCoordinate[] {
     return this.props.coordinates;
   }
 

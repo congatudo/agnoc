@@ -1,7 +1,7 @@
 import { ID, Entity, ArgumentNotProvidedException, isPresent, ArgumentInvalidException } from '@agnoc/toolkit';
-import { DeviceFanSpeed } from '../value-objects/device-fan-speed.value-object';
+import { DeviceFanSpeed } from '../primitives/device-fan-speed.value-object';
+import { DeviceWaterLevel } from '../primitives/device-water-level.value-object';
 import { DeviceTime } from '../value-objects/device-time.value-object';
-import { DeviceWaterLevel } from '../value-objects/device-water-level.value-object';
 
 export enum WeekDay {
   'sunday' = 1 << 0,

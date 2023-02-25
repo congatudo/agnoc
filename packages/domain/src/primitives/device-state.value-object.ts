@@ -1,6 +1,7 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject, ArgumentInvalidException } from '@agnoc/toolkit';
 import type { DomainPrimitive } from '@agnoc/toolkit';
 
+/** The possible values of a device state. */
 export enum DeviceStateValue {
   Error = 'error',
   Docked = 'docked',
@@ -12,18 +13,16 @@ export enum DeviceStateValue {
   Moving = 'moving',
 }
 
+/** Describe the state of a device. */
 export class DeviceState extends ValueObject<DeviceStateValue> {
+  /** Returns the value of the device state. */
   get value(): DeviceStateValue {
     return this.props.value;
   }
 
   protected validate(props: DomainPrimitive<DeviceStateValue>): void {
-    if (![props.value].every(isPresent)) {
-      throw new ArgumentNotProvidedException('Missing property in device state constructor');
-    }
-
     if (!Object.values(DeviceStateValue).includes(props.value)) {
-      throw new ArgumentInvalidException('Invalid property in device state constructor');
+      throw new ArgumentInvalidException(`Value '${props.value}' for device state is invalid`);
     }
   }
 }

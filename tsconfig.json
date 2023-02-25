@@ -12,7 +12,7 @@
     "excludeProtected": false,
     "excludeInternal": false,
     "includeVersion": true,
-    "sort": ["static-first", "instance-first"],
+    "sort": ["kind", "instance-first", "static-first"],
     "hideGenerator": true,
     "noMissingExports": true
   }

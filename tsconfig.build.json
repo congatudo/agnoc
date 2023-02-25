@@ -6,9 +6,5 @@
     "noEmit": false,
     "composite": true
   },
-  "files": [],
-  "references": [
-    { "path": "packages/transport-tcp/tsconfig.build.json" },
-    { "path": "packages/cli/tsconfig.build.json" }
-  ]
+  "files": []
 }

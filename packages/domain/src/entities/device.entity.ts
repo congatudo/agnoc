@@ -1,17 +1,17 @@
 import { Entity, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
 import type { DeviceMap } from './device-map.entity';
 import type { DeviceOrder } from './device-order.entity';
-import type { DeviceBattery } from '../value-objects/device-battery.value-object';
-import type { DeviceConfig } from '../value-objects/device-config.value-object';
+import type { DeviceBattery } from '../primitives/device-battery.value-object';
+import type { DeviceError } from '../primitives/device-error.value-object';
+import type { DeviceFanSpeed } from '../primitives/device-fan-speed.value-object';
+import type { DeviceMode } from '../primitives/device-mode.value-object';
+import type { DeviceState } from '../primitives/device-state.value-object';
+import type { DeviceWaterLevel } from '../primitives/device-water-level.value-object';
+import type { DeviceCleanWork } from '../value-objects/device-clean-work.value-object';
 import type { DeviceConsumable } from '../value-objects/device-consumable.value-object';
-import type { DeviceCurrentClean } from '../value-objects/device-current-clean.value-object';
-import type { DeviceError } from '../value-objects/device-error.value-object';
-import type { DeviceFanSpeed } from '../value-objects/device-fan-speed.value-object';
-import type { DeviceMode } from '../value-objects/device-mode.value-object';
-import type { DeviceState } from '../value-objects/device-state.value-object';
+import type { DeviceSettings } from '../value-objects/device-settings.value-object';
 import type { DeviceSystem } from '../value-objects/device-system.value-object';
 import type { DeviceVersion } from '../value-objects/device-version.value-object';
-import type { DeviceWaterLevel } from '../value-objects/device-water-level.value-object';
 import type { DeviceWlan } from '../value-objects/device-wlan.value-object';
 import type { ID } from '@agnoc/toolkit';
 
@@ -19,8 +19,8 @@ export interface DeviceProps {
   id: ID;
   system: DeviceSystem;
   version: DeviceVersion;
-  config?: DeviceConfig;
-  currentClean?: DeviceCurrentClean;
+  config?: DeviceSettings;
+  currentClean?: DeviceCleanWork;
   orders?: DeviceOrder[];
   consumables?: DeviceConsumable[];
   map?: DeviceMap;
@@ -52,11 +52,11 @@ export class Device extends Entity<DeviceProps> {
     return this.props.version;
   }
 
-  get config(): DeviceConfig | undefined {
+  get config(): DeviceSettings | undefined {
     return this.props.config;
   }
 
-  get currentClean(): DeviceCurrentClean | undefined {
+  get currentClean(): DeviceCleanWork | undefined {
     return this.props.currentClean;
   }
 
@@ -116,11 +116,11 @@ export class Device extends Entity<DeviceProps> {
     this.props.version = version;
   }
 
-  updateConfig(config: DeviceConfig): void {
+  updateConfig(config?: DeviceSettings): void {
     this.props.config = config;
   }
 
-  updateCurrentClean(currentClean: DeviceCurrentClean): void {
+  updateCurrentClean(currentClean: DeviceCleanWork): void {
     this.props.currentClean = currentClean;
   }
 

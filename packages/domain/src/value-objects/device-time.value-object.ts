@@ -1,33 +1,69 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
+import {
+  ValueObject,
+  isPresent,
+  ArgumentNotProvidedException,
+  ArgumentOutOfRangeException,
+  ArgumentInvalidException,
+} from '@agnoc/toolkit';
 
+/** Properties for a device time. */
 export interface DeviceTimeProps {
-  hour: number;
-  minute: number;
+  hours: number;
+  minutes: number;
 }
 
+/** Describes a point in time using `hours` and `minutes`. */
 export class DeviceTime extends ValueObject<DeviceTimeProps> {
-  get hour(): number {
-    return this.props.hour;
+  /** Returns the `hours` in device time. Allowed values from `0` to `23`. */
+  get hours(): number {
+    return this.props.hours;
   }
 
-  get minute(): number {
-    return this.props.minute;
+  /** Returns the `minutes` in device time. Allowed values from `0` to `59`. */
+  get minutes(): number {
+    return this.props.minutes;
   }
 
+  /** Returns minutes from device time. */
   toMinutes(): number {
-    return this.props.hour * 60 + this.props.minute;
+    return this.props.hours * 60 + this.props.minutes;
   }
 
+  /** Creates a new instance of `DeviceTime` from minutes. */
   static fromMinutes(minutes: number): DeviceTime {
     return new DeviceTime({
-      hour: Math.floor(minutes / 60),
-      minute: minutes % 60,
+      hours: Math.floor(minutes / 60),
+      minutes: minutes % 60,
     });
   }
 
   protected validate(props: DeviceTimeProps): void {
-    if (![props.hour, props.minute].every(isPresent)) {
-      throw new ArgumentNotProvidedException('Missing property in device time constructor');
+    const keys = ['hours', 'minutes'] as (keyof DeviceTimeProps)[];
+
+    keys.forEach((prop) => {
+      const value = props[prop];
+
+      if (!isPresent(value)) {
+        throw new ArgumentNotProvidedException(`Property '${prop}' for device time not provided`);
+      }
+
+      if (typeof value !== 'number') {
+        throw new ArgumentInvalidException(
+          `Value '${value as string}' for property '${prop}' for device time is not a number`,
+        );
+      }
+    });
+
+    if (props.hours < 0 || props.hours > 23) {
+      throw new ArgumentOutOfRangeException(
+        `Value '${props.hours}' for property 'hours' for device time is out of range`,
+      );
+    }
+
+    if (props.minutes < 0 || props.minutes > 59) {
+      throw new ArgumentOutOfRangeException(
+        `Value '${props.minutes}' for property 'minutes' for device time is out of range`,
+      );
     }
   }
 }
