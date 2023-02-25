@@ -1,5 +1,6 @@
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 
+/** Describe the type of a device consumable. */
 export enum DeviceConsumableType {
   MainBrush = 'mainBrush',
   SideBrush = 'sideBrush',
@@ -7,27 +8,43 @@ export enum DeviceConsumableType {
   Dishcloth = 'dishcloth',
 }
 
+/** Describe the props of a device consumable. */
 export interface DeviceConsumableProps {
+  /** The type of the consumable. */
   type: DeviceConsumableType;
-  used: number;
+  /** The minutes used of the consumable. */
+  minutesUsed: number;
 }
 
+/** Describe a device consumable. */
 export class DeviceConsumable extends ValueObject<DeviceConsumableProps> {
+  /** Returns the type of the consumable. */
   get type(): DeviceConsumableType {
     return this.props.type;
   }
 
-  get used(): number {
-    return this.props.used;
+  /** Returns the minutes used of the consumable. */
+  get minutesUsed(): number {
+    return this.props.minutesUsed;
   }
 
   protected validate(props: DeviceConsumableProps): void {
-    if (![props.type, props.used].every(isPresent)) {
-      throw new ArgumentNotProvidedException('Missing property in device consumable constructor');
-    }
+    const keys = ['type', 'minutesUsed'] as (keyof DeviceConsumableProps)[];
+
+    keys.forEach((prop) => {
+      if (!isPresent(props[prop])) {
+        throw new ArgumentNotProvidedException(`Property '${prop}' for device consumable not provided`);
+      }
+    });
 
     if (!Object.values(DeviceConsumableType).includes(props.type)) {
-      throw new ArgumentInvalidException('Invalid property type in device consumable constructor');
+      throw new ArgumentInvalidException(`Value '${props.type}' for property 'type' for device consumable is invalid`);
+    }
+
+    if (typeof props.minutesUsed !== 'number') {
+      throw new ArgumentInvalidException(
+        `Value '${props.minutesUsed as string}' for property 'minutesUsed' for device consumable is not a number`,
+      );
     }
   }
 }

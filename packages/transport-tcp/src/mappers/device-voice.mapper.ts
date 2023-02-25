@@ -1,4 +1,4 @@
-import { DeviceVoice, DeviceVoiceMaxVolume, DeviceVoiceMinVolume } from '@agnoc/domain';
+import { VoiceSetting, VoiceSettingMaxVolume, VoiceSettingMinVolume } from '@agnoc/domain';
 import { interpolate } from '@agnoc/toolkit';
 import type { Mapper } from '@agnoc/toolkit';
 
@@ -10,24 +10,25 @@ const ROBOT = {
   max: ROBOT_MAX_VOLUME,
 };
 const DEVICE = {
-  min: DeviceVoiceMinVolume,
-  max: DeviceVoiceMaxVolume,
+  min: VoiceSettingMinVolume,
+  max: VoiceSettingMaxVolume,
 };
 
+// TODO: add nullable fields here to prevent casting from consumer
 export interface RobotVoice {
   isEnabled: boolean;
   volume: number;
 }
 
-export class DeviceVoiceMapper implements Mapper<DeviceVoice, RobotVoice> {
-  toDomain({ isEnabled, volume }: RobotVoice): DeviceVoice {
-    return new DeviceVoice({
+export class DeviceVoiceMapper implements Mapper<VoiceSetting, RobotVoice> {
+  toDomain({ isEnabled, volume }: RobotVoice): VoiceSetting {
+    return new VoiceSetting({
       isEnabled,
       volume: interpolate(volume, ROBOT, DEVICE),
     });
   }
 
-  fromDomain({ isEnabled, volume }: DeviceVoice): RobotVoice {
+  fromDomain({ isEnabled, volume }: VoiceSetting): RobotVoice {
     return {
       isEnabled,
       volume: Math.floor(interpolate(volume, DEVICE, ROBOT)),

@@ -1,23 +1,23 @@
 import { Entity, isPresent, ArgumentNotProvidedException, ArgumentInvalidException, ID } from '@agnoc/toolkit';
-import { Coordinate } from '../value-objects/coordinate.value-object';
-import { Pixel } from '../value-objects/pixel.value-object';
+import { MapCoordinate } from '../value-objects/map-coordinate.value-object';
+import { MapPixel } from '../value-objects/map-pixel.value-object';
 import type { Room } from './room.entity';
 import type { Zone } from './zone.entity';
-import type { Position } from '../value-objects/position.value-object';
+import type { MapPosition } from '../value-objects/map-position.value-object';
 
 export interface DeviceMapProps {
   id: ID;
-  size: Pixel;
-  min: Coordinate;
-  max: Coordinate;
+  size: MapPixel;
+  min: MapCoordinate;
+  max: MapCoordinate;
   resolution: number;
   grid: Buffer;
-  robot?: Position;
-  charger?: Position;
-  currentSpot?: Position;
+  robot?: MapPosition;
+  charger?: MapPosition;
+  currentSpot?: MapPosition;
   rooms: Room[];
   restrictedZones: Zone[];
-  robotPath: Coordinate[];
+  robotPath: MapCoordinate[];
 }
 
 export class DeviceMap extends Entity<DeviceMapProps> {
@@ -30,15 +30,15 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     return this.props.id;
   }
 
-  get size(): Pixel {
+  get size(): MapPixel {
     return this.props.size;
   }
 
-  get min(): Coordinate {
+  get min(): MapCoordinate {
     return this.props.min;
   }
 
-  get max(): Coordinate {
+  get max(): MapCoordinate {
     return this.props.max;
   }
 
@@ -50,11 +50,11 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     return this.props.grid;
   }
 
-  get robot(): Position | undefined {
+  get robot(): MapPosition | undefined {
     return this.props.robot;
   }
 
-  get charger(): Position | undefined {
+  get charger(): MapPosition | undefined {
     return this.props.charger;
   }
 
@@ -66,19 +66,19 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     return this.props.restrictedZones;
   }
 
-  get currentSpot(): Position | undefined {
+  get currentSpot(): MapPosition | undefined {
     return this.props.currentSpot;
   }
 
-  get robotPath(): Coordinate[] {
+  get robotPath(): MapCoordinate[] {
     return this.props.robotPath;
   }
 
-  updateRobot(robot: Position): void {
+  updateRobot(robot: MapPosition): void {
     this.props.robot = robot;
   }
 
-  updateCharger(charger: Position): void {
+  updateCharger(charger: MapPosition): void {
     this.props.charger = charger;
   }
 
@@ -90,23 +90,23 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     this.props.rooms = rooms;
   }
 
-  updateCurrentSpot(currentSpot: Position): void {
+  updateCurrentSpot(currentSpot: MapPosition): void {
     this.props.currentSpot = currentSpot;
   }
 
-  updateRobotPath(robotPath: Coordinate[]): void {
+  updateRobotPath(robotPath: MapCoordinate[]): void {
     this.props.robotPath = robotPath;
   }
 
-  toPixel(pos: Coordinate): Pixel {
-    return new Pixel({
+  toPixel(pos: MapCoordinate): MapPixel {
+    return new MapPixel({
       x: Math.floor(((pos.x - this.min.x) * this.size.x) / (this.max.x - this.min.x)),
       y: Math.floor(((pos.y - this.min.y) * this.size.y) / (this.max.y - this.min.y)),
     });
   }
 
-  toCoordinate(pos: Pixel): Coordinate {
-    return new Coordinate({
+  toCoordinate(pos: MapPixel): MapCoordinate {
+    return new MapCoordinate({
       x: (pos.x / this.size.x) * (this.max.x - this.min.x) + this.min.x,
       y: (pos.y / this.size.y) * (this.max.y - this.min.y) + this.min.y,
     });

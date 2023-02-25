@@ -1,3 +1,5 @@
+const pkg = require('./package.json');
+
 module.exports = function (api) {
   api.cache(true);
 
@@ -8,7 +10,7 @@ module.exports = function (api) {
       {
         corejs: 3,
         useBuiltIns: 'usage',
-        targets: ['node >= 18.12'],
+        targets: [`node ${pkg.engines.node}`],
       },
     ],
   ];
@@ -29,5 +31,14 @@ module.exports = function (api) {
   return {
     presets,
     plugins,
+    ignore: getIgnorePatterns(process.env.NODE_ENV),
   };
 };
+
+function getIgnorePatterns(nodeEnv) {
+  if (nodeEnv === 'production') {
+    return ['**/*.test.ts'];
+  }
+
+  return [];
+}
