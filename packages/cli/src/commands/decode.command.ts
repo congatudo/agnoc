@@ -1,9 +1,10 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
-import { createReadStream } from "fs";
-import { Duplex, pipeline } from "stream";
-import { PacketDecodeTransform } from "@agnoc/cli/streams/packet-decode-transform.stream";
-import { toJSONStream } from "../utils/to-json-stream.util";
-import { toStringStream } from "../utils/to-string-stream.util";
+import { createReadStream } from 'fs';
+import { pipeline } from 'stream';
+import { PacketDecodeTransform } from '../streams/packet-decode-transform.stream';
+import { toJSONStream } from '../utils/to-json-stream.util';
+import { toStringStream } from '../utils/to-string-stream.util';
+import type { Duplex } from 'stream';
 
 interface DecodeOptions {
   json: true | undefined;
@@ -14,7 +15,7 @@ interface DecodeOptions {
 
 export function decode(file: string, options: DecodeOptions): void {
   pipeline(
-    file === "-" ? options.stdin : createReadStream(file),
+    file === '-' ? options.stdin : createReadStream(file),
     new PacketDecodeTransform(),
     ...(options.json ? toJSONStream() : toStringStream()),
     options.stdout,
@@ -22,6 +23,6 @@ export function decode(file: string, options: DecodeOptions): void {
       if (err && err.stack) {
         options.stderr.write(err.stack);
       }
-    }
+    },
   );
 }

@@ -1,6 +1,7 @@
 # compiled output
 lib
 schemas
+public
 
 # dependencies
 node_modules

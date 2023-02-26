@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "tsBuildInfoFile": ".build-cache/tsconfig.build.tsbuildinfo"
+  },
+  "include": ["src", "schemas"],
+  "references": [{ "path": "../toolkit/tsconfig.build.json" }, { "path": "../domain/tsconfig.build.json" }]
+}

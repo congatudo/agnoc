@@ -1,17 +1,17 @@
-name: "Install"
-description: "Install dependencies for jobs"
+name: 'Install'
+description: 'Install dependencies for jobs'
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 18
-        registry-url: "https://registry.npmjs.org"
+        registry-url: 'https://registry.npmjs.org'
     - name: Configure git user
       shell: bash
       run: |
-        git config --global user.email adrigzr@users.noreply.github.com
+        git config --global user.email a.gonzalezrus@gmail.com
         git config --global user.name adrigzr
     - name: Install libpcap-dev
       shell: bash
@@ -23,7 +23,7 @@ runs:
         path: |
           node_modules
           packages/*/node_modules
-        key: cache-dependencies-${{ hashFiles('**/yarn.lock') }}
+        key: cache-dependencies-${{ hashFiles('**/package.json', '**/yarn.lock') }}
         restore-keys: |
           cache-dependencies-
     - name: Install dependencies

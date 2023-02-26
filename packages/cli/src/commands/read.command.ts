@@ -1,8 +1,9 @@
-import { Duplex, pipeline } from "stream";
-import { PacketDecodeTransform } from "../streams/packet-decode-transform.stream";
-import { TCPReader } from "../streams/tcp-reader.stream";
-import { toJSONStream } from "../utils/to-json-stream.util";
-import { toStringStream } from "../utils/to-string-stream.util";
+import { pipeline } from 'stream';
+import { PacketDecodeTransform } from '../streams/packet-decode-transform.stream';
+import { TCPReader } from '../streams/tcp-reader.stream';
+import { toJSONStream } from '../utils/to-json-stream.util';
+import { toStringStream } from '../utils/to-string-stream.util';
+import type { Duplex } from 'stream';
 
 interface ReadOptions {
   json: true | undefined;
@@ -15,16 +16,14 @@ export async function read(file: string, options: ReadOptions): Promise<void> {
   let pcap;
 
   try {
-    pcap = await import("pcap");
+    pcap = await import('pcap');
   } catch (e) {
-    throw new ReferenceError(
-      `Unable to find 'pcap' module. Try installing 'lib-pcap' and reinstalling this package.`
-    );
+    throw new ReferenceError(`Unable to find 'pcap' module. Try installing 'lib-pcap' and reinstalling this package.`);
   }
 
   pipeline(
     new TCPReader(file, {
-      filter: "port 4010 or port 4030 or port 4050",
+      filter: 'port 4010 or port 4030 or port 4050',
       decode: pcap.decode,
       createSession: pcap.createOfflineSession,
     }),
@@ -35,6 +34,6 @@ export async function read(file: string, options: ReadOptions): Promise<void> {
       if (err && err.stack) {
         options.stderr.write(err.stack);
       }
-    }
+    },
   );
 }

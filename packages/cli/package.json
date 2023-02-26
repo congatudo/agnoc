@@ -1,7 +1,7 @@
 {
   "name": "@agnoc/cli",
-  "version": "0.16.0-next.9",
-  "description": "Agnoc command line.",
+  "version": "0.17.1",
+  "description": "Agnoc command line interface",
   "keywords": [
     "agnoc",
     "cli",
@@ -17,9 +17,15 @@
   },
   "license": "MIT",
   "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "bin": {
     "agnoc": "./bin/agnoc.js"
   },
+  "files": [
+    "bin",
+    "lib"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -29,12 +35,46 @@
     "directory": "packages/cli"
   },
   "scripts": {
-    "build": "make",
-    "clean": "make clean",
-    "test": "make test"
+    "build": "npm-run-all build:lib",
+    "build:lib": "npm-run-all build:lib:js build:lib:ts",
+    "build:lib:js": "NODE_ENV=production babel --out-dir lib --root-mode upward --extensions '.ts' src",
+    "build:lib:ts": "tsc -b tsconfig.build.json",
+    "clean": "rm -rf .build-cache lib",
+    "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
+    "test": "nyc mocha test"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "inputs": [
+          "{workspaceRoot}/package.json",
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/package.json",
+          "{projectRoot}/tsconfig.*"
+        ],
+        "outputs": [
+          "{projectRoot}/lib",
+          "{projectRoot}/.build-cache"
+        ]
+      },
+      "test": {
+        "dependsOn": [
+          "build"
+        ],
+        "inputs": [
+          "{workspaceRoot}/.mocharc.yml",
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/test/**/*"
+        ],
+        "outputs": [
+          "{projectRoot}/coverage"
+        ]
+      }
+    }
   },
   "dependencies": {
-    "@agnoc/core": "^0.16.0-next.9",
+    "@agnoc/transport-tcp": "^0.16.0",
+    "@agnoc/toolkit": "^0.16.0",
     "chalk": "^4.1.1",
     "cli-ux": "^5.5.1",
     "commander": "^10.0.0",
@@ -52,6 +92,11 @@
     "sinon-chai": "^3.7.0"
   },
   "engines": {
-    "node": ">=12.3"
+    "node": ">=18.12"
+  },
+  "typedoc": {
+    "entryPoint": "./src/index.ts",
+    "readmeFile": "./README.md",
+    "displayName": "CLI"
   }
 }

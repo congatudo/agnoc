@@ -1,0 +1,103 @@
+{
+  "name": "@agnoc/transport-tcp",
+  "version": "0.16.0",
+  "description": "Agnoc transport TCP library",
+  "keywords": [
+    "agnoc",
+    "transport",
+    "tcp",
+    "conga",
+    "cecotec",
+    "driver",
+    "reverse",
+    "engineering"
+  ],
+  "homepage": "https://github.com/adrigzr/agnoc",
+  "bugs": {
+    "url": "https://github.com/adrigzr/agnoc/issues"
+  },
+  "license": "MIT",
+  "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "schemas"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrigzr/agnoc.git",
+    "directory": "packages/transport-tcp"
+  },
+  "scripts": {
+    "build": "npm-run-all build:schemas build:lib",
+    "build:lib": "npm-run-all build:lib:js build:lib:ts",
+    "build:lib:js": "NODE_ENV=production babel --out-dir lib --root-mode upward --extensions '.ts' src",
+    "build:lib:ts": "tsc -b tsconfig.build.json",
+    "build:schemas": "npm-run-all build:schemas:json build:schemas:js build:schemas:ts",
+    "build:schemas:js": "pbjs -t static -w commonjs -o schemas/schema.js schemas/schema.proto",
+    "build:schemas:json": "pbjs -t json -o schemas/schema.json schemas/schema.proto",
+    "build:schemas:ts": "pbts -o schemas/schema.d.ts schemas/schema.js",
+    "clean": "rm -rf .build-cache lib schemas/schema.json schemas/schema.js schemas/schema.d.ts",
+    "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
+    "test": "nyc mocha src test"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "inputs": [
+          "{workspaceRoot}/package.json",
+          "{projectRoot}/schemas/schema.proto",
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/package.json",
+          "{projectRoot}/tsconfig.*"
+        ],
+        "outputs": [
+          "{projectRoot}/schemas/schema.json",
+          "{projectRoot}/schemas/schema.js",
+          "{projectRoot}/schemas/schema.d.ts",
+          "{projectRoot}/lib",
+          "{projectRoot}/.build-cache"
+        ]
+      },
+      "test": {
+        "dependsOn": [
+          "build"
+        ],
+        "inputs": [
+          "{workspaceRoot}/.mocharc.yml",
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/test/**/*"
+        ],
+        "outputs": [
+          "{projectRoot}/coverage"
+        ]
+      }
+    }
+  },
+  "dependencies": {
+    "@agnoc/domain": "^0.16.0",
+    "@agnoc/toolkit": "^0.16.0",
+    "debug": "^4.3.4",
+    "protobufjs": "^7.2.2",
+    "tiny-typed-emitter": "^2.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "protobufjs-cli": "^1.1.1",
+    "sinon": "^15.0.1",
+    "sinon-chai": "^3.7.0"
+  },
+  "engines": {
+    "node": ">=18.12"
+  },
+  "typedoc": {
+    "entryPoint": "./src/index.ts",
+    "readmeFile": "./README.md",
+    "displayName": "Transport TCP"
+  }
+}
