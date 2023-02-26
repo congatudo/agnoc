@@ -3,6 +3,102 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0-next.0](https://github.com/congatudo/agnoc/compare/v0.17.1...v0.18.0-next.0) (2023-02-26)
+
+### Bug Fixes
+
+- **domain:** moved `BigNumber` to `transport-tcp`
+  ([5323861](https://github.com/congatudo/agnoc/commit/5323861e1207684f204156ba2b6833fba65842eb))
+- **domain:** moved `BigNumber` to `transport-tcp`
+  ([f5454a4](https://github.com/congatudo/agnoc/commit/f5454a4bfe6a75ca9fff2a8a3ba19c5618450a21))
+- force publish ([0e1aaa8](https://github.com/congatudo/agnoc/commit/0e1aaa8106c674310e440fdf96890070c711925a))
+- force publish ([d2b5cb3](https://github.com/congatudo/agnoc/commit/d2b5cb35108c1d1f47c5763f9d51a9edbfd7a99d))
+- force publish ([8ee42ac](https://github.com/congatudo/agnoc/commit/8ee42ac7899242cc156373c98712ca469f783a24))
+- force publish ([bf39188](https://github.com/congatudo/agnoc/commit/bf39188801f151930b0a37624238226ca0640539))
+
+### Features
+
+- **core:** add `resolution` field to `DeviceMap`
+  ([d5af9c8](https://github.com/congatudo/agnoc/commit/d5af9c8e76dc63e4f2bff2a4fa2378314bb1bb1a))
+- **core:** rename `core` package to `transport-tcp`
+  ([ce64625](https://github.com/congatudo/agnoc/commit/ce646250779efab350a6cf2473e53c2bc9b76d90))
+- **core:** rename `core` package to `transport-tcp`
+  ([6a6e64c](https://github.com/congatudo/agnoc/commit/6a6e64c27cb3e12c0c7dd925d8b61d2fcab35be0))
+- extract `toolkit` & `domain` packages
+  ([9e1da4e](https://github.com/congatudo/agnoc/commit/9e1da4e06e103ead41ec0768a9c6af50786e9f43))
+- extract `toolkit` & `domain` packages
+  ([c1bac5c](https://github.com/congatudo/agnoc/commit/c1bac5ce5b7cfb90e78ddd21f8d42a5a9d5eba6b))
+- upgrade to node 18 ([5642a76](https://github.com/congatudo/agnoc/commit/5642a760c20e716cfa927f680cfe96f9a70336ce))
+- upgrade to node 18 ([90daaa3](https://github.com/congatudo/agnoc/commit/90daaa3c4bf85a5204ae7930a129a950dada788e))
+
+# [0.16.0-next.9](https://github.com/congatudo/agnoc/compare/v0.16.0-next.8...v0.16.0-next.9) (2023-02-09)
+
+# [0.16.0-next.8](https://github.com/congatudo/agnoc/compare/v0.16.0-next.7...v0.16.0-next.8) (2023-02-08)
+
+### Features
+
+- update dependencies ([e0457fe](https://github.com/congatudo/agnoc/commit/e0457fe003cf870c5374781795097c2590cfb3ee))
+
+# [0.16.0-next.7](https://github.com/congatudo/agnoc/compare/v0.16.0-next.6...v0.16.0-next.7) (2022-01-28)
+
+### Bug Fixes
+
+- **core:** emit updateDevice event when has waiting map
+  ([63801b3](https://github.com/congatudo/agnoc/commit/63801b32e8ffbaceefe68b6db9dbdb4502d26a80))
+
+# [0.16.0-next.6](https://github.com/congatudo/agnoc/compare/v0.16.0-next.5...v0.16.0-next.6) (2022-01-26)
+
+### Bug Fixes
+
+- **core:** fix enable manual mode
+  ([92dedee](https://github.com/congatudo/agnoc/commit/92dedee8dbf98c32ae207f742093fafbdc4d3d58))
+- **core:** set device timezone as optional
+  ([851c9aa](https://github.com/congatudo/agnoc/commit/851c9aa7e67e487f1b99ec2fdbafecc7545c5b60))
+
+# [0.16.0-next.5](https://github.com/congatudo/agnoc/compare/v0.16.0-next.4...v0.16.0-next.5) (2022-01-24)
+
+### Bug Fixes
+
+- add missing workMode ([f3a1975](https://github.com/congatudo/agnoc/commit/f3a1975ff54947c7ad609350985268f59a598ad2))
+
+# [0.16.0-next.4](https://github.com/congatudo/agnoc/compare/v0.16.0-next.3...v0.16.0-next.4) (2021-08-16)
+
+### Bug Fixes
+
+- **core:** set battery value interpolation to 100..200
+  ([02884fd](https://github.com/congatudo/agnoc/commit/02884fde2059f881d4491ef32b1ae249c7f4032d))
+
+# [0.16.0-next.3](https://github.com/congatudo/agnoc/compare/v0.16.0-next.2...v0.16.0-next.3) (2021-07-26)
+
+### Features
+
+- add waiting map handler
+  ([f5c112f](https://github.com/congatudo/agnoc/commit/f5c112f87a726d7e6d76875be0056a107f8e27e4))
+
+# [0.16.0-next.2](https://github.com/congatudo/agnoc/compare/v0.16.0-next.1...v0.16.0-next.2) (2021-06-21)
+
+### Bug Fixes
+
+- emit not cleaning robot position
+  ([8438b40](https://github.com/congatudo/agnoc/commit/8438b40b872caa7fe7f9020315eef871d22d5e4e))
+
+# [0.16.0-next.1](https://github.com/congatudo/agnoc/compare/v0.16.0-next.0...v0.16.0-next.1) (2021-06-15)
+
+### Bug Fixes
+
+- update dependencies ([d0f6a00](https://github.com/congatudo/agnoc/commit/d0f6a0060804e5c91875e7028a19669776b49e18))
+
+# [0.16.0-next.0](https://github.com/congatudo/agnoc/compare/v0.15.0...v0.16.0-next.0) (2021-06-15)
+
+### Features
+
+- add device set time ([d74c049](https://github.com/congatudo/agnoc/commit/d74c049d8a0d8795fab5f119b82471ff70513988))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [0.17.1](https://github.com/congatudo/agnoc/compare/v0.17.0...v0.17.1) (2023-02-20)
 
 ### Bug Fixes

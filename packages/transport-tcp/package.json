@@ -1,6 +1,6 @@
 {
   "name": "@agnoc/transport-tcp",
-  "version": "0.16.0",
+  "version": "0.18.0-next.0",
   "description": "Agnoc transport TCP library",
   "keywords": [
     "agnoc",
@@ -79,8 +79,8 @@
     }
   },
   "dependencies": {
-    "@agnoc/domain": "^0.16.0",
-    "@agnoc/toolkit": "^0.16.0",
+    "@agnoc/domain": "^0.18.0-next.0",
+    "@agnoc/toolkit": "^0.18.0-next.0",
     "debug": "^4.3.4",
     "protobufjs": "^7.2.2",
     "tiny-typed-emitter": "^2.1.0"

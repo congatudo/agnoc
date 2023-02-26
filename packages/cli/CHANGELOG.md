@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0-next.0](https://github.com/adrigzr/agnoc/compare/v0.17.1...v0.18.0-next.0) (2023-02-26)
+
+### Features
+
+- **core:** rename `core` package to `transport-tcp`
+  ([6a6e64c](https://github.com/adrigzr/agnoc/commit/6a6e64c27cb3e12c0c7dd925d8b61d2fcab35be0))
+- extract `toolkit` & `domain` packages
+  ([c1bac5c](https://github.com/adrigzr/agnoc/commit/c1bac5ce5b7cfb90e78ddd21f8d42a5a9d5eba6b))
+- upgrade to node 18 ([90daaa3](https://github.com/adrigzr/agnoc/commit/90daaa3c4bf85a5204ae7930a129a950dada788e))
+
+# [0.16.0-next.9](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.8...v0.16.0-next.9) (2023-02-09)
+
+# [0.16.0-next.8](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.7...v0.16.0-next.8) (2023-02-08)
+
+### Features
+
+- update dependencies ([e0457fe](https://github.com/adrigzr/agnoc/commit/e0457fe003cf870c5374781795097c2590cfb3ee))
+
+# [0.16.0-next.7](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.6...v0.16.0-next.7) (2022-01-28)
+
+# [0.16.0-next.6](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.5...v0.16.0-next.6) (2022-01-26)
+
+# [0.16.0-next.5](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.4...v0.16.0-next.5) (2022-01-24)
+
+# [0.16.0-next.4](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.3...v0.16.0-next.4) (2021-08-16)
+
+# [0.16.0-next.3](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.2...v0.16.0-next.3) (2021-07-26)
+
+# [0.16.0-next.2](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.1...v0.16.0-next.2) (2021-06-21)
+
+# [0.16.0-next.1](https://github.com/adrigzr/agnoc/compare/v0.16.0-next.0...v0.16.0-next.1) (2021-06-15)
+
+### Bug Fixes
+
+- update dependencies ([d0f6a00](https://github.com/adrigzr/agnoc/commit/d0f6a0060804e5c91875e7028a19669776b49e18))
+
+# [0.16.0-next.0](https://github.com/adrigzr/agnoc/compare/v0.15.0...v0.16.0-next.0) (2021-06-15)
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [0.17.1](https://github.com/adrigzr/agnoc/compare/v0.17.0...v0.17.1) (2023-02-20)
 
 **Note:** Version bump only for package @agnoc/cli

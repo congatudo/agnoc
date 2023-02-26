@@ -1,6 +1,6 @@
 {
   "name": "@agnoc/domain",
-  "version": "0.16.0",
+  "version": "0.18.0-next.0",
   "description": "Agnoc domain library",
   "keywords": [
     "agnoc",
@@ -65,7 +65,7 @@
     }
   },
   "dependencies": {
-    "@agnoc/toolkit": "^0.16.0"
+    "@agnoc/toolkit": "^0.18.0-next.0"
   },
   "devDependencies": {
     "chai": "^4.3.7",

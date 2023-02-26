@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0-next.0](https://github.com/adrigzr/agnoc/compare/v0.17.1...v0.18.0-next.0) (2023-02-26)
+
+### Bug Fixes
+
+- **domain:** moved `BigNumber` to `transport-tcp`
+  ([f5454a4](https://github.com/adrigzr/agnoc/commit/f5454a4bfe6a75ca9fff2a8a3ba19c5618450a21))
+
+### Features
+
+- **core:** rename `core` package to `transport-tcp`
+  ([6a6e64c](https://github.com/adrigzr/agnoc/commit/6a6e64c27cb3e12c0c7dd925d8b61d2fcab35be0))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [0.17.1](https://github.com/adrigzr/agnoc/compare/v0.17.0...v0.17.1) (2023-02-20)
 
 **Note:** Version bump only for package @agnoc/core
