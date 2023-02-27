@@ -153,9 +153,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async start(): Promise<void> {
     if (this.device.hasMopAttached && this.device.mode?.value !== DeviceModeValue.Mop) {
-      await this.setMode(new DeviceMode({ value: DeviceModeValue.Mop }));
+      await this.setMode(new DeviceMode(DeviceModeValue.Mop));
     } else if (!this.device.hasMopAttached && this.device.mode?.value === DeviceModeValue.Mop) {
-      await this.setMode(new DeviceMode({ value: DeviceModeValue.None }));
+      await this.setMode(new DeviceMode(DeviceModeValue.None));
     }
 
     if (this.device.mode?.value === DeviceModeValue.Zone) {
@@ -465,7 +465,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     if (this.device.mode?.value !== DeviceModeValue.Spot) {
-      await this.setMode(new DeviceMode({ value: DeviceModeValue.Spot }));
+      await this.setMode(new DeviceMode(DeviceModeValue.Spot));
     }
 
     await this.sendRecv('DEVICE_MAPID_SET_NAVIGATION_REQ', 'DEVICE_MAPID_SET_NAVIGATION_RSP', {
@@ -488,7 +488,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
 
     if (this.device.mode?.value !== DeviceModeValue.Zone) {
-      await this.setMode(new DeviceMode({ value: DeviceModeValue.Zone }));
+      await this.setMode(new DeviceMode(DeviceModeValue.Zone));
     }
 
     const req = {
@@ -836,7 +836,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     this.device.updateCurrentClean(
       new DeviceCleanWork({
-        size: new CleanSize({ value: object.cleanSize }),
+        size: new CleanSize(object.cleanSize),
         time: DeviceTime.fromMinutes(object.cleanTime),
       }),
     );
@@ -887,7 +887,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
       this.device.updateCurrentClean(
         new DeviceCleanWork({
-          size: new CleanSize({ value: statusInfo.cleanSize }),
+          size: new CleanSize(statusInfo.cleanSize),
           time: DeviceTime.fromMinutes(statusInfo.cleanTime),
         }),
       );

@@ -1,32 +1,44 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { ValueObject } from '../base-classes/value-object.base';
+import { DomainPrimitive } from '../base-classes/domain-primitive.base';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import { ID } from './id.value-object';
 
 describe('id.value-object', () => {
-  it('inherits value object', () => {
-    const id = new ID(1);
+  it('should be created', function () {
+    const id = new ID(123);
 
-    expect(id).to.be.instanceof(ValueObject);
+    expect(id).to.be.instanceof(DomainPrimitive);
+    expect(id.value).to.be.equal(123);
   });
 
-  it('returns its value', () => {
-    const id = new ID(1);
-
-    expect(id.value).to.be.equal(1);
+  it('should throw an error when value is not a number', function () {
+    // @ts-expect-error - invalid value
+    expect(() => new ID('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for id is not a positive integer`);
   });
 
-  it('throws an error when it is not a number', () => {
-    expect(() => {
-      // @ts-expect-error invalid argument
-      new ID('foo');
-    }).to.throw(ArgumentInvalidException);
+  it('should throw an error when value is a float', function () {
+    expect(() => new ID(0.5)).to.throw(ArgumentInvalidException, `Value '0.5' for id is not a positive integer`);
   });
 
-  it('generates random id', () => {
-    const id = ID.generate();
+  it('should throw an error when value is below zero', function () {
+    expect(() => new ID(-5)).to.throw(ArgumentInvalidException, `Value '-5' for id is not a positive integer`);
+  });
 
-    expect(id).to.be.instanceof(ID);
+  describe('#generate()', () => {
+    it('generates random id', () => {
+      const id = ID.generate();
+
+      expect(id).to.be.instanceof(ID);
+    });
+  });
+
+  describe('#fromJSON()', () => {
+    it('creates id from JSON', () => {
+      const id = ID.fromJSON(123);
+
+      expect(id).to.be.instanceof(ID);
+      expect(id.value).to.be.equal(123);
+    });
   });
 });

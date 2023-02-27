@@ -31,7 +31,7 @@ export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_
       fanSpeed: this.deviceFanSpeedMapper.toDomain(orderList.cleanInfo.windPower),
       waterLevel: orderList.cleanInfo.waterLevel
         ? this.deviceWaterLevelMapper.toDomain(orderList.cleanInfo.waterLevel)
-        : new DeviceWaterLevel({ value: DeviceWaterLevelValue.Off }),
+        : new DeviceWaterLevel(DeviceWaterLevelValue.Off),
     };
 
     return new DeviceOrder(props);

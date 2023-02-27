@@ -1,5 +1,4 @@
-import { ValueObject, ArgumentInvalidException } from '@agnoc/toolkit';
-import type { DomainPrimitive } from '@agnoc/toolkit';
+import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 
 /** Describes a device error value. */
 export enum DeviceErrorValue {
@@ -44,17 +43,12 @@ export enum DeviceErrorValue {
   WheelUp = 'WheelUp',
 }
 
-/** Describes a device error value. */
-export class DeviceError extends ValueObject<DeviceErrorValue> {
-  /**
-   * Returns device error value.
-   *
-   * Allowed values from {@link DeviceErrorValue}.
-   */
-  get value(): DeviceErrorValue {
-    return this.props.value;
-  }
-
+/**
+ * Describes a device error value.
+ *
+ * Allowed values from {@link DeviceErrorValue}.
+ */
+export class DeviceError extends DomainPrimitive<DeviceErrorValue> {
   protected validate(props: DomainPrimitive<DeviceErrorValue>): void {
     if (!Object.values(DeviceErrorValue).includes(props.value)) {
       throw new ArgumentInvalidException(`Value '${props.value}' for device error is invalid`);

@@ -13,9 +13,7 @@ const ROBOT_TO_DOMAIN = flipObject(DOMAIN_TO_ROBOT);
 
 export class DeviceFanSpeedMapper implements Mapper<DeviceFanSpeed, number> {
   toDomain(fanSpeed: number): DeviceFanSpeed {
-    return new DeviceFanSpeed({
-      value: ROBOT_TO_DOMAIN[fanSpeed],
-    });
+    return new DeviceFanSpeed(ROBOT_TO_DOMAIN[fanSpeed]);
   }
 
   fromDomain(fanSpeed: DeviceFanSpeed): number {

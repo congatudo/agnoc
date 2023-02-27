@@ -24,9 +24,7 @@ function getDomainValue(mode: number): DeviceModeValue {
 
 export class DeviceModeMapper implements Mapper<DeviceMode, number> {
   toDomain(mode: number): DeviceMode {
-    return new DeviceMode({
-      value: getDomainValue(mode),
-    });
+    return new DeviceMode(getDomainValue(mode));
   }
 
   fromDomain(): number {

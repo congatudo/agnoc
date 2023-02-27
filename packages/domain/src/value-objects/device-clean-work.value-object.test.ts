@@ -9,7 +9,7 @@ describe('DeviceCleanWork', function () {
   let time: DeviceTime;
 
   beforeEach(function () {
-    size = new CleanSize({ value: 10 });
+    size = new CleanSize(10);
     time = DeviceTime.fromMinutes(120);
   });
 

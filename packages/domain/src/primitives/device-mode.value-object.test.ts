@@ -1,12 +1,12 @@
-import { ValueObject, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 import { expect } from 'chai';
 import { DeviceMode, DeviceModeValue } from './device-mode.value-object';
 
 describe('DeviceMode', function () {
   it('should be created', function () {
-    const deviceMode = new DeviceMode({ value: DeviceModeValue.None });
+    const deviceMode = new DeviceMode(DeviceModeValue.None);
 
-    expect(deviceMode).to.be.instanceOf(ValueObject);
+    expect(deviceMode).to.be.instanceOf(DomainPrimitive);
     expect(deviceMode.value).to.be.equal(DeviceModeValue.None);
   });
 

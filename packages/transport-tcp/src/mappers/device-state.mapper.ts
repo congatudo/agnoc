@@ -77,9 +77,7 @@ function getDomainValue(state: RobotState): DeviceStateValue {
 
 export class DeviceStateMapper implements Mapper<DeviceState, RobotState> {
   toDomain(state: RobotState): DeviceState {
-    return new DeviceState({
-      value: getDomainValue(state),
-    });
+    return new DeviceState(getDomainValue(state));
   }
 
   fromDomain(): RobotState {

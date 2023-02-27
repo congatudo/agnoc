@@ -1,5 +1,4 @@
-import { ValueObject, ArgumentInvalidException } from '@agnoc/toolkit';
-import type { DomainPrimitive } from '@agnoc/toolkit';
+import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 
 /** The possible values of a device state. */
 export enum DeviceStateValue {
@@ -14,12 +13,7 @@ export enum DeviceStateValue {
 }
 
 /** Describe the state of a device. */
-export class DeviceState extends ValueObject<DeviceStateValue> {
-  /** Returns the value of the device state. */
-  get value(): DeviceStateValue {
-    return this.props.value;
-  }
-
+export class DeviceState extends DomainPrimitive<DeviceStateValue> {
   protected validate(props: DomainPrimitive<DeviceStateValue>): void {
     if (!Object.values(DeviceStateValue).includes(props.value)) {
       throw new ArgumentInvalidException(`Value '${props.value}' for device state is invalid`);

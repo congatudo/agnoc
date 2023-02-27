@@ -13,9 +13,7 @@ const ROBOT_TO_DOMAIN = flipObject(DOMAIN_TO_ROBOT);
 
 export class DeviceWaterLevelMapper implements Mapper<DeviceWaterLevel, number> {
   toDomain(waterLevel: number): DeviceWaterLevel {
-    return new DeviceWaterLevel({
-      value: ROBOT_TO_DOMAIN[waterLevel],
-    });
+    return new DeviceWaterLevel(ROBOT_TO_DOMAIN[waterLevel]);
   }
 
   fromDomain(waterLevel: DeviceWaterLevel): number {

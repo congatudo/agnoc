@@ -1,12 +1,12 @@
-import { ValueObject, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 import { expect } from 'chai';
 import { DeviceWaterLevel, DeviceWaterLevelValue } from './device-water-level.value-object';
 
 describe('DeviceWaterLevel', function () {
   it('should be created', function () {
-    const deviceWaterLevel = new DeviceWaterLevel({ value: DeviceWaterLevelValue.Off });
+    const deviceWaterLevel = new DeviceWaterLevel(DeviceWaterLevelValue.Off);
 
-    expect(deviceWaterLevel).to.be.instanceOf(ValueObject);
+    expect(deviceWaterLevel).to.be.instanceOf(DomainPrimitive);
     expect(deviceWaterLevel.value).to.be.equal(DeviceWaterLevelValue.Off);
   });
 

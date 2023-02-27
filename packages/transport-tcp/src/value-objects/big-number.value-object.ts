@@ -1,18 +1,9 @@
 import { randomBytes } from 'crypto';
-import { ValueObject, ArgumentInvalidException } from '@agnoc/toolkit';
-import type { DomainPrimitive } from '@agnoc/toolkit';
+import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 
 export type BigNumberSerialized = string;
 
-export class BigNumber extends ValueObject<bigint> {
-  constructor(value: bigint) {
-    super({ value });
-  }
-
-  public get value(): bigint {
-    return this.props.value;
-  }
-
+export class BigNumber extends DomainPrimitive<bigint> {
   public override toString(): string {
     return this.props.value.toString(16);
   }

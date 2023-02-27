@@ -1,7 +1,6 @@
-import { ValueObject, ArgumentOutOfRangeException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ArgumentOutOfRangeException, ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 import { OPNAMES, OPCODES } from '../constants/opcodes.constant';
 import type { OPCodeLiteral, OPNameLiteral } from '../constants/opcodes.constant';
-import type { DomainPrimitive } from '@agnoc/toolkit';
 
 const MIN_OPCODE = 0;
 const MAX_OPCODE = 0xffff;
@@ -10,21 +9,13 @@ function toHex(value: number) {
   return `0x${value.toString(16).padStart(4, '0')}`;
 }
 
-export class OPCode<Name extends (typeof OPNAMES)[Code], Code extends OPCodeLiteral> extends ValueObject<number> {
-  constructor(value: Code) {
-    super({ value });
-  }
-
-  get value(): Code {
-    return this.props.value as Code;
-  }
-
+export class OPCode<Name extends (typeof OPNAMES)[Code], Code extends OPCodeLiteral> extends DomainPrimitive<number> {
   get code(): string {
     return toHex(this.props.value);
   }
 
   get name(): Name {
-    return OPNAMES[this.value] as Name;
+    return OPNAMES[this.value as Code] as Name;
   }
 
   override toString(): string {

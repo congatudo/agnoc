@@ -1,22 +1,14 @@
 import { randomBytes } from 'crypto';
-import { ValueObject } from '../base-classes/value-object.base';
+import { DomainPrimitive } from '../base-classes/domain-primitive.base';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
-import type { DomainPrimitive } from '../base-classes/value-object.base';
+import type { DomainPrimitiveProps } from '../base-classes/domain-primitive.base';
 
 export type IDSerialized = number;
 
-export class ID extends ValueObject<number> {
-  constructor(value: number) {
-    super({ value });
-  }
-
-  public get value(): number {
-    return this.props.value;
-  }
-
-  protected validate({ value }: DomainPrimitive<number>): void {
-    if (typeof value !== 'number') {
-      throw new ArgumentInvalidException('Incorrect ID value');
+export class ID extends DomainPrimitive<number> {
+  protected validate({ value }: DomainPrimitiveProps<number>): void {
+    if (!Number.isInteger(value) || value < 0) {
+      throw new ArgumentInvalidException(`Value '${value}' for id is not a positive integer`);
     }
   }
 

@@ -24,9 +24,7 @@ export class DeviceBatteryMapper implements Mapper<DeviceBattery, number> {
       battery = ROBOT_MAX_VALUE;
     }
 
-    return new DeviceBattery({
-      value: interpolate(battery, ROBOT, DEVICE),
-    });
+    return new DeviceBattery(interpolate(battery, ROBOT, DEVICE));
   }
 
   fromDomain(battery: DeviceBattery): number {

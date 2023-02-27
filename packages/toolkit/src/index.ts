@@ -1,4 +1,5 @@
 export * from './base-classes/aggregate-root.base';
+export * from './base-classes/domain-primitive.base';
 export * from './base-classes/entity.base';
 export * from './base-classes/exception.base';
 export * from './base-classes/mapper.base';
