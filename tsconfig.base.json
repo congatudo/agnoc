@@ -7,6 +7,7 @@
     "experimentalDecorators": true,
     "isolatedModules": true,
     "moduleResolution": "node",
+    "sourceMap": true,
     "noEmit": true,
     "noErrorTruncation": true,
     "noFallthroughCasesInSwitch": true,
