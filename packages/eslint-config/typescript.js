@@ -20,12 +20,12 @@ module.exports = {
   ],
   plugins: ['eslint-plugin-tsdoc'],
   settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts'],
+    },
     'import/resolver': {
-      'babel-module': {
-        extensions: ['.js', '.ts', '.json'],
-        alias: {
-          '^(@agnoc/[^/]+)$': '\\1/src',
-        },
+      typescript: {
+        project: ['tsconfig.json'],
       },
     },
   },

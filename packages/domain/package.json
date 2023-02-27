@@ -32,9 +32,7 @@
   },
   "scripts": {
     "build": "npm-run-all build:lib",
-    "build:lib": "npm-run-all build:lib:js build:lib:ts",
-    "build:lib:js": "NODE_ENV=production babel --out-dir lib --root-mode upward --extensions '.ts' src",
-    "build:lib:ts": "tsc -b tsconfig.build.json",
+    "build:lib": "tsc -b tsconfig.build.json",
     "clean": "rm -rf .build-cache lib",
     "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
     "test": "nyc mocha src"
@@ -65,7 +63,8 @@
     }
   },
   "dependencies": {
-    "@agnoc/toolkit": "^0.18.0-next.0"
+    "@agnoc/toolkit": "^0.18.0-next.0",
+    "tslib": "^2.5.0"
   },
   "devDependencies": {
     "chai": "^4.3.7",

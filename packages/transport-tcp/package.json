@@ -34,9 +34,7 @@
   },
   "scripts": {
     "build": "npm-run-all build:schemas build:lib",
-    "build:lib": "npm-run-all build:lib:js build:lib:ts",
-    "build:lib:js": "NODE_ENV=production babel --out-dir lib --root-mode upward --extensions '.ts' src",
-    "build:lib:ts": "tsc -b tsconfig.build.json",
+    "build:lib": "tsc -b tsconfig.build.json",
     "build:schemas": "npm-run-all build:schemas:json build:schemas:js build:schemas:ts",
     "build:schemas:js": "pbjs -t static -w commonjs -o schemas/schema.js schemas/schema.proto",
     "build:schemas:json": "pbjs -t json -o schemas/schema.json schemas/schema.proto",
@@ -83,7 +81,8 @@
     "@agnoc/toolkit": "^0.18.0-next.0",
     "debug": "^4.3.4",
     "protobufjs": "^7.2.2",
-    "tiny-typed-emitter": "^2.1.0"
+    "tiny-typed-emitter": "^2.1.0",
+    "tslib": "^2.5.0"
   },
   "devDependencies": {
     "chai": "^4.3.7",

@@ -1,8 +1,5 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "noEmit": true
-  },
   "include": ["packages/*/src", "packages/*/test", "packages/**/typings.d.ts"],
   "typedocOptions": {
     "entryPoints": ["packages/cli", "packages/transport-tcp", "packages/domain", "packages/toolkit"],
