@@ -18,7 +18,7 @@ describe('MapPosition', function () {
     // @ts-expect-error - missing property
     expect(() => new MapPosition({ y: 20, phi: 0 })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'x' for map position not provided`,
+      `Property 'x' for MapPosition not provided`,
     );
   });
 
@@ -26,7 +26,7 @@ describe('MapPosition', function () {
     // @ts-expect-error - missing property
     expect(() => new MapPosition({ x: 'foo', y: 20, phi: 0 })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'x' for map position is not a number`,
+      `Value 'foo' of property 'x' for MapPosition is not a number`,
     );
   });
 
@@ -34,7 +34,7 @@ describe('MapPosition', function () {
     // @ts-expect-error - missing property
     expect(() => new MapPosition({ x: 10, phi: 0 })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'y' for map position not provided`,
+      `Property 'y' for MapPosition not provided`,
     );
   });
 
@@ -42,7 +42,7 @@ describe('MapPosition', function () {
     // @ts-expect-error - missing property
     expect(() => new MapPosition({ x: 10, y: 'foo', phi: 0 })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'y' for map position is not a number`,
+      `Value 'foo' of property 'y' for MapPosition is not a number`,
     );
   });
 
@@ -50,7 +50,7 @@ describe('MapPosition', function () {
     // @ts-expect-error - missing property
     expect(() => new MapPosition({ x: 10, y: 20 })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'phi' for map position not provided`,
+      `Property 'phi' for MapPosition not provided`,
     );
   });
 
@@ -58,7 +58,7 @@ describe('MapPosition', function () {
     // @ts-expect-error - missing property
     expect(() => new MapPosition({ x: 10, y: 20, phi: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'phi' for map position is not a number`,
+      `Value 'foo' of property 'phi' for MapPosition is not a number`,
     );
   });
 

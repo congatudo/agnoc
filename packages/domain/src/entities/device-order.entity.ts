@@ -1,6 +1,6 @@
 import { ID, Entity, ArgumentNotProvidedException, isPresent, ArgumentInvalidException } from '@agnoc/toolkit';
-import { DeviceFanSpeed } from '../primitives/device-fan-speed.value-object';
-import { DeviceWaterLevel } from '../primitives/device-water-level.value-object';
+import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
+import { DeviceWaterLevel } from '../domain-primitives/device-water-level.domain-primitive';
 import { DeviceTime } from '../value-objects/device-time.value-object';
 
 export enum WeekDay {
@@ -36,11 +36,6 @@ export interface DeviceOrderProps {
 }
 
 export class DeviceOrder extends Entity<DeviceOrderProps> {
-  constructor(props: DeviceOrderProps) {
-    super(props);
-    this.validate(props);
-  }
-
   override get id(): ID {
     return this.props.id;
   }
@@ -85,7 +80,7 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
     return this.props.waterLevel;
   }
 
-  private validate(props: DeviceOrderProps) {
+  protected validate(props: DeviceOrderProps): void {
     if (
       ![
         props.id,

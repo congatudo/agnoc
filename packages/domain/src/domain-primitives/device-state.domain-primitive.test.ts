@@ -1,6 +1,6 @@
 import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { DeviceState, DeviceStateValue } from './device-state.value-object';
+import { DeviceState, DeviceStateValue } from './device-state.domain-primitive';
 
 describe('DeviceState', function () {
   it('should be created', function () {
@@ -12,6 +12,6 @@ describe('DeviceState', function () {
 
   it('should throw an error when value is invalid', function () {
     // @ts-expect-error - invalid value
-    expect(() => new DeviceState('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for device state is invalid`);
+    expect(() => new DeviceState('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for DeviceState is invalid`);
   });
 });

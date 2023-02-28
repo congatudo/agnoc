@@ -54,21 +54,21 @@ describe('DeviceSettings', function () {
     expect(
       // @ts-expect-error - missing property
       () => new DeviceSettings({ quietHours, ecoMode, repeatClean, brokenClean, carpetMode, historyMap }),
-    ).to.throw(ArgumentNotProvidedException, `Property 'voice' for device settings not provided`);
+    ).to.throw(ArgumentNotProvidedException, `Property 'voice' for DeviceSettings not provided`);
   });
 
   it("should throw an error when 'voice' property is invalid", function () {
     expect(
       // @ts-expect-error - invalid property
       () => new DeviceSettings({ voice: 'foo', quietHours, ecoMode, repeatClean, brokenClean, carpetMode, historyMap }),
-    ).to.throw(ArgumentInvalidException, `Value 'foo' for property 'voice' for device settings is not a voice setting`);
+    ).to.throw(ArgumentInvalidException, `Value 'foo' for property 'voice' for DeviceSettings is not a VoiceSetting`);
   });
 
   it("should throw an error when 'quietHours' property is not provided", function () {
     expect(
       // @ts-expect-error - missing property
       () => new DeviceSettings({ voice, ecoMode, repeatClean, brokenClean, carpetMode, historyMap }),
-    ).to.throw(ArgumentNotProvidedException, `Property 'quietHours' for device settings not provided`);
+    ).to.throw(ArgumentNotProvidedException, `Property 'quietHours' for DeviceSettings not provided`);
   });
 
   it("should throw an error when 'quietHours' property is invalid", function () {
@@ -77,7 +77,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ voice, quietHours: 'foo', ecoMode, repeatClean, brokenClean, carpetMode, historyMap }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'quietHours' for device settings is not a quiet hours setting`,
+      `Value 'foo' for property 'quietHours' for DeviceSettings is not a QuietHoursSetting`,
     );
   });
 
@@ -85,7 +85,7 @@ describe('DeviceSettings', function () {
     expect(
       // @ts-expect-error - missing property
       () => new DeviceSettings({ voice, quietHours, repeatClean, brokenClean, carpetMode, historyMap }),
-    ).to.throw(ArgumentNotProvidedException, `Property 'ecoMode' for device settings not provided`);
+    ).to.throw(ArgumentNotProvidedException, `Property 'ecoMode' for DeviceSettings not provided`);
   });
 
   it("should throw an error when 'ecoMode' property is invalid", function () {
@@ -94,7 +94,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ voice, quietHours, ecoMode: 'foo', repeatClean, brokenClean, carpetMode, historyMap }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'ecoMode' for device settings is not a device setting`,
+      `Value 'foo' for property 'ecoMode' for DeviceSettings is not a DeviceSetting`,
     );
   });
 
@@ -102,7 +102,7 @@ describe('DeviceSettings', function () {
     expect(
       // @ts-expect-error - missing property
       () => new DeviceSettings({ voice, quietHours, ecoMode, brokenClean, carpetMode, historyMap }),
-    ).to.throw(ArgumentNotProvidedException, `Property 'repeatClean' for device settings not provided`);
+    ).to.throw(ArgumentNotProvidedException, `Property 'repeatClean' for DeviceSettings not provided`);
   });
 
   it("should throw an error when 'repeatClean' property is invalid", function () {
@@ -111,7 +111,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ voice, quietHours, ecoMode, repeatClean: 'foo', brokenClean, carpetMode, historyMap }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'repeatClean' for device settings is not a device setting`,
+      `Value 'foo' for property 'repeatClean' for DeviceSettings is not a DeviceSetting`,
     );
   });
 
@@ -119,7 +119,7 @@ describe('DeviceSettings', function () {
     expect(
       // @ts-expect-error - missing property
       () => new DeviceSettings({ voice, quietHours, ecoMode, repeatClean, carpetMode, historyMap }),
-    ).to.throw(ArgumentNotProvidedException, `Property 'brokenClean' for device settings not provided`);
+    ).to.throw(ArgumentNotProvidedException, `Property 'brokenClean' for DeviceSettings not provided`);
   });
 
   it("should throw an error when 'brokenClean' property is invalid", function () {
@@ -128,7 +128,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ voice, quietHours, ecoMode, repeatClean, brokenClean: 'foo', carpetMode, historyMap }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'brokenClean' for device settings is not a device setting`,
+      `Value 'foo' for property 'brokenClean' for DeviceSettings is not a DeviceSetting`,
     );
   });
 
@@ -136,7 +136,7 @@ describe('DeviceSettings', function () {
     expect(
       // @ts-expect-error - missing property
       () => new DeviceSettings({ voice, quietHours, ecoMode, repeatClean, brokenClean, historyMap }),
-    ).to.throw(ArgumentNotProvidedException, `Property 'carpetMode' for device settings not provided`);
+    ).to.throw(ArgumentNotProvidedException, `Property 'carpetMode' for DeviceSettings not provided`);
   });
 
   it("should throw an error when 'carpetMode' property is invalid", function () {
@@ -145,7 +145,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ voice, quietHours, ecoMode, repeatClean, brokenClean, carpetMode: 'foo', historyMap }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'carpetMode' for device settings is not a device setting`,
+      `Value 'foo' for property 'carpetMode' for DeviceSettings is not a DeviceSetting`,
     );
   });
 
@@ -153,7 +153,7 @@ describe('DeviceSettings', function () {
     expect(
       // @ts-expect-error - missing property
       () => new DeviceSettings({ voice, quietHours, ecoMode, repeatClean, brokenClean, carpetMode }),
-    ).to.throw(ArgumentNotProvidedException, `Property 'historyMap' for device settings not provided`);
+    ).to.throw(ArgumentNotProvidedException, `Property 'historyMap' for DeviceSettings not provided`);
   });
 
   it("should throw an error when 'historyMap' property is invalid", function () {
@@ -162,7 +162,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ voice, quietHours, ecoMode, repeatClean, brokenClean, carpetMode, historyMap: 'foo' }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'historyMap' for device settings is not a device setting`,
+      `Value 'foo' for property 'historyMap' for DeviceSettings is not a DeviceSetting`,
     );
   });
 });

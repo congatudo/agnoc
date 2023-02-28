@@ -16,7 +16,7 @@ export enum DeviceFanSpeedValue {
 export class DeviceFanSpeed extends DomainPrimitive<DeviceFanSpeedValue> {
   protected validate(props: DomainPrimitive<DeviceFanSpeedValue>): void {
     if (!Object.values(DeviceFanSpeedValue).includes(props.value)) {
-      throw new ArgumentInvalidException(`Value '${props.value}' for device fan speed is invalid`);
+      throw new ArgumentInvalidException(`Value '${props.value}' for ${this.constructor.name} is invalid`);
     }
   }
 }

@@ -1,6 +1,6 @@
 import { ArgumentInvalidException, ArgumentOutOfRangeException, DomainPrimitive } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { DeviceBattery } from './device-battery.value-object';
+import { DeviceBattery } from './device-battery.domain-primitive';
 
 describe('DeviceBattery', function () {
   it('should be created', function () {
@@ -14,14 +14,14 @@ describe('DeviceBattery', function () {
     // @ts-expect-error - invalid value
     expect(() => new DeviceBattery('foo')).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for device battery is not a number`,
+      `Value 'foo' for DeviceBattery is not a number`,
     );
   });
 
   it('should throw an error when value is out of range', function () {
     expect(() => new DeviceBattery(150)).to.throw(
       ArgumentOutOfRangeException,
-      `Value '150' for device battery is out of range`,
+      `Value '150' for DeviceBattery is out of range`,
     );
   });
 });

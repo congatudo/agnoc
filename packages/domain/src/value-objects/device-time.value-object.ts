@@ -44,25 +44,25 @@ export class DeviceTime extends ValueObject<DeviceTimeProps> {
       const value = props[prop];
 
       if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for device time not provided`);
+        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
       }
 
       if (typeof value !== 'number') {
         throw new ArgumentInvalidException(
-          `Value '${value as string}' for property '${prop}' for device time is not a number`,
+          `Value '${value as string}' for property '${prop}' for ${this.constructor.name} is not a number`,
         );
       }
     });
 
     if (props.hours < 0 || props.hours > 23) {
       throw new ArgumentOutOfRangeException(
-        `Value '${props.hours}' for property 'hours' for device time is out of range`,
+        `Value '${props.hours}' for property 'hours' for ${this.constructor.name} is out of range`,
       );
     }
 
     if (props.minutes < 0 || props.minutes > 59) {
       throw new ArgumentOutOfRangeException(
-        `Value '${props.minutes}' for property 'minutes' for device time is out of range`,
+        `Value '${props.minutes}' for property 'minutes' for ${this.constructor.name} is out of range`,
       );
     }
   }

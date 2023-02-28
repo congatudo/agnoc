@@ -15,11 +15,11 @@ export const DeviceBatteryMaxValue = 100;
 export class DeviceBattery extends DomainPrimitive<number> {
   protected validate({ value }: DomainPrimitiveProps<number>): void {
     if (typeof value !== 'number') {
-      throw new ArgumentInvalidException(`Value '${value as string}' for device battery is not a number`);
+      throw new ArgumentInvalidException(`Value '${value as string}' for ${this.constructor.name} is not a number`);
     }
 
     if (value < DeviceBatteryMinValue || value > DeviceBatteryMaxValue) {
-      throw new ArgumentOutOfRangeException(`Value '${value}' for device battery is out of range`);
+      throw new ArgumentOutOfRangeException(`Value '${value}' for ${this.constructor.name} is out of range`);
     }
   }
 }

@@ -1,6 +1,6 @@
 import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { DeviceWaterLevel, DeviceWaterLevelValue } from './device-water-level.value-object';
+import { DeviceWaterLevel, DeviceWaterLevelValue } from './device-water-level.domain-primitive';
 
 describe('DeviceWaterLevel', function () {
   it('should be created', function () {
@@ -14,7 +14,7 @@ describe('DeviceWaterLevel', function () {
     // @ts-expect-error - invalid value
     expect(() => new DeviceWaterLevel('foo')).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for device water level is invalid`,
+      `Value 'foo' for DeviceWaterLevel is invalid`,
     );
   });
 });

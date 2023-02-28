@@ -17,7 +17,7 @@ describe('DeviceConsumable', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceConsumable({ minutesUsed: 50 })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'type' for device consumable not provided`,
+      `Property 'type' for DeviceConsumable not provided`,
     );
   });
 
@@ -25,7 +25,7 @@ describe('DeviceConsumable', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceConsumable({ type: 'foo', minutesUsed: 50 })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'type' for device consumable is invalid`,
+      `Value 'foo' for property 'type' for DeviceConsumable is invalid`,
     );
   });
 
@@ -33,7 +33,7 @@ describe('DeviceConsumable', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceConsumable({ type: DeviceConsumableType.MainBrush })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'minutesUsed' for device consumable not provided`,
+      `Property 'minutesUsed' for DeviceConsumable not provided`,
     );
   });
 
@@ -41,7 +41,7 @@ describe('DeviceConsumable', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceConsumable({ type: DeviceConsumableType.MainBrush, minutesUsed: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'minutesUsed' for device consumable is not a number`,
+      `Value 'foo' for property 'minutesUsed' for DeviceConsumable is not a number`,
     );
   });
 });

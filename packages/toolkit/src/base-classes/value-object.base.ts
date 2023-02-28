@@ -43,7 +43,7 @@ export abstract class ValueObject<T> {
 
   private checkIfEmpty(props: T): void {
     if (isEmpty(props)) {
-      throw new ArgumentNotProvidedException('Cannot create a value object from empty props');
+      throw new ArgumentNotProvidedException(`Cannot create ${this.constructor.name} from empty props`);
     }
   }
 

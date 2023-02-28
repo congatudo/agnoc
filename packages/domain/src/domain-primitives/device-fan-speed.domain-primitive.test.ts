@@ -1,6 +1,6 @@
 import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { DeviceFanSpeed, DeviceFanSpeedValue } from './device-fan-speed.value-object';
+import { DeviceFanSpeed, DeviceFanSpeedValue } from './device-fan-speed.domain-primitive';
 
 describe('DeviceFanSpeed', function () {
   it('should be created', function () {
@@ -14,7 +14,7 @@ describe('DeviceFanSpeed', function () {
     // @ts-expect-error - invalid value
     expect(() => new DeviceFanSpeed('foo')).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for device fan speed is invalid`,
+      `Value 'foo' for DeviceFanSpeed is invalid`,
     );
   });
 });

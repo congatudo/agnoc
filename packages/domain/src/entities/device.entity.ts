@@ -1,12 +1,12 @@
 import { Entity, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
 import type { DeviceMap } from './device-map.entity';
 import type { DeviceOrder } from './device-order.entity';
-import type { DeviceBattery } from '../primitives/device-battery.value-object';
-import type { DeviceError } from '../primitives/device-error.value-object';
-import type { DeviceFanSpeed } from '../primitives/device-fan-speed.value-object';
-import type { DeviceMode } from '../primitives/device-mode.value-object';
-import type { DeviceState } from '../primitives/device-state.value-object';
-import type { DeviceWaterLevel } from '../primitives/device-water-level.value-object';
+import type { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
+import type { DeviceError } from '../domain-primitives/device-error.domain-primitive';
+import type { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
+import type { DeviceMode } from '../domain-primitives/device-mode.domain-primitive';
+import type { DeviceState } from '../domain-primitives/device-state.domain-primitive';
+import type { DeviceWaterLevel } from '../domain-primitives/device-water-level.domain-primitive';
 import type { DeviceCleanWork } from '../value-objects/device-clean-work.value-object';
 import type { DeviceConsumable } from '../value-objects/device-consumable.value-object';
 import type { DeviceSettings } from '../value-objects/device-settings.value-object';
@@ -41,7 +41,6 @@ export class Device extends Entity<DeviceProps> {
       hasWaitingMap: false,
       ...props,
     });
-    this.validate(props);
   }
 
   get system(): DeviceSystem {

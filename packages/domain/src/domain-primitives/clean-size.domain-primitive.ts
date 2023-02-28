@@ -5,7 +5,7 @@ import type { DomainPrimitiveProps } from 'packages/toolkit/src/base-classes/dom
 export class CleanSize extends DomainPrimitive<number> {
   protected validate({ value }: DomainPrimitiveProps<number>): void {
     if (!Number.isInteger(value) || value < 0) {
-      throw new ArgumentInvalidException(`Value '${value}' for clean size is not a positive integer`);
+      throw new ArgumentInvalidException(`Value '${value}' for ${this.constructor.name} is not a positive integer`);
     }
   }
 }

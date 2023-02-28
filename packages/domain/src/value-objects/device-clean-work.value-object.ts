@@ -1,5 +1,5 @@
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
-import { CleanSize } from '../primitives/clean-size.value-object';
+import { CleanSize } from '../domain-primitives/clean-size.domain-primitive';
 import { DeviceTime } from './device-time.value-object';
 
 /** Describe the clean work of a device. */
@@ -27,19 +27,19 @@ export class DeviceCleanWork extends ValueObject<DeviceCleanProps> {
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for device clean not provided`);
+        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
       }
     });
 
     if (!(props.size instanceof CleanSize)) {
       throw new ArgumentInvalidException(
-        `Value '${props.size as string}' for property 'size' for device clean is not a clean size`,
+        `Value '${props.size as string}' for property 'size' for ${this.constructor.name} is not a ${CleanSize.name}`,
       );
     }
 
     if (!(props.time instanceof DeviceTime)) {
       throw new ArgumentInvalidException(
-        `Value '${props.time as string}' for property 'time' for device clean is not a device time`,
+        `Value '${props.time as string}' for property 'time' for ${this.constructor.name} is not a ${DeviceTime.name}`,
       );
     }
   }

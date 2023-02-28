@@ -11,11 +11,6 @@ export interface RoomProps {
 }
 
 export class Room extends Entity<RoomProps> {
-  constructor(props: RoomProps) {
-    super(props);
-    this.validate(props);
-  }
-
   override get id(): ID {
     return this.props.id;
   }
@@ -36,7 +31,7 @@ export class Room extends Entity<RoomProps> {
     return this.props.pixels;
   }
 
-  private validate(props: RoomProps): void {
+  protected validate(props: RoomProps): void {
     if (![props.id, props.name, props.isEnabled, props.center, props.pixels].every(isPresent)) {
       throw new ArgumentNotProvidedException('Missing property in room constructor');
     }

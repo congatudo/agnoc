@@ -84,7 +84,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
     const multiplexer = new Multiplexer();
     const device = new Device({
       id: ID.generate(),
-      system: new DeviceSystem(props),
+      system: new DeviceSystem({ type: props.deviceType }),
       version: new DeviceVersion({
         software: props.softwareVersion,
         hardware: props.hardwareVersion,

@@ -15,7 +15,7 @@ describe('MapCoordinate', function () {
     // @ts-expect-error - missing property
     expect(() => new MapCoordinate({ y: 20 })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'x' for map coordinate not provided`,
+      `Property 'x' for MapCoordinate not provided`,
     );
   });
 
@@ -23,7 +23,7 @@ describe('MapCoordinate', function () {
     // @ts-expect-error - missing property
     expect(() => new MapCoordinate({ x: 'foo', y: 20 })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'x' for map coordinate is not a number`,
+      `Value 'foo' of property 'x' for MapCoordinate is not a number`,
     );
   });
 
@@ -31,7 +31,7 @@ describe('MapCoordinate', function () {
     // @ts-expect-error - missing property
     expect(() => new MapCoordinate({ x: 10 })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'y' for map coordinate not provided`,
+      `Property 'y' for MapCoordinate not provided`,
     );
   });
 
@@ -39,7 +39,7 @@ describe('MapCoordinate', function () {
     // @ts-expect-error - missing property
     expect(() => new MapCoordinate({ x: 10, y: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'y' for map coordinate is not a number`,
+      `Value 'foo' of property 'y' for MapCoordinate is not a number`,
     );
   });
 });

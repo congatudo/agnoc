@@ -16,7 +16,7 @@ export enum DeviceModeValue {
 export class DeviceMode extends DomainPrimitive<DeviceModeValue> {
   protected validate(props: DomainPrimitive<DeviceModeValue>): void {
     if (!Object.values(DeviceModeValue).includes(props.value)) {
-      throw new ArgumentInvalidException(`Value '${props.value}' for device mode is invalid`);
+      throw new ArgumentInvalidException(`Value '${props.value}' for ${this.constructor.name} is invalid`);
     }
   }
 }

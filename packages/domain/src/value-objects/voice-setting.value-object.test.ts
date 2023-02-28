@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { VoiceSetting } from './voice-setting.value-object';
 
 describe('VoiceSetting', function () {
-  it('should create a voice setting', function () {
+  it('should create a VoiceSetting', function () {
     const voiceSetting = new VoiceSetting({
       isEnabled: true,
       volume: 50,
@@ -17,7 +17,7 @@ describe('VoiceSetting', function () {
     // @ts-expect-error - missing property
     expect(() => new VoiceSetting({ volume: 50 })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'isEnabled' for voice setting not provided`,
+      `Property 'isEnabled' for VoiceSetting not provided`,
     );
   });
 
@@ -25,7 +25,7 @@ describe('VoiceSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new VoiceSetting({ isEnabled: 'foo', volume: 50 })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isEnabled' for voice setting is not a boolean`,
+      `Value 'foo' for property 'isEnabled' for VoiceSetting is not a boolean`,
     );
   });
 
@@ -33,7 +33,7 @@ describe('VoiceSetting', function () {
     // @ts-expect-error - missing property
     expect(() => new VoiceSetting({ isEnabled: true })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'volume' for voice setting not provided`,
+      `Property 'volume' for VoiceSetting not provided`,
     );
   });
 
@@ -41,14 +41,14 @@ describe('VoiceSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new VoiceSetting({ isEnabled: true, volume: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'volume' for voice setting is not a number`,
+      `Value 'foo' for property 'volume' for VoiceSetting is not a number`,
     );
   });
 
   it("should throw an error when 'volume' property is out of range", function () {
     expect(() => new VoiceSetting({ isEnabled: true, volume: 150 })).to.throw(
       ArgumentOutOfRangeException,
-      `Value '150' for property 'volume' for voice setting is out of range`,
+      `Value '150' for property 'volume' for VoiceSetting is out of range`,
     );
   });
 });

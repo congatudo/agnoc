@@ -71,51 +71,63 @@ export class DeviceSettings extends ValueObject<DeviceSettingsProps> {
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for device settings not provided`);
+        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
       }
     });
 
     if (!(props.voice instanceof VoiceSetting)) {
       throw new ArgumentInvalidException(
-        `Value '${props.voice as string}' for property 'voice' for device settings is not a voice setting`,
+        `Value '${props.voice as string}' for property 'voice' for ${this.constructor.name} is not a ${
+          VoiceSetting.name
+        }`,
       );
     }
 
     if (!(props.quietHours instanceof QuietHoursSetting)) {
       throw new ArgumentInvalidException(
-        `Value '${
-          props.quietHours as string
-        }' for property 'quietHours' for device settings is not a quiet hours setting`,
+        `Value '${props.quietHours as string}' for property 'quietHours' for ${this.constructor.name} is not a ${
+          QuietHoursSetting.name
+        }`,
       );
     }
 
     if (!(props.ecoMode instanceof DeviceSetting)) {
       throw new ArgumentInvalidException(
-        `Value '${props.ecoMode as string}' for property 'ecoMode' for device settings is not a device setting`,
+        `Value '${props.ecoMode as string}' for property 'ecoMode' for ${this.constructor.name} is not a ${
+          DeviceSetting.name
+        }`,
       );
     }
 
     if (!(props.repeatClean instanceof DeviceSetting)) {
       throw new ArgumentInvalidException(
-        `Value '${props.repeatClean as string}' for property 'repeatClean' for device settings is not a device setting`,
+        `Value '${props.repeatClean as string}' for property 'repeatClean' for ${this.constructor.name} is not a ${
+          DeviceSetting.name
+        }`,
       );
     }
 
     if (!(props.brokenClean instanceof DeviceSetting)) {
       throw new ArgumentInvalidException(
-        `Value '${props.brokenClean as string}' for property 'brokenClean' for device settings is not a device setting`,
+        `Value '${props.brokenClean as string}' for property 'brokenClean' for ${this.constructor.name} is not a ${
+          DeviceSetting.name
+        }`,
       );
     }
 
     if (!(props.carpetMode instanceof DeviceSetting)) {
       throw new ArgumentInvalidException(
-        `Value '${props.carpetMode as string}' for property 'carpetMode' for device settings is not a device setting`,
+        `Value '${props.carpetMode as string}' for property 'carpetMode' for ${this.constructor.name} is not a ${
+          DeviceSetting.name
+        }`,
       );
     }
 
     if (!(props.historyMap instanceof DeviceSetting)) {
       throw new ArgumentInvalidException(
-        `Value '${props.historyMap as string}' for property 'historyMap' for device settings is not a device setting`,
+        `Value '${props.historyMap as string}' for property 'historyMap' for ${this.constructor.name} is not a ${
+          DeviceSetting.name
+        }`,
       );
     }
   }

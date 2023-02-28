@@ -1,6 +1,6 @@
 import { ValueObject, ArgumentInvalidException } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { DeviceError, DeviceErrorValue } from './device-error.value-object';
+import { DeviceError, DeviceErrorValue } from './device-error.domain-primitive';
 
 describe('DeviceError', function () {
   it('should be created', function () {
@@ -12,6 +12,6 @@ describe('DeviceError', function () {
 
   it('should throw an error when value is invalid', function () {
     // @ts-expect-error - invalid value
-    expect(() => new DeviceError('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for device error is invalid`);
+    expect(() => new DeviceError('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for DeviceError is invalid`);
   });
 });

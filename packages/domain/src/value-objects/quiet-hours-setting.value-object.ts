@@ -33,25 +33,29 @@ export class QuietHoursSetting extends ValueObject<QuietHoursSettingProps> {
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for device quiet hours not provided`);
+        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
       }
     });
 
     if (typeof props.isEnabled !== 'boolean') {
       throw new ArgumentInvalidException(
-        `Value '${props.isEnabled as string}' for property 'isEnabled' for device quiet hours is not a boolean`,
+        `Value '${props.isEnabled as string}' for property 'isEnabled' for ${this.constructor.name} is not a boolean`,
       );
     }
 
     if (!(props.beginTime instanceof DeviceTime)) {
       throw new ArgumentInvalidException(
-        `Value '${props.beginTime as string}' for property 'beginTime' for device quiet hours is not a device time`,
+        `Value '${props.beginTime as string}' for property 'beginTime' for ${this.constructor.name} is not a ${
+          DeviceTime.name
+        }`,
       );
     }
 
     if (!(props.endTime instanceof DeviceTime)) {
       throw new ArgumentInvalidException(
-        `Value '${props.endTime as string}' for property 'endTime' for device quiet hours is not a device time`,
+        `Value '${props.endTime as string}' for property 'endTime' for ${this.constructor.name} is not a ${
+          DeviceTime.name
+        }`,
       );
     }
   }

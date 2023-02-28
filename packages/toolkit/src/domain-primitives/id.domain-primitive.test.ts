@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { DomainPrimitive } from '../base-classes/domain-primitive.base';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
-import { ID } from './id.value-object';
+import { ID } from './id.domain-primitive';
 
-describe('id.value-object', () => {
+describe('ID', () => {
   it('should be created', function () {
     const id = new ID(123);
 

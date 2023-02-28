@@ -27,12 +27,12 @@ export class DeviceVersion extends ValueObject<DeviceVersionProps> {
       const value = props[prop];
 
       if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for device version not provided`);
+        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
       }
 
       if (typeof value !== 'string') {
         throw new ArgumentInvalidException(
-          `Value '${value as string}' for property '${prop}' for device version is not a string`,
+          `Value '${value as string}' for property '${prop}' for ${this.constructor.name} is not a string`,
         );
       }
     });

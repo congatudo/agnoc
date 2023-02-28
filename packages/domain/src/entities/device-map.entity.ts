@@ -21,11 +21,6 @@ export interface DeviceMapProps {
 }
 
 export class DeviceMap extends Entity<DeviceMapProps> {
-  constructor(props: DeviceMapProps) {
-    super(props);
-    this.validate(props);
-  }
-
   override get id(): ID {
     return this.props.id;
   }
@@ -112,7 +107,7 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     });
   }
 
-  private validate(props: DeviceMapProps): void {
+  protected validate(props: DeviceMapProps): void {
     if (
       ![props.id, props.size, props.min, props.max, props.grid, props.rooms, props.restrictedZones].every(isPresent)
     ) {

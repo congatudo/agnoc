@@ -1,6 +1,6 @@
 import { ArgumentInvalidException, ArgumentNotProvidedException, ValueObject } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { CleanSize } from '../primitives/clean-size.value-object';
+import { CleanSize } from '../domain-primitives/clean-size.domain-primitive';
 import { DeviceCleanWork } from './device-clean-work.value-object';
 import { DeviceTime } from './device-time.value-object';
 
@@ -25,7 +25,7 @@ describe('DeviceCleanWork', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceCleanWork({ time })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'size' for device clean not provided`,
+      `Property 'size' for DeviceCleanWork not provided`,
     );
   });
 
@@ -33,7 +33,7 @@ describe('DeviceCleanWork', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceCleanWork({ size: 1, time })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'size' for device clean is not a clean size`,
+      `Value '1' for property 'size' for DeviceCleanWork is not a CleanSize`,
     );
   });
 
@@ -41,7 +41,7 @@ describe('DeviceCleanWork', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceCleanWork({ size })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'time' for device clean not provided`,
+      `Property 'time' for DeviceCleanWork not provided`,
     );
   });
 
@@ -49,7 +49,7 @@ describe('DeviceCleanWork', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceCleanWork({ size, time: 1 })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'time' for device clean is not a device time`,
+      `Value '1' for property 'time' for DeviceCleanWork is not a DeviceTime`,
     );
   });
 });

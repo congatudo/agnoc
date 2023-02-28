@@ -26,4 +26,4 @@ export * from './utils/is-present.util';
 export * from './utils/stream.util';
 export * from './utils/to-stream.util';
 export * from './utils/wait-for.util';
-export * from './value-objects/id.value-object';
+export * from './domain-primitives/id.domain-primitive';

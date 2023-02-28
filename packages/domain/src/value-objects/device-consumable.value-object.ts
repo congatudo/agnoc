@@ -33,17 +33,21 @@ export class DeviceConsumable extends ValueObject<DeviceConsumableProps> {
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for device consumable not provided`);
+        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
       }
     });
 
     if (!Object.values(DeviceConsumableType).includes(props.type)) {
-      throw new ArgumentInvalidException(`Value '${props.type}' for property 'type' for device consumable is invalid`);
+      throw new ArgumentInvalidException(
+        `Value '${props.type}' for property 'type' for ${this.constructor.name} is invalid`,
+      );
     }
 
     if (typeof props.minutesUsed !== 'number') {
       throw new ArgumentInvalidException(
-        `Value '${props.minutesUsed as string}' for property 'minutesUsed' for device consumable is not a number`,
+        `Value '${props.minutesUsed as string}' for property 'minutesUsed' for ${
+          this.constructor.name
+        } is not a number`,
       );
     }
   }

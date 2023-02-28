@@ -45,12 +45,12 @@ export class MapPosition extends ValueObject<MapPositionProps> {
       const value = props[prop];
 
       if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for map position not provided`);
+        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
       }
 
       if (typeof value !== 'number') {
         throw new ArgumentInvalidException(
-          `Value '${value as string}' of property '${prop}' for map position is not a number`,
+          `Value '${value as string}' of property '${prop}' for ${this.constructor.name} is not a number`,
         );
       }
     });

@@ -25,7 +25,7 @@ describe('QuietHoursSetting', function () {
     // @ts-expect-error - missing property
     expect(() => new QuietHoursSetting({ beginTime, endTime })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'isEnabled' for device quiet hours not provided`,
+      `Property 'isEnabled' for QuietHoursSetting not provided`,
     );
   });
 
@@ -33,7 +33,7 @@ describe('QuietHoursSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new QuietHoursSetting({ isEnabled: 'foo', beginTime, endTime })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isEnabled' for device quiet hours is not a boolean`,
+      `Value 'foo' for property 'isEnabled' for QuietHoursSetting is not a boolean`,
     );
   });
 
@@ -41,7 +41,7 @@ describe('QuietHoursSetting', function () {
     // @ts-expect-error - missing property
     expect(() => new QuietHoursSetting({ isEnabled: true, endTime })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'beginTime' for device quiet hours not provided`,
+      `Property 'beginTime' for QuietHoursSetting not provided`,
     );
   });
 
@@ -49,7 +49,7 @@ describe('QuietHoursSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new QuietHoursSetting({ isEnabled: true, beginTime: 'foo', endTime })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'beginTime' for device quiet hours is not a device time`,
+      `Value 'foo' for property 'beginTime' for QuietHoursSetting is not a DeviceTime`,
     );
   });
 
@@ -57,7 +57,7 @@ describe('QuietHoursSetting', function () {
     // @ts-expect-error - missing property
     expect(() => new QuietHoursSetting({ isEnabled: true, beginTime })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'endTime' for device quiet hours not provided`,
+      `Property 'endTime' for QuietHoursSetting not provided`,
     );
   });
 
@@ -65,7 +65,7 @@ describe('QuietHoursSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new QuietHoursSetting({ isEnabled: true, beginTime, endTime: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'endTime' for device quiet hours is not a device time`,
+      `Value 'foo' for property 'endTime' for QuietHoursSetting is not a DeviceTime`,
     );
   });
 });

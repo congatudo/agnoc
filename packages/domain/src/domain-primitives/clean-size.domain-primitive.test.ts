@@ -1,6 +1,6 @@
 import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { CleanSize } from './clean-size.value-object';
+import { CleanSize } from './clean-size.domain-primitive';
 
 describe('CleanSize', function () {
   it('should be created', function () {
@@ -14,21 +14,21 @@ describe('CleanSize', function () {
     // @ts-expect-error - invalid value
     expect(() => new CleanSize('foo')).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for clean size is not a positive integer`,
+      `Value 'foo' for CleanSize is not a positive integer`,
     );
   });
 
   it('should throw an error when value is not an integer', function () {
     expect(() => new CleanSize(10.5)).to.throw(
       ArgumentInvalidException,
-      `Value '10.5' for clean size is not a positive integer`,
+      `Value '10.5' for CleanSize is not a positive integer`,
     );
   });
 
   it('should throw an error when value is negative', function () {
     expect(() => new CleanSize(-10)).to.throw(
       ArgumentInvalidException,
-      `Value '-10' for clean size is not a positive integer`,
+      `Value '-10' for CleanSize is not a positive integer`,
     );
   });
 });

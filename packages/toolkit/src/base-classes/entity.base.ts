@@ -1,31 +1,33 @@
+import { ID } from '../domain-primitives/id.domain-primitive';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
 import { convertPropsToObject } from '../utils/convert-props-to-object.util';
 import { isObject } from '../utils/is-object.util';
 import { isPresent } from '../utils/is-present.util';
-import { ID } from '../value-objects/id.value-object';
 
-export interface BaseEntityProps {
+export interface EntityProps {
   id: ID;
 }
 
-export abstract class Entity<EntityProps extends BaseEntityProps> {
-  constructor(props: EntityProps) {
-    this.validateProps(props);
+export abstract class Entity<T extends EntityProps> {
+  constructor(props: T) {
+    this.checkIfEmpty(props);
+    this.validateId(props);
+    this.validate(props);
     this.props = props;
   }
 
-  protected readonly props: EntityProps;
+  protected readonly props: T;
 
   get id(): ID {
     return this.props.id;
   }
 
-  static isEntity(entity: unknown): entity is Entity<BaseEntityProps> {
+  static isEntity(entity: unknown): entity is Entity<EntityProps> {
     return entity instanceof Entity;
   }
 
-  public equals(object?: Entity<EntityProps>): boolean {
+  public equals(object?: Entity<T>): boolean {
     if (!isPresent(object)) {
       return false;
     }
@@ -41,8 +43,8 @@ export abstract class Entity<EntityProps extends BaseEntityProps> {
     return this.id.equals(object.id);
   }
 
-  clone<C extends Entity<EntityProps>>(this: C, props: Partial<EntityProps>): C {
-    const ctor = this.constructor as new (props: EntityProps) => C;
+  clone<C extends Entity<T>>(this: C, props: Partial<T>): C {
+    const ctor = this.constructor as new (props: T) => C;
 
     return new ctor({
       ...this.props,
@@ -60,17 +62,23 @@ export abstract class Entity<EntityProps extends BaseEntityProps> {
     return JSON.stringify(this.toJSON());
   }
 
-  private validateProps(props: EntityProps) {
+  private checkIfEmpty(props: T) {
     if (!isObject(props)) {
-      throw new ArgumentInvalidException('Entity props should be an object');
+      throw new ArgumentInvalidException(`Cannot create ${this.constructor.name} from non-object props`);
     }
+  }
 
+  protected abstract validate(props: T): void;
+
+  private validateId(props: T) {
     if (!props.id) {
-      throw new ArgumentNotProvidedException('Entity props must have an id');
+      throw new ArgumentNotProvidedException(`Property 'id' for ${this.constructor.name} not provided`);
     }
 
     if (!(props.id instanceof ID)) {
-      throw new ArgumentInvalidException('Entity id must a valid ID object');
+      throw new ArgumentInvalidException(
+        `Property 'id' for ${this.constructor.name} must be an instance of ${ID.name}`,
+      );
     }
   }
 }

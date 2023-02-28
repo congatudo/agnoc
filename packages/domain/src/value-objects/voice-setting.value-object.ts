@@ -39,25 +39,25 @@ export class VoiceSetting extends ValueObject<VoiceSettingProps> {
       const value = props[prop];
 
       if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for voice setting not provided`);
+        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
       }
     });
 
     if (typeof props.isEnabled !== 'boolean') {
       throw new ArgumentInvalidException(
-        `Value '${props.isEnabled as string}' for property 'isEnabled' for voice setting is not a boolean`,
+        `Value '${props.isEnabled as string}' for property 'isEnabled' for ${this.constructor.name} is not a boolean`,
       );
     }
 
     if (typeof props.volume !== 'number') {
       throw new ArgumentInvalidException(
-        `Value '${props.volume as string}' for property 'volume' for voice setting is not a number`,
+        `Value '${props.volume as string}' for property 'volume' for ${this.constructor.name} is not a number`,
       );
     }
 
     if (props.volume < VoiceSettingMinVolume || props.volume > VoiceSettingMaxVolume) {
       throw new ArgumentOutOfRangeException(
-        `Value '${props.volume}' for property 'volume' for voice setting is out of range`,
+        `Value '${props.volume}' for property 'volume' for ${this.constructor.name} is out of range`,
       );
     }
   }

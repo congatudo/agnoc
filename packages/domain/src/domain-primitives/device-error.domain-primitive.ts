@@ -51,7 +51,7 @@ export enum DeviceErrorValue {
 export class DeviceError extends DomainPrimitive<DeviceErrorValue> {
   protected validate(props: DomainPrimitive<DeviceErrorValue>): void {
     if (!Object.values(DeviceErrorValue).includes(props.value)) {
-      throw new ArgumentInvalidException(`Value '${props.value}' for device error is invalid`);
+      throw new ArgumentInvalidException(`Value '${props.value}' for ${this.constructor.name} is invalid`);
     }
   }
 }

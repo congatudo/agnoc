@@ -32,7 +32,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceWlan({ ssid, port, mask, mac })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'ipv4' for device wlan not provided`,
+      `Property 'ipv4' for DeviceWlan not provided`,
     );
   });
 
@@ -40,7 +40,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ipv4: 1, ssid, port, mask, mac })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'ipv4' for device wlan is not a string`,
+      `Value '1' for property 'ipv4' for DeviceWlan is not a string`,
     );
   });
 
@@ -48,7 +48,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceWlan({ ipv4, port, mask, mac })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'ssid' for device wlan not provided`,
+      `Property 'ssid' for DeviceWlan not provided`,
     );
   });
 
@@ -56,7 +56,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ipv4, ssid: 1, port, mask, mac })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'ssid' for device wlan is not a string`,
+      `Value '1' for property 'ssid' for DeviceWlan is not a string`,
     );
   });
 
@@ -64,7 +64,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceWlan({ ipv4, ssid, mask, mac })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'port' for device wlan not provided`,
+      `Property 'port' for DeviceWlan not provided`,
     );
   });
 
@@ -72,7 +72,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ipv4, ssid, port: 'foo', mask, mac })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'port' for device wlan is not a number`,
+      `Value 'foo' for property 'port' for DeviceWlan is not a number`,
     );
   });
 
@@ -80,7 +80,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceWlan({ ipv4, ssid, port, mac })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'mask' for device wlan not provided`,
+      `Property 'mask' for DeviceWlan not provided`,
     );
   });
 
@@ -88,7 +88,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ipv4, ssid, port, mask: 1, mac })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'mask' for device wlan is not a string`,
+      `Value '1' for property 'mask' for DeviceWlan is not a string`,
     );
   });
 
@@ -96,7 +96,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceWlan({ ipv4, ssid, port, mask })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'mac' for device wlan not provided`,
+      `Property 'mac' for DeviceWlan not provided`,
     );
   });
 
@@ -104,7 +104,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ipv4, ssid, port, mask, mac: 1 })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'mac' for device wlan is not a string`,
+      `Value '1' for property 'mac' for DeviceWlan is not a string`,
     );
   });
 });

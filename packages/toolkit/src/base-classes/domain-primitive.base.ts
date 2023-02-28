@@ -8,7 +8,7 @@ export interface DomainPrimitiveProps<T extends Primitives> {
 
 export abstract class DomainPrimitive<T extends Primitives> extends ValueObject<DomainPrimitiveProps<T>> {
   constructor(value: T) {
-    checkIfPrimitiveValue(value);
+    checkIfPrimitiveValue(new.target.name, value);
 
     super({ value });
   }
@@ -42,8 +42,8 @@ function isPrimitiveValue(value: unknown): value is Primitives {
   );
 }
 
-function checkIfPrimitiveValue(value: unknown): void {
+function checkIfPrimitiveValue(className: string, value: unknown): void {
   if (!isPrimitiveValue(value)) {
-    throw new ArgumentInvalidException('Cannot create a domain primitive from non-primitive value');
+    throw new ArgumentInvalidException(`Cannot create ${className} from non-primitive value`);
   }
 }

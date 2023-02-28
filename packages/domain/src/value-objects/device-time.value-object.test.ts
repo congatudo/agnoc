@@ -20,7 +20,7 @@ describe('DeviceTime', function () {
     // @ts-expect-error - missing hour
     expect(() => new DeviceTime({ minutes: 30 })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'hours' for device time not provided`,
+      `Property 'hours' for DeviceTime not provided`,
     );
   });
 
@@ -28,14 +28,14 @@ describe('DeviceTime', function () {
     // @ts-expect-error - missing hour
     expect(() => new DeviceTime({ hours: 'foo', minutes: 30 })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'hours' for device time is not a number`,
+      `Value 'foo' for property 'hours' for DeviceTime is not a number`,
     );
   });
 
   it("should throw an error when 'hours' are out of range", function () {
     expect(() => new DeviceTime({ hours: 25, minutes: 30 })).to.throw(
       ArgumentOutOfRangeException,
-      `Value '25' for property 'hours' for device time is out of range`,
+      `Value '25' for property 'hours' for DeviceTime is out of range`,
     );
   });
 
@@ -43,7 +43,7 @@ describe('DeviceTime', function () {
     // @ts-expect-error - missing hour
     expect(() => new DeviceTime({ minutes: 30 })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'hours' for device time not provided`,
+      `Property 'hours' for DeviceTime not provided`,
     );
   });
 
@@ -51,19 +51,19 @@ describe('DeviceTime', function () {
     // @ts-expect-error - missing hour
     expect(() => new DeviceTime({ hours: 1, minutes: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'minutes' for device time is not a number`,
+      `Value 'foo' for property 'minutes' for DeviceTime is not a number`,
     );
   });
 
   it("should throw an error when 'minutes' are out of range", function () {
     expect(() => new DeviceTime({ hours: 1, minutes: 65 })).to.throw(
       ArgumentOutOfRangeException,
-      `Value '65' for property 'minutes' for device time is out of range`,
+      `Value '65' for property 'minutes' for DeviceTime is out of range`,
     );
   });
 
   describe('#toMinutes', function () {
-    it('should return minutes from device time', function () {
+    it('should return minutes from DeviceTime', function () {
       const deviceTime = new DeviceTime({ hours: 1, minutes: 30 });
 
       expect(deviceTime.toMinutes()).to.be.equal(90);

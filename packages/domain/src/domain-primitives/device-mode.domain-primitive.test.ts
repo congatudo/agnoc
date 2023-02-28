@@ -1,6 +1,6 @@
 import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { DeviceMode, DeviceModeValue } from './device-mode.value-object';
+import { DeviceMode, DeviceModeValue } from './device-mode.domain-primitive';
 
 describe('DeviceMode', function () {
   it('should be created', function () {
@@ -12,6 +12,6 @@ describe('DeviceMode', function () {
 
   it('should throw an error when value is invalid', function () {
     // @ts-expect-error - invalid value
-    expect(() => new DeviceMode('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for device mode is invalid`);
+    expect(() => new DeviceMode('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for DeviceMode is invalid`);
   });
 });

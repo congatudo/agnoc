@@ -15,7 +15,7 @@ describe('DeviceVersion', function () {
     // @ts-expect-error - software is not provided
     expect(() => new DeviceVersion({ hardware: '1.0.0' })).to.throw(
       ArgumentNotProvidedException,
-      "Property 'software' for device version not provided",
+      "Property 'software' for DeviceVersion not provided",
     );
   });
 
@@ -23,7 +23,7 @@ describe('DeviceVersion', function () {
     // @ts-expect-error - hardware is not provided
     expect(() => new DeviceVersion({ software: '1.0.0' })).to.throw(
       ArgumentNotProvidedException,
-      "Property 'hardware' for device version not provided",
+      "Property 'hardware' for DeviceVersion not provided",
     );
   });
 
@@ -31,7 +31,7 @@ describe('DeviceVersion', function () {
     // @ts-expect-error - software is not a string
     expect(() => new DeviceVersion({ software: 1, hardware: '1.0.0' })).to.throw(
       ArgumentInvalidException,
-      "Value '1' for property 'software' for device version is not a string",
+      "Value '1' for property 'software' for DeviceVersion is not a string",
     );
   });
 
@@ -39,7 +39,7 @@ describe('DeviceVersion', function () {
     // @ts-expect-error - hardware is not a string
     expect(() => new DeviceVersion({ software: '1.0.0', hardware: 1 })).to.throw(
       ArgumentInvalidException,
-      "Value '1' for property 'hardware' for device version is not a string",
+      "Value '1' for property 'hardware' for DeviceVersion is not a string",
     );
   });
 });
