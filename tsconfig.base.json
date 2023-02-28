@@ -29,6 +29,8 @@
     "stripInternal": true,
     "target": "ES2022",
     "paths": {
+      "@agnoc/schemas-tcp/json": ["packages/schemas-tcp/lib/index.json"],
+      "@agnoc/schemas-tcp": ["packages/schemas-tcp/lib"],
       "@agnoc/*": ["packages/*/src"]
     }
   },

@@ -1,4 +1,4 @@
-import cli from 'cli-ux';
+import cliUx from 'cli-ux';
 import wifi from 'node-wifi';
 import { wlanConfig } from './wlan-config.command';
 import type { Network } from 'node-wifi';
@@ -18,16 +18,16 @@ function isCongaAP(network: Network): boolean {
 
 export async function wlan(ssid: string, pass: string, options: WlanOptions): Promise<void> {
   await wifi.init({ iface: options.iface });
-  await cli.anykey('Put your robot in AP mode and press any key to continue');
+  await cliUx.anykey('Put your robot in AP mode and press any key to continue');
 
-  cli.action.start('Checking current connection');
+  cliUx.action.start('Checking current connection');
   const currentNetworks = await wifi.getCurrentConnections();
-  cli.action.stop();
+  cliUx.action.stop();
 
   let ap = currentNetworks.find(isCongaAP);
 
   if (!ap) {
-    cli.action.start('Looking for robot AP');
+    cliUx.action.start('Looking for robot AP');
 
     do {
       const networks = await wifi.scan();
@@ -39,22 +39,22 @@ export async function wlan(ssid: string, pass: string, options: WlanOptions): Pr
       }
     } while (!ap);
 
-    cli.action.stop();
+    cliUx.action.stop();
 
-    cli.action.start('Connecting to robot AP');
+    cliUx.action.start('Connecting to robot AP');
     await wifi.connect({ ssid: ap.ssid });
-    cli.action.stop();
+    cliUx.action.stop();
 
-    cli.action.start('Checking current connection');
+    cliUx.action.start('Checking current connection');
     const currentNetworks = await wifi.getCurrentConnections();
-    cli.action.stop();
+    cliUx.action.stop();
 
     if (!currentNetworks.find(isCongaAP)) {
       throw new Error('Unable to connect to robot AP');
     }
   }
 
-  cli.action.start('Configuring wifi settings in the robot');
+  cliUx.action.start('Configuring wifi settings in the robot');
   await wlanConfig(ssid, pass, { timeout: Number(options.timeout) });
-  cli.action.stop();
+  cliUx.action.stop();
 }

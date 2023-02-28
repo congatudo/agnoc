@@ -1,7 +1,7 @@
 import { PassThrough } from 'stream';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import mockFS from 'mock-fs';
+import mockFS, { restore } from 'mock-fs';
 import { decode } from '../../../src/commands/decode.command';
 import { readStream } from '../../helpers/read-stream.helper';
 import type { Duplex } from 'stream';
@@ -33,7 +33,7 @@ describe('decode', () => {
   });
 
   afterEach(function () {
-    mockFS.restore();
+    restore();
   });
 
   it('decodes a tcp flow from stdin', async function () {

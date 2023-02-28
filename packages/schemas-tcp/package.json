@@ -1,0 +1,68 @@
+{
+  "name": "@agnoc/schemas-tcp",
+  "version": "0.16.0",
+  "description": "Agnoc schemas TCP library",
+  "keywords": [
+    "agnoc",
+    "schemas",
+    "tcp",
+    "conga",
+    "cecotec",
+    "driver",
+    "reverse",
+    "engineering"
+  ],
+  "homepage": "https://github.com/adrigzr/agnoc",
+  "bugs": {
+    "url": "https://github.com/adrigzr/agnoc/issues"
+  },
+  "license": "MIT",
+  "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    "./json": "./lib/index.json"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrigzr/agnoc.git",
+    "directory": "packages/transport-tcp"
+  },
+  "scripts": {
+    "build": "npm-run-all build:lib",
+    "build:lib": "mkdir -p lib && npm-run-all build:lib:js build:lib:json build:lib:ts",
+    "build:lib:js": "pbjs -t static -w commonjs -o lib/index.js src/index.proto",
+    "build:lib:json": "pbjs -t json -o lib/index.json src/index.proto",
+    "build:lib:ts": "pbts -o lib/index.d.ts lib/index.js",
+    "clean": "rm -rf lib"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "inputs": [
+          "{workspaceRoot}/package.json",
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/package.json"
+        ],
+        "outputs": [
+          "{projectRoot}/lib"
+        ]
+      }
+    }
+  },
+  "dependencies": {
+    "protobufjs": "^7.2.2"
+  },
+  "devDependencies": {
+    "protobufjs-cli": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=18.12"
+  }
+}

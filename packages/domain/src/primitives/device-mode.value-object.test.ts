@@ -12,9 +12,6 @@ describe('DeviceMode', function () {
 
   it('should throw an error when value is invalid', function () {
     // @ts-expect-error - invalid value
-    expect(() => new DeviceMode({ value: 'foo' })).to.throw(
-      ArgumentInvalidException,
-      `Value 'foo' for device mode is invalid`,
-    );
+    expect(() => new DeviceMode('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for device mode is invalid`);
   });
 });

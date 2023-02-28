@@ -1,4 +1,5 @@
 import { flipObject } from '@agnoc/toolkit';
+import type { ChargePoseInfo, MapInfo, RobotPoseInfo } from '../interfaces/map.interface';
 import type {
   ICLIENT_HEARTBEAT_REQ,
   ICLIENT_HEARTBEAT_RSP,
@@ -93,8 +94,7 @@ import type {
   IUSER_SET_DEVICE_CTRL_SETTING_RSP,
   IUSER_SET_DEVICE_QUIETHOURS_REQ,
   IUSER_SET_DEVICE_QUIETHOURS_RSP,
-} from '../../schemas/schema';
-import type { ChargePoseInfo, MapInfo, RobotPoseInfo } from '../interfaces/map.interface';
+} from '@agnoc/schemas-tcp';
 
 export const OPCODES = {
   COMMON_ERROR_REPLY: 0x0001,

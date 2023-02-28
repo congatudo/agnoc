@@ -2,8 +2,8 @@ import { DeviceOrder, CLEAN_MODE, DeviceTime, DeviceWaterLevel, DeviceWaterLevel
 import { ArgumentNotProvidedException, ID } from '@agnoc/toolkit';
 import type { DeviceFanSpeedMapper } from './device-fan-speed.mapper';
 import type { DeviceWaterLevelMapper } from './device-water-level.mapper';
-import type { IDEVICE_ORDERLIST_SETTING_REQ } from '../../schemas/schema';
 import type { DeviceOrderProps, CleanMode } from '@agnoc/domain';
+import type { IDEVICE_ORDERLIST_SETTING_REQ } from '@agnoc/schemas-tcp';
 import type { Mapper } from '@agnoc/toolkit';
 
 export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_SETTING_REQ> {

@@ -1,6 +1,5 @@
 import { hasKey, ArgumentInvalidException, isObject, ValueObject } from '@agnoc/toolkit';
 import protobuf from 'protobufjs/light';
-import schema from '../../schemas/schema.json';
 import { decodeArea } from '../decoders/area.decoder';
 import { decodeChargePosition } from '../decoders/charge-position.decoder';
 import { decodeMap } from '../decoders/map.decoder';
@@ -22,7 +21,9 @@ export interface PayloadSerialized<Name extends OPDecoderLiteral> {
 
 type Decoder = (buffer: Buffer) => unknown;
 
-const root = protobuf.Root.fromJSON(schema as INamespace);
+// eslint-disable-next-line node/no-missing-require, @typescript-eslint/no-var-requires
+const schema = require('@agnoc/schemas-tcp/json') as INamespace;
+const root = protobuf.Root.fromJSON(schema);
 const decoders = {
   DEVICE_MAPID_PUSH_POSITION_INFO: decodeRobotPosition,
   DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO: decodeChargePosition,

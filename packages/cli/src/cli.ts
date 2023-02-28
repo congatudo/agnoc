@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import cli from 'cli-ux';
+import cliUx from 'cli-ux';
 import { Command } from 'commander';
 import { version } from '../package.json';
 import { decode } from './commands/decode.command';
@@ -22,7 +22,7 @@ const stdio = {
 };
 
 function handleError(e: Error): void {
-  cli.action.stop(chalk.red('!'));
+  cliUx.action.stop(chalk.red('!'));
   stdio.stderr.write(chalk.red(e.message + '\n'));
 }
 
@@ -92,9 +92,9 @@ program
   .argument('<password>', 'wifi password')
   .option('-t, --timeout <timeout>', 'connect timeout in milliseconds', '10000')
   .action(async (ssid: string, password: string, { timeout }: WlanConfigCommandOptions) => {
-    cli.action.start('Configuring wifi settings in the robot');
+    cliUx.action.start('Configuring wifi settings in the robot');
     await wlanConfig(ssid, password, { timeout: Number(timeout) }).catch(handleError);
-    cli.action.stop();
+    cliUx.action.stop();
   });
 
 program.addHelpCommand('help [command]', 'display help for command');

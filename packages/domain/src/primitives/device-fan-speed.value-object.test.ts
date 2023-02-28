@@ -12,7 +12,7 @@ describe('DeviceFanSpeed', function () {
 
   it('should throw an error when value is invalid', function () {
     // @ts-expect-error - invalid value
-    expect(() => new DeviceFanSpeed({ value: 'foo' })).to.throw(
+    expect(() => new DeviceFanSpeed('foo')).to.throw(
       ArgumentInvalidException,
       `Value 'foo' for device fan speed is invalid`,
     );

@@ -1,7 +1,7 @@
 import { Socket } from 'net';
-import { PacketServer, PacketSocket } from '@agnoc/transport-tcp';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
+import { PacketServer, PacketSocket } from '@agnoc/transport-tcp';
 
 declare module 'mocha' {
   interface Context {

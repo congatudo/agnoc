@@ -1,7 +1,7 @@
 import { PassThrough } from 'stream';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import mockFS from 'mock-fs';
+import mockFS, { restore } from 'mock-fs';
 import { encode } from '../../../src/commands/encode.command';
 import { readStream } from '../../helpers/read-stream.helper';
 import type { Duplex } from 'stream';
@@ -51,7 +51,7 @@ describe('encode', () => {
   });
 
   afterEach(function () {
-    mockFS.restore();
+    restore();
   });
 
   it('encodes a tcp flow from stdin', async function () {
