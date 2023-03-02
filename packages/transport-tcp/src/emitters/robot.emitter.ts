@@ -34,6 +34,7 @@ import {
   BufferWriter,
 } from '@agnoc/toolkit';
 import { TypedEmitter } from 'tiny-typed-emitter';
+import { CleanModeMapper } from '../mappers/clean-mode.mapper';
 import { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
 import { DeviceErrorMapper } from '../mappers/device-error.mapper';
 import { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
@@ -106,7 +107,8 @@ const CTRL_VALUE = {
 // TODO: move to constructor
 const deviceFanSpeedMapper = new DeviceFanSpeedMapper();
 const deviceWaterLevelMapper = new DeviceWaterLevelMapper();
-const deviceOrderMapper = new DeviceOrderMapper(deviceFanSpeedMapper, deviceWaterLevelMapper);
+const cleanModeMapper = new CleanModeMapper();
+const deviceOrderMapper = new DeviceOrderMapper(deviceFanSpeedMapper, deviceWaterLevelMapper, cleanModeMapper);
 const deviceVoiceMapper = new DeviceVoiceMapper();
 const deviceStateMapper = new DeviceStateMapper();
 const deviceModeMapper = new DeviceModeMapper();

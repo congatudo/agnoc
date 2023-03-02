@@ -1,8 +1,9 @@
-import { DeviceOrder, CLEAN_MODE, DeviceTime, DeviceWaterLevel, DeviceWaterLevelValue } from '@agnoc/domain';
+import { DeviceOrder, DeviceTime, DeviceWaterLevel, DeviceWaterLevelValue } from '@agnoc/domain';
 import { ArgumentNotProvidedException, ID } from '@agnoc/toolkit';
+import type { CleanModeMapper } from './clean-mode.mapper';
 import type { DeviceFanSpeedMapper } from './device-fan-speed.mapper';
 import type { DeviceWaterLevelMapper } from './device-water-level.mapper';
-import type { DeviceOrderProps, CleanMode } from '@agnoc/domain';
+import type { DeviceOrderProps } from '@agnoc/domain';
 import type { IDEVICE_ORDERLIST_SETTING_REQ } from '@agnoc/schemas-tcp';
 import type { Mapper } from '@agnoc/toolkit';
 
@@ -10,6 +11,7 @@ export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_
   constructor(
     private readonly deviceFanSpeedMapper: DeviceFanSpeedMapper,
     private readonly deviceWaterLevelMapper: DeviceWaterLevelMapper,
+    private readonly cleanModeMapper: CleanModeMapper,
   ) {}
 
   toDomain(orderList: IDEVICE_ORDERLIST_SETTING_REQ): DeviceOrder {
@@ -27,7 +29,7 @@ export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_
       isDeepClean: orderList.cleanInfo.twiceClean,
       weekDay: orderList.weekDay,
       time,
-      cleanMode: CLEAN_MODE[orderList.cleanInfo.cleanMode] as CleanMode,
+      cleanMode: this.cleanModeMapper.toDomain(orderList.cleanInfo.cleanMode),
       fanSpeed: this.deviceFanSpeedMapper.toDomain(orderList.cleanInfo.windPower),
       waterLevel: orderList.cleanInfo.waterLevel
         ? this.deviceWaterLevelMapper.toDomain(orderList.cleanInfo.waterLevel)
@@ -47,7 +49,7 @@ export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_
       cleanInfo: {
         mapHeadId: deviceOrder.mapId.value,
         planId: deviceOrder.planId.value,
-        cleanMode: CLEAN_MODE[deviceOrder.cleanMode],
+        cleanMode: this.cleanModeMapper.fromDomain(deviceOrder.cleanMode),
         windPower: this.deviceFanSpeedMapper.fromDomain(deviceOrder.fanSpeed),
         waterLevel: this.deviceWaterLevelMapper.fromDomain(deviceOrder.waterLevel),
         twiceClean: deviceOrder.isDeepClean,

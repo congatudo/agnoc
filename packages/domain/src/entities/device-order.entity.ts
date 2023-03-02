@@ -1,4 +1,5 @@
 import { ID, Entity, ArgumentNotProvidedException, isPresent, ArgumentInvalidException } from '@agnoc/toolkit';
+import { CleanMode } from '../domain-primitives/clean-mode.domain-primitive';
 import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
 import { DeviceWaterLevel } from '../domain-primitives/device-water-level.domain-primitive';
 import { DeviceTime } from '../value-objects/device-time.value-object';
@@ -12,14 +13,6 @@ export enum WeekDay {
   'friday' = 1 << 5,
   'saturday' = 1 << 6,
 }
-
-export enum CLEAN_MODE {
-  'auto' = 1,
-  'border' = 3,
-  'mop' = 4,
-}
-
-export type CleanMode = keyof typeof CLEAN_MODE;
 
 export interface DeviceOrderProps {
   id: ID;
@@ -115,7 +108,7 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
       throw new ArgumentInvalidException('Invalid time in device order constructor');
     }
 
-    if (!Object.keys(CLEAN_MODE).includes(props.cleanMode)) {
+    if (!(props.cleanMode instanceof CleanMode)) {
       throw new ArgumentInvalidException('Invalid cleanMode in device order constructor');
     }
 
