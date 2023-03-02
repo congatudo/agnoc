@@ -1,18 +1,14 @@
-import { Entity, ID } from '@agnoc/toolkit';
+import { Entity } from '@agnoc/toolkit';
 import { expect } from 'chai';
+import { givenSomeUserProps } from '../test-support';
 import { User } from './user.entity';
 
 describe('User', function () {
-  let id: ID;
-
-  beforeEach(function () {
-    id = new ID(1);
-  });
-
   it('should be created', function () {
-    const user = new User({ id });
+    const userProps = givenSomeUserProps();
+    const user = new User(userProps);
 
     expect(user).to.be.instanceOf(Entity);
-    expect(user.id).to.be.equal(id);
+    expect(user.id).to.be.equal(userProps.id);
   });
 });
