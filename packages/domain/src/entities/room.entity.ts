@@ -38,7 +38,7 @@ export class Room extends Entity<RoomProps> {
   }
 
   protected validate(props: RoomProps): void {
-    const keys = ['name', 'isEnabled', 'center', 'pixels'] as (keyof RoomProps)[];
+    const keys: (keyof RoomProps)[] = ['name', 'isEnabled', 'center', 'pixels'];
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {
@@ -47,19 +47,37 @@ export class Room extends Entity<RoomProps> {
     });
 
     if (typeof props.name !== 'string') {
-      throw new ArgumentInvalidException(`Property 'name' for ${this.constructor.name} is not a string`);
+      throw new ArgumentInvalidException(
+        `Value '${props.name as string}' for property 'name' for ${this.constructor.name} is not a string`,
+      );
     }
 
     if (typeof props.isEnabled !== 'boolean') {
-      throw new ArgumentInvalidException(`Property 'isEnabled' for ${this.constructor.name} is not a boolean`);
+      throw new ArgumentInvalidException(
+        `Value '${props.isEnabled as string}' for property 'isEnabled' for ${this.constructor.name} is not a boolean`,
+      );
     }
 
     if (!(props.center instanceof MapCoordinate)) {
-      throw new ArgumentInvalidException(`Property 'center' for ${this.constructor.name} is not a MapCoordinate`);
+      throw new ArgumentInvalidException(
+        `Value '${props.center as string}' for property 'center' for ${this.constructor.name} is not a MapCoordinate`,
+      );
     }
 
-    if (!Array.isArray(props.pixels) || !props.pixels.every((pixel) => pixel instanceof MapPixel)) {
-      throw new ArgumentInvalidException(`Property 'pixels' for ${this.constructor.name} is not an array of MapPixel`);
+    if (!Array.isArray(props.pixels)) {
+      throw new ArgumentInvalidException(
+        `Value '${props.pixels as string}' for property 'pixels' for ${
+          this.constructor.name
+        } is not an array of MapPixel`,
+      );
+    }
+
+    if (!props.pixels.every((pixel) => pixel instanceof MapPixel)) {
+      throw new ArgumentInvalidException(
+        `Value '${props.pixels.join(', ')}' for property 'pixels' for ${
+          this.constructor.name
+        } is not an array of MapPixel`,
+      );
     }
   }
 }

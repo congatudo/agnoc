@@ -21,7 +21,7 @@ export class DeviceVersion extends ValueObject<DeviceVersionProps> {
   }
 
   protected validate(props: DeviceVersionProps): void {
-    const keys = ['software', 'hardware'] as (keyof DeviceVersionProps)[];
+    const keys: (keyof DeviceVersionProps)[] = ['software', 'hardware'];
 
     keys.forEach((prop) => {
       const value = props[prop];

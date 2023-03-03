@@ -1,4 +1,4 @@
-import { ArgumentNotProvidedException } from '@agnoc/toolkit';
+import { ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
 import { expect } from 'chai';
 import { DeviceCapability, DeviceSystem } from './device-system.value-object';
 
@@ -36,11 +36,19 @@ describe('DeviceSystem', function () {
     expect(deviceSystem.supports(DeviceCapability.WATER_SENSOR)).to.be.equal(true);
   });
 
-  it('should throw an error when type is not provided', function () {
+  it("should throw an error when 'type' is not provided", function () {
     // @ts-expect-error - invalid value
     expect(() => new DeviceSystem({ foo: 'bar' })).to.throw(
       ArgumentNotProvidedException,
       `Property 'type' for DeviceSystem not provided`,
+    );
+  });
+
+  it("should throw an error when 'type' is not a number", function () {
+    // @ts-expect-error - invalid value
+    expect(() => new DeviceSystem({ type: 'foo' })).to.throw(
+      ArgumentInvalidException,
+      `Value 'foo' for property 'type' for DeviceSystem is not a number`,
     );
   });
 });

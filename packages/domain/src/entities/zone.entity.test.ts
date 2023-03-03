@@ -25,15 +25,15 @@ describe('Zone', function () {
     // @ts-expect-error - invalid property
     expect(() => new Zone({ ...givenSomeZoneProps(), coordinates: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'coordinates' for zone must be an array`,
+      `Value 'foo' for property 'coordinates' for zone must be an array`,
     );
   });
 
   it("should throw an error when 'coordinates' are invalid", function () {
     // @ts-expect-error - invalid property
-    expect(() => new Zone({ ...givenSomeZoneProps(), coordinates: ['foo'] })).to.throw(
+    expect(() => new Zone({ ...givenSomeZoneProps(), coordinates: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Property 'coordinates' for zone must be an array of MapCoordinate`,
+      `Value 'foo, 1' for property 'coordinates' for zone must be an array of MapCoordinate`,
     );
   });
 });

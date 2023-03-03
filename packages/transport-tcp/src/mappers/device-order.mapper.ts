@@ -29,7 +29,7 @@ export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_
       isEnabled: orderList.enable,
       isRepeatable: orderList.enable,
       isDeepClean: orderList.cleanInfo.twiceClean,
-      weekDayList: this.weekDayListMapper.toDomain(orderList.weekDay),
+      weekDays: this.weekDayListMapper.toDomain(orderList.weekDay),
       time,
       cleanMode: this.cleanModeMapper.toDomain(orderList.cleanInfo.cleanMode),
       fanSpeed: this.deviceFanSpeedMapper.toDomain(orderList.cleanInfo.windPower),
@@ -46,7 +46,7 @@ export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_
       orderId: deviceOrder.id.value,
       enable: deviceOrder.isEnabled,
       repeat: deviceOrder.isRepeatable,
-      weekDay: this.weekDayListMapper.fromDomain(deviceOrder.weekDayList),
+      weekDay: this.weekDayListMapper.fromDomain(deviceOrder.weekDays),
       dayTime: deviceOrder.time.toMinutes(),
       cleanInfo: {
         mapHeadId: deviceOrder.mapId.value,

@@ -42,7 +42,7 @@ export class DeviceWlan extends ValueObject<DeviceWlanProps> {
   }
 
   protected validate(props: DeviceWlanProps): void {
-    const keys = ['ipv4', 'ssid', 'port', 'mask', 'mac'] as (keyof DeviceWlanProps)[];
+    const keys: (keyof DeviceWlanProps)[] = ['ipv4', 'ssid', 'port', 'mask', 'mac'];
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {

@@ -23,7 +23,7 @@ export class DeviceCleanWork extends ValueObject<DeviceCleanWorkProps> {
   }
 
   protected validate(props: DeviceCleanWorkProps): void {
-    const keys = ['size', 'time'] as (keyof DeviceCleanWorkProps)[];
+    const keys: (keyof DeviceCleanWorkProps)[] = ['size', 'time'];
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {

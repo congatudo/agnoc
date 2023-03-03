@@ -1,4 +1,4 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
+import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 import type { ValueOf } from '@agnoc/toolkit';
 
 /** Describes the device system properties. */
@@ -29,13 +29,19 @@ export class DeviceSystem extends ValueObject<DeviceSystemProps> {
   }
 
   protected validate(props: DeviceSystemProps): void {
-    const keys = ['type'] as (keyof DeviceSystemProps)[];
+    const keys: (keyof DeviceSystemProps)[] = ['type'];
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {
         throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
       }
     });
+
+    if (typeof props.type !== 'number') {
+      throw new ArgumentInvalidException(
+        `Value '${props.type as string}' for property 'type' for ${this.constructor.name} is not a number`,
+      );
+    }
   }
 }
 

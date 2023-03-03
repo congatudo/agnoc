@@ -136,7 +136,7 @@ export class DeviceMap extends Entity<DeviceMapProps> {
   }
 
   protected validate(props: DeviceMapProps): void {
-    const keys = [
+    const keys: (keyof DeviceMapProps)[] = [
       'size',
       'min',
       'max',
@@ -145,7 +145,7 @@ export class DeviceMap extends Entity<DeviceMapProps> {
       'rooms',
       'restrictedZones',
       'robotPath',
-    ] as (keyof DeviceMapProps)[];
+    ];
 
     keys.forEach((prop) => {
       const value = props[prop];
@@ -156,56 +156,103 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     });
 
     if (!(props.size instanceof MapPixel)) {
-      throw new ArgumentInvalidException(`Property 'size' for ${this.constructor.name} is not a ${MapPixel.name}`);
+      throw new ArgumentInvalidException(
+        `Value '${props.size as string}' for property 'size' for ${this.constructor.name} is not a ${MapPixel.name}`,
+      );
     }
 
     if (!(props.min instanceof MapCoordinate)) {
-      throw new ArgumentInvalidException(`Property 'min' for ${this.constructor.name} is not a ${MapCoordinate.name}`);
+      throw new ArgumentInvalidException(
+        `Value '${props.min as string}' for property 'min' for ${this.constructor.name} is not a ${MapCoordinate.name}`,
+      );
     }
 
     if (!(props.max instanceof MapCoordinate)) {
-      throw new ArgumentInvalidException(`Property 'max' for ${this.constructor.name} is not a ${MapCoordinate.name}`);
+      throw new ArgumentInvalidException(
+        `Value '${props.max as string}' for property 'max' for ${this.constructor.name} is not a ${MapCoordinate.name}`,
+      );
     }
 
     if (typeof props.resolution !== 'number') {
-      throw new ArgumentInvalidException(`Property 'resolution' for ${this.constructor.name} is not a number`);
+      throw new ArgumentInvalidException(
+        `Value '${props.resolution as string}' for property 'resolution' for ${this.constructor.name} is not a number`,
+      );
     }
 
     if (!(props.grid instanceof Buffer)) {
-      throw new ArgumentInvalidException(`Property 'grid' for ${this.constructor.name} is not a Buffer`);
+      throw new ArgumentInvalidException(
+        `Value '${props.grid as string}' for property 'grid' for ${this.constructor.name} is not a Buffer`,
+      );
     }
 
     if (isPresent(props.robot) && !(props.robot instanceof MapPosition)) {
-      throw new ArgumentInvalidException(`Property 'robot' for ${this.constructor.name} is not a ${MapPosition.name}`);
+      throw new ArgumentInvalidException(
+        `Value '${props.robot as string}' for property 'robot' for ${this.constructor.name} is not a ${
+          MapPosition.name
+        }`,
+      );
     }
 
     if (isPresent(props.charger) && !(props.charger instanceof MapPosition)) {
       throw new ArgumentInvalidException(
-        `Property 'charger' for ${this.constructor.name} is not a ${MapPosition.name}`,
+        `Value '${props.charger as string}' for property 'charger' for ${this.constructor.name} is not a ${
+          MapPosition.name
+        }`,
       );
     }
 
     if (isPresent(props.currentSpot) && !(props.currentSpot instanceof MapPosition)) {
       throw new ArgumentInvalidException(
-        `Property 'currentSpot' for ${this.constructor.name} is not a ${MapPosition.name}`,
+        `Value '${props.currentSpot as string}' for property 'currentSpot' for ${this.constructor.name} is not a ${
+          MapPosition.name
+        }`,
       );
     }
 
-    if (!Array.isArray(props.rooms) || !props.rooms.every((room) => room instanceof Room)) {
+    if (!Array.isArray(props.rooms)) {
       throw new ArgumentInvalidException(
-        `Property 'rooms' for ${this.constructor.name} is not an array of ${Room.name}`,
+        `Value '${props.rooms as string}' for property 'rooms' for ${this.constructor.name} is not an array of ${
+          Room.name
+        }`,
       );
     }
 
-    if (!Array.isArray(props.restrictedZones) || !props.restrictedZones.every((zone) => zone instanceof Zone)) {
+    if (!props.rooms.every((room) => room instanceof Room)) {
       throw new ArgumentInvalidException(
-        `Property 'restrictedZones' for ${this.constructor.name} is not an array of ${Zone.name}`,
+        `Value '${props.rooms.join(', ')}' for property 'rooms' for ${this.constructor.name} is not an array of ${
+          Room.name
+        }`,
       );
     }
 
-    if (!Array.isArray(props.robotPath) || !props.robotPath.every((coord) => coord instanceof MapCoordinate)) {
+    if (!Array.isArray(props.restrictedZones)) {
       throw new ArgumentInvalidException(
-        `Property 'robotPath' for ${this.constructor.name} is not an array of ${MapCoordinate.name}`,
+        `Value '${props.restrictedZones as string}' for property 'restrictedZones' for ${
+          this.constructor.name
+        } is not an array of ${Zone.name}`,
+      );
+    }
+
+    if (!props.restrictedZones.every((zone) => zone instanceof Zone)) {
+      throw new ArgumentInvalidException(
+        `Value '${props.restrictedZones.join(', ')}' for property 'restrictedZones' for ${
+          this.constructor.name
+        } is not an array of ${Zone.name}`,
+      );
+    }
+
+    if (!Array.isArray(props.robotPath)) {
+      throw new ArgumentInvalidException(
+        `Value '${props.robotPath as string}' for property 'robotPath' for ${
+          this.constructor.name
+        } is not an array of ${MapCoordinate.name}`,
+      );
+    }
+    if (!props.robotPath.every((coord) => coord instanceof MapCoordinate)) {
+      throw new ArgumentInvalidException(
+        `Value '${props.robotPath.join(', ')}' for property 'robotPath' for ${
+          this.constructor.name
+        } is not an array of ${MapCoordinate.name}`,
       );
     }
   }

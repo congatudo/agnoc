@@ -59,7 +59,7 @@ export class DeviceSettings extends ValueObject<DeviceSettingsProps> {
   }
 
   protected validate(props: DeviceSettingsProps): void {
-    const keys = [
+    const keys: (keyof DeviceSettingsProps)[] = [
       'voice',
       'quietHours',
       'ecoMode',
@@ -67,7 +67,7 @@ export class DeviceSettings extends ValueObject<DeviceSettingsProps> {
       'brokenClean',
       'carpetMode',
       'historyMap',
-    ] as (keyof DeviceSettingsProps)[];
+    ];
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {

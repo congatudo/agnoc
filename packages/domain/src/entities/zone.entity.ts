@@ -21,11 +21,15 @@ export class Zone extends Entity<ZoneProps> {
     }
 
     if (!Array.isArray(props.coordinates)) {
-      throw new ArgumentInvalidException(`Property 'coordinates' for zone must be an array`);
+      throw new ArgumentInvalidException(
+        `Value '${props.coordinates as string}' for property 'coordinates' for zone must be an array`,
+      );
     }
 
     if (!props.coordinates.every((coordinate) => coordinate instanceof MapCoordinate)) {
-      throw new ArgumentInvalidException(`Property 'coordinates' for zone must be an array of MapCoordinate`);
+      throw new ArgumentInvalidException(
+        `Value '${props.coordinates.join(', ')}' for property 'coordinates' for zone must be an array of MapCoordinate`,
+      );
     }
   }
 }

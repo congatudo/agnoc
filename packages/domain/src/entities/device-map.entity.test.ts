@@ -1,8 +1,18 @@
 import { ArgumentInvalidException, ArgumentNotProvidedException, Entity } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { givenSomeDeviceMapProps, givenSomeMapPositionProps } from '../test-support';
+import {
+  givenSomeDeviceMapProps,
+  givenSomeMapCoordinateProps,
+  givenSomeMapPositionProps,
+  givenSomeRoomProps,
+  givenSomeZoneProps,
+} from '../test-support';
+import { MapCoordinate } from '../value-objects/map-coordinate.value-object';
+import { MapPixel } from '../value-objects/map-pixel.value-object';
 import { MapPosition } from '../value-objects/map-position.value-object';
 import { DeviceMap } from './device-map.entity';
+import { Room } from './room.entity';
+import { Zone } from './zone.entity';
 
 describe('DeviceMap', function () {
   it('should be created', function () {
@@ -106,7 +116,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), size: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'size' for DeviceMap is not a MapPixel`,
+      `Value 'foo' for property 'size' for DeviceMap is not a MapPixel`,
     );
   });
 
@@ -114,7 +124,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), min: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'min' for DeviceMap is not a MapCoordinate`,
+      `Value 'foo' for property 'min' for DeviceMap is not a MapCoordinate`,
     );
   });
 
@@ -122,7 +132,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), max: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'max' for DeviceMap is not a MapCoordinate`,
+      `Value 'foo' for property 'max' for DeviceMap is not a MapCoordinate`,
     );
   });
 
@@ -130,7 +140,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), resolution: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'resolution' for DeviceMap is not a number`,
+      `Value 'foo' for property 'resolution' for DeviceMap is not a number`,
     );
   });
 
@@ -138,7 +148,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), grid: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'grid' for DeviceMap is not a Buffer`,
+      `Value 'foo' for property 'grid' for DeviceMap is not a Buffer`,
     );
   });
 
@@ -146,7 +156,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), robot: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'robot' for DeviceMap is not a MapPosition`,
+      `Value 'foo' for property 'robot' for DeviceMap is not a MapPosition`,
     );
   });
 
@@ -154,7 +164,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), charger: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'charger' for DeviceMap is not a MapPosition`,
+      `Value 'foo' for property 'charger' for DeviceMap is not a MapPosition`,
     );
   });
 
@@ -162,7 +172,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), currentSpot: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'currentSpot' for DeviceMap is not a MapPosition`,
+      `Value 'foo' for property 'currentSpot' for DeviceMap is not a MapPosition`,
     );
   });
 
@@ -170,15 +180,15 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), rooms: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'rooms' for DeviceMap is not an array`,
+      `Value 'foo' for property 'rooms' for DeviceMap is not an array`,
     );
   });
 
   it("should throw an error when 'rooms' is not an array of Room", function () {
     // @ts-expect-error - invalid property
-    expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), rooms: ['foo'] })).to.throw(
+    expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), rooms: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Property 'rooms' for DeviceMap is not an array of Room`,
+      `Value 'foo, 1' for property 'rooms' for DeviceMap is not an array of Room`,
     );
   });
 
@@ -186,15 +196,15 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), restrictedZones: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'restrictedZones' for DeviceMap is not an array`,
+      `Value 'foo' for property 'restrictedZones' for DeviceMap is not an array`,
     );
   });
 
   it("should throw an error when 'restrictedZones' is not an array of Zone", function () {
     // @ts-expect-error - invalid property
-    expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), restrictedZones: ['foo'] })).to.throw(
+    expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), restrictedZones: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Property 'restrictedZones' for DeviceMap is not an array of Zone`,
+      `Value 'foo, 1' for property 'restrictedZones' for DeviceMap is not an array of Zone`,
     );
   });
 
@@ -202,15 +212,107 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), robotPath: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Property 'robotPath' for DeviceMap is not an array`,
+      `Value 'foo' for property 'robotPath' for DeviceMap is not an array`,
     );
   });
 
   it("should throw an error when 'robotPath' is not an array of MapCoordinate", function () {
     // @ts-expect-error - invalid property
-    expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), robotPath: ['foo'] })).to.throw(
+    expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), robotPath: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Property 'robotPath' for DeviceMap is not an array of MapCoordinate`,
+      `Value 'foo, 1' for property 'robotPath' for DeviceMap is not an array of MapCoordinate`,
     );
+  });
+
+  describe('#updateRobot()', function () {
+    it('should update the robot position', function () {
+      const map = new DeviceMap(givenSomeDeviceMapProps());
+      const position = new MapPosition(givenSomeMapPositionProps());
+
+      map.updateRobot(position);
+
+      expect(map.robot).to.be.equal(position);
+    });
+  });
+
+  describe('#updateCharger()', function () {
+    it('should update the robot position', function () {
+      const map = new DeviceMap(givenSomeDeviceMapProps());
+      const position = new MapPosition(givenSomeMapPositionProps());
+
+      map.updateCharger(position);
+
+      expect(map.charger).to.be.equal(position);
+    });
+  });
+
+  describe('#updateRestrictedZones()', function () {
+    it('should update the robot position', function () {
+      const map = new DeviceMap(givenSomeDeviceMapProps());
+      const zones = [new Zone(givenSomeZoneProps())];
+
+      map.updateRestrictedZones(zones);
+
+      expect(map.restrictedZones).to.be.equal(zones);
+    });
+  });
+
+  describe('#updateRooms()', function () {
+    it('should update the robot position', function () {
+      const map = new DeviceMap(givenSomeDeviceMapProps());
+      const rooms = [new Room(givenSomeRoomProps())];
+
+      map.updateRooms(rooms);
+
+      expect(map.rooms).to.be.equal(rooms);
+    });
+  });
+
+  describe('#updateCurrentSpot()', function () {
+    it('should update the robot position', function () {
+      const map = new DeviceMap(givenSomeDeviceMapProps());
+      const position = new MapPosition(givenSomeMapPositionProps());
+
+      map.updateCurrentSpot(position);
+
+      expect(map.currentSpot).to.be.equal(position);
+    });
+  });
+
+  describe('#updateRobotPath()', function () {
+    it('should update the robot position', function () {
+      const map = new DeviceMap(givenSomeDeviceMapProps());
+      const coordinates = [new MapCoordinate(givenSomeMapCoordinateProps())];
+
+      map.updateRobotPath(coordinates);
+
+      expect(map.robotPath).to.be.equal(coordinates);
+    });
+  });
+
+  describe('#toPixel()', function () {
+    it('should return the pixel coordinates', function () {
+      const size = new MapPixel({ x: 100, y: 100 });
+      const min = new MapCoordinate({ x: -20, y: -20 });
+      const max = new MapCoordinate({ x: 20, y: 20 });
+      const map = new DeviceMap({ ...givenSomeDeviceMapProps(), size, min, max });
+      const pixel = map.toPixel(new MapCoordinate({ x: 10, y: -10 }));
+
+      expect(pixel.x).to.be.equal(75);
+      expect(pixel.y).to.be.equal(25);
+    });
+  });
+
+  describe('#toCoordinate()', function () {
+    it('should return the pixel coordinates', function () {
+      const size = new MapPixel({ x: 100, y: 100 });
+      const min = new MapCoordinate({ x: -20, y: -20 });
+      const max = new MapCoordinate({ x: 20, y: 20 });
+      const map = new DeviceMap({ ...givenSomeDeviceMapProps(), size, min, max });
+      const coordinate = map.toCoordinate(new MapPixel({ x: 75, y: 25 }));
+
+      expect(coordinate.x).to.be.equal(10);
+      expect(coordinate.y).to.be.equal(-10);
+    });
   });
 });

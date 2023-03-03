@@ -29,7 +29,7 @@ export class DeviceConsumable extends ValueObject<DeviceConsumableProps> {
   }
 
   protected validate(props: DeviceConsumableProps): void {
-    const keys = ['type', 'minutesUsed'] as (keyof DeviceConsumableProps)[];
+    const keys: (keyof DeviceConsumableProps)[] = ['type', 'minutesUsed'];
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {

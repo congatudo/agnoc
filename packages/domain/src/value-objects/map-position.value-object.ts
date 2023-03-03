@@ -39,7 +39,7 @@ export class MapPosition extends ValueObject<MapPositionProps> {
   }
 
   protected validate(props: MapPositionProps): void {
-    const keys = ['x', 'y', 'phi'] as (keyof MapPositionProps)[];
+    const keys: (keyof MapPositionProps)[] = ['x', 'y', 'phi'];
 
     keys.forEach((prop) => {
       const value = props[prop];

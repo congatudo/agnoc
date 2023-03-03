@@ -21,7 +21,7 @@ export class MapCoordinate extends ValueObject<MapCoordinateProps> {
   }
 
   protected validate(props: MapCoordinateProps): void {
-    const keys = ['x', 'y'] as (keyof MapCoordinateProps)[];
+    const keys: (keyof MapCoordinateProps)[] = ['x', 'y'];
 
     keys.forEach((prop) => {
       const value = props[prop];

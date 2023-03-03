@@ -52,7 +52,7 @@ describe('Room', function () {
     // @ts-expect-error - invalid property
     expect(() => new Room({ ...givenSomeRoomProps(), name: 1 })).to.throw(
       ArgumentInvalidException,
-      "Property 'name' for Room is not a string",
+      "Value '1' for property 'name' for Room is not a string",
     );
   });
 
@@ -60,7 +60,7 @@ describe('Room', function () {
     // @ts-expect-error - invalid property
     expect(() => new Room({ ...givenSomeRoomProps(), isEnabled: 'foo' })).to.throw(
       ArgumentInvalidException,
-      "Property 'isEnabled' for Room is not a boolean",
+      "Value 'foo' for property 'isEnabled' for Room is not a boolean",
     );
   });
 
@@ -68,7 +68,7 @@ describe('Room', function () {
     // @ts-expect-error - invalid property
     expect(() => new Room({ ...givenSomeRoomProps(), center: 'foo' })).to.throw(
       ArgumentInvalidException,
-      "Property 'center' for Room is not a MapCoordinate",
+      "Value 'foo' for property 'center' for Room is not a MapCoordinate",
     );
   });
 
@@ -76,15 +76,15 @@ describe('Room', function () {
     // @ts-expect-error - invalid property
     expect(() => new Room({ ...givenSomeRoomProps(), pixels: 'foo' })).to.throw(
       ArgumentInvalidException,
-      "Property 'pixels' for Room is not an array of MapPixel",
+      "Value 'foo' for property 'pixels' for Room is not an array of MapPixel",
     );
   });
 
   it("should throw an error when 'pixels' are not an array of MapPixel", function () {
     // @ts-expect-error - invalid property
-    expect(() => new Room({ ...givenSomeRoomProps(), pixels: ['foo'] })).to.throw(
+    expect(() => new Room({ ...givenSomeRoomProps(), pixels: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      "Property 'pixels' for Room is not an array of MapPixel",
+      "Value 'foo, 1' for property 'pixels' for Room is not an array of MapPixel",
     );
   });
 });

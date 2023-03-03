@@ -33,7 +33,7 @@ export class VoiceSetting extends ValueObject<VoiceSettingProps> {
   }
 
   protected validate(props: VoiceSettingProps): void {
-    const keys = ['isEnabled', 'volume'] as (keyof VoiceSettingProps)[];
+    const keys: (keyof VoiceSettingProps)[] = ['isEnabled', 'volume'];
 
     keys.forEach((prop) => {
       const value = props[prop];

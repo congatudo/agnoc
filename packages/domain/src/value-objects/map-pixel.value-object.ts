@@ -21,7 +21,7 @@ export class MapPixel extends ValueObject<MapPixelProps> {
   }
 
   protected validate(props: MapPixelProps): void {
-    const keys = ['x', 'y'] as (keyof MapPixelProps)[];
+    const keys: (keyof MapPixelProps)[] = ['x', 'y'];
 
     keys.forEach((prop) => {
       const value = props[prop];

@@ -29,7 +29,7 @@ export class QuietHoursSetting extends ValueObject<QuietHoursSettingProps> {
   }
 
   protected validate(props: QuietHoursSettingProps): void {
-    const keys = ['isEnabled', 'beginTime', 'endTime'] as (keyof QuietHoursSettingProps)[];
+    const keys: (keyof QuietHoursSettingProps)[] = ['isEnabled', 'beginTime', 'endTime'];
 
     keys.forEach((prop) => {
       if (!isPresent(props[prop])) {

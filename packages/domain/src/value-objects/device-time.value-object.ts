@@ -38,7 +38,7 @@ export class DeviceTime extends ValueObject<DeviceTimeProps> {
   }
 
   protected validate(props: DeviceTimeProps): void {
-    const keys = ['hours', 'minutes'] as (keyof DeviceTimeProps)[];
+    const keys: (keyof DeviceTimeProps)[] = ['hours', 'minutes'];
 
     keys.forEach((prop) => {
       const value = props[prop];

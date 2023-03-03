@@ -1,5 +1,9 @@
 import { ID } from '@agnoc/toolkit';
+import { CleanMode, CleanModeValue } from './domain-primitives/clean-mode.domain-primitive';
 import { CleanSize } from './domain-primitives/clean-size.domain-primitive';
+import { DeviceFanSpeed, DeviceFanSpeedValue } from './domain-primitives/device-fan-speed.domain-primitive';
+import { DeviceWaterLevel, DeviceWaterLevelValue } from './domain-primitives/device-water-level.domain-primitive';
+import { WeekDay, WeekDayValue } from './domain-primitives/week-day.domain-primitive';
 import { Room } from './entities/room.entity';
 import { Zone } from './entities/zone.entity';
 import { DeviceConsumableType } from './value-objects/device-consumable.value-object';
@@ -10,6 +14,7 @@ import { MapPixel } from './value-objects/map-pixel.value-object';
 import { QuietHoursSetting } from './value-objects/quiet-hours-setting.value-object';
 import { VoiceSetting } from './value-objects/voice-setting.value-object';
 import type { DeviceMapProps } from './entities/device-map.entity';
+import type { DeviceOrderProps } from './entities/device-order.entity';
 import type { RoomProps } from './entities/room.entity';
 import type { UserProps } from './entities/user.entity';
 import type { ZoneProps } from './entities/zone.entity';
@@ -153,5 +158,21 @@ export function givenSomeDeviceMapProps(): DeviceMapProps {
 export function givenSomeUserProps(): UserProps {
   return {
     id: ID.generate(),
+  };
+}
+
+export function givenSomeDeviceOrderProps(): DeviceOrderProps {
+  return {
+    id: ID.generate(),
+    mapId: ID.generate(),
+    planId: ID.generate(),
+    isEnabled: true,
+    isRepeatable: true,
+    isDeepClean: true,
+    weekDays: [new WeekDay(WeekDayValue.Monday), new WeekDay(WeekDayValue.Wednesday)],
+    time: new DeviceTime(givenSomeDeviceTimeProps()),
+    cleanMode: new CleanMode(CleanModeValue.Auto),
+    fanSpeed: new DeviceFanSpeed(DeviceFanSpeedValue.High),
+    waterLevel: new DeviceWaterLevel(DeviceWaterLevelValue.High),
   };
 }
