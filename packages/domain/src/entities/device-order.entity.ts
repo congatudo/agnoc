@@ -3,16 +3,7 @@ import { CleanMode } from '../domain-primitives/clean-mode.domain-primitive';
 import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
 import { DeviceWaterLevel } from '../domain-primitives/device-water-level.domain-primitive';
 import { DeviceTime } from '../value-objects/device-time.value-object';
-
-export enum WeekDay {
-  'sunday' = 1 << 0,
-  'monday' = 1 << 1,
-  'tuesday' = 1 << 2,
-  'wednesday' = 1 << 3,
-  'thursday' = 1 << 4,
-  'friday' = 1 << 5,
-  'saturday' = 1 << 6,
-}
+import type { WeekDay } from '../domain-primitives/week-day.domain-primitive';
 
 export interface DeviceOrderProps {
   id: ID;
@@ -21,7 +12,7 @@ export interface DeviceOrderProps {
   isEnabled: boolean;
   isRepeatable: boolean;
   isDeepClean: boolean;
-  weekDay: WeekDay;
+  weekDayList: WeekDay[];
   time: DeviceTime;
   cleanMode: CleanMode;
   fanSpeed: DeviceFanSpeed;
@@ -53,8 +44,8 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
     return this.props.isDeepClean;
   }
 
-  get weekDay(): WeekDay {
-    return this.props.weekDay;
+  get weekDayList(): WeekDay[] {
+    return this.props.weekDayList;
   }
 
   get time(): DeviceTime {
@@ -82,7 +73,7 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
         props.isEnabled,
         props.isRepeatable,
         props.isDeepClean,
-        props.weekDay,
+        props.weekDayList,
         props.time,
         props.cleanMode,
         props.fanSpeed,

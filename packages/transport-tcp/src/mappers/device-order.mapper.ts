@@ -3,6 +3,7 @@ import { ArgumentNotProvidedException, ID } from '@agnoc/toolkit';
 import type { CleanModeMapper } from './clean-mode.mapper';
 import type { DeviceFanSpeedMapper } from './device-fan-speed.mapper';
 import type { DeviceWaterLevelMapper } from './device-water-level.mapper';
+import type { WeekDayListMapper } from './week-day-list.mapper';
 import type { DeviceOrderProps } from '@agnoc/domain';
 import type { IDEVICE_ORDERLIST_SETTING_REQ } from '@agnoc/schemas-tcp';
 import type { Mapper } from '@agnoc/toolkit';
@@ -12,6 +13,7 @@ export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_
     private readonly deviceFanSpeedMapper: DeviceFanSpeedMapper,
     private readonly deviceWaterLevelMapper: DeviceWaterLevelMapper,
     private readonly cleanModeMapper: CleanModeMapper,
+    private readonly weekDayListMapper: WeekDayListMapper,
   ) {}
 
   toDomain(orderList: IDEVICE_ORDERLIST_SETTING_REQ): DeviceOrder {
@@ -27,7 +29,7 @@ export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_
       isEnabled: orderList.enable,
       isRepeatable: orderList.enable,
       isDeepClean: orderList.cleanInfo.twiceClean,
-      weekDay: orderList.weekDay,
+      weekDayList: this.weekDayListMapper.toDomain(orderList.weekDay),
       time,
       cleanMode: this.cleanModeMapper.toDomain(orderList.cleanInfo.cleanMode),
       fanSpeed: this.deviceFanSpeedMapper.toDomain(orderList.cleanInfo.windPower),
@@ -44,7 +46,7 @@ export class DeviceOrderMapper implements Mapper<DeviceOrder, IDEVICE_ORDERLIST_
       orderId: deviceOrder.id.value,
       enable: deviceOrder.isEnabled,
       repeat: deviceOrder.isRepeatable,
-      weekDay: deviceOrder.weekDay,
+      weekDay: this.weekDayListMapper.fromDomain(deviceOrder.weekDayList),
       dayTime: deviceOrder.time.toMinutes(),
       cleanInfo: {
         mapHeadId: deviceOrder.mapId.value,

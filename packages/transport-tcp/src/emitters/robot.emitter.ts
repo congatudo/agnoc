@@ -43,6 +43,7 @@ import { DeviceOrderMapper } from '../mappers/device-order.mapper';
 import { DeviceStateMapper } from '../mappers/device-state.mapper';
 import { DeviceVoiceMapper } from '../mappers/device-voice.mapper';
 import { DeviceWaterLevelMapper } from '../mappers/device-water-level.mapper';
+import { WeekDayListMapper } from '../mappers/week-day-list.mapper';
 import type { Connection } from './connection.emitter';
 import type { Multiplexer } from './multiplexer.emitter';
 import type { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
@@ -108,7 +109,13 @@ const CTRL_VALUE = {
 const deviceFanSpeedMapper = new DeviceFanSpeedMapper();
 const deviceWaterLevelMapper = new DeviceWaterLevelMapper();
 const cleanModeMapper = new CleanModeMapper();
-const deviceOrderMapper = new DeviceOrderMapper(deviceFanSpeedMapper, deviceWaterLevelMapper, cleanModeMapper);
+const weekDayListMapper = new WeekDayListMapper();
+const deviceOrderMapper = new DeviceOrderMapper(
+  deviceFanSpeedMapper,
+  deviceWaterLevelMapper,
+  cleanModeMapper,
+  weekDayListMapper,
+);
 const deviceVoiceMapper = new DeviceVoiceMapper();
 const deviceStateMapper = new DeviceStateMapper();
 const deviceModeMapper = new DeviceModeMapper();

@@ -20,7 +20,14 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
-    "./test-support": "./lib/test-support.ts"
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./test-support": {
+      "types": "./lib/test-support.d.ts",
+      "default": "./lib/test-support.js"
+    }
   },
   "files": [
     "lib"
