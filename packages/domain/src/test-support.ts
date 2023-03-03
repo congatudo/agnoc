@@ -8,13 +8,16 @@ import { Room } from './entities/room.entity';
 import { Zone } from './entities/zone.entity';
 import { DeviceConsumableType } from './value-objects/device-consumable.value-object';
 import { DeviceSetting } from './value-objects/device-setting.value-object';
+import { DeviceSystem } from './value-objects/device-system.value-object';
 import { DeviceTime } from './value-objects/device-time.value-object';
+import { DeviceVersion } from './value-objects/device-version.value-object';
 import { MapCoordinate } from './value-objects/map-coordinate.value-object';
 import { MapPixel } from './value-objects/map-pixel.value-object';
 import { QuietHoursSetting } from './value-objects/quiet-hours-setting.value-object';
 import { VoiceSetting } from './value-objects/voice-setting.value-object';
 import type { DeviceMapProps } from './entities/device-map.entity';
 import type { DeviceOrderProps } from './entities/device-order.entity';
+import type { DeviceProps } from './entities/device.entity';
 import type { RoomProps } from './entities/room.entity';
 import type { UserProps } from './entities/user.entity';
 import type { ZoneProps } from './entities/zone.entity';
@@ -22,6 +25,7 @@ import type { DeviceCleanWorkProps } from './value-objects/device-clean-work.val
 import type { DeviceConsumableProps } from './value-objects/device-consumable.value-object';
 import type { DeviceSettingProps } from './value-objects/device-setting.value-object';
 import type { DeviceSettingsProps } from './value-objects/device-settings.value-object';
+import type { DeviceSystemProps } from './value-objects/device-system.value-object';
 import type { DeviceTimeProps } from './value-objects/device-time.value-object';
 import type { DeviceVersionProps } from './value-objects/device-version.value-object';
 import type { DeviceWlanProps } from './value-objects/device-wlan.value-object';
@@ -174,5 +178,19 @@ export function givenSomeDeviceOrderProps(): DeviceOrderProps {
     cleanMode: new CleanMode(CleanModeValue.Auto),
     fanSpeed: new DeviceFanSpeed(DeviceFanSpeedValue.High),
     waterLevel: new DeviceWaterLevel(DeviceWaterLevelValue.High),
+  };
+}
+
+export function givenSomeDeviceSystemProps(): DeviceSystemProps {
+  return {
+    type: 9,
+  };
+}
+
+export function givenSomeDeviceProps(): DeviceProps {
+  return {
+    id: ID.generate(),
+    system: new DeviceSystem(givenSomeDeviceSystemProps()),
+    version: new DeviceVersion(givenSomeDeviceVersionProps()),
   };
 }

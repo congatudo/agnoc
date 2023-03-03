@@ -236,7 +236,7 @@ describe('DeviceMap', function () {
   });
 
   describe('#updateCharger()', function () {
-    it('should update the robot position', function () {
+    it('should update the charger position', function () {
       const map = new DeviceMap(givenSomeDeviceMapProps());
       const position = new MapPosition(givenSomeMapPositionProps());
 
@@ -247,7 +247,7 @@ describe('DeviceMap', function () {
   });
 
   describe('#updateRestrictedZones()', function () {
-    it('should update the robot position', function () {
+    it('should update the restricted zones', function () {
       const map = new DeviceMap(givenSomeDeviceMapProps());
       const zones = [new Zone(givenSomeZoneProps())];
 
@@ -258,7 +258,7 @@ describe('DeviceMap', function () {
   });
 
   describe('#updateRooms()', function () {
-    it('should update the robot position', function () {
+    it('should update the rooms', function () {
       const map = new DeviceMap(givenSomeDeviceMapProps());
       const rooms = [new Room(givenSomeRoomProps())];
 
@@ -269,7 +269,7 @@ describe('DeviceMap', function () {
   });
 
   describe('#updateCurrentSpot()', function () {
-    it('should update the robot position', function () {
+    it('should update the current spot', function () {
       const map = new DeviceMap(givenSomeDeviceMapProps());
       const position = new MapPosition(givenSomeMapPositionProps());
 
@@ -280,7 +280,7 @@ describe('DeviceMap', function () {
   });
 
   describe('#updateRobotPath()', function () {
-    it('should update the robot position', function () {
+    it('should update the robot path', function () {
       const map = new DeviceMap(givenSomeDeviceMapProps());
       const coordinates = [new MapCoordinate(givenSomeMapCoordinateProps())];
 
