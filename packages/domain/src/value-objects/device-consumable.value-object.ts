@@ -1,11 +1,11 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 
 /** Describe the type of a device consumable. */
 export enum DeviceConsumableType {
-  MainBrush = 'mainBrush',
-  SideBrush = 'sideBrush',
-  Filter = 'filter',
-  Dishcloth = 'dishcloth',
+  MainBrush = 'MainBrush',
+  SideBrush = 'SideBrush',
+  Filter = 'Filter',
+  Dishcloth = 'Dishcloth',
 }
 
 /** Describe the props of a device consumable. */
@@ -31,24 +31,9 @@ export class DeviceConsumable extends ValueObject<DeviceConsumableProps> {
   protected validate(props: DeviceConsumableProps): void {
     const keys: (keyof DeviceConsumableProps)[] = ['type', 'minutesUsed'];
 
-    keys.forEach((prop) => {
-      if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
-    });
+    keys.forEach((prop) => this.validateDefinedProp(props, prop));
 
-    if (!Object.values(DeviceConsumableType).includes(props.type)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.type}' for property 'type' for ${this.constructor.name} is invalid`,
-      );
-    }
-
-    if (typeof props.minutesUsed !== 'number') {
-      throw new ArgumentInvalidException(
-        `Value '${props.minutesUsed as string}' for property 'minutesUsed' for ${
-          this.constructor.name
-        } is not a number`,
-      );
-    }
+    this.validateInListProp(props, 'type', Object.values(DeviceConsumableType));
+    this.validateNumberProp(props, 'minutesUsed');
   }
 }

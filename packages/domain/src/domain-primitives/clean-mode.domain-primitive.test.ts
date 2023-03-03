@@ -12,6 +12,9 @@ describe('CleanMode', function () {
 
   it('should throw an error when value is invalid', function () {
     // @ts-expect-error - invalid value
-    expect(() => new CleanMode('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for CleanMode is invalid`);
+    expect(() => new CleanMode('foo')).to.throw(
+      ArgumentInvalidException,
+      `Value 'foo' for property 'value' of CleanMode is not one of 'Auto, Border, Mop'`,
+    );
   });
 });

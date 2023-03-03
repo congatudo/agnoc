@@ -1,10 +1,4 @@
-import {
-  ValueObject,
-  isPresent,
-  ArgumentNotProvidedException,
-  ArgumentInvalidException,
-  ArgumentOutOfRangeException,
-} from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 
 /** The properties of the voice setting. */
 export interface VoiceSettingProps {
@@ -36,29 +30,11 @@ export class VoiceSetting extends ValueObject<VoiceSettingProps> {
     const keys: (keyof VoiceSettingProps)[] = ['isEnabled', 'volume'];
 
     keys.forEach((prop) => {
-      const value = props[prop];
-
-      if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
+      this.validateDefinedProp(props, prop);
     });
 
-    if (typeof props.isEnabled !== 'boolean') {
-      throw new ArgumentInvalidException(
-        `Value '${props.isEnabled as string}' for property 'isEnabled' for ${this.constructor.name} is not a boolean`,
-      );
-    }
-
-    if (typeof props.volume !== 'number') {
-      throw new ArgumentInvalidException(
-        `Value '${props.volume as string}' for property 'volume' for ${this.constructor.name} is not a number`,
-      );
-    }
-
-    if (props.volume < VoiceSettingMinVolume || props.volume > VoiceSettingMaxVolume) {
-      throw new ArgumentOutOfRangeException(
-        `Value '${props.volume}' for property 'volume' for ${this.constructor.name} is out of range`,
-      );
-    }
+    this.validateBooleanProp(props, 'isEnabled');
+    this.validateNumberProp(props, 'volume');
+    this.validateNumberProp(props, 'volume', { min: VoiceSettingMinVolume, max: VoiceSettingMaxVolume });
   }
 }

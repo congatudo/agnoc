@@ -4,23 +4,9 @@ import { ID } from '../domain-primitives/id.domain-primitive';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
 import { Entity } from './entity.base';
+import { Validatable } from './validatable.base';
 
 describe('entity.base', () => {
-  it('throws an error when does not have props', () => {
-    type EntityProps = { id: ID };
-
-    class DummyEntity extends Entity<EntityProps> {
-      protected validate(_: EntityProps): void {
-        // noop
-      }
-    }
-
-    expect(() => {
-      // @ts-expect-error expected argument
-      new DummyEntity();
-    }).to.throw(ArgumentInvalidException, 'Cannot create DummyEntity from non-object props');
-  });
-
   it('throws an error when does not have an id', () => {
     type EntityProps = { id: ID };
 
@@ -63,6 +49,7 @@ describe('entity.base', () => {
     const id = ID.generate();
     const dummyEntity = new DummyEntity({ id });
 
+    expect(dummyEntity).to.be.instanceOf(Validatable);
     expect(dummyEntity.id.equals(id)).to.be.true;
   });
 

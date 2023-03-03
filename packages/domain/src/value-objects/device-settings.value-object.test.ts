@@ -29,7 +29,10 @@ describe('DeviceSettings', function () {
     expect(
       // @ts-expect-error - invalid property
       () => new DeviceSettings({ ...givenSomeDeviceSettingsProps(), voice: 'foo' }),
-    ).to.throw(ArgumentInvalidException, `Value 'foo' for property 'voice' for DeviceSettings is not a VoiceSetting`);
+    ).to.throw(
+      ArgumentInvalidException,
+      `Value 'foo' for property 'voice' of DeviceSettings is not an instance of VoiceSetting`,
+    );
   });
 
   it("should throw an error when 'quietHours' property is not provided", function () {
@@ -45,7 +48,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ ...givenSomeDeviceSettingsProps(), quietHours: 'foo' }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'quietHours' for DeviceSettings is not a QuietHoursSetting`,
+      `Value 'foo' for property 'quietHours' of DeviceSettings is not an instance of QuietHoursSetting`,
     );
   });
 
@@ -62,7 +65,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ ...givenSomeDeviceSettingsProps(), ecoMode: 'foo' }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'ecoMode' for DeviceSettings is not a DeviceSetting`,
+      `Value 'foo' for property 'ecoMode' of DeviceSettings is not an instance of DeviceSetting`,
     );
   });
 
@@ -79,7 +82,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ ...givenSomeDeviceSettingsProps(), repeatClean: 'foo' }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'repeatClean' for DeviceSettings is not a DeviceSetting`,
+      `Value 'foo' for property 'repeatClean' of DeviceSettings is not an instance of DeviceSetting`,
     );
   });
 
@@ -96,7 +99,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ ...givenSomeDeviceSettingsProps(), brokenClean: 'foo' }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'brokenClean' for DeviceSettings is not a DeviceSetting`,
+      `Value 'foo' for property 'brokenClean' of DeviceSettings is not an instance of DeviceSetting`,
     );
   });
 
@@ -113,7 +116,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ ...givenSomeDeviceSettingsProps(), carpetMode: 'foo' }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'carpetMode' for DeviceSettings is not a DeviceSetting`,
+      `Value 'foo' for property 'carpetMode' of DeviceSettings is not an instance of DeviceSetting`,
     );
   });
 
@@ -130,7 +133,7 @@ describe('DeviceSettings', function () {
       () => new DeviceSettings({ ...givenSomeDeviceSettingsProps(), historyMap: 'foo' }),
     ).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'historyMap' for DeviceSettings is not a DeviceSetting`,
+      `Value 'foo' for property 'historyMap' of DeviceSettings is not an instance of DeviceSetting`,
     );
   });
 });

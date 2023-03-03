@@ -12,6 +12,9 @@ describe('WeekDay', function () {
 
   it('should throw an error when value is invalid', function () {
     // @ts-expect-error - invalid value
-    expect(() => new WeekDay('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for WeekDay is invalid`);
+    expect(() => new WeekDay('foo')).to.throw(
+      ArgumentInvalidException,
+      `Value 'foo' for property 'value' of WeekDay is not one of 'Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday'`,
+    );
   });
 });

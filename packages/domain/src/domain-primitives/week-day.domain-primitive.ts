@@ -1,4 +1,4 @@
-import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
+import { DomainPrimitive } from '@agnoc/toolkit';
 
 /** Describes a week day value. */
 export enum WeekDayValue {
@@ -18,8 +18,6 @@ export enum WeekDayValue {
  */
 export class WeekDay extends DomainPrimitive<WeekDayValue> {
   protected validate(props: DomainPrimitive<WeekDayValue>): void {
-    if (!Object.values(WeekDayValue).includes(props.value)) {
-      throw new ArgumentInvalidException(`Value '${props.value}' for ${this.constructor.name} is invalid`);
-    }
+    this.validateInListProp(props, 'value', Object.values(WeekDayValue));
   }
 }

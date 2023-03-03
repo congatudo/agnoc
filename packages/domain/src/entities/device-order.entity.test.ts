@@ -106,7 +106,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), mapId: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'mapId' for DeviceOrder is not an ID`,
+      `Value 'foo' for property 'mapId' of DeviceOrder is not an instance of ID`,
     );
   });
 
@@ -114,7 +114,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), planId: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'planId' for DeviceOrder is not an ID`,
+      `Value 'foo' for property 'planId' of DeviceOrder is not an instance of ID`,
     );
   });
 
@@ -122,7 +122,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), isEnabled: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isEnabled' for DeviceOrder is not a boolean`,
+      `Value 'foo' for property 'isEnabled' of DeviceOrder is not a boolean`,
     );
   });
 
@@ -130,7 +130,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), isRepeatable: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isRepeatable' for DeviceOrder is not a boolean`,
+      `Value 'foo' for property 'isRepeatable' of DeviceOrder is not a boolean`,
     );
   });
 
@@ -138,7 +138,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), isDeepClean: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isDeepClean' for DeviceOrder is not a boolean`,
+      `Value 'foo' for property 'isDeepClean' of DeviceOrder is not a boolean`,
     );
   });
 
@@ -146,7 +146,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), weekDays: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'weekDays' for DeviceOrder is not an array of WeekDay`,
+      `Value 'foo' for property 'weekDays' of DeviceOrder is not an array`,
     );
   });
 
@@ -154,7 +154,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), weekDays: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo, 1' for property 'weekDays' for DeviceOrder is not an array of WeekDay`,
+      `Value 'foo, 1' for property 'weekDays' of DeviceOrder is not an array of WeekDay`,
     );
   });
 
@@ -162,7 +162,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), time: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'time' for DeviceOrder is not a DeviceTime`,
+      `Value 'foo' for property 'time' of DeviceOrder is not an instance of DeviceTime`,
     );
   });
 
@@ -170,7 +170,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), cleanMode: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'cleanMode' for DeviceOrder is not a CleanMode`,
+      `Value 'foo' for property 'cleanMode' of DeviceOrder is not an instance of CleanMode`,
     );
   });
 
@@ -178,7 +178,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), fanSpeed: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'fanSpeed' for DeviceOrder is not a DeviceFanSpeed`,
+      `Value 'foo' for property 'fanSpeed' of DeviceOrder is not an instance of DeviceFanSpeed`,
     );
   });
 
@@ -186,7 +186,7 @@ describe('DeviceOrder', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceOrder({ ...givenSomeDeviceOrderProps(), waterLevel: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'waterLevel' for DeviceOrder is not a DeviceWaterLevel`,
+      `Value 'foo' for property 'waterLevel' of DeviceOrder is not an instance of DeviceWaterLevel`,
     );
   });
 });

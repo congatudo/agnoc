@@ -24,7 +24,7 @@ describe('DeviceConsumable', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceConsumable({ ...givenSomeDeviceConsumableProps(), type: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'type' for DeviceConsumable is invalid`,
+      `Value 'foo' for property 'type' of DeviceConsumable is not one of 'MainBrush, SideBrush, Filter, Dishcloth'`,
     );
   });
 
@@ -40,7 +40,7 @@ describe('DeviceConsumable', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceConsumable({ ...givenSomeDeviceConsumableProps(), minutesUsed: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'minutesUsed' for DeviceConsumable is not a number`,
+      `Value 'foo' for property 'minutesUsed' of DeviceConsumable is not a number`,
     );
   });
 });

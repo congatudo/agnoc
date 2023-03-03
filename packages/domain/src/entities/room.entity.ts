@@ -1,4 +1,4 @@
-import { Entity, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { Entity } from '@agnoc/toolkit';
 import { MapCoordinate } from '../value-objects/map-coordinate.value-object';
 import { MapPixel } from '../value-objects/map-pixel.value-object';
 import type { EntityProps } from '@agnoc/toolkit';
@@ -41,43 +41,12 @@ export class Room extends Entity<RoomProps> {
     const keys: (keyof RoomProps)[] = ['name', 'isEnabled', 'center', 'pixels'];
 
     keys.forEach((prop) => {
-      if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
+      this.validateDefinedProp(props, prop);
     });
 
-    if (typeof props.name !== 'string') {
-      throw new ArgumentInvalidException(
-        `Value '${props.name as string}' for property 'name' for ${this.constructor.name} is not a string`,
-      );
-    }
-
-    if (typeof props.isEnabled !== 'boolean') {
-      throw new ArgumentInvalidException(
-        `Value '${props.isEnabled as string}' for property 'isEnabled' for ${this.constructor.name} is not a boolean`,
-      );
-    }
-
-    if (!(props.center instanceof MapCoordinate)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.center as string}' for property 'center' for ${this.constructor.name} is not a MapCoordinate`,
-      );
-    }
-
-    if (!Array.isArray(props.pixels)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.pixels as string}' for property 'pixels' for ${
-          this.constructor.name
-        } is not an array of MapPixel`,
-      );
-    }
-
-    if (!props.pixels.every((pixel) => pixel instanceof MapPixel)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.pixels.join(', ')}' for property 'pixels' for ${
-          this.constructor.name
-        } is not an array of MapPixel`,
-      );
-    }
+    this.validateStringProp(props, 'name');
+    this.validateBooleanProp(props, 'isEnabled');
+    this.validateInstanceProp(props, 'center', MapCoordinate);
+    this.validateArrayProp(props, 'pixels', MapPixel);
   }
 }

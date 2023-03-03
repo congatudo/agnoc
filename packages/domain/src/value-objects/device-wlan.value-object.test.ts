@@ -28,7 +28,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ...givenSomeDeviceWlanProps(), ipv4: 1 })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'ipv4' for DeviceWlan is not a string`,
+      `Value '1' for property 'ipv4' of DeviceWlan is not a string`,
     );
   });
 
@@ -44,7 +44,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ...givenSomeDeviceWlanProps(), ssid: 1 })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'ssid' for DeviceWlan is not a string`,
+      `Value '1' for property 'ssid' of DeviceWlan is not a string`,
     );
   });
 
@@ -60,7 +60,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ...givenSomeDeviceWlanProps(), port: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'port' for DeviceWlan is not a number`,
+      `Value 'foo' for property 'port' of DeviceWlan is not a number`,
     );
   });
 
@@ -76,7 +76,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ...givenSomeDeviceWlanProps(), mask: 1 })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'mask' for DeviceWlan is not a string`,
+      `Value '1' for property 'mask' of DeviceWlan is not a string`,
     );
   });
 
@@ -92,7 +92,7 @@ describe('DeviceWlan', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceWlan({ ...givenSomeDeviceWlanProps(), mac: 1 })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'mac' for DeviceWlan is not a string`,
+      `Value '1' for property 'mac' of DeviceWlan is not a string`,
     );
   });
 });

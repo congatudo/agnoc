@@ -33,7 +33,7 @@ describe('DeviceVersion', function () {
     // @ts-expect-error - software is not a string
     expect(() => new DeviceVersion({ ...givenSomeDeviceVersionProps(), software: 1 })).to.throw(
       ArgumentInvalidException,
-      "Value '1' for property 'software' for DeviceVersion is not a string",
+      "Value '1' for property 'software' of DeviceVersion is not a string",
     );
   });
 
@@ -41,7 +41,7 @@ describe('DeviceVersion', function () {
     // @ts-expect-error - hardware is not a string
     expect(() => new DeviceVersion({ ...givenSomeDeviceVersionProps(), hardware: 1 })).to.throw(
       ArgumentInvalidException,
-      "Value '1' for property 'hardware' for DeviceVersion is not a string",
+      "Value '1' for property 'hardware' of DeviceVersion is not a string",
     );
   });
 });

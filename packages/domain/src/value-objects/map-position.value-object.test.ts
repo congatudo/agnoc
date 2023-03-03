@@ -28,7 +28,7 @@ describe('MapPosition', function () {
     // @ts-expect-error - missing property
     expect(() => new MapPosition({ ...givenSomeMapPositionProps(), x: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'x' for MapPosition is not a number`,
+      `Value 'foo' for property 'x' of MapPosition is not a number`,
     );
   });
 
@@ -44,7 +44,7 @@ describe('MapPosition', function () {
     // @ts-expect-error - missing property
     expect(() => new MapPosition({ ...givenSomeMapPositionProps(), y: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'y' for MapPosition is not a number`,
+      `Value 'foo' for property 'y' of MapPosition is not a number`,
     );
   });
 
@@ -60,7 +60,7 @@ describe('MapPosition', function () {
     // @ts-expect-error - missing property
     expect(() => new MapPosition({ ...givenSomeMapPositionProps(), phi: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'phi' for MapPosition is not a number`,
+      `Value 'foo' for property 'phi' of MapPosition is not a number`,
     );
   });
 

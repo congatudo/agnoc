@@ -1,14 +1,12 @@
-import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
 import { convertPropsToObject } from '../utils/convert-props-to-object.util';
-import { isEmpty } from '../utils/is-empty.util';
 import { isPresent } from '../utils/is-present.util';
+import { Validatable } from './validatable.base';
 
-export abstract class ValueObject<T> {
+export abstract class ValueObject<T> extends Validatable<T> {
   protected readonly props: T;
 
   constructor(props: T) {
-    this.checkIfEmpty(props);
-    this.validate(props);
+    super(props);
     this.props = props;
   }
 
@@ -20,7 +18,7 @@ export abstract class ValueObject<T> {
     return JSON.stringify(this) === JSON.stringify(vo);
   }
 
-  toString(): string {
+  override toString(): string {
     return JSON.stringify(this.toJSON());
   }
 
@@ -37,14 +35,6 @@ export abstract class ValueObject<T> {
       ...this.props,
       ...props,
     });
-  }
-
-  protected abstract validate(props: T): void;
-
-  private checkIfEmpty(props: T): void {
-    if (isEmpty(props)) {
-      throw new ArgumentNotProvidedException(`Cannot create ${this.constructor.name} from empty props`);
-    }
   }
 
   static isValueObject(obj: unknown): obj is ValueObject<unknown> {

@@ -30,14 +30,14 @@ describe('DeviceTime', function () {
     // @ts-expect-error - missing hour
     expect(() => new DeviceTime({ ...givenSomeDeviceTimeProps(), hours: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'hours' for DeviceTime is not a number`,
+      `Value 'foo' for property 'hours' of DeviceTime is not a number`,
     );
   });
 
   it("should throw an error when 'hours' are out of range", function () {
     expect(() => new DeviceTime({ ...givenSomeDeviceTimeProps(), hours: 25 })).to.throw(
       ArgumentOutOfRangeException,
-      `Value '25' for property 'hours' for DeviceTime is out of range`,
+      `Value '25' for property 'hours' of DeviceTime is out of range [0, 23]`,
     );
   });
 
@@ -53,14 +53,14 @@ describe('DeviceTime', function () {
     // @ts-expect-error - missing hour
     expect(() => new DeviceTime({ ...givenSomeDeviceTimeProps(), minutes: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'minutes' for DeviceTime is not a number`,
+      `Value 'foo' for property 'minutes' of DeviceTime is not a number`,
     );
   });
 
   it("should throw an error when 'minutes' are out of range", function () {
     expect(() => new DeviceTime({ ...givenSomeDeviceTimeProps(), minutes: 65 })).to.throw(
       ArgumentOutOfRangeException,
-      `Value '65' for property 'minutes' for DeviceTime is out of range`,
+      `Value '65' for property 'minutes' of DeviceTime is out of range [0, 59]`,
     );
   });
 

@@ -2,18 +2,17 @@ import { ID } from '../domain-primitives/id.domain-primitive';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
 import { convertPropsToObject } from '../utils/convert-props-to-object.util';
-import { isObject } from '../utils/is-object.util';
 import { isPresent } from '../utils/is-present.util';
+import { Validatable } from './validatable.base';
 
 export interface EntityProps {
   id: ID;
 }
 
-export abstract class Entity<T extends EntityProps> {
+export abstract class Entity<T extends EntityProps> extends Validatable<T> {
   constructor(props: T) {
-    this.checkIfEmpty(props);
+    super(props);
     this.validateId(props);
-    this.validate(props);
     this.props = props;
   }
 
@@ -52,23 +51,15 @@ export abstract class Entity<T extends EntityProps> {
     });
   }
 
-  public toJSON(): unknown {
+  toJSON(): unknown {
     const propsCopy = convertPropsToObject(this.props);
 
     return Object.freeze(propsCopy);
   }
 
-  public toString(): string {
+  override toString(): string {
     return JSON.stringify(this.toJSON());
   }
-
-  private checkIfEmpty(props: T) {
-    if (!isObject(props)) {
-      throw new ArgumentInvalidException(`Cannot create ${this.constructor.name} from non-object props`);
-    }
-  }
-
-  protected abstract validate(props: T): void;
 
   private validateId(props: T) {
     if (!props.id) {

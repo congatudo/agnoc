@@ -1,4 +1,4 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 
 /** The properties of the device wlan. */
 export interface DeviceWlanProps {
@@ -45,39 +45,13 @@ export class DeviceWlan extends ValueObject<DeviceWlanProps> {
     const keys: (keyof DeviceWlanProps)[] = ['ipv4', 'ssid', 'port', 'mask', 'mac'];
 
     keys.forEach((prop) => {
-      if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
+      this.validateDefinedProp(props, prop);
     });
 
-    if (typeof props.ipv4 !== 'string') {
-      throw new ArgumentInvalidException(
-        `Value '${props.ipv4 as string}' for property 'ipv4' for ${this.constructor.name} is not a string`,
-      );
-    }
-
-    if (typeof props.ssid !== 'string') {
-      throw new ArgumentInvalidException(
-        `Value '${props.ssid as string}' for property 'ssid' for ${this.constructor.name} is not a string`,
-      );
-    }
-
-    if (typeof props.port !== 'number') {
-      throw new ArgumentInvalidException(
-        `Value '${props.port as string}' for property 'port' for ${this.constructor.name} is not a number`,
-      );
-    }
-
-    if (typeof props.mask !== 'string') {
-      throw new ArgumentInvalidException(
-        `Value '${props.mask as string}' for property 'mask' for ${this.constructor.name} is not a string`,
-      );
-    }
-
-    if (typeof props.mac !== 'string') {
-      throw new ArgumentInvalidException(
-        `Value '${props.mac as string}' for property 'mac' for ${this.constructor.name} is not a string`,
-      );
-    }
+    this.validateStringProp(props, 'ipv4');
+    this.validateStringProp(props, 'ssid');
+    this.validateNumberProp(props, 'port');
+    this.validateStringProp(props, 'mask');
+    this.validateStringProp(props, 'mac');
   }
 }

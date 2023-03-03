@@ -12,6 +12,9 @@ describe('DeviceState', function () {
 
   it('should throw an error when value is invalid', function () {
     // @ts-expect-error - invalid value
-    expect(() => new DeviceState('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for DeviceState is invalid`);
+    expect(() => new DeviceState('foo')).to.throw(
+      ArgumentInvalidException,
+      `Value 'foo' for property 'value' of DeviceState is not one of 'error, docked, idle, returning, cleaning, paused, manual_control, moving'`,
+    );
   });
 });

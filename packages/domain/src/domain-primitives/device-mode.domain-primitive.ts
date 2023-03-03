@@ -1,4 +1,4 @@
-import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
+import { DomainPrimitive } from '@agnoc/toolkit';
 
 /** Describes a device mode value. */
 export enum DeviceModeValue {
@@ -15,8 +15,6 @@ export enum DeviceModeValue {
  */
 export class DeviceMode extends DomainPrimitive<DeviceModeValue> {
   protected validate(props: DomainPrimitive<DeviceModeValue>): void {
-    if (!Object.values(DeviceModeValue).includes(props.value)) {
-      throw new ArgumentInvalidException(`Value '${props.value}' for ${this.constructor.name} is invalid`);
-    }
+    this.validateInListProp(props, 'value', Object.values(DeviceModeValue));
   }
 }

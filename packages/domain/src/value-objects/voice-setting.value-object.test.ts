@@ -24,7 +24,7 @@ describe('VoiceSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new VoiceSetting({ ...givenSomeVoiceSettingProps(), isEnabled: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isEnabled' for VoiceSetting is not a boolean`,
+      `Value 'foo' for property 'isEnabled' of VoiceSetting is not a boolean`,
     );
   });
 
@@ -40,14 +40,14 @@ describe('VoiceSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new VoiceSetting({ ...givenSomeVoiceSettingProps(), volume: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'volume' for VoiceSetting is not a number`,
+      `Value 'foo' for property 'volume' of VoiceSetting is not a number`,
     );
   });
 
   it("should throw an error when 'volume' property is out of range", function () {
     expect(() => new VoiceSetting({ ...givenSomeVoiceSettingProps(), volume: 150 })).to.throw(
       ArgumentOutOfRangeException,
-      `Value '150' for property 'volume' for VoiceSetting is out of range`,
+      `Value '150' for property 'volume' of VoiceSetting is out of range [0, 100]`,
     );
   });
 });

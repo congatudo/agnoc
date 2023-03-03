@@ -1,4 +1,4 @@
-import { Entity, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { Entity } from '@agnoc/toolkit';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
@@ -135,81 +135,99 @@ export class Device extends Entity<DeviceProps> {
 
   /** Updates the device system. */
   updateSystem(system: DeviceSystem): void {
+    this.validateDefinedProp({ system }, 'system');
+    this.validateInstanceProp({ system }, 'system', DeviceSystem);
     this.props.system = system;
   }
 
   /** Updates the device version. */
   updateVersion(version: DeviceVersion): void {
+    this.validateDefinedProp({ version }, 'version');
+    this.validateInstanceProp({ version }, 'version', DeviceVersion);
     this.props.version = version;
   }
 
   /** Updates the device settings. */
   updateConfig(config?: DeviceSettings): void {
+    this.validateInstanceProp({ config }, 'config', DeviceSettings);
     this.props.config = config;
   }
 
   /** Updates the device current clean. */
-  updateCurrentClean(currentClean: DeviceCleanWork): void {
+  updateCurrentClean(currentClean?: DeviceCleanWork): void {
+    this.validateInstanceProp({ currentClean }, 'currentClean', DeviceCleanWork);
     this.props.currentClean = currentClean;
   }
 
   /** Updates the device orders. */
-  updateOrders(orders: DeviceOrder[]): void {
+  updateOrders(orders?: DeviceOrder[]): void {
+    this.validateArrayProp({ orders }, 'orders', DeviceOrder);
     this.props.orders = orders;
   }
 
   /** Updates the device consumables. */
-  updateConsumables(consumables: DeviceConsumable[]): void {
+  updateConsumables(consumables?: DeviceConsumable[]): void {
+    this.validateArrayProp({ consumables }, 'consumables', DeviceConsumable);
     this.props.consumables = consumables;
   }
 
   /** Updates the device map. */
-  updateMap(map: DeviceMap): void {
+  updateMap(map?: DeviceMap): void {
+    this.validateInstanceProp({ map }, 'map', DeviceMap);
     this.props.map = map;
   }
 
   /** Updates the device wlan. */
-  updateWlan(wlan: DeviceWlan): void {
+  updateWlan(wlan?: DeviceWlan): void {
+    this.validateInstanceProp({ wlan }, 'wlan', DeviceWlan);
     this.props.wlan = wlan;
   }
 
   /** Updates the device battery. */
-  updateBattery(battery: DeviceBattery): void {
+  updateBattery(battery?: DeviceBattery): void {
+    this.validateInstanceProp({ battery }, 'battery', DeviceBattery);
     this.props.battery = battery;
   }
 
   /** Updates the device state. */
-  updateState(state: DeviceState): void {
+  updateState(state?: DeviceState): void {
+    this.validateInstanceProp({ state }, 'state', DeviceState);
     this.props.state = state;
   }
 
   /** Updates the device mode. */
-  updateMode(mode: DeviceMode): void {
+  updateMode(mode?: DeviceMode): void {
+    this.validateInstanceProp({ mode }, 'mode', DeviceMode);
     this.props.mode = mode;
   }
 
   /** Updates the device error. */
-  updateError(error: DeviceError): void {
+  updateError(error?: DeviceError): void {
+    this.validateInstanceProp({ error }, 'error', DeviceError);
     this.props.error = error;
   }
 
   /** Updates the device fan speed. */
-  updateFanSpeed(fanSpeed: DeviceFanSpeed): void {
+  updateFanSpeed(fanSpeed?: DeviceFanSpeed): void {
+    this.validateInstanceProp({ fanSpeed }, 'fanSpeed', DeviceFanSpeed);
     this.props.fanSpeed = fanSpeed;
   }
 
   /** Updates the device water level. */
-  updateWaterLevel(waterLevel: DeviceWaterLevel): void {
+  updateWaterLevel(waterLevel?: DeviceWaterLevel): void {
+    this.validateInstanceProp({ waterLevel }, 'waterLevel', DeviceWaterLevel);
     this.props.waterLevel = waterLevel;
   }
 
   /** Updates whenether the device has a mop attached. */
   updateHasMopAttached(value: boolean): void {
+    this.validateBooleanProp({ hasMopAttached: value }, 'hasMopAttached');
     this.props.hasMopAttached = value;
   }
 
   /** Updates whenether the device has a waiting map. */
   updateHasWaitingMap(value: boolean): void {
+    this.validateBooleanProp({ hasWaitingMap: value }, 'hasWaitingMap');
     this.props.hasWaitingMap = value;
   }
 
@@ -217,151 +235,24 @@ export class Device extends Entity<DeviceProps> {
     const keys: (keyof DeviceProps)[] = ['system', 'version'];
 
     keys.forEach((prop) => {
-      if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
+      this.validateDefinedProp(props, prop);
     });
 
-    if (!(props.system instanceof DeviceSystem)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.system as string}' for property 'system' for ${this.constructor.name} is not a ${
-          DeviceSystem.name
-        }`,
-      );
-    }
-
-    if (!(props.version instanceof DeviceVersion)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.version as string}' for property 'version' for ${this.constructor.name} is not a ${
-          DeviceVersion.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.config) && !(props.config instanceof DeviceSettings)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.config as string}' for property 'config' for ${this.constructor.name} is not a ${
-          DeviceSettings.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.currentClean) && !(props.currentClean instanceof DeviceCleanWork)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.currentClean as string}' for property 'currentClean' for ${this.constructor.name} is not a ${
-          DeviceCleanWork.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.orders)) {
-      if (!Array.isArray(props.orders)) {
-        throw new ArgumentInvalidException(
-          `Value '${props.orders as string}' for property 'orders' for ${this.constructor.name} is not an array of ${
-            DeviceOrder.name
-          }`,
-        );
-      }
-
-      if (!props.orders.every((item) => item instanceof DeviceOrder)) {
-        throw new ArgumentInvalidException(
-          `Value '${props.orders.join(', ')}' for property 'orders' for ${this.constructor.name} is not an array of ${
-            DeviceOrder.name
-          }`,
-        );
-      }
-    }
-
-    if (isPresent(props.consumables)) {
-      if (!Array.isArray(props.consumables)) {
-        throw new ArgumentInvalidException(
-          `Value '${props.consumables as string}' for property 'consumables' for ${
-            this.constructor.name
-          } is not an array of ${DeviceConsumable.name}`,
-        );
-      }
-
-      if (!props.consumables.every((item) => item instanceof DeviceConsumable)) {
-        throw new ArgumentInvalidException(
-          `Value '${props.consumables.join(', ')}' for property 'consumables' for ${
-            this.constructor.name
-          } is not an array of ${DeviceConsumable.name}`,
-        );
-      }
-    }
-
-    if (isPresent(props.map) && !(props.map instanceof DeviceMap)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.map as string}' for property 'map' for ${this.constructor.name} is not a ${DeviceMap.name}`,
-      );
-    }
-
-    if (isPresent(props.wlan) && !(props.wlan instanceof DeviceWlan)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.wlan as string}' for property 'wlan' for ${this.constructor.name} is not a ${DeviceWlan.name}`,
-      );
-    }
-
-    if (isPresent(props.battery) && !(props.battery instanceof DeviceBattery)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.battery as string}' for property 'battery' for ${this.constructor.name} is not a ${
-          DeviceBattery.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.state) && !(props.state instanceof DeviceState)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.state as string}' for property 'state' for ${this.constructor.name} is not a ${
-          DeviceState.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.mode) && !(props.mode instanceof DeviceMode)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.mode as string}' for property 'mode' for ${this.constructor.name} is not a ${DeviceMode.name}`,
-      );
-    }
-
-    if (isPresent(props.error) && !(props.error instanceof DeviceError)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.error as string}' for property 'error' for ${this.constructor.name} is not a ${
-          DeviceError.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.fanSpeed) && !(props.fanSpeed instanceof DeviceFanSpeed)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.fanSpeed as string}' for property 'fanSpeed' for ${this.constructor.name} is not a ${
-          DeviceFanSpeed.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.waterLevel) && !(props.waterLevel instanceof DeviceWaterLevel)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.waterLevel as string}' for property 'waterLevel' for ${this.constructor.name} is not a ${
-          DeviceWaterLevel.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.hasMopAttached) && typeof props.hasMopAttached !== 'boolean') {
-      throw new ArgumentInvalidException(
-        `Value '${props.hasMopAttached as string}' for property 'hasMopAttached' for ${
-          this.constructor.name
-        } is not a boolean`,
-      );
-    }
-
-    if (isPresent(props.hasWaitingMap) && typeof props.hasWaitingMap !== 'boolean') {
-      throw new ArgumentInvalidException(
-        `Value '${props.hasWaitingMap as string}' for property 'hasWaitingMap' for ${
-          this.constructor.name
-        } is not a boolean`,
-      );
-    }
+    this.validateInstanceProp(props, 'system', DeviceSystem);
+    this.validateInstanceProp(props, 'version', DeviceVersion);
+    this.validateInstanceProp(props, 'config', DeviceSettings);
+    this.validateInstanceProp(props, 'currentClean', DeviceCleanWork);
+    this.validateArrayProp(props, 'orders', DeviceOrder);
+    this.validateArrayProp(props, 'consumables', DeviceConsumable);
+    this.validateInstanceProp(props, 'map', DeviceMap);
+    this.validateInstanceProp(props, 'wlan', DeviceWlan);
+    this.validateInstanceProp(props, 'battery', DeviceBattery);
+    this.validateInstanceProp(props, 'state', DeviceState);
+    this.validateInstanceProp(props, 'mode', DeviceMode);
+    this.validateInstanceProp(props, 'error', DeviceError);
+    this.validateInstanceProp(props, 'fanSpeed', DeviceFanSpeed);
+    this.validateInstanceProp(props, 'waterLevel', DeviceWaterLevel);
+    this.validateBooleanProp(props, 'hasMopAttached');
+    this.validateBooleanProp(props, 'hasWaitingMap');
   }
 }

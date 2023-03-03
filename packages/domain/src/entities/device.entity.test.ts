@@ -62,7 +62,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), system: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'system' for Device is not a DeviceSystem`,
+      `Value 'foo' for property 'system' of Device is not an instance of DeviceSystem`,
     );
   });
 
@@ -70,7 +70,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), version: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'version' for Device is not a DeviceVersion`,
+      `Value 'foo' for property 'version' of Device is not an instance of DeviceVersion`,
     );
   });
 
@@ -78,7 +78,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), config: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'config' for Device is not a DeviceSettings`,
+      `Value 'foo' for property 'config' of Device is not an instance of DeviceSettings`,
     );
   });
 
@@ -86,7 +86,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), currentClean: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'currentClean' for Device is not a DeviceCleanWork`,
+      `Value 'foo' for property 'currentClean' of Device is not an instance of DeviceCleanWork`,
     );
   });
 
@@ -94,7 +94,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), orders: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'orders' for Device is not an array of DeviceOrder`,
+      `Value 'foo' for property 'orders' of Device is not an array`,
     );
   });
 
@@ -102,7 +102,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), orders: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo, 1' for property 'orders' for Device is not an array of DeviceOrder`,
+      `Value 'foo, 1' for property 'orders' of Device is not an array of DeviceOrder`,
     );
   });
 
@@ -110,7 +110,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), consumables: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'consumables' for Device is not an array of DeviceConsumable`,
+      `Value 'foo' for property 'consumables' of Device is not an array`,
     );
   });
 
@@ -118,7 +118,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), consumables: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo, 1' for property 'consumables' for Device is not an array of DeviceConsumable`,
+      `Value 'foo, 1' for property 'consumables' of Device is not an array of DeviceConsumable`,
     );
   });
 
@@ -126,7 +126,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), map: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'map' for Device is not a DeviceMap`,
+      `Value 'foo' for property 'map' of Device is not an instance of DeviceMap`,
     );
   });
 
@@ -134,7 +134,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), wlan: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'wlan' for Device is not a DeviceWlan`,
+      `Value 'foo' for property 'wlan' of Device is not an instance of DeviceWlan`,
     );
   });
 
@@ -142,7 +142,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), battery: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'battery' for Device is not a DeviceBattery`,
+      `Value 'foo' for property 'battery' of Device is not an instance of DeviceBattery`,
     );
   });
 
@@ -150,7 +150,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), state: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'state' for Device is not a DeviceState`,
+      `Value 'foo' for property 'state' of Device is not an instance of DeviceState`,
     );
   });
 
@@ -158,7 +158,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), mode: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'mode' for Device is not a DeviceMode`,
+      `Value 'foo' for property 'mode' of Device is not an instance of DeviceMode`,
     );
   });
 
@@ -166,7 +166,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), error: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'error' for Device is not a DeviceError`,
+      `Value 'foo' for property 'error' of Device is not an instance of DeviceError`,
     );
   });
 
@@ -174,7 +174,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), fanSpeed: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'fanSpeed' for Device is not a DeviceFanSpeed`,
+      `Value 'foo' for property 'fanSpeed' of Device is not an instance of DeviceFanSpeed`,
     );
   });
 
@@ -182,7 +182,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), waterLevel: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'waterLevel' for Device is not a DeviceWaterLevel`,
+      `Value 'foo' for property 'waterLevel' of Device is not an instance of DeviceWaterLevel`,
     );
   });
 
@@ -190,7 +190,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), hasMopAttached: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'hasMopAttached' for Device is not a boolean`,
+      `Value 'foo' for property 'hasMopAttached' of Device is not a boolean`,
     );
   });
 
@@ -198,7 +198,7 @@ describe('Device', function () {
     // @ts-expect-error - invalid property
     expect(() => new Device({ ...givenSomeDeviceProps(), hasWaitingMap: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'hasWaitingMap' for Device is not a boolean`,
+      `Value 'foo' for property 'hasWaitingMap' of Device is not a boolean`,
     );
   });
 

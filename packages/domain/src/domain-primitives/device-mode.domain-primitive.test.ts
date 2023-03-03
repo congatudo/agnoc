@@ -12,6 +12,9 @@ describe('DeviceMode', function () {
 
   it('should throw an error when value is invalid', function () {
     // @ts-expect-error - invalid value
-    expect(() => new DeviceMode('foo')).to.throw(ArgumentInvalidException, `Value 'foo' for DeviceMode is invalid`);
+    expect(() => new DeviceMode('foo')).to.throw(
+      ArgumentInvalidException,
+      `Value 'foo' for property 'value' of DeviceMode is not one of 'None, Spot, Zone, Mop'`,
+    );
   });
 });

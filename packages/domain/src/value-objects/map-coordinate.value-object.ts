@@ -1,4 +1,4 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 
 /** Describe a coordinate in a map. */
 export interface MapCoordinateProps {
@@ -24,17 +24,8 @@ export class MapCoordinate extends ValueObject<MapCoordinateProps> {
     const keys: (keyof MapCoordinateProps)[] = ['x', 'y'];
 
     keys.forEach((prop) => {
-      const value = props[prop];
-
-      if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
-
-      if (typeof value !== 'number') {
-        throw new ArgumentInvalidException(
-          `Value '${value as string}' of property '${prop}' for ${this.constructor.name} is not a number`,
-        );
-      }
+      this.validateDefinedProp(props, prop);
+      this.validateNumberProp(props, prop);
     });
   }
 }

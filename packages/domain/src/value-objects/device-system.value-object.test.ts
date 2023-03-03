@@ -48,7 +48,7 @@ describe('DeviceSystem', function () {
     // @ts-expect-error - invalid value
     expect(() => new DeviceSystem({ type: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'type' for DeviceSystem is not a number`,
+      `Value 'foo' for property 'type' of DeviceSystem is not a number`,
     );
   });
 });

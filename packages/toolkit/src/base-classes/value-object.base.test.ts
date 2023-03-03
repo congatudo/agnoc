@@ -1,30 +1,21 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { Validatable } from './validatable.base';
 import { ValueObject } from './value-object.base';
 
 describe('value-object.base', () => {
-  it('should throw an error when has no props', () => {
-    class DummyValueObject extends ValueObject<void> {
+  it('should be created', () => {
+    type Props = { foo: string };
+
+    class DummyValueObject extends ValueObject<Props> {
       protected validate(): void {
         return;
       }
     }
 
-    expect(() => new DummyValueObject()).to.throws(ArgumentNotProvidedException);
-  });
+    const dummyValueObject = new DummyValueObject({ foo: 'bar' });
 
-  it('should validate its own props', (done) => {
-    type Props = { foo: string };
-
-    class DummyValueObject extends ValueObject<Props> {
-      protected validate(props: Props): void {
-        expect(props).to.contain({ foo: 'bar' });
-        done();
-      }
-    }
-
-    new DummyValueObject({ foo: 'bar' });
+    expect(dummyValueObject).to.be.instanceOf(Validatable);
   });
 
   it('should have structural equality', () => {

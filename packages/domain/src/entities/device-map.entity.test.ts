@@ -116,7 +116,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), size: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'size' for DeviceMap is not a MapPixel`,
+      `Value 'foo' for property 'size' of DeviceMap is not an instance of MapPixel`,
     );
   });
 
@@ -124,7 +124,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), min: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'min' for DeviceMap is not a MapCoordinate`,
+      `Value 'foo' for property 'min' of DeviceMap is not an instance of MapCoordinate`,
     );
   });
 
@@ -132,7 +132,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), max: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'max' for DeviceMap is not a MapCoordinate`,
+      `Value 'foo' for property 'max' of DeviceMap is not an instance of MapCoordinate`,
     );
   });
 
@@ -140,7 +140,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), resolution: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'resolution' for DeviceMap is not a number`,
+      `Value 'foo' for property 'resolution' of DeviceMap is not a number`,
     );
   });
 
@@ -148,7 +148,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), grid: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'grid' for DeviceMap is not a Buffer`,
+      `Value 'foo' for property 'grid' of DeviceMap is not an instance of Buffer`,
     );
   });
 
@@ -156,7 +156,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), robot: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'robot' for DeviceMap is not a MapPosition`,
+      `Value 'foo' for property 'robot' of DeviceMap is not an instance of MapPosition`,
     );
   });
 
@@ -164,7 +164,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), charger: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'charger' for DeviceMap is not a MapPosition`,
+      `Value 'foo' for property 'charger' of DeviceMap is not an instance of MapPosition`,
     );
   });
 
@@ -172,7 +172,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), currentSpot: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'currentSpot' for DeviceMap is not a MapPosition`,
+      `Value 'foo' for property 'currentSpot' of DeviceMap is not an instance of MapPosition`,
     );
   });
 
@@ -180,7 +180,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), rooms: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'rooms' for DeviceMap is not an array`,
+      `Value 'foo' for property 'rooms' of DeviceMap is not an array`,
     );
   });
 
@@ -188,7 +188,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), rooms: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo, 1' for property 'rooms' for DeviceMap is not an array of Room`,
+      `Value 'foo, 1' for property 'rooms' of DeviceMap is not an array of Room`,
     );
   });
 
@@ -196,7 +196,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), restrictedZones: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'restrictedZones' for DeviceMap is not an array`,
+      `Value 'foo' for property 'restrictedZones' of DeviceMap is not an array`,
     );
   });
 
@@ -204,7 +204,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), restrictedZones: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo, 1' for property 'restrictedZones' for DeviceMap is not an array of Zone`,
+      `Value 'foo, 1' for property 'restrictedZones' of DeviceMap is not an array of Zone`,
     );
   });
 
@@ -212,7 +212,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), robotPath: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'robotPath' for DeviceMap is not an array`,
+      `Value 'foo' for property 'robotPath' of DeviceMap is not an array`,
     );
   });
 
@@ -220,7 +220,7 @@ describe('DeviceMap', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceMap({ ...givenSomeDeviceMapProps(), robotPath: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo, 1' for property 'robotPath' for DeviceMap is not an array of MapCoordinate`,
+      `Value 'foo, 1' for property 'robotPath' of DeviceMap is not an array of MapCoordinate`,
     );
   });
 

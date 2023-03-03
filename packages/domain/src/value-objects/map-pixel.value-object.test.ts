@@ -24,14 +24,14 @@ describe('MapPixel', function () {
   it("should throw an error when 'x' property is negative", function () {
     expect(() => new MapPixel({ ...givenSomeMapPixelProps(), x: -5 })).to.throw(
       ArgumentInvalidException,
-      `Value '-5' for property 'x' for MapPixel is not a positive integer`,
+      `Value '-5' for property 'x' of MapPixel is not a positive integer`,
     );
   });
 
   it("should throw an error when 'x' property is not integer", function () {
     expect(() => new MapPixel({ ...givenSomeMapPixelProps(), x: 0.5 })).to.throw(
       ArgumentInvalidException,
-      `Value '0.5' for property 'x' for MapPixel is not a positive integer`,
+      `Value '0.5' for property 'x' of MapPixel is not a positive integer`,
     );
   });
 
@@ -46,14 +46,14 @@ describe('MapPixel', function () {
   it("should throw an error when 'y' property is negative", function () {
     expect(() => new MapPixel({ ...givenSomeMapPixelProps(), y: -5 })).to.throw(
       ArgumentInvalidException,
-      `Value '-5' for property 'y' for MapPixel is not a positive integer`,
+      `Value '-5' for property 'y' of MapPixel is not a positive integer`,
     );
   });
 
   it("should throw an error when 'y' property is not integer", function () {
     expect(() => new MapPixel({ ...givenSomeMapPixelProps(), y: 0.5 })).to.throw(
       ArgumentInvalidException,
-      `Value '0.5' for property 'y' for MapPixel is not a positive integer`,
+      `Value '0.5' for property 'y' of MapPixel is not a positive integer`,
     );
   });
 });

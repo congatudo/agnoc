@@ -1,4 +1,4 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 
 /** Describe a pixel in a map. */
 export interface MapPixelProps {
@@ -24,17 +24,8 @@ export class MapPixel extends ValueObject<MapPixelProps> {
     const keys: (keyof MapPixelProps)[] = ['x', 'y'];
 
     keys.forEach((prop) => {
-      const value = props[prop];
-
-      if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
-
-      if (!Number.isInteger(value) || value < 0) {
-        throw new ArgumentInvalidException(
-          `Value '${value}' for property '${prop}' for ${this.constructor.name} is not a positive integer`,
-        );
-      }
+      this.validateDefinedProp(props, prop);
+      this.validatePositiveIntegerProp(props, prop);
     });
   }
 }

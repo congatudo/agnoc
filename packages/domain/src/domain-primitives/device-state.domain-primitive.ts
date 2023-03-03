@@ -1,4 +1,4 @@
-import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
+import { DomainPrimitive } from '@agnoc/toolkit';
 
 /** The possible values of a device state. */
 export enum DeviceStateValue {
@@ -15,8 +15,6 @@ export enum DeviceStateValue {
 /** Describe the state of a device. */
 export class DeviceState extends DomainPrimitive<DeviceStateValue> {
   protected validate(props: DomainPrimitive<DeviceStateValue>): void {
-    if (!Object.values(DeviceStateValue).includes(props.value)) {
-      throw new ArgumentInvalidException(`Value '${props.value}' for ${this.constructor.name} is invalid`);
-    }
+    this.validateInListProp(props, 'value', Object.values(DeviceStateValue));
   }
 }

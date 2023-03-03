@@ -1,4 +1,4 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 
 /** The properties of the device version. */
 export interface DeviceVersionProps {
@@ -24,17 +24,8 @@ export class DeviceVersion extends ValueObject<DeviceVersionProps> {
     const keys: (keyof DeviceVersionProps)[] = ['software', 'hardware'];
 
     keys.forEach((prop) => {
-      const value = props[prop];
-
-      if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
-
-      if (typeof value !== 'string') {
-        throw new ArgumentInvalidException(
-          `Value '${value as string}' for property '${prop}' for ${this.constructor.name} is not a string`,
-        );
-      }
+      this.validateDefinedProp(props, prop);
+      this.validateStringProp(props, prop);
     });
   }
 }

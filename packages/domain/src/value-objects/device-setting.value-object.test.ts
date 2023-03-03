@@ -21,7 +21,7 @@ describe('DeviceSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceSetting({ isEnabled: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isEnabled' for DeviceSetting is not a boolean`,
+      `Value 'foo' for property 'isEnabled' of DeviceSetting is not a boolean`,
     );
   });
 });

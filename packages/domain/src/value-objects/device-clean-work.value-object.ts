@@ -1,4 +1,4 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 import { CleanSize } from '../domain-primitives/clean-size.domain-primitive';
 import { DeviceTime } from './device-time.value-object';
 
@@ -25,22 +25,9 @@ export class DeviceCleanWork extends ValueObject<DeviceCleanWorkProps> {
   protected validate(props: DeviceCleanWorkProps): void {
     const keys: (keyof DeviceCleanWorkProps)[] = ['size', 'time'];
 
-    keys.forEach((prop) => {
-      if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
-    });
+    keys.forEach((prop) => this.validateDefinedProp(props, prop));
 
-    if (!(props.size instanceof CleanSize)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.size as string}' for property 'size' for ${this.constructor.name} is not a ${CleanSize.name}`,
-      );
-    }
-
-    if (!(props.time instanceof DeviceTime)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.time as string}' for property 'time' for ${this.constructor.name} is not a ${DeviceTime.name}`,
-      );
-    }
+    this.validateInstanceProp(props, 'size', CleanSize);
+    this.validateInstanceProp(props, 'time', DeviceTime);
   }
 }

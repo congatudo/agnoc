@@ -1,4 +1,4 @@
-import { ID, Entity, ArgumentNotProvidedException, isPresent, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ID, Entity } from '@agnoc/toolkit';
 import { CleanMode } from '../domain-primitives/clean-mode.domain-primitive';
 import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
 import { DeviceWaterLevel } from '../domain-primitives/device-water-level.domain-primitive';
@@ -97,91 +97,18 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
     ];
 
     keys.forEach((prop) => {
-      const value = props[prop];
-
-      if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
+      this.validateDefinedProp(props, prop);
     });
 
-    if (!(props.mapId instanceof ID)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.mapId as string}' for property 'mapId' for ${this.constructor.name} is not an ${ID.name}`,
-      );
-    }
-
-    if (!(props.planId instanceof ID)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.planId as string}' for property 'planId' for ${this.constructor.name} is not an ${ID.name}`,
-      );
-    }
-
-    if (typeof props.isEnabled !== 'boolean') {
-      throw new ArgumentInvalidException(
-        `Value '${props.isEnabled as string}' for property 'isEnabled' for ${this.constructor.name} is not a boolean`,
-      );
-    }
-
-    if (typeof props.isRepeatable !== 'boolean') {
-      throw new ArgumentInvalidException(
-        `Value '${props.isRepeatable as string}' for property 'isRepeatable' for ${
-          this.constructor.name
-        } is not a boolean`,
-      );
-    }
-
-    if (typeof props.isDeepClean !== 'boolean') {
-      throw new ArgumentInvalidException(
-        `Value '${props.isDeepClean as string}' for property 'isDeepClean' for ${
-          this.constructor.name
-        } is not a boolean`,
-      );
-    }
-
-    if (!Array.isArray(props.weekDays)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.weekDays as string}' for property 'weekDays' for ${this.constructor.name} is not an array of ${
-          WeekDay.name
-        }`,
-      );
-    }
-
-    if (!props.weekDays.every((item) => item instanceof WeekDay)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.weekDays.join(', ')}' for property 'weekDays' for ${this.constructor.name} is not an array of ${
-          WeekDay.name
-        }`,
-      );
-    }
-
-    if (!(props.time instanceof DeviceTime)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.time as string}' for property 'time' for ${this.constructor.name} is not a ${DeviceTime.name}`,
-      );
-    }
-
-    if (!(props.cleanMode instanceof CleanMode)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.cleanMode as string}' for property 'cleanMode' for ${this.constructor.name} is not a ${
-          CleanMode.name
-        }`,
-      );
-    }
-
-    if (!(props.fanSpeed instanceof DeviceFanSpeed)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.fanSpeed as string}' for property 'fanSpeed' for ${this.constructor.name} is not a ${
-          DeviceFanSpeed.name
-        }`,
-      );
-    }
-
-    if (!(props.waterLevel instanceof DeviceWaterLevel)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.waterLevel as string}' for property 'waterLevel' for ${this.constructor.name} is not a ${
-          DeviceWaterLevel.name
-        }`,
-      );
-    }
+    this.validateInstanceProp(props, 'mapId', ID);
+    this.validateInstanceProp(props, 'planId', ID);
+    this.validateBooleanProp(props, 'isEnabled');
+    this.validateBooleanProp(props, 'isRepeatable');
+    this.validateBooleanProp(props, 'isDeepClean');
+    this.validateArrayProp(props, 'weekDays', WeekDay);
+    this.validateInstanceProp(props, 'time', DeviceTime);
+    this.validateInstanceProp(props, 'cleanMode', CleanMode);
+    this.validateInstanceProp(props, 'fanSpeed', DeviceFanSpeed);
+    this.validateInstanceProp(props, 'waterLevel', DeviceWaterLevel);
   }
 }

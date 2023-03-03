@@ -15,6 +15,7 @@ export * from './types/deep-partial.type';
 export * from './types/object-literal.type';
 export * from './types/require-one.type';
 export * from './types/value-of.type';
+export * from './types/constructor.type';
 export * from './utils/convert-props-to-object.util';
 export * from './utils/debug.util';
 export * from './utils/flip-object.util';

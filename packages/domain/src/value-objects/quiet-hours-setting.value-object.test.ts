@@ -26,7 +26,7 @@ describe('QuietHoursSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new QuietHoursSetting({ ...givenSomeQuietHoursSettingProps(), isEnabled: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isEnabled' for QuietHoursSetting is not a boolean`,
+      `Value 'foo' for property 'isEnabled' of QuietHoursSetting is not a boolean`,
     );
   });
 
@@ -42,7 +42,7 @@ describe('QuietHoursSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new QuietHoursSetting({ ...givenSomeQuietHoursSettingProps(), beginTime: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'beginTime' for QuietHoursSetting is not a DeviceTime`,
+      `Value 'foo' for property 'beginTime' of QuietHoursSetting is not an instance of DeviceTime`,
     );
   });
 
@@ -58,7 +58,7 @@ describe('QuietHoursSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new QuietHoursSetting({ ...givenSomeQuietHoursSettingProps(), endTime: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'endTime' for QuietHoursSetting is not a DeviceTime`,
+      `Value 'foo' for property 'endTime' of QuietHoursSetting is not an instance of DeviceTime`,
     );
   });
 });

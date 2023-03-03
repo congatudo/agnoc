@@ -1,4 +1,4 @@
-import { Entity, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { Entity } from '@agnoc/toolkit';
 import { MapCoordinate } from '../value-objects/map-coordinate.value-object';
 import { MapPixel } from '../value-objects/map-pixel.value-object';
 import { MapPosition } from '../value-objects/map-position.value-object';
@@ -91,31 +91,43 @@ export class DeviceMap extends Entity<DeviceMapProps> {
 
   /** Updates the position of the robot. */
   updateRobot(robot: MapPosition): void {
+    this.validateDefinedProp({ robot }, 'robot');
+    this.validateInstanceProp({ robot }, 'robot', MapPosition);
     this.props.robot = robot;
   }
 
   /** Updates the position of the charger. */
   updateCharger(charger: MapPosition): void {
+    this.validateDefinedProp({ charger }, 'charger');
+    this.validateInstanceProp({ charger }, 'charger', MapPosition);
     this.props.charger = charger;
   }
 
   /** Updates the restricted zones. */
   updateRestrictedZones(restrictedZones: Zone[]): void {
+    this.validateDefinedProp({ restrictedZones }, 'restrictedZones');
+    this.validateArrayProp({ restrictedZones }, 'restrictedZones', Zone);
     this.props.restrictedZones = restrictedZones;
   }
 
   /** Updates the rooms. */
   updateRooms(rooms: Room[]): void {
+    this.validateDefinedProp({ rooms }, 'rooms');
+    this.validateArrayProp({ rooms }, 'rooms', Room);
     this.props.rooms = rooms;
   }
 
   /** Updates the position of the current spot. */
   updateCurrentSpot(currentSpot: MapPosition): void {
+    this.validateDefinedProp({ currentSpot }, 'currentSpot');
+    this.validateInstanceProp({ currentSpot }, 'currentSpot', MapPosition);
     this.props.currentSpot = currentSpot;
   }
 
   /** Updates the path of the robot. */
   updateRobotPath(robotPath: MapCoordinate[]): void {
+    this.validateDefinedProp({ robotPath }, 'robotPath');
+    this.validateArrayProp({ robotPath }, 'robotPath', MapCoordinate);
     this.props.robotPath = robotPath;
   }
 
@@ -148,112 +160,19 @@ export class DeviceMap extends Entity<DeviceMapProps> {
     ];
 
     keys.forEach((prop) => {
-      const value = props[prop];
-
-      if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for ${this.constructor.name} not provided`);
-      }
+      this.validateDefinedProp(props, prop);
     });
 
-    if (!(props.size instanceof MapPixel)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.size as string}' for property 'size' for ${this.constructor.name} is not a ${MapPixel.name}`,
-      );
-    }
-
-    if (!(props.min instanceof MapCoordinate)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.min as string}' for property 'min' for ${this.constructor.name} is not a ${MapCoordinate.name}`,
-      );
-    }
-
-    if (!(props.max instanceof MapCoordinate)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.max as string}' for property 'max' for ${this.constructor.name} is not a ${MapCoordinate.name}`,
-      );
-    }
-
-    if (typeof props.resolution !== 'number') {
-      throw new ArgumentInvalidException(
-        `Value '${props.resolution as string}' for property 'resolution' for ${this.constructor.name} is not a number`,
-      );
-    }
-
-    if (!(props.grid instanceof Buffer)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.grid as string}' for property 'grid' for ${this.constructor.name} is not a Buffer`,
-      );
-    }
-
-    if (isPresent(props.robot) && !(props.robot instanceof MapPosition)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.robot as string}' for property 'robot' for ${this.constructor.name} is not a ${
-          MapPosition.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.charger) && !(props.charger instanceof MapPosition)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.charger as string}' for property 'charger' for ${this.constructor.name} is not a ${
-          MapPosition.name
-        }`,
-      );
-    }
-
-    if (isPresent(props.currentSpot) && !(props.currentSpot instanceof MapPosition)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.currentSpot as string}' for property 'currentSpot' for ${this.constructor.name} is not a ${
-          MapPosition.name
-        }`,
-      );
-    }
-
-    if (!Array.isArray(props.rooms)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.rooms as string}' for property 'rooms' for ${this.constructor.name} is not an array of ${
-          Room.name
-        }`,
-      );
-    }
-
-    if (!props.rooms.every((room) => room instanceof Room)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.rooms.join(', ')}' for property 'rooms' for ${this.constructor.name} is not an array of ${
-          Room.name
-        }`,
-      );
-    }
-
-    if (!Array.isArray(props.restrictedZones)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.restrictedZones as string}' for property 'restrictedZones' for ${
-          this.constructor.name
-        } is not an array of ${Zone.name}`,
-      );
-    }
-
-    if (!props.restrictedZones.every((zone) => zone instanceof Zone)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.restrictedZones.join(', ')}' for property 'restrictedZones' for ${
-          this.constructor.name
-        } is not an array of ${Zone.name}`,
-      );
-    }
-
-    if (!Array.isArray(props.robotPath)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.robotPath as string}' for property 'robotPath' for ${
-          this.constructor.name
-        } is not an array of ${MapCoordinate.name}`,
-      );
-    }
-    if (!props.robotPath.every((coord) => coord instanceof MapCoordinate)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.robotPath.join(', ')}' for property 'robotPath' for ${
-          this.constructor.name
-        } is not an array of ${MapCoordinate.name}`,
-      );
-    }
+    this.validateInstanceProp(props, 'size', MapPixel);
+    this.validateInstanceProp(props, 'min', MapCoordinate);
+    this.validateInstanceProp(props, 'max', MapCoordinate);
+    this.validateNumberProp(props, 'resolution');
+    this.validateInstanceProp(props, 'grid', Buffer);
+    this.validateInstanceProp(props, 'robot', MapPosition);
+    this.validateInstanceProp(props, 'charger', MapPosition);
+    this.validateInstanceProp(props, 'currentSpot', MapPosition);
+    this.validateArrayProp(props, 'rooms', Room);
+    this.validateArrayProp(props, 'restrictedZones', Zone);
+    this.validateArrayProp(props, 'robotPath', MapCoordinate);
   }
 }

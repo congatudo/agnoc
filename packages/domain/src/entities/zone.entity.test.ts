@@ -17,7 +17,7 @@ describe('Zone', function () {
     // @ts-expect-error - missing property
     expect(() => new Zone({ ...givenSomeZoneProps(), coordinates: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'coordinates' for zone not provided`,
+      `Property 'coordinates' for Zone not provided`,
     );
   });
 
@@ -25,7 +25,7 @@ describe('Zone', function () {
     // @ts-expect-error - invalid property
     expect(() => new Zone({ ...givenSomeZoneProps(), coordinates: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'coordinates' for zone must be an array`,
+      `Value 'foo' for property 'coordinates' of Zone is not an array`,
     );
   });
 
@@ -33,7 +33,7 @@ describe('Zone', function () {
     // @ts-expect-error - invalid property
     expect(() => new Zone({ ...givenSomeZoneProps(), coordinates: ['foo', 1] })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo, 1' for property 'coordinates' for zone must be an array of MapCoordinate`,
+      `Value 'foo, 1' for property 'coordinates' of Zone is not an array of MapCoordinate`,
     );
   });
 });

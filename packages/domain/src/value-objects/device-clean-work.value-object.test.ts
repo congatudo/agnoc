@@ -25,7 +25,7 @@ describe('DeviceCleanWork', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceCleanWork({ ...givenSomeDeviceCleanWorkProps(), size: 1 })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'size' for DeviceCleanWork is not a CleanSize`,
+      `Value '1' for property 'size' of DeviceCleanWork is not an instance of CleanSize`,
     );
   });
 
@@ -41,7 +41,7 @@ describe('DeviceCleanWork', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceCleanWork({ ...givenSomeDeviceCleanWorkProps(), time: 1 })).to.throw(
       ArgumentInvalidException,
-      `Value '1' for property 'time' for DeviceCleanWork is not a DeviceTime`,
+      `Value '1' for property 'time' of DeviceCleanWork is not an instance of DeviceTime`,
     );
   });
 });

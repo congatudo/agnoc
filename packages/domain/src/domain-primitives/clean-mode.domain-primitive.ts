@@ -1,4 +1,4 @@
-import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
+import { DomainPrimitive } from '@agnoc/toolkit';
 
 /** Describes a clean mode value. */
 export enum CleanModeValue {
@@ -14,8 +14,6 @@ export enum CleanModeValue {
  */
 export class CleanMode extends DomainPrimitive<CleanModeValue> {
   protected validate(props: DomainPrimitive<CleanModeValue>): void {
-    if (!Object.values(CleanModeValue).includes(props.value)) {
-      throw new ArgumentInvalidException(`Value '${props.value}' for ${this.constructor.name} is invalid`);
-    }
+    this.validateInListProp(props, 'value', Object.values(CleanModeValue));
   }
 }

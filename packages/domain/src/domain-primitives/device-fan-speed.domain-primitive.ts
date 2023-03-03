@@ -1,4 +1,4 @@
-import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
+import { DomainPrimitive } from '@agnoc/toolkit';
 
 /** Describes a device fan speed value. */
 export enum DeviceFanSpeedValue {
@@ -15,8 +15,6 @@ export enum DeviceFanSpeedValue {
  */
 export class DeviceFanSpeed extends DomainPrimitive<DeviceFanSpeedValue> {
   protected validate(props: DomainPrimitive<DeviceFanSpeedValue>): void {
-    if (!Object.values(DeviceFanSpeedValue).includes(props.value)) {
-      throw new ArgumentInvalidException(`Value '${props.value}' for ${this.constructor.name} is invalid`);
-    }
+    this.validateInListProp(props, 'value', Object.values(DeviceFanSpeedValue));
   }
 }
