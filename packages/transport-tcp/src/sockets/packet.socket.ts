@@ -1,18 +1,15 @@
 import { Socket } from 'net';
 import { Duplex } from 'stream';
 import { DomainException } from '@agnoc/toolkit';
-import { Packet } from '../value-objects/packet.value-object';
-import type { OPDecoderLiteral } from '../constants/opcodes.constant';
+import type { PayloadObjectName } from '../constants/payloads.constant';
+import type { PacketMapper } from '../mappers/packet.mapper';
+import type { Packet } from '../value-objects/packet.value-object';
 import type { AddressInfo, SocketConnectOpts } from 'net';
-
-export interface PacketSocketProps {
-  socket?: Socket;
-}
 
 export type Callback = (error?: Error | null) => void;
 
 export interface PacketSocketEvents {
-  data: (packet: Packet<OPDecoderLiteral>) => void;
+  data: (packet: Packet<PayloadObjectName>) => void;
   connect: () => void;
   close: (hasError: boolean) => void;
   drain: () => void;
@@ -32,26 +29,24 @@ export declare interface PacketSocket extends Duplex {
   once<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
 
   write(
-    packet: Packet<OPDecoderLiteral>,
+    packet: Packet<PayloadObjectName>,
     encoding?: BufferEncoding,
     cb?: (error: Error | null | undefined) => void,
   ): boolean;
-  write(packet: Packet<OPDecoderLiteral>, cb?: (error: Error | null | undefined) => void): boolean;
+  write(packet: Packet<PayloadObjectName>, cb?: (error: Error | null | undefined) => void): boolean;
   end(cb?: () => void): this;
-  end(packet: Packet<OPDecoderLiteral>, cb?: () => void): this;
+  end(packet: Packet<PayloadObjectName>, cb?: () => void): this;
 }
 
 export class PacketSocket extends Duplex {
   private socket?: Socket;
   private readingPaused = false;
 
-  constructor();
-  constructor(props: PacketSocketProps);
-  constructor(props?: PacketSocketProps) {
+  constructor(private readonly packetMapper: PacketMapper, socket?: Socket) {
     super({ objectMode: true });
 
-    if (props?.socket) {
-      this.wrapSocket(props.socket);
+    if (socket) {
+      this.wrapSocket(socket);
     }
   }
 
@@ -144,7 +139,7 @@ export class PacketSocket extends Duplex {
       let packet;
 
       try {
-        packet = Packet.fromBuffer(body);
+        packet = this.packetMapper.toDomain(body);
       } catch (e) {
         this.socket.destroy(e as Error);
         return;
@@ -163,13 +158,13 @@ export class PacketSocket extends Duplex {
     setImmediate(this.onReadable.bind(this));
   }
 
-  override _write(packet: Packet<OPDecoderLiteral>, _: BufferEncoding, done: Callback): void {
+  override _write(packet: Packet<PayloadObjectName>, _: BufferEncoding, done: Callback): void {
     if (!this.socket) {
       done(new DomainException('Called _write without connection'));
       return;
     }
 
-    const buffer = packet.toBuffer();
+    const buffer = this.packetMapper.fromDomain(packet);
 
     try {
       this.socket.write(buffer, done);

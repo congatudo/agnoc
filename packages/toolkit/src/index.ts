@@ -1,6 +1,7 @@
 export * from './base-classes/domain-primitive.base';
 export * from './base-classes/entity.base';
 export * from './base-classes/exception.base';
+export * from './base-classes/factory.base';
 export * from './base-classes/mapper.base';
 export * from './base-classes/validatable.base';
 export * from './base-classes/value-object.base';

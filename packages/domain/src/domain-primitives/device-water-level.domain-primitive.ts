@@ -15,6 +15,6 @@ export enum DeviceWaterLevelValue {
  */
 export class DeviceWaterLevel extends DomainPrimitive<DeviceWaterLevelValue> {
   protected validate(props: DomainPrimitive<DeviceWaterLevelValue>): void {
-    this.validateInListProp(props, 'value', Object.values(DeviceWaterLevelValue));
+    this.validateListProp(props, 'value', Object.values(DeviceWaterLevelValue));
   }
 }

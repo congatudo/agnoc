@@ -5,26 +5,29 @@ import { isEmpty } from '../utils/is-empty.util';
 import { isPresent } from '../utils/is-present.util';
 import type { Constructor } from '../types/constructor.type';
 
+/** Abstract base class that provides basic validation tools for building blocks of the domain. */
 export abstract class Validatable<T> {
+  /** Checks if the provided props are empty and invokes the `validate` method. */
   constructor(props: T) {
     this.checkIfEmpty(props);
     this.validate(props);
   }
 
+  /** Implement this method to provide validation logic for the provided props. */
   protected abstract validate(props: T): void;
 
-  protected validateInListProp<T, K extends keyof T & string>(props: T, propName: K, list: T[K][]): void {
+  /** Checks whether a prop is included in a list. */
+  protected validateListProp<T, K extends keyof T & string>(props: T, propName: K, list: T[K][]): void {
     const value = props[propName];
 
     if (isPresent(value) && !list.includes(value)) {
       throw new ArgumentInvalidException(
-        `Value '${value as string}' for property '${propName}' of ${this.constructor.name} is not one of '${list.join(
-          ', ',
-        )}'`,
+        `Value '${value as string}' for property '${propName}' of ${this.constructor.name} is invalid`,
       );
     }
   }
 
+  /** Checks whether a prop is a positive integer. */
   protected validatePositiveIntegerProp<T, K extends keyof T & string>(props: T, propName: K): void {
     const value = props[propName];
 
@@ -35,6 +38,7 @@ export abstract class Validatable<T> {
     }
   }
 
+  /** Checks whether a prop is a number. Optionally check if the number is contained in a range. */
   protected validateNumberProp<T, K extends keyof T & string>(props: T, propName: K, range?: NumberRange): void {
     const value = props[propName];
 
@@ -59,12 +63,14 @@ export abstract class Validatable<T> {
     }
   }
 
+  /** Checks whether a prop is defined. */
   protected validateDefinedProp<T, K extends keyof T & string>(props: T, propName: K): void {
     if (!isPresent(props[propName])) {
       throw new ArgumentNotProvidedException(`Property '${propName}' for ${this.constructor.name} not provided`);
     }
   }
 
+  /** Checks whether a prop is an instance of a class. */
   protected validateInstanceProp<T, K extends keyof T & string>(props: T, propName: K, ctor: Constructor): void {
     const value = props[propName];
 
@@ -77,26 +83,18 @@ export abstract class Validatable<T> {
     }
   }
 
-  protected validateBooleanProp<T, K extends keyof T & string>(props: T, propName: K): void {
+  /** Checks whether a prop is of a certain type. */
+  protected validateTypeProp<T, K extends keyof T & string>(props: T, propName: K, type: string): void {
     const value = props[propName];
 
-    if (isPresent(value) && typeof value !== 'boolean') {
+    if (isPresent(value) && typeof value !== type) {
       throw new ArgumentInvalidException(
-        `Value '${value as string}' for property '${propName}' of ${this.constructor.name} is not a boolean`,
+        `Value '${value as string}' for property '${propName}' of ${this.constructor.name} is not a ${type}`,
       );
     }
   }
 
-  protected validateStringProp<T, K extends keyof T & string>(props: T, propName: K): void {
-    const value = props[propName];
-
-    if (isPresent(value) && typeof value !== 'string') {
-      throw new ArgumentInvalidException(
-        `Value '${value as string}' for property '${propName}' of ${this.constructor.name} is not a string`,
-      );
-    }
-  }
-
+  /** Checks whether a prop is an array of instances of a class. */
   protected validateArrayProp<T, K extends keyof T & string>(props: T, propName: K, ctor: Constructor): void {
     const value = props[propName];
 

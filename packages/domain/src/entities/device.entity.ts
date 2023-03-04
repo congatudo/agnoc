@@ -45,9 +45,9 @@ export interface DeviceProps extends EntityProps {
   fanSpeed?: DeviceFanSpeed;
   /** The device water level. */
   waterLevel?: DeviceWaterLevel;
-  /** Whenether the device has a mop attached. */
+  /** whether the device has a mop attached. */
   hasMopAttached?: boolean;
-  /** Whenether the device has a waiting map. */
+  /** Whether the device has a waiting map. */
   hasWaitingMap?: boolean;
 }
 
@@ -123,12 +123,12 @@ export class Device extends Entity<DeviceProps> {
     return this.props.waterLevel;
   }
 
-  /** Returns whenether the device has a mop attached. */
+  /** Returns whether the device has a mop attached. */
   get hasMopAttached(): boolean {
     return Boolean(this.props.hasMopAttached);
   }
 
-  /** Returns whenether the device has a waiting map. */
+  /** Returns whether the device has a waiting map. */
   get hasWaitingMap(): boolean {
     return Boolean(this.props.hasWaitingMap);
   }
@@ -219,15 +219,15 @@ export class Device extends Entity<DeviceProps> {
     this.props.waterLevel = waterLevel;
   }
 
-  /** Updates whenether the device has a mop attached. */
+  /** Updates whether the device has a mop attached. */
   updateHasMopAttached(value: boolean): void {
-    this.validateBooleanProp({ hasMopAttached: value }, 'hasMopAttached');
+    this.validateTypeProp({ hasMopAttached: value }, 'hasMopAttached', 'boolean');
     this.props.hasMopAttached = value;
   }
 
-  /** Updates whenether the device has a waiting map. */
+  /** Updates whether the device has a waiting map. */
   updateHasWaitingMap(value: boolean): void {
-    this.validateBooleanProp({ hasWaitingMap: value }, 'hasWaitingMap');
+    this.validateTypeProp({ hasWaitingMap: value }, 'hasWaitingMap', 'boolean');
     this.props.hasWaitingMap = value;
   }
 
@@ -252,7 +252,7 @@ export class Device extends Entity<DeviceProps> {
     this.validateInstanceProp(props, 'error', DeviceError);
     this.validateInstanceProp(props, 'fanSpeed', DeviceFanSpeed);
     this.validateInstanceProp(props, 'waterLevel', DeviceWaterLevel);
-    this.validateBooleanProp(props, 'hasMopAttached');
-    this.validateBooleanProp(props, 'hasWaitingMap');
+    this.validateTypeProp(props, 'hasMopAttached', 'boolean');
+    this.validateTypeProp(props, 'hasWaitingMap', 'boolean');
   }
 }

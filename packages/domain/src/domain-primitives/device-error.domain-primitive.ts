@@ -50,6 +50,6 @@ export enum DeviceErrorValue {
  */
 export class DeviceError extends DomainPrimitive<DeviceErrorValue> {
   protected validate(props: DomainPrimitive<DeviceErrorValue>): void {
-    this.validateInListProp(props, 'value', Object.values(DeviceErrorValue));
+    this.validateListProp(props, 'value', Object.values(DeviceErrorValue));
   }
 }

@@ -1,4 +1,11 @@
 import { PassThrough } from 'stream';
+import {
+  PacketMapper,
+  PayloadFactory,
+  PayloadObjectParserService,
+  getProtobufRoot,
+  getCustomDecoders,
+} from '@agnoc/transport-tcp';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import mockFS, { restore } from 'mock-fs';
@@ -16,6 +23,9 @@ declare module 'mocha' {
     };
   }
 }
+
+const payloadFactory = new PayloadFactory(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
+const packetMapper = new PacketMapper(payloadFactory);
 
 describe('decode', () => {
   beforeEach(function () {
@@ -37,7 +47,7 @@ describe('decode', () => {
   });
 
   it('decodes a tcp flow from stdin', async function () {
-    decode('-', { ...this.stdio, json: undefined });
+    decode('-', { ...this.stdio, json: undefined, packetMapper });
 
     this.stdio.stdin.write(this.buffer);
     this.stdio.stdin.end();
@@ -45,12 +55,12 @@ describe('decode', () => {
     const data = await readStream(this.stdio.stdout);
 
     expect(data).to.be.equal(
-      '[id: 7a479a0fbb978c12] [ctype: 2] [flow: 1] [userId: 2] [deviceId: 1] [opcode: DEVICE_GETTIME_RSP] {"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}\n',
+      '[7a479a0fbb978c12] [ctype: 2] [flow: 1] [userId: 2] [deviceId: 1] {"opcode":"DEVICE_GETTIME_RSP","object":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
     );
   });
 
   it('decodes a tcp flow from stdin to json', async function () {
-    decode('-', { ...this.stdio, json: true });
+    decode('-', { ...this.stdio, json: true, packetMapper });
 
     this.stdio.stdin.write(this.buffer);
     this.stdio.stdin.end();
@@ -79,17 +89,17 @@ describe('decode', () => {
   });
 
   it('decodes a tcp flow from file', async function () {
-    decode('example.bin', { ...this.stdio, json: undefined });
+    decode('example.bin', { ...this.stdio, json: undefined, packetMapper });
 
     const data = await readStream(this.stdio.stdout);
 
     expect(data).to.be.equal(
-      '[id: 7a479a0fbb978c12] [ctype: 2] [flow: 1] [userId: 2] [deviceId: 1] [opcode: DEVICE_GETTIME_RSP] {"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}\n',
+      '[7a479a0fbb978c12] [ctype: 2] [flow: 1] [userId: 2] [deviceId: 1] {"opcode":"DEVICE_GETTIME_RSP","object":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
     );
   });
 
   it('decodes a tcp flow from file to json', async function () {
-    decode('example.bin', { ...this.stdio, json: true });
+    decode('example.bin', { ...this.stdio, json: true, packetMapper });
 
     const data = await readStream(this.stdio.stdout);
 

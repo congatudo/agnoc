@@ -1,7 +1,18 @@
 import { Server } from 'net';
+import { ID } from '@agnoc/toolkit';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { PacketSocket, Packet } from '@agnoc/transport-tcp';
+import {
+  PacketSocket,
+  Packet,
+  PacketSequence,
+  OPCode,
+  getProtobufRoot,
+  PayloadFactory,
+  PayloadObjectParserService,
+  PacketMapper,
+  getCustomDecoders,
+} from '@agnoc/transport-tcp';
 import type { AddressInfo } from 'net';
 
 declare module 'mocha' {
@@ -9,6 +20,9 @@ declare module 'mocha' {
     server: Server;
   }
 }
+
+const payloadFactory = new PayloadFactory(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
+const packetMapper = new PacketMapper(payloadFactory);
 
 describe('packet.socket', () => {
   beforeEach(function () {
@@ -24,7 +38,7 @@ describe('packet.socket', () => {
   });
 
   it('connects to a server', function (done) {
-    const socket = new PacketSocket();
+    const socket = new PacketSocket(packetMapper);
 
     this.server.once('listening', () => {
       void socket.connect({
@@ -42,7 +56,7 @@ describe('packet.socket', () => {
   });
 
   it('writes packets to a server', function (done) {
-    const socket = new PacketSocket();
+    const socket = new PacketSocket(packetMapper);
 
     this.server.once('listening', () => {
       void socket.connect({
@@ -60,22 +74,19 @@ describe('packet.socket', () => {
     });
 
     socket.once('connect', () => {
-      const packet = Packet.fromJSON({
+      const packet = new Packet({
         ctype: 2,
         flow: 1,
-        deviceId: 1,
-        userId: 2,
-        sequence: '7a479a0fbb978c12',
-        payload: {
-          opcode: 'DEVICE_GETTIME_RSP',
-          object: {
-            result: 0,
-            body: {
-              deviceTime: 1606129555,
-              deviceTimezone: 3600,
-            },
+        deviceId: new ID(1),
+        userId: new ID(2),
+        sequence: PacketSequence.fromString('7a479a0fbb978c12'),
+        payload: payloadFactory.create(OPCode.fromName('DEVICE_GETTIME_RSP'), {
+          result: 0,
+          body: {
+            deviceTime: 1606129555,
+            deviceTimezone: 3600,
           },
-        },
+        }),
       });
 
       socket.end(packet);
@@ -85,7 +96,7 @@ describe('packet.socket', () => {
   });
 
   it('writes packets to a client', function (done) {
-    const socket = new PacketSocket();
+    const socket = new PacketSocket(packetMapper);
 
     this.server.once('listening', () => {
       void socket.connect({

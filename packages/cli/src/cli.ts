@@ -1,3 +1,10 @@
+import {
+  PayloadFactory,
+  PayloadObjectParserService,
+  getProtobufRoot,
+  PacketMapper,
+  getCustomDecoders,
+} from '@agnoc/transport-tcp';
 import chalk from 'chalk';
 import cliUx from 'cli-ux';
 import { Command } from 'commander';
@@ -21,6 +28,9 @@ const stdio = {
   stderr: process.stderr,
 };
 
+const payloadFactory = new PayloadFactory(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
+const packetMapper = new PacketMapper(payloadFactory);
+
 function handleError(e: Error): void {
   cliUx.action.stop(chalk.red('!'));
   stdio.stderr.write(chalk.red(e.message + '\n'));
@@ -37,6 +47,7 @@ program
     decode(file, {
       ...options,
       ...stdio,
+      packetMapper,
     }),
   );
 
@@ -47,6 +58,8 @@ program
   .action((file: string) =>
     encode(file, {
       ...stdio,
+      packetMapper,
+      payloadFactory,
     }),
   );
 
@@ -59,6 +72,7 @@ program
     read(file, {
       ...options,
       ...stdio,
+      packetMapper,
     }),
   );
 

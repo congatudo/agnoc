@@ -27,7 +27,7 @@ describe('domain-primitive.base', function () {
     // @ts-expect-error - invalid value
     expect(() => new DummyDomainPrimitive({ value: 'foo' })).to.throw(
       ArgumentInvalidException,
-      'Cannot create DummyDomainPrimitive from non-primitive value',
+      `Value '[object Object]' for DummyDomainPrimitive is not a primitive value`,
     );
   });
 

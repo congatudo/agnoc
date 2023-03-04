@@ -14,7 +14,7 @@ describe('DeviceWaterLevel', function () {
     // @ts-expect-error - invalid value
     expect(() => new DeviceWaterLevel('foo')).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'value' of DeviceWaterLevel is not one of 'Off, Low, Medium, High'`,
+      `Value 'foo' for property 'value' of DeviceWaterLevel is invalid`,
     );
   });
 });

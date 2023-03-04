@@ -7,7 +7,9 @@ import { Connection } from './connection.emitter';
 import { Multiplexer } from './multiplexer.emitter';
 import { PacketServer } from './packet-server.emitter';
 import { Robot } from './robot.emitter';
-import type { OPDecoderLiteral } from '../constants/opcodes.constant';
+import type { PayloadObjectName } from '../constants/payloads.constant';
+import type { PayloadFactory } from '../factories/payload.factory';
+import type { PacketMapper } from '../mappers/packet.mapper';
 import type { PacketSocket } from '../sockets/packet.socket';
 import type { MessageHandlers } from '../value-objects/message.value-object';
 
@@ -30,12 +32,12 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
     DEVICE_REGISTER_REQ: this.handleClientRegister,
   } as const;
 
-  constructor() {
+  constructor(private readonly packetMapper: PacketMapper, private readonly payloadFactory: PayloadFactory) {
     super();
     this.servers = {
-      cmd: new PacketServer(),
-      map: new PacketServer(),
-      rtc: new PacketServer(),
+      cmd: new PacketServer(this.packetMapper),
+      map: new PacketServer(this.packetMapper),
+      rtc: new PacketServer(this.packetMapper),
     };
     this.addListeners();
   }
@@ -112,7 +114,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
   }
 
   @bind
-  handleMessage<Name extends OPDecoderLiteral>(message: Message<Name>): void {
+  handleMessage<Name extends PayloadObjectName>(message: Message<Name>): void {
     const handler = this.handlers[message.opname];
 
     if (handler) {
@@ -128,7 +130,6 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
     }
 
     message.respond('COMMON_ERROR_REPLY', {
-      // TODO: type this.
       result: 1,
       opcode: message.packet.payload.opcode.value,
       error: 'Device not registered',
@@ -137,7 +138,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
 
   @bind
   private handleConnection(socket: PacketSocket): void {
-    const connection = new Connection(socket);
+    const connection = new Connection(this.payloadFactory, socket);
 
     connection.on('data', (packet) => {
       const message = new Message({ connection, packet });
@@ -148,7 +149,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
 
   @bind
   private handleRTPConnection(socket: PacketSocket) {
-    const connection = new Connection(socket);
+    const connection = new Connection(this.payloadFactory, socket);
 
     connection.send({
       opname: 'DEVICE_TIME_SYNC_RSP',

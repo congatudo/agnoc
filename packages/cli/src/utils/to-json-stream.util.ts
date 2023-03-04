@@ -1,7 +1,7 @@
 import { Transform } from 'stream';
 import { isObject } from '@agnoc/toolkit';
 import { ArrayTransform } from '../streams/array-transform.stream';
-import type { Packet, OPDecoderLiteral } from '@agnoc/transport-tcp';
+import type { Packet, PayloadObjectName } from '@agnoc/transport-tcp';
 
 function filterProperties(_: string, value: unknown) {
   if (isObject(value) && value.type === 'Buffer') {
@@ -16,7 +16,7 @@ export function toJSONStream(): Transform[] {
     new ArrayTransform(),
     new Transform({
       objectMode: true,
-      transform(array: Packet<OPDecoderLiteral>[], _, done) {
+      transform(array: Packet<PayloadObjectName>[], _, done) {
         const list = array.map((packet) => packet.toJSON());
 
         this.push(JSON.stringify(list, filterProperties, 2));

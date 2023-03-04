@@ -14,7 +14,7 @@ describe('DeviceFanSpeed', function () {
     // @ts-expect-error - invalid value
     expect(() => new DeviceFanSpeed('foo')).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'value' of DeviceFanSpeed is not one of 'Off, Low, Medium, High'`,
+      `Value 'foo' for property 'value' of DeviceFanSpeed is invalid`,
     );
   });
 });

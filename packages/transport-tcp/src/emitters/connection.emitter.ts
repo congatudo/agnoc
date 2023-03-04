@@ -8,41 +8,41 @@ import {
   ArgumentInvalidException,
 } from '@agnoc/toolkit';
 import { TypedEmitter } from 'tiny-typed-emitter';
+import { OPCode } from '../domain-primitives/opcode.domain-primitive';
+import { PacketSequence } from '../domain-primitives/packet-sequence.domain-primitive';
 import { PacketSocket } from '../sockets/packet.socket';
-import { BigNumber } from '../value-objects/big-number.value-object';
-import { OPCode } from '../value-objects/opcode.value-object';
 import { Packet } from '../value-objects/packet.value-object';
-import { Payload } from '../value-objects/payload.value-object';
-import type { OPCodeLiteral, OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
+import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
+import type { PayloadFactory } from '../factories/payload.factory';
 import type { ID } from '@agnoc/toolkit';
 import type { Debugger } from 'debug';
 
-export interface ConnectionSendProps<Name extends OPDecoderLiteral> {
+export interface ConnectionSendProps<Name extends PayloadObjectName> {
   opname: Name;
   userId: ID;
   deviceId: ID;
-  object: OPDecoders[Name];
+  object: PayloadObjectFrom<Name>;
 }
 
-export interface ConnectionRespondProps<Name extends OPDecoderLiteral> {
-  packet: Packet<OPDecoderLiteral>;
+export interface ConnectionRespondProps<Name extends PayloadObjectName> {
+  packet: Packet<PayloadObjectName>;
   opname: Name;
-  object: OPDecoders[Name];
+  object: PayloadObjectFrom<Name>;
 }
 
-export type ConnectionEvents<Name extends OPDecoderLiteral> = {
+export type ConnectionEvents<Name extends PayloadObjectName> = {
   [key in Name]: (packet: Packet<Name>) => void;
 } & {
-  data: (packet: Packet<OPDecoderLiteral>) => void;
+  data: (packet: Packet<Name>) => void;
   close: () => void;
   error: (err: Error) => void;
 };
 
-export class Connection extends TypedEmitter<ConnectionEvents<OPDecoderLiteral>> {
+export class Connection extends TypedEmitter<ConnectionEvents<PayloadObjectName>> {
   private socket: PacketSocket;
   private debug: Debugger;
 
-  constructor(socket: PacketSocket) {
+  constructor(private readonly payloadFactory: PayloadFactory, socket: PacketSocket) {
     super();
     this.validate(socket);
     this.socket = socket;
@@ -57,15 +57,15 @@ export class Connection extends TypedEmitter<ConnectionEvents<OPDecoderLiteral>>
     this.socket.on('close', this.handleClose);
   }
 
-  send<Name extends OPDecoderLiteral>({ opname, userId, deviceId, object }: ConnectionSendProps<Name>): boolean {
+  send<Name extends PayloadObjectName>({ opname, userId, deviceId, object }: ConnectionSendProps<Name>): boolean {
     const packet = new Packet({
       ctype: 2,
       flow: 0,
       // This swap is intended.
       userId: deviceId,
       deviceId: userId,
-      sequence: BigNumber.generate(),
-      payload: Payload.fromObject(OPCode.fromName<Name, OPCodeLiteral>(opname), object),
+      sequence: PacketSequence.generate(),
+      payload: this.payloadFactory.create(OPCode.fromName(opname), object),
     });
 
     this.debug(`sending packet ${packet.toString()}`);
@@ -73,7 +73,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<OPDecoderLiteral>>
     return this.write(packet);
   }
 
-  respond<Name extends OPDecoderLiteral>({ packet, opname, object }: ConnectionRespondProps<Name>): boolean {
+  respond<Name extends PayloadObjectName>({ packet, opname, object }: ConnectionRespondProps<Name>): boolean {
     const response = new Packet({
       ctype: packet.ctype,
       flow: packet.flow + 1,
@@ -81,7 +81,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<OPDecoderLiteral>>
       userId: packet.deviceId,
       deviceId: packet.userId,
       sequence: packet.sequence,
-      payload: Payload.fromObject(OPCode.fromName<Name, OPCodeLiteral>(opname), object),
+      payload: this.payloadFactory.create(OPCode.fromName(opname), object),
     });
 
     this.debug(`responding to packet with ${response.toString()}`);
@@ -89,7 +89,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<OPDecoderLiteral>>
     return this.write(response);
   }
 
-  private write(packet: Packet<OPDecoderLiteral>): boolean {
+  private write(packet: Packet<PayloadObjectName>): boolean {
     if (!this.socket.destroyed && !this.socket.connecting) {
       return this.socket.write(packet);
     }
@@ -103,10 +103,10 @@ export class Connection extends TypedEmitter<ConnectionEvents<OPDecoderLiteral>>
   }
 
   @bind
-  private handlePacket(packet: Packet<OPDecoderLiteral>): void {
+  private handlePacket(packet: Packet<PayloadObjectName>): void {
     this.validatePacket(packet);
 
-    const opname = packet.payload.opcode.name;
+    const opname = packet.payload.opcode.name as PayloadObjectName;
 
     if (!opname) {
       throw new DomainException(`Unable to handle unknown packet ${packet.payload.opcode.toString()}`);
@@ -133,7 +133,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<OPDecoderLiteral>>
     }:${this.socket.localPort || 0}`;
   }
 
-  protected validatePacket(packet: Packet<OPDecoderLiteral>): void {
+  protected validatePacket(packet: Packet<PayloadObjectName>): void {
     if (!(packet instanceof Packet)) {
       throw new DomainException('Connection socket emitted non-packet data');
     }

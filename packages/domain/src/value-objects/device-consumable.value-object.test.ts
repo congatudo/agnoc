@@ -24,7 +24,7 @@ describe('DeviceConsumable', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceConsumable({ ...givenSomeDeviceConsumableProps(), type: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'type' of DeviceConsumable is not one of 'MainBrush, SideBrush, Filter, Dishcloth'`,
+      `Value 'foo' for property 'type' of DeviceConsumable is invalid`,
     );
   });
 

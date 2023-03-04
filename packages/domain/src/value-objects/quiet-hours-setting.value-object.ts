@@ -35,7 +35,7 @@ export class QuietHoursSetting extends ValueObject<QuietHoursSettingProps> {
       this.validateDefinedProp(props, prop);
     });
 
-    this.validateBooleanProp(props, 'isEnabled');
+    this.validateTypeProp(props, 'isEnabled', 'boolean');
     this.validateInstanceProp(props, 'beginTime', DeviceTime);
     this.validateInstanceProp(props, 'endTime', DeviceTime);
   }

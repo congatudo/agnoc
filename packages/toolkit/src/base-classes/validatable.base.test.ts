@@ -39,7 +39,7 @@ describe('Validatable', function () {
 
       class DummyValidatable extends Validatable<ValidatableProps> {
         protected validate(props: ValidatableProps): void {
-          this.validateInListProp(props, 'foo', ['foo', 'bar']);
+          this.validateListProp(props, 'foo', ['foo', 'bar']);
         }
       }
 
@@ -51,7 +51,7 @@ describe('Validatable', function () {
 
       class DummyValidatable extends Validatable<ValidatableProps> {
         protected validate(props: ValidatableProps): void {
-          this.validateInListProp(props, 'foo', ['foo', 'bar']);
+          this.validateListProp(props, 'foo', ['foo', 'bar']);
         }
       }
 
@@ -63,13 +63,13 @@ describe('Validatable', function () {
 
       class DummyValidatable extends Validatable<ValidatableProps> {
         protected validate(props: ValidatableProps): void {
-          this.validateInListProp(props, 'foo', ['foo', 'bar']);
+          this.validateListProp(props, 'foo', ['foo', 'bar']);
         }
       }
 
       expect(() => new DummyValidatable({ foo: 'baz' })).to.throw(
         ArgumentInvalidException,
-        `Value 'baz' for property 'foo' of DummyValidatable is not one of 'foo, bar'`,
+        `Value 'baz' for property 'foo' of DummyValidatable is invalid`,
       );
     });
   });
@@ -341,13 +341,13 @@ describe('Validatable', function () {
     });
   });
 
-  describe('#validateBooleanProp()', function () {
+  describe('#validateTypeProp()', function () {
     it('should validate optional values', function () {
       type ValidatableProps = { foo?: boolean };
 
       class DummyValidatable extends Validatable<ValidatableProps> {
         protected validate(props: ValidatableProps): void {
-          this.validateBooleanProp(props, 'foo');
+          this.validateTypeProp(props, 'foo', 'boolean');
         }
       }
 
@@ -359,7 +359,7 @@ describe('Validatable', function () {
 
       class DummyValidatable extends Validatable<ValidatableProps> {
         protected validate(props: ValidatableProps): void {
-          this.validateBooleanProp(props, 'foo');
+          this.validateTypeProp(props, 'foo', 'boolean');
         }
       }
 
@@ -371,7 +371,7 @@ describe('Validatable', function () {
 
       class DummyValidatable extends Validatable<ValidatableProps> {
         protected validate(props: ValidatableProps): void {
-          this.validateBooleanProp(props, 'foo');
+          this.validateTypeProp(props, 'foo', 'boolean');
         }
       }
 
@@ -379,48 +379,6 @@ describe('Validatable', function () {
       expect(() => new DummyValidatable({ foo: 'foo' })).to.throw(
         ArgumentInvalidException,
         `Value 'foo' for property 'foo' of DummyValidatable is not a boolean`,
-      );
-    });
-  });
-
-  describe('#validateStringProp()', function () {
-    it('should validate optional values', function () {
-      type ValidatableProps = { foo?: string };
-
-      class DummyValidatable extends Validatable<ValidatableProps> {
-        protected validate(props: ValidatableProps): void {
-          this.validateStringProp(props, 'foo');
-        }
-      }
-
-      new DummyValidatable({ foo: undefined });
-    });
-
-    it('should validate string', function () {
-      type ValidatableProps = { foo: string };
-
-      class DummyValidatable extends Validatable<ValidatableProps> {
-        protected validate(props: ValidatableProps): void {
-          this.validateStringProp(props, 'foo');
-        }
-      }
-
-      new DummyValidatable({ foo: 'bar' });
-    });
-
-    it('should throw an error when prop is not a string', function () {
-      type ValidatableProps = { foo: string };
-
-      class DummyValidatable extends Validatable<ValidatableProps> {
-        protected validate(props: ValidatableProps): void {
-          this.validateStringProp(props, 'foo');
-        }
-      }
-
-      // @ts-expect-error - invalid property
-      expect(() => new DummyValidatable({ foo: 1 })).to.throw(
-        ArgumentInvalidException,
-        `Value '1' for property 'foo' of DummyValidatable is not a string`,
       );
     });
   });

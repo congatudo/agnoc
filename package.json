@@ -7,7 +7,7 @@
     "build:packages": "lerna run build",
     "build:typedoc": "typedoc",
     "clean": "npm-run-all 'clean:*'",
-    "clean:lint": "rm -rf .eslintcache",
+    "clean:root": "rm -rf .eslintcache coverage public",
     "clean:packages": "lerna run clean",
     "dependency:upgrade": "ncu --upgrade --peer --deep && yarn-deduplicate --strategy fewer && yarn install",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel 'lint:!(fix)'",

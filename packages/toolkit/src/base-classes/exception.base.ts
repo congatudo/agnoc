@@ -1,13 +1,14 @@
 import type { ObjectLiteral } from '../types/object-literal.type';
 
-export interface SerializedException {
+export interface JSONException {
   name: string;
   message: string;
   stack?: string;
   metadata?: ObjectLiteral;
-  cause?: SerializedException | unknown;
+  cause?: JSONException | unknown;
 }
 
+/** Base class for building an exception. */
 export abstract class Exception extends Error {
   override readonly name = this.constructor.name;
   readonly metadata?: ObjectLiteral;
@@ -18,7 +19,8 @@ export abstract class Exception extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 
-  toJSON(): SerializedException {
+  /** Convert the exception to a JSON object. */
+  toJSON(): JSONException {
     return {
       name: this.name,
       message: this.message,
@@ -29,7 +31,7 @@ export abstract class Exception extends Error {
   }
 }
 
-function serializeError(error: unknown): SerializedException | unknown | undefined {
+function serializeError(error: unknown): JSONException | unknown | undefined {
   if (!(error instanceof Error)) {
     return error;
   }

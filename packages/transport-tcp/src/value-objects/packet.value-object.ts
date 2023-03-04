@@ -1,162 +1,79 @@
-import assert from 'assert';
-import {
-  ID,
-  toStream,
-  readWord,
-  readByte,
-  readLong,
-  readShort,
-  writeWord,
-  writeByte,
-  writeLong,
-  writeShort,
-  ValueObject,
-  isPresent,
-  ArgumentNotProvidedException,
-  ArgumentInvalidException,
-  BufferWriter,
-} from '@agnoc/toolkit';
-import { BigNumber } from './big-number.value-object';
-import { OPCode } from './opcode.value-object';
+import { ValueObject, ID } from '@agnoc/toolkit';
+import { PacketSequence } from '../domain-primitives/packet-sequence.domain-primitive';
 import { Payload } from './payload.value-object';
-import type { JSONPayload } from './payload.value-object';
-import type { OPDecoderLiteral, OPCodeLiteral } from '../constants/opcodes.constant';
+import type { PayloadObjectName } from '../constants/payloads.constant';
 
-export interface PacketProps<Name extends OPDecoderLiteral> {
+/** Describes the properties of a packet. */
+export interface PacketProps<Name extends PayloadObjectName> {
+  /** The packet type. */
   ctype: number;
+  /** The packet flow. */
   flow: number;
+  /** The device id. */
   deviceId: ID;
+  /** The user id. */
   userId: ID;
-  sequence: BigNumber;
+  /** The packet sequence. */
+  sequence: PacketSequence;
+  /** The packet payload. */
   payload: Payload<Name>;
 }
 
-export interface JSONPacket<Name extends OPDecoderLiteral> {
-  ctype: number;
-  flow: number;
-  deviceId: number;
-  userId: number;
-  sequence: string;
-  payload: JSONPayload<Name>;
-}
-
-export function unpack<Name extends OPDecoderLiteral>(data: Buffer): PacketProps<Name> {
-  const stream = toStream(data);
-  const size = readWord(stream);
-
-  assert(data.length >= size, 'unpack: missing data');
-
-  const ctype = readByte(stream);
-  const flow = readByte(stream);
-  const deviceId = new ID(readWord(stream));
-  const userId = new ID(readWord(stream));
-  const sequence = new BigNumber(readLong(stream));
-  const opcode = OPCode.fromCode(readShort(stream) as OPCodeLiteral);
-  const payload = Payload.fromBuffer(
-    opcode as OPCode<Name, OPCodeLiteral>,
-    size > 24 ? (stream.read(size - 24) as Buffer) : Buffer.alloc(0),
-  );
-
-  return {
-    ctype,
-    flow,
-    deviceId,
-    userId,
-    sequence,
-    payload,
-  };
-}
-
-export function pack<Name extends OPDecoderLiteral>(packet: PacketProps<Name>): Buffer {
-  const size = 24 + Number(packet.payload?.buffer.length);
-  const stream = new BufferWriter();
-
-  writeWord(stream, size);
-  writeByte(stream, packet.ctype);
-  writeByte(stream, packet.flow);
-  writeWord(stream, packet.deviceId.value);
-  writeWord(stream, packet.userId.value);
-  writeLong(stream, packet.sequence.value);
-  writeShort(stream, packet.payload.opcode.value);
-
-  stream.write(packet.payload.buffer);
-
-  return stream.buffer;
-}
-
-export class Packet<Name extends OPDecoderLiteral> extends ValueObject<PacketProps<Name>> {
+/** Describes a packet. */
+export class Packet<Name extends PayloadObjectName> extends ValueObject<PacketProps<Name>> {
+  /** Returns the packet type. */
   get ctype(): number {
     return this.props.ctype;
   }
 
+  /** Returns the packet flow. */
   get flow(): number {
     return this.props.flow;
   }
 
+  /** Returns the user id. */
   get userId(): ID {
     return this.props.userId;
   }
 
+  /** Returns the device id. */
   get deviceId(): ID {
     return this.props.deviceId;
   }
 
-  get sequence(): BigNumber {
+  /** Returns the packet sequence. */
+  get sequence(): PacketSequence {
     return this.props.sequence;
   }
 
+  /** Returns the packet payload. */
   get payload(): Payload<Name> {
     return this.props.payload;
   }
 
-  toBuffer(): Buffer {
-    return pack(this.props);
-  }
-
   override toString(): string {
     return [
-      `[id: ${this.props.sequence.toString()}]`,
+      `[${this.props.sequence.toString()}]`,
       `[ctype: ${this.props.ctype}]`,
       `[flow: ${this.props.flow}]`,
       `[userId: ${this.props.userId.toString()}]`,
       `[deviceId: ${this.props.deviceId.toString()}]`,
-      `[opcode: ${this.props.payload.opcode.toString()}]`,
       this.props.payload.toString(),
     ].join(' ');
   }
 
-  override toJSON(): JSONPacket<Name> {
-    return super.toJSON() as JSONPacket<Name>;
-  }
-
   protected validate(props: PacketProps<Name>): void {
-    if (![props.ctype, props.flow, props.userId, props.deviceId, props.sequence, props.payload].every(isPresent)) {
-      throw new ArgumentNotProvidedException('Missing property in packet constructor');
-    }
+    const keys: (keyof PacketProps<Name>)[] = ['ctype', 'flow', 'deviceId', 'userId', 'sequence', 'payload'];
 
-    if (!(props.sequence instanceof BigNumber)) {
-      throw new ArgumentInvalidException('Invalid sequence in packet constructor');
-    }
+    keys.forEach((prop) => {
+      this.validateDefinedProp(props, prop);
+    });
 
-    if (isPresent(props.payload) && !(props.payload instanceof Payload)) {
-      throw new ArgumentInvalidException('Invalid payload in packet constructor');
-    }
-  }
-
-  static fromBuffer<Name extends OPDecoderLiteral>(buffer: Buffer): Packet<Name> {
-    return new Packet(unpack(buffer));
-  }
-
-  static fromJSON<Name extends OPDecoderLiteral>(serialized: JSONPacket<Name>): Packet<Name> {
-    const props: PacketProps<Name> = {
-      ctype: serialized.ctype,
-      flow: serialized.flow,
-      deviceId: new ID(serialized.deviceId),
-      userId: new ID(serialized.userId),
-      sequence: BigNumber.fromString(serialized.sequence),
-      payload: Payload.fromJSON(serialized.payload),
-    };
-
-    return new Packet(props);
+    this.validateNumberProp(props, 'ctype');
+    this.validateNumberProp(props, 'flow');
+    this.validateInstanceProp(props, 'userId', ID);
+    this.validateInstanceProp(props, 'deviceId', ID);
+    this.validateInstanceProp(props, 'sequence', PacketSequence);
+    this.validateInstanceProp(props, 'payload', Payload);
   }
 }

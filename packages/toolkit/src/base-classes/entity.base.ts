@@ -1,6 +1,4 @@
 import { ID } from '../domain-primitives/id.domain-primitive';
-import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
-import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
 import { convertPropsToObject } from '../utils/convert-props-to-object.util';
 import { isPresent } from '../utils/is-present.util';
 import { Validatable } from './validatable.base';
@@ -62,14 +60,7 @@ export abstract class Entity<T extends EntityProps> extends Validatable<T> {
   }
 
   private validateId(props: T) {
-    if (!props.id) {
-      throw new ArgumentNotProvidedException(`Property 'id' for ${this.constructor.name} not provided`);
-    }
-
-    if (!(props.id instanceof ID)) {
-      throw new ArgumentInvalidException(
-        `Property 'id' for ${this.constructor.name} must be an instance of ${ID.name}`,
-      );
-    }
+    this.validateDefinedProp(props, 'id');
+    this.validateInstanceProp(props, 'id', ID);
   }
 }

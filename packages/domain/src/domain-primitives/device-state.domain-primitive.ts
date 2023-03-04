@@ -15,6 +15,6 @@ export enum DeviceStateValue {
 /** Describe the state of a device. */
 export class DeviceState extends DomainPrimitive<DeviceStateValue> {
   protected validate(props: DomainPrimitive<DeviceStateValue>): void {
-    this.validateInListProp(props, 'value', Object.values(DeviceStateValue));
+    this.validateListProp(props, 'value', Object.values(DeviceStateValue));
   }
 }

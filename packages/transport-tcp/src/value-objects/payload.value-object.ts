@@ -1,89 +1,64 @@
-import { hasKey, ArgumentInvalidException, isObject, ValueObject } from '@agnoc/toolkit';
-import protobuf from 'protobufjs/light';
-import { decodeArea } from '../decoders/area.decoder';
-import { decodeChargePosition } from '../decoders/charge-position.decoder';
-import { decodeMap } from '../decoders/map.decoder';
-import { decodeRobotPosition } from '../decoders/robot-position.decoder';
-import { OPCode } from './opcode.value-object';
-import type { OPDecoderLiteral, OPCodeLiteral, OPDecoders } from '../constants/opcodes.constant';
-import type { INamespace } from 'protobufjs/light';
+import { isObject, ValueObject } from '@agnoc/toolkit';
+import { OPCode } from '../domain-primitives/opcode.domain-primitive';
+import type { OPCodeFrom } from '../constants/opcodes.constant';
+import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
 
-export interface PayloadProps<Name extends OPDecoderLiteral> {
-  opcode: OPCode<Name, OPCodeLiteral>;
+/** Describes the properties of a payload. */
+export interface PayloadProps<Name extends PayloadObjectName> {
+  /** The opcode of the payload. */
+  opcode: OPCode<OPCodeFrom<Name>>;
+  /** The buffer representation of the payload. */
   buffer: Buffer;
-  object: OPDecoders[Name];
+  /** The object representation of the payload. */
+  object: PayloadObjectFrom<Name>;
 }
 
-export interface JSONPayload<Name extends OPDecoderLiteral> {
+/** Describes the JSON representation of a payload. */
+export interface JSONPayload<Name extends PayloadObjectName> {
+  /** The name of the opcode for the payload. */
   opcode: Name;
-  object: OPDecoders[Name];
+  /** The object representation of the payload. */
+  object: PayloadObjectFrom<Name>;
 }
 
-type Decoder = (buffer: Buffer) => unknown;
-
-// eslint-disable-next-line node/no-missing-require, @typescript-eslint/no-var-requires
-const schema = require('@agnoc/schemas-tcp/json') as INamespace;
-const root = protobuf.Root.fromJSON(schema);
-const decoders = {
-  DEVICE_MAPID_PUSH_POSITION_INFO: decodeRobotPosition,
-  DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO: decodeChargePosition,
-  DEVICE_MAPID_GET_GLOBAL_INFO_RSP: decodeMap,
-  DEVICE_MAPID_PUSH_MAP_INFO: decodeMap,
-  DEVICE_MAPID_PUSH_ALL_MEMORY_MAP_INFO: decodeArea,
-} as const;
-
-function fromObject<Name extends OPDecoderLiteral>(
-  opcode: OPCode<Name, OPCodeLiteral>,
-  object: OPDecoders[Name],
-): Buffer {
-  if (!object) {
-    return Buffer.alloc(0);
+/** Describes a payload. */
+export class Payload<Name extends PayloadObjectName> extends ValueObject<PayloadProps<Name>> {
+  /** Returns the opcode of the payload. */
+  get opcode(): OPCode<OPCodeFrom<Name>> {
+    return this.props.opcode;
   }
 
-  if (!opcode.name || !hasKey(root, opcode.name)) {
-    throw new ArgumentInvalidException(
-      `Unable to create payload from unknown opcode ${opcode.toString()} from object ${JSON.stringify(object)}`,
-    );
+  /** Returns the buffer representation of the payload. */
+  get buffer(): Buffer {
+    return this.props.buffer;
   }
 
-  const schema = root.lookupType(opcode.name);
-  const err = schema.verify(object);
-
-  if (err) {
-    throw new ArgumentInvalidException(`Unable to create payload from object: ${err}`);
+  /** Returns the object representation of the payload. */
+  get object(): PayloadObjectFrom<Name> {
+    return this.props.object;
   }
 
-  const message = schema.create(object);
-
-  return Buffer.from(schema.encode(message).finish());
-}
-
-function fromBuffer<Name extends OPDecoderLiteral>(
-  opcode: OPCode<Name, OPCodeLiteral>,
-  buffer: Buffer,
-): OPDecoders[Name] {
-  if (!opcode.name) {
-    throw new ArgumentInvalidException(
-      `Unable to create payload from unknown opcode ${opcode.toString()} from buffer ${buffer.toString('hex')}`,
-    );
+  /** Returns the string representation of the payload with some properties filtered. */
+  override toString(): string {
+    return JSON.stringify(this, filterProperties);
   }
 
-  if (hasKey(decoders, opcode.name)) {
-    const decoder = decoders[opcode.name] as Decoder;
-
-    return decoder(buffer) as OPDecoders[Name];
+  /** Returns the JSON representation of the payload. */
+  override toJSON(): JSONPayload<Name> {
+    return { opcode: this.props.opcode.name as Name, object: this.props.object };
   }
 
-  if (hasKey(root, opcode.name)) {
-    const schema = root.lookupType(opcode.name);
-    const message = schema.decode(buffer);
+  protected validate(props: PayloadProps<Name>): void {
+    const keys: (keyof PayloadProps<Name>)[] = ['opcode', 'buffer', 'object'];
 
-    return schema.toObject(message) as OPDecoders[Name];
+    keys.forEach((prop) => {
+      this.validateDefinedProp(props, prop);
+    });
+
+    this.validateInstanceProp(props, 'opcode', OPCode);
+    this.validateInstanceProp(props, 'buffer', Buffer);
+    this.validateInstanceProp(props, 'object', Object);
   }
-
-  throw new ArgumentInvalidException(
-    `Unable to find decoder for opcode ${opcode.toString()} with buffer ${buffer.toString('hex')}`,
-  );
 }
 
 function filterProperties(_: string, value: unknown) {
@@ -92,72 +67,4 @@ function filterProperties(_: string, value: unknown) {
   }
 
   return value;
-}
-
-export class Payload<Name extends OPDecoderLiteral> extends ValueObject<PayloadProps<Name>> {
-  constructor({ opcode, buffer, object }: PayloadProps<Name>) {
-    super({
-      opcode,
-      buffer,
-      object,
-    });
-  }
-
-  public get opcode(): OPCode<Name, OPCodeLiteral> {
-    return this.props.opcode;
-  }
-
-  public get buffer(): Buffer {
-    return this.props.buffer;
-  }
-
-  public get object(): OPDecoders[Name] {
-    return this.props.object;
-  }
-
-  public override toString(): string {
-    return JSON.stringify(this.object, filterProperties);
-  }
-
-  public override toJSON(): JSONPayload<Name> {
-    return { opcode: this.props.opcode.name, object: this.props.object };
-  }
-
-  protected validate(props: PayloadProps<Name>): void {
-    if (!(props.opcode instanceof OPCode)) {
-      throw new ArgumentInvalidException('Wrong opcode in payload constructor');
-    }
-  }
-
-  public static fromJSON<Name extends OPDecoderLiteral>(obj: JSONPayload<Name>): Payload<Name> {
-    const opcode = OPCode.fromName(obj.opcode);
-
-    return this.fromObject(opcode as OPCode<Name, OPCodeLiteral>, obj.object);
-  }
-
-  public static fromBuffer<Name extends OPDecoderLiteral>(
-    opcode: OPCode<Name, OPCodeLiteral>,
-    buffer: Buffer,
-  ): Payload<Name> {
-    const object = fromBuffer(opcode, buffer);
-
-    return new Payload({
-      opcode,
-      buffer,
-      object,
-    });
-  }
-
-  public static fromObject<Name extends OPDecoderLiteral>(
-    opcode: OPCode<Name, OPCodeLiteral>,
-    object: OPDecoders[Name],
-  ): Payload<Name> {
-    const buffer = fromObject(opcode, object);
-
-    return new Payload({
-      opcode,
-      buffer,
-      object,
-    });
-  }
 }

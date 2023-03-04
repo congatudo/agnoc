@@ -23,7 +23,7 @@ export class DeviceSystem extends ValueObject<DeviceSystemProps> {
     return DeviceModelCapability[this.model];
   }
 
-  /** Returns true whenether the device supports the given capability. */
+  /** Returns true whether the device supports the given capability. */
   supports(capability: DeviceCapability): boolean {
     return Boolean(this.capabilities & capability);
   }

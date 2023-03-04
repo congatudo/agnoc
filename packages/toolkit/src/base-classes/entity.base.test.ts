@@ -34,7 +34,7 @@ describe('entity.base', () => {
     expect(() => {
       // @ts-expect-error argument invalid
       new DummyEntity({ id: 123 });
-    }).to.throw(ArgumentInvalidException, `Property 'id' for DummyEntity must be an instance of ID`);
+    }).to.throw(ArgumentInvalidException, `Value '123' for property 'id' of DummyEntity is not an instance of ID`);
   });
 
   it('has id property', () => {

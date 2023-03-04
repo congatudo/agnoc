@@ -15,6 +15,6 @@ export enum DeviceModeValue {
  */
 export class DeviceMode extends DomainPrimitive<DeviceModeValue> {
   protected validate(props: DomainPrimitive<DeviceModeValue>): void {
-    this.validateInListProp(props, 'value', Object.values(DeviceModeValue));
+    this.validateListProp(props, 'value', Object.values(DeviceModeValue));
   }
 }

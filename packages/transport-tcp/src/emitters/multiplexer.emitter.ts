@@ -2,25 +2,25 @@
 import { DomainException, debug, bind } from '@agnoc/toolkit';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import type { Connection } from './connection.emitter';
-import type { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
+import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
 import type { Packet } from '../value-objects/packet.value-object';
 import type { ID } from '@agnoc/toolkit';
 
-export type MultiplexerEvents<Name extends OPDecoderLiteral> = {
+export type MultiplexerEvents<Name extends PayloadObjectName> = {
   [key in Name]: (packet: Packet<Name>) => void;
 } & {
-  data: (packet: Packet<OPDecoderLiteral>) => void;
+  data: (packet: Packet<PayloadObjectName>) => void;
   error: (err: Error) => void;
 };
 
-export interface MultiplexerSendProps<Name extends OPDecoderLiteral> {
+export interface MultiplexerSendProps<Name extends PayloadObjectName> {
   opname: Name;
   userId: ID;
   deviceId: ID;
-  object: OPDecoders[Name];
+  object: PayloadObjectFrom<Name>;
 }
 
-export class Multiplexer extends TypedEmitter<MultiplexerEvents<OPDecoderLiteral>> {
+export class Multiplexer extends TypedEmitter<MultiplexerEvents<PayloadObjectName>> {
   private connections: Connection[] = [];
   private debug = debug(__filename);
 
@@ -47,7 +47,7 @@ export class Multiplexer extends TypedEmitter<MultiplexerEvents<OPDecoderLiteral
     return false;
   }
 
-  send(props: MultiplexerSendProps<OPDecoderLiteral>): boolean {
+  send(props: MultiplexerSendProps<PayloadObjectName>): boolean {
     const connection = this.connections[0];
 
     if (!connection) {
@@ -67,8 +67,8 @@ export class Multiplexer extends TypedEmitter<MultiplexerEvents<OPDecoderLiteral
   }
 
   @bind
-  private handlePacket(packet: Packet<OPDecoderLiteral>): void {
-    const opname = packet.payload.opcode.name;
+  private handlePacket(packet: Packet<PayloadObjectName>): void {
+    const opname = packet.payload.opcode.name as PayloadObjectName;
 
     if (!opname) {
       throw new DomainException(`Unable to handle unknown packet ${packet.payload.opcode.toString()}`);

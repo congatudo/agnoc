@@ -1,11 +1,11 @@
 import { Transform } from 'stream';
-import type { Packet, OPDecoderLiteral } from '@agnoc/transport-tcp';
+import type { Packet, PayloadObjectName } from '@agnoc/transport-tcp';
 
 export function toStringStream(): Transform[] {
   return [
     new Transform({
       objectMode: true,
-      transform(packet: Packet<OPDecoderLiteral>, _, done) {
+      transform(packet: Packet<PayloadObjectName>, _, done) {
         this.push(packet.toString() + '\n');
         done();
       },

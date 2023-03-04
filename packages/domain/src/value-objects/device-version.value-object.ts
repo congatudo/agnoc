@@ -25,7 +25,7 @@ export class DeviceVersion extends ValueObject<DeviceVersionProps> {
 
     keys.forEach((prop) => {
       this.validateDefinedProp(props, prop);
-      this.validateStringProp(props, prop);
+      this.validateTypeProp(props, prop, 'string');
     });
   }
 }

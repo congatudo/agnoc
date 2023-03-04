@@ -2,19 +2,19 @@
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 import { Connection } from '../emitters/connection.emitter';
 import { Packet } from './packet.value-object';
-import type { OPDecoderLiteral, OPDecoders } from '@agnoc/transport-tcp';
+import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
 
-export interface MessageProps<Name extends OPDecoderLiteral> {
+export interface MessageProps<Name extends PayloadObjectName> {
   connection: Connection;
   packet: Packet<Name>;
 }
 
-export type MessageHandler<Name extends OPDecoderLiteral> = (message: Message<Name>) => void;
+export type MessageHandler<Name extends PayloadObjectName> = (message: Message<Name>) => void;
 export type MessageHandlers = Partial<{
-  [Name in OPDecoderLiteral]: MessageHandler<Name>;
+  [Name in PayloadObjectName]: MessageHandler<Name>;
 }>;
 
-export class Message<Name extends OPDecoderLiteral> extends ValueObject<MessageProps<Name>> {
+export class Message<Name extends PayloadObjectName> extends ValueObject<MessageProps<Name>> {
   constructor(props: MessageProps<Name>) {
     super(props);
   }
@@ -28,10 +28,10 @@ export class Message<Name extends OPDecoderLiteral> extends ValueObject<MessageP
   }
 
   get opname(): Name {
-    return this.packet.payload.opcode.name;
+    return this.packet.payload.opcode.name as Name;
   }
 
-  respond<RName extends OPDecoderLiteral>(opname: RName, object: OPDecoders[RName]): boolean {
+  respond<RName extends PayloadObjectName>(opname: RName, object: PayloadObjectFrom<RName>): boolean {
     return this.connection.respond({ packet: this.packet, opname, object });
   }
 

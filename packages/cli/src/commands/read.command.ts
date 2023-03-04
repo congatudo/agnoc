@@ -3,6 +3,7 @@ import { PacketDecodeTransform } from '../streams/packet-decode-transform.stream
 import { TCPReader } from '../streams/tcp-reader.stream';
 import { toJSONStream } from '../utils/to-json-stream.util';
 import { toStringStream } from '../utils/to-string-stream.util';
+import type { PacketMapper } from '@agnoc/transport-tcp';
 import type { Duplex } from 'stream';
 
 interface ReadOptions {
@@ -10,6 +11,7 @@ interface ReadOptions {
   stdin: Duplex;
   stdout: Duplex;
   stderr: Duplex;
+  packetMapper: PacketMapper;
 }
 
 export async function read(file: string, options: ReadOptions): Promise<void> {
@@ -27,7 +29,7 @@ export async function read(file: string, options: ReadOptions): Promise<void> {
       decode: pcap.decode,
       createSession: pcap.createOfflineSession,
     }),
-    new PacketDecodeTransform(),
+    new PacketDecodeTransform(options.packetMapper),
     ...(options.json ? toJSONStream() : toStringStream()),
     options.stdout,
     (err) => {

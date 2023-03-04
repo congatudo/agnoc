@@ -14,6 +14,6 @@ export enum CleanModeValue {
  */
 export class CleanMode extends DomainPrimitive<CleanModeValue> {
   protected validate(props: DomainPrimitive<CleanModeValue>): void {
-    this.validateInListProp(props, 'value', Object.values(CleanModeValue));
+    this.validateListProp(props, 'value', Object.values(CleanModeValue));
   }
 }

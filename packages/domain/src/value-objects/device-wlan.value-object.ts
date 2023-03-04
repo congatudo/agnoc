@@ -48,10 +48,10 @@ export class DeviceWlan extends ValueObject<DeviceWlanProps> {
       this.validateDefinedProp(props, prop);
     });
 
-    this.validateStringProp(props, 'ipv4');
-    this.validateStringProp(props, 'ssid');
+    this.validateTypeProp(props, 'ipv4', 'string');
+    this.validateTypeProp(props, 'ssid', 'string');
     this.validateNumberProp(props, 'port');
-    this.validateStringProp(props, 'mask');
-    this.validateStringProp(props, 'mac');
+    this.validateTypeProp(props, 'mask', 'string');
+    this.validateTypeProp(props, 'mac', 'string');
   }
 }

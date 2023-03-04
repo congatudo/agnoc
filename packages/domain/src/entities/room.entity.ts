@@ -44,8 +44,8 @@ export class Room extends Entity<RoomProps> {
       this.validateDefinedProp(props, prop);
     });
 
-    this.validateStringProp(props, 'name');
-    this.validateBooleanProp(props, 'isEnabled');
+    this.validateTypeProp(props, 'name', 'string');
+    this.validateTypeProp(props, 'isEnabled', 'boolean');
     this.validateInstanceProp(props, 'center', MapCoordinate);
     this.validateArrayProp(props, 'pixels', MapPixel);
   }

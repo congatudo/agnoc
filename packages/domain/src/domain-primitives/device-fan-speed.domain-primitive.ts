@@ -15,6 +15,6 @@ export enum DeviceFanSpeedValue {
  */
 export class DeviceFanSpeed extends DomainPrimitive<DeviceFanSpeedValue> {
   protected validate(props: DomainPrimitive<DeviceFanSpeedValue>): void {
-    this.validateInListProp(props, 'value', Object.values(DeviceFanSpeedValue));
+    this.validateListProp(props, 'value', Object.values(DeviceFanSpeedValue));
   }
 }

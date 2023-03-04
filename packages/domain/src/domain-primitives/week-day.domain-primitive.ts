@@ -18,6 +18,6 @@ export enum WeekDayValue {
  */
 export class WeekDay extends DomainPrimitive<WeekDayValue> {
   protected validate(props: DomainPrimitive<WeekDayValue>): void {
-    this.validateInListProp(props, 'value', Object.values(WeekDayValue));
+    this.validateListProp(props, 'value', Object.values(WeekDayValue));
   }
 }

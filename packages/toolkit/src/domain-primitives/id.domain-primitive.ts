@@ -3,6 +3,7 @@ import { DomainPrimitive } from '../base-classes/domain-primitive.base';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import type { DomainPrimitiveProps } from '../base-classes/domain-primitive.base';
 
+/** Describes the identity of an entity. */
 export class ID extends DomainPrimitive<number> {
   protected validate({ value }: DomainPrimitiveProps<number>): void {
     if (!Number.isInteger(value) || value < 0) {
@@ -10,6 +11,7 @@ export class ID extends DomainPrimitive<number> {
     }
   }
 
+  /** Generates a new random ID. */
   static generate(): ID {
     const uint32 = randomBytes(2).toString('hex');
     const id = parseInt(uint32, 16);

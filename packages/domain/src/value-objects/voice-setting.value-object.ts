@@ -33,7 +33,7 @@ export class VoiceSetting extends ValueObject<VoiceSettingProps> {
       this.validateDefinedProp(props, prop);
     });
 
-    this.validateBooleanProp(props, 'isEnabled');
+    this.validateTypeProp(props, 'isEnabled', 'boolean');
     this.validateNumberProp(props, 'volume');
     this.validateNumberProp(props, 'volume', { min: VoiceSettingMinVolume, max: VoiceSettingMaxVolume });
   }

@@ -1,1 +1,1 @@
-export type ValueOf<T> = T[keyof T];
+export type ValueOf<ObjectType, ValueType extends keyof ObjectType = keyof ObjectType> = ObjectType[ValueType];

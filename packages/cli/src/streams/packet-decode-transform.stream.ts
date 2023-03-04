@@ -1,12 +1,12 @@
 import { Transform } from 'stream';
 import { DomainException } from '@agnoc/toolkit';
-import { Packet } from '@agnoc/transport-tcp';
+import type { PacketMapper } from '@agnoc/transport-tcp';
 import type { TransformCallback } from 'stream';
 
 export class PacketDecodeTransform extends Transform {
   private buffer: Buffer = Buffer.alloc(0);
 
-  constructor() {
+  constructor(private readonly packetMapper: PacketMapper) {
     super({
       objectMode: true,
     });
@@ -19,7 +19,7 @@ export class PacketDecodeTransform extends Transform {
 
     while (this.buffer.length >= size) {
       try {
-        const packet = Packet.fromBuffer(this.buffer);
+        const packet = this.packetMapper.toDomain(this.buffer);
 
         this.push(packet);
       } catch (e) {

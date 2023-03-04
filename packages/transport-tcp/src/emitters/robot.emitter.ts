@@ -46,7 +46,7 @@ import { DeviceWaterLevelMapper } from '../mappers/device-water-level.mapper';
 import { WeekDayListMapper } from '../mappers/week-day-list.mapper';
 import type { Connection } from './connection.emitter';
 import type { Multiplexer } from './multiplexer.emitter';
-import type { OPDecoderLiteral, OPDecoders } from '../constants/opcodes.constant';
+import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
 import type { Message, MessageHandlers } from '../value-objects/message.value-object';
 import type { Packet } from '../value-objects/packet.value-object';
 import type {
@@ -804,8 +804,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
     const object = message.packet.payload.object;
     const props: DeviceSettingsProps = {
       voice: deviceVoiceMapper.toDomain({
-        isEnabled: object.voice.voiceMode || false,
-        volume: object.voice.volume || 1,
+        isEnabled: object.voice.voiceMode,
+        volume: object.voice.volume,
       }),
       quietHours: new QuietHoursSetting({
         isEnabled: object.quietHours.isOpen,
@@ -1144,7 +1144,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
   }
 
-  handleMessage<Name extends OPDecoderLiteral>(message: Message<Name>): void {
+  handleMessage<Name extends PayloadObjectName>(message: Message<Name>): void {
     const handler = this.handlers[message.opname];
 
     if (message.packet.userId.value !== 0 && message.packet.userId.value !== this.user.id.value) {
@@ -1173,7 +1173,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     return this.multiplexer.close();
   }
 
-  send<Name extends OPDecoderLiteral>(opname: Name, object: OPDecoders[Name]): void {
+  send<Name extends PayloadObjectName>(opname: Name, object: PayloadObjectFrom<Name>): void {
     const ret = this.multiplexer.send({
       opname,
       userId: this.user.id,
@@ -1186,9 +1186,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
     }
   }
 
-  recv<Name extends OPDecoderLiteral>(opname: Name): Promise<Packet<Name>> {
+  recv<Name extends PayloadObjectName>(opname: Name): Promise<Packet<Name>> {
     return new Promise((resolve, reject) => {
-      const done = (packet: Packet<OPDecoderLiteral>) => {
+      const done = (packet: Packet<PayloadObjectName>) => {
         clearTimeout(timer);
         resolve(packet as Packet<Name>);
       };
@@ -1204,10 +1204,10 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
   }
 
-  sendRecv<SendName extends OPDecoderLiteral, RecvName extends OPDecoderLiteral>(
+  sendRecv<SendName extends PayloadObjectName, RecvName extends PayloadObjectName>(
     sendOPName: SendName,
     recvOPName: RecvName,
-    sendObject: OPDecoders[SendName],
+    sendObject: PayloadObjectFrom<SendName>,
   ): Promise<Packet<RecvName>> {
     this.send(sendOPName, sendObject);
 

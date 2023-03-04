@@ -1,6 +1,7 @@
 import { Server } from 'net';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { PacketSocket } from '../sockets/packet.socket';
+import type { PacketMapper } from '../mappers/packet.mapper';
 import type { AddressInfo, ListenOptions, Socket } from 'net';
 
 export interface PacketServerEvents {
@@ -13,7 +14,7 @@ export interface PacketServerEvents {
 export class PacketServer extends TypedEmitter<PacketServerEvents> {
   private server: Server;
 
-  constructor() {
+  constructor(private readonly packetMapper: PacketMapper) {
     super();
     this.server = new Server();
     this.addListeners();
@@ -54,7 +55,7 @@ export class PacketServer extends TypedEmitter<PacketServerEvents> {
   }
 
   private onConnection(socket: Socket): void {
-    const client = new PacketSocket({ socket });
+    const client = new PacketSocket(this.packetMapper, socket);
 
     this.emit('connection', client);
   }

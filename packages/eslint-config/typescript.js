@@ -49,6 +49,12 @@ module.exports = {
     'import/no-relative-packages': 'error',
     'import/no-useless-path-segments': 'error',
     'import/no-unused-modules': 'warn',
+    'import/no-internal-modules': [
+      'error',
+      {
+        forbid: ['packages/**/*'],
+      },
+    ],
     'import/order': [
       'warn',
       {
@@ -60,4 +66,12 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['**/*.test.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-argument': 'off',
+      },
+    },
+  ],
 };

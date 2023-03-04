@@ -33,7 +33,7 @@ export class DeviceConsumable extends ValueObject<DeviceConsumableProps> {
 
     keys.forEach((prop) => this.validateDefinedProp(props, prop));
 
-    this.validateInListProp(props, 'type', Object.values(DeviceConsumableType));
+    this.validateListProp(props, 'type', Object.values(DeviceConsumableType));
     this.validateNumberProp(props, 'minutesUsed');
   }
 }

@@ -14,17 +14,16 @@ const DEVICE = {
   max: VoiceSettingMaxVolume,
 };
 
-// TODO: add nullable fields here to prevent casting from consumer
 export interface RobotVoice {
-  isEnabled: boolean;
-  volume: number;
+  isEnabled: boolean | null | undefined;
+  volume: number | null | undefined;
 }
 
 export class DeviceVoiceMapper implements Mapper<VoiceSetting, RobotVoice> {
   toDomain({ isEnabled, volume }: RobotVoice): VoiceSetting {
     return new VoiceSetting({
-      isEnabled,
-      volume: interpolate(volume, ROBOT, DEVICE),
+      isEnabled: isEnabled ?? false,
+      volume: interpolate(volume ?? ROBOT_MIN_VOLUME, ROBOT, DEVICE),
     });
   }
 

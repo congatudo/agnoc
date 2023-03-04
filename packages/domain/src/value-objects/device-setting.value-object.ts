@@ -15,6 +15,6 @@ export class DeviceSetting extends ValueObject<DeviceSettingProps> {
 
   protected validate(props: DeviceSettingProps): void {
     this.validateDefinedProp(props, 'isEnabled');
-    this.validateBooleanProp(props, 'isEnabled');
+    this.validateTypeProp(props, 'isEnabled', 'boolean');
   }
 }

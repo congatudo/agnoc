@@ -12,11 +12,11 @@ export interface DeviceOrderProps extends EntityProps {
   mapId: ID;
   /** The plan id. */
   planId: ID;
-  /** Whenether the device order is enabled. */
+  /** whether the device order is enabled. */
   isEnabled: boolean;
-  /** Whenether the device order is repeatable. */
+  /** whether the device order is repeatable. */
   isRepeatable: boolean;
-  /** Whenether the device order is a deep clean. */
+  /** whether the device order is a deep clean. */
   isDeepClean: boolean;
   /** The week days when the device order is executed. */
   weekDays: WeekDay[];
@@ -42,17 +42,17 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
     return this.props.planId;
   }
 
-  /** Returns whenether the device order is enabled. */
+  /** Returns whether the device order is enabled. */
   get isEnabled(): boolean {
     return this.props.isEnabled;
   }
 
-  /** Returns whenether the device order is repeatable. */
+  /** Returns whether the device order is repeatable. */
   get isRepeatable(): boolean {
     return this.props.isRepeatable;
   }
 
-  /** Returns whenether the device order is a deep clean. */
+  /** Returns whether the device order is a deep clean. */
   get isDeepClean(): boolean {
     return this.props.isDeepClean;
   }
@@ -102,9 +102,9 @@ export class DeviceOrder extends Entity<DeviceOrderProps> {
 
     this.validateInstanceProp(props, 'mapId', ID);
     this.validateInstanceProp(props, 'planId', ID);
-    this.validateBooleanProp(props, 'isEnabled');
-    this.validateBooleanProp(props, 'isRepeatable');
-    this.validateBooleanProp(props, 'isDeepClean');
+    this.validateTypeProp(props, 'isEnabled', 'boolean');
+    this.validateTypeProp(props, 'isRepeatable', 'boolean');
+    this.validateTypeProp(props, 'isDeepClean', 'boolean');
     this.validateArrayProp(props, 'weekDays', WeekDay);
     this.validateInstanceProp(props, 'time', DeviceTime);
     this.validateInstanceProp(props, 'cleanMode', CleanMode);

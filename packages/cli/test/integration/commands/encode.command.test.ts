@@ -1,4 +1,11 @@
 import { PassThrough } from 'stream';
+import {
+  PacketMapper,
+  PayloadFactory,
+  PayloadObjectParserService,
+  getProtobufRoot,
+  getCustomDecoders,
+} from '@agnoc/transport-tcp';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import mockFS, { restore } from 'mock-fs';
@@ -16,6 +23,9 @@ declare module 'mocha' {
     };
   }
 }
+
+const payloadFactory = new PayloadFactory(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
+const packetMapper = new PacketMapper(payloadFactory);
 
 describe('encode', () => {
   beforeEach(function () {
@@ -55,7 +65,7 @@ describe('encode', () => {
   });
 
   it('encodes a tcp flow from stdin', async function () {
-    encode('-', { ...this.stdio });
+    encode('-', { ...this.stdio, packetMapper, payloadFactory });
 
     this.stdio.stdin.write(this.json);
     this.stdio.stdin.end();
@@ -66,7 +76,7 @@ describe('encode', () => {
   });
 
   it('encodes a tcp flow from file', async function () {
-    encode('example.json', { ...this.stdio });
+    encode('example.json', { ...this.stdio, packetMapper, payloadFactory });
 
     const data = await readStream(this.stdio.stdout, 'hex');
 
