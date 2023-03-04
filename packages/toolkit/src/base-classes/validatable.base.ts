@@ -126,7 +126,7 @@ export abstract class Validatable<T> {
   }
 }
 
-interface NumberRange {
+export interface NumberRange {
   min?: number;
   max?: number;
 }

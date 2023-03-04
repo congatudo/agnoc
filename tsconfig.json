@@ -8,9 +8,9 @@
     "excludePrivate": false,
     "excludeProtected": false,
     "excludeInternal": false,
+    "excludeExternals": false,
     "includeVersion": true,
     "sort": ["kind", "instance-first", "static-first"],
-    "hideGenerator": true,
-    "noMissingExports": true
+    "hideGenerator": true
   }
 }

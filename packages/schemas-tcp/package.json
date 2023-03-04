@@ -1,7 +1,7 @@
 {
   "name": "@agnoc/schemas-tcp",
   "version": "0.16.0",
-  "description": "Agnoc schemas TCP library",
+  "description": "Agnoc TCP schemas library",
   "keywords": [
     "agnoc",
     "schemas",
@@ -64,5 +64,9 @@
   },
   "engines": {
     "node": ">=18.12"
+  },
+  "typedoc": {
+    "displayName": "TCP Schemas",
+    "entryPoint": "lib/index.d.ts"
   }
 }
