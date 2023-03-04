@@ -16,6 +16,7 @@
     "lint:style": "prettier --check .",
     "lint:style:fix": "prettier --write .",
     "lint:types": "tsc",
+    "posttest": "sh ./scripts/merge-coverage.sh",
     "prepare": "husky install",
     "test": "npm-run-all 'test:*'",
     "test:packages": "lerna run test",
