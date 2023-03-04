@@ -22,7 +22,7 @@ export class OPCode<Name extends (typeof OPNAMES)[Code], Code extends OPCodeLite
     return this.name;
   }
 
-  override toJSON(): Name {
+  override toJSON(): string {
     return this.name;
   }
 

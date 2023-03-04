@@ -3,8 +3,6 @@ import { DomainPrimitive } from '../base-classes/domain-primitive.base';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import type { DomainPrimitiveProps } from '../base-classes/domain-primitive.base';
 
-export type IDSerialized = number;
-
 export class ID extends DomainPrimitive<number> {
   protected validate({ value }: DomainPrimitiveProps<number>): void {
     if (!Number.isInteger(value) || value < 0) {
@@ -17,9 +15,5 @@ export class ID extends DomainPrimitive<number> {
     const id = parseInt(uint32, 16);
 
     return new ID(id);
-  }
-
-  static fromJSON(value: IDSerialized): ID {
-    return new ID(value);
   }
 }

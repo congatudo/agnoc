@@ -32,13 +32,4 @@ describe('ID', () => {
       expect(id).to.be.instanceof(ID);
     });
   });
-
-  describe('#fromJSON()', () => {
-    it('creates id from JSON', () => {
-      const id = ID.fromJSON(123);
-
-      expect(id).to.be.instanceof(ID);
-      expect(id.value).to.be.equal(123);
-    });
-  });
 });

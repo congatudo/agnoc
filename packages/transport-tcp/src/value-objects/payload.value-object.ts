@@ -14,7 +14,7 @@ export interface PayloadProps<Name extends OPDecoderLiteral> {
   object: OPDecoders[Name];
 }
 
-export interface PayloadSerialized<Name extends OPDecoderLiteral> {
+export interface JSONPayload<Name extends OPDecoderLiteral> {
   opcode: Name;
   object: OPDecoders[Name];
 }
@@ -119,8 +119,8 @@ export class Payload<Name extends OPDecoderLiteral> extends ValueObject<PayloadP
     return JSON.stringify(this.object, filterProperties);
   }
 
-  public override toJSON(): PayloadSerialized<Name> {
-    return { opcode: this.props.opcode.toJSON(), object: this.props.object };
+  public override toJSON(): JSONPayload<Name> {
+    return { opcode: this.props.opcode.name, object: this.props.object };
   }
 
   protected validate(props: PayloadProps<Name>): void {
@@ -129,7 +129,7 @@ export class Payload<Name extends OPDecoderLiteral> extends ValueObject<PayloadP
     }
   }
 
-  public static fromJSON<Name extends OPDecoderLiteral>(obj: PayloadSerialized<Name>): Payload<Name> {
+  public static fromJSON<Name extends OPDecoderLiteral>(obj: JSONPayload<Name>): Payload<Name> {
     const opcode = OPCode.fromName(obj.opcode);
 
     return this.fromObject(opcode as OPCode<Name, OPCodeLiteral>, obj.object);

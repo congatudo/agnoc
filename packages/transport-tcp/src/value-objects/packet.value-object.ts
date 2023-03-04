@@ -19,10 +19,8 @@ import {
 import { BigNumber } from './big-number.value-object';
 import { OPCode } from './opcode.value-object';
 import { Payload } from './payload.value-object';
-import type { BigNumberSerialized } from './big-number.value-object';
-import type { PayloadSerialized } from './payload.value-object';
+import type { JSONPayload } from './payload.value-object';
 import type { OPDecoderLiteral, OPCodeLiteral } from '../constants/opcodes.constant';
-import type { IDSerialized } from '@agnoc/toolkit';
 
 export interface PacketProps<Name extends OPDecoderLiteral> {
   ctype: number;
@@ -33,13 +31,13 @@ export interface PacketProps<Name extends OPDecoderLiteral> {
   payload: Payload<Name>;
 }
 
-export interface PacketSerialized<Name extends OPDecoderLiteral> {
+export interface JSONPacket<Name extends OPDecoderLiteral> {
   ctype: number;
   flow: number;
-  deviceId: IDSerialized;
-  userId: IDSerialized;
-  sequence: BigNumberSerialized;
-  payload: PayloadSerialized<Name>;
+  deviceId: number;
+  userId: number;
+  sequence: string;
+  payload: JSONPayload<Name>;
 }
 
 export function unpack<Name extends OPDecoderLiteral>(data: Buffer): PacketProps<Name> {
@@ -127,8 +125,8 @@ export class Packet<Name extends OPDecoderLiteral> extends ValueObject<PacketPro
     ].join(' ');
   }
 
-  override toJSON(): PacketSerialized<Name> {
-    return super.toJSON() as PacketSerialized<Name>;
+  override toJSON(): JSONPacket<Name> {
+    return super.toJSON() as JSONPacket<Name>;
   }
 
   protected validate(props: PacketProps<Name>): void {
@@ -149,13 +147,13 @@ export class Packet<Name extends OPDecoderLiteral> extends ValueObject<PacketPro
     return new Packet(unpack(buffer));
   }
 
-  static fromJSON<Name extends OPDecoderLiteral>(serialized: PacketSerialized<Name>): Packet<Name> {
+  static fromJSON<Name extends OPDecoderLiteral>(serialized: JSONPacket<Name>): Packet<Name> {
     const props: PacketProps<Name> = {
       ctype: serialized.ctype,
       flow: serialized.flow,
-      deviceId: ID.fromJSON(serialized.deviceId),
-      userId: ID.fromJSON(serialized.userId),
-      sequence: BigNumber.fromJSON(serialized.sequence),
+      deviceId: new ID(serialized.deviceId),
+      userId: new ID(serialized.userId),
+      sequence: BigNumber.fromString(serialized.sequence),
       payload: Payload.fromJSON(serialized.payload),
     };
 

@@ -1,14 +1,12 @@
 import { randomBytes } from 'crypto';
 import { ArgumentInvalidException, DomainPrimitive } from '@agnoc/toolkit';
 
-export type BigNumberSerialized = string;
-
 export class BigNumber extends DomainPrimitive<bigint> {
   public override toString(): string {
     return this.props.value.toString(16);
   }
 
-  public override toJSON(): BigNumberSerialized {
+  public override toJSON(): string {
     return this.toString();
   }
 
@@ -20,12 +18,6 @@ export class BigNumber extends DomainPrimitive<bigint> {
 
   public static generate(): BigNumber {
     const str = randomBytes(8).toString('hex');
-    const value = BigInt(`0x${str}`);
-
-    return new BigNumber(value);
-  }
-
-  public static fromJSON(str: BigNumberSerialized): BigNumber {
     const value = BigInt(`0x${str}`);
 
     return new BigNumber(value);
