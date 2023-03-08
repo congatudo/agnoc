@@ -7,5 +7,9 @@
   },
   "include": ["src"],
   "exclude": ["**/*.test.ts"],
-  "references": [{ "path": "../toolkit/tsconfig.build.json" }]
+  "references": [
+    { "path": "../toolkit/tsconfig.build.json" },
+    { "path": "../domain/tsconfig.build.json" },
+    { "path": "../transport-tcp/tsconfig.build.json" }
+  ]
 }

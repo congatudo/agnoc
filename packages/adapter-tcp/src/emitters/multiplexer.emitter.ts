@@ -2,9 +2,8 @@
 import { DomainException, debug, bind } from '@agnoc/toolkit';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import type { Connection } from './connection.emitter';
-import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
-import type { Packet } from '../value-objects/packet.value-object';
 import type { ID } from '@agnoc/toolkit';
+import type { PayloadObjectName, Packet, PayloadObjectFrom } from '@agnoc/transport-tcp';
 
 export type MultiplexerEvents<Name extends PayloadObjectName> = {
   [key in Name]: (packet: Packet<Name>) => void;

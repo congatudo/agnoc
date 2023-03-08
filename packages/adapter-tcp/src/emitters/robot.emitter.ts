@@ -46,9 +46,7 @@ import { DeviceWaterLevelMapper } from '../mappers/device-water-level.mapper';
 import { WeekDayListMapper } from '../mappers/week-day-list.mapper';
 import type { Connection } from './connection.emitter';
 import type { Multiplexer } from './multiplexer.emitter';
-import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
 import type { Message, MessageHandlers } from '../value-objects/message.value-object';
-import type { Packet } from '../value-objects/packet.value-object';
 import type {
   Device,
   User,
@@ -58,6 +56,7 @@ import type {
   VoiceSetting,
   DeviceSettingsProps,
 } from '@agnoc/domain';
+import type { PayloadObjectName, PayloadObjectFrom, Packet } from '@agnoc/transport-tcp';
 import type { Debugger } from 'debug';
 
 export interface RobotProps {

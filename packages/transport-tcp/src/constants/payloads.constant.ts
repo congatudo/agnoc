@@ -1,6 +1,6 @@
 import type { OPNameLiteral } from './opcodes.constant';
 import type { AreaListInfo } from '../decoders/area.decoder';
-import type { MapInfo, ChargePoseInfo, RobotPoseInfo } from '../interfaces/map.interface';
+import type { MapInfo, ChargePoseInfo, RobotPoseInfo } from '../decoders/map.interface';
 import type {
   ICLIENT_HEARTBEAT_REQ,
   ICLIENT_HEARTBEAT_RSP,

@@ -52,7 +52,7 @@ module.exports = {
     'import/no-internal-modules': [
       'error',
       {
-        forbid: ['packages/**/*'],
+        forbid: ['packages/**/*', '@agnoc/*/src/**/*'],
       },
     ],
     'import/order': [

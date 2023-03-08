@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Device, DeviceSystem, DeviceVersion, User } from '@agnoc/domain';
 import { ID, bind } from '@agnoc/toolkit';
+import { PacketServer } from '@agnoc/transport-tcp';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { Message } from '../value-objects/message.value-object';
 import { Connection } from './connection.emitter';
 import { Multiplexer } from './multiplexer.emitter';
-import { PacketServer } from './packet-server.emitter';
 import { Robot } from './robot.emitter';
-import type { PayloadObjectName } from '../constants/payloads.constant';
-import type { PayloadFactory } from '../factories/payload.factory';
-import type { PacketMapper } from '../mappers/packet.mapper';
-import type { PacketSocket } from '../sockets/packet.socket';
 import type { MessageHandlers } from '../value-objects/message.value-object';
+import type { PacketMapper, PayloadFactory, PayloadObjectName, PacketSocket } from '@agnoc/transport-tcp';
 
 interface Servers {
   cmd: PacketServer;

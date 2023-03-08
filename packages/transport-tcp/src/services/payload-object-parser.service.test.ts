@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { PayloadObjectParserService } from './payload-object-parser.service';
 import type { Decoder, DecoderMap, Encoder, EncoderMap } from './payload-object-parser.service';
 import type { PayloadObject } from '../constants/payloads.constant';
-import type { MapInfo } from '../interfaces/map.interface';
+import type { MapInfo } from '../decoders/map.interface';
 import type { Root, Type, Message, Writer } from 'protobufjs/light';
 
 describe('PayloadObjectParserService', function () {

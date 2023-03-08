@@ -32,7 +32,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/adrigzr/agnoc.git",
-    "directory": "packages/transport-tcp"
+    "directory": "packages/schemas-tcp"
   },
   "scripts": {
     "build": "npm-run-all build:lib",

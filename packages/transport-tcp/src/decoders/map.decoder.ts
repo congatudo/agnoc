@@ -15,7 +15,7 @@ import type {
   Point,
   RoomConnection,
   RoomSegment,
-} from '../interfaces/map.interface';
+} from './map.interface';
 import type { Readable } from 'stream';
 
 export function readMapHeadInfo(stream: Readable): MapHeadInfo {

@@ -7,14 +7,10 @@ import {
   ArgumentNotProvidedException,
   ArgumentInvalidException,
 } from '@agnoc/toolkit';
+import { Packet, PacketSocket, PacketSequence, OPCode } from '@agnoc/transport-tcp';
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { OPCode } from '../domain-primitives/opcode.domain-primitive';
-import { PacketSequence } from '../domain-primitives/packet-sequence.domain-primitive';
-import { PacketSocket } from '../sockets/packet.socket';
-import { Packet } from '../value-objects/packet.value-object';
-import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
-import type { PayloadFactory } from '../factories/payload.factory';
 import type { ID } from '@agnoc/toolkit';
+import type { PayloadObjectName, PayloadObjectFrom, PayloadFactory } from '@agnoc/transport-tcp';
 import type { Debugger } from 'debug';
 
 export interface ConnectionSendProps<Name extends PayloadObjectName> {

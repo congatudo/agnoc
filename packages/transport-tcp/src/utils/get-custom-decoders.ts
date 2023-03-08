@@ -1,7 +1,7 @@
-import { decodeArea } from './area.decoder';
-import { decodeChargePosition } from './charge-position.decoder';
-import { decodeMap } from './map.decoder';
-import { decodeRobotPosition } from './robot-position.decoder';
+import { decodeArea } from '../decoders/area.decoder';
+import { decodeChargePosition } from '../decoders/charge-position.decoder';
+import { decodeMap } from '../decoders/map.decoder';
+import { decodeRobotPosition } from '../decoders/robot-position.decoder';
 import type { DecoderMap } from '../services/payload-object-parser.service';
 
 const decoders: Partial<DecoderMap> = {

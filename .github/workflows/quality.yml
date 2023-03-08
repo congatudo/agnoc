@@ -43,7 +43,6 @@ jobs:
           path: |
             node_modules/.cache/nx
             packages/*/lib
-            packages/transport-tcp/schemas
           key: cache-build-${{ github.sha }}
       - name: Build packages
         run: yarn build

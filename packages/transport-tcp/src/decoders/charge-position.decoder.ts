@@ -1,5 +1,5 @@
 import { toStream, readWord, readFloat } from '@agnoc/toolkit';
-import type { ChargePoseInfo } from '../interfaces/map.interface';
+import type { ChargePoseInfo } from './map.interface';
 
 export function decodeChargePosition(payload: Buffer): ChargePoseInfo {
   const stream = toStream(payload);

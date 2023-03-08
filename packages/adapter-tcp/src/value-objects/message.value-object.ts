@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { Packet } from '@agnoc/transport-tcp';
 import { Connection } from '../emitters/connection.emitter';
-import { Packet } from './packet.value-object';
-import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
+import type { PayloadObjectName, PayloadObjectFrom } from '@agnoc/transport-tcp';
 
 export interface MessageProps<Name extends PayloadObjectName> {
   connection: Connection;
