@@ -128,7 +128,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
 
     message.respond('COMMON_ERROR_REPLY', {
       result: 1,
-      opcode: message.packet.payload.opcode.value,
+      opcode: message.packet.payload.opcode.code,
       error: 'Device not registered',
     });
   }

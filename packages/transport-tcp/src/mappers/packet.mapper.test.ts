@@ -84,7 +84,7 @@ describe('PacketMapper', function () {
         payload: new Payload({
           opcode: OPCode.fromName('DEVICE_GETTIME_RSP'),
           buffer: Buffer.from('08001a090893afeefd0510901c', 'hex'),
-          object: {},
+          object: { result: 1, body: { deviceTime: 1 } },
         }),
       });
 

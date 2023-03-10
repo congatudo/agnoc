@@ -15,7 +15,6 @@ import {
 import { OPCode } from '../domain-primitives/opcode.domain-primitive';
 import { PacketSequence } from '../domain-primitives/packet-sequence.domain-primitive';
 import { Packet } from '../value-objects/packet.value-object';
-import type { OPCodeFrom } from '../constants/opcodes.constant';
 import type { PayloadObjectName } from '../constants/payloads.constant';
 import type { PayloadFactory } from '../factories/payload.factory';
 import type { Mapper } from '@agnoc/toolkit';
@@ -38,9 +37,9 @@ export class PacketMapper implements Mapper<Packet<PayloadObjectName>, Buffer> {
     const deviceId = new ID(readWord(stream));
     const userId = new ID(readWord(stream));
     const sequence = new PacketSequence(readLong(stream));
-    const opcode = OPCode.fromCode(readShort(stream) as OPCodeFrom<Name>);
+    const opcode = OPCode.fromCode(readShort(stream));
     const buffer = size > 24 ? (stream.read(size - 24) as Buffer) : Buffer.alloc(0);
-    const payload = this.payloadFactory.create(opcode, buffer);
+    const payload = this.payloadFactory.create(opcode as OPCode<Name>, buffer);
 
     return new Packet({
       ctype,
@@ -63,7 +62,7 @@ export class PacketMapper implements Mapper<Packet<PayloadObjectName>, Buffer> {
     writeWord(stream, packet.deviceId.value);
     writeWord(stream, packet.userId.value);
     writeLong(stream, packet.sequence.value);
-    writeShort(stream, packet.payload.opcode.value);
+    writeShort(stream, packet.payload.opcode.code);
 
     stream.write(packet.payload.buffer);
 

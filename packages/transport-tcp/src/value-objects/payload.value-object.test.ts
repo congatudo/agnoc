@@ -56,6 +56,7 @@ describe('Payload', function () {
   });
 
   it('should throw an error when "object" is not an object', function () {
+    // @ts-expect-error - invalid property
     expect(() => new Payload({ ...givenSomePayloadProps(), object: 'foo' })).to.throw(
       ArgumentInvalidException,
       `Value 'foo' for property 'object' of Payload is not an instance of Object`,

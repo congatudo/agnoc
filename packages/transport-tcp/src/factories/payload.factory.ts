@@ -1,6 +1,5 @@
 import { ArgumentInvalidException } from '@agnoc/toolkit';
 import { Payload } from '../value-objects/payload.value-object';
-import type { OPCodeFrom } from '../constants/opcodes.constant';
 import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
 import type { OPCode } from '../domain-primitives/opcode.domain-primitive';
 import type { PayloadObjectParserService } from '../services/payload-object-parser.service';
@@ -11,13 +10,10 @@ export class PayloadFactory implements Factory<Payload<PayloadObjectName>> {
   constructor(private readonly payloadObjectParserService: PayloadObjectParserService) {}
 
   /** Creates a payload from a buffer or an object. */
-  create<Name extends PayloadObjectName>(opcode: OPCode<OPCodeFrom<Name>>, buffer: Buffer): Payload<Name>;
+  create<Name extends PayloadObjectName>(opcode: OPCode<Name>, buffer: Buffer): Payload<Name>;
+  create<Name extends PayloadObjectName>(opcode: OPCode<Name>, object: PayloadObjectFrom<Name>): Payload<Name>;
   create<Name extends PayloadObjectName>(
-    opcode: OPCode<OPCodeFrom<Name>>,
-    object: PayloadObjectFrom<Name>,
-  ): Payload<Name>;
-  create<Name extends PayloadObjectName>(
-    opcode: OPCode<OPCodeFrom<Name>>,
+    opcode: OPCode<Name>,
     bufferOrObject: Buffer | PayloadObjectFrom<Name>,
   ): Payload<Name> {
     if (bufferOrObject instanceof Buffer) {
@@ -27,10 +23,7 @@ export class PayloadFactory implements Factory<Payload<PayloadObjectName>> {
     return this.createFromObject(opcode, bufferOrObject);
   }
 
-  private createFromBuffer<Name extends PayloadObjectName>(
-    opcode: OPCode<OPCodeFrom<Name>>,
-    buffer: Buffer,
-  ): Payload<Name> {
+  private createFromBuffer<Name extends PayloadObjectName>(opcode: OPCode<Name>, buffer: Buffer): Payload<Name> {
     const decoder = this.payloadObjectParserService.getDecoder(opcode.name as Name);
 
     if (!decoder) {
@@ -49,7 +42,7 @@ export class PayloadFactory implements Factory<Payload<PayloadObjectName>> {
   }
 
   private createFromObject<Name extends PayloadObjectName>(
-    opcode: OPCode<OPCodeFrom<Name>>,
+    opcode: OPCode<Name>,
     object: PayloadObjectFrom<Name>,
   ): Payload<Name> {
     const encoder = this.payloadObjectParserService.getEncoder(opcode.name as Name);

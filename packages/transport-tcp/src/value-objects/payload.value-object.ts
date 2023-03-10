@@ -1,12 +1,11 @@
 import { isObject, ValueObject } from '@agnoc/toolkit';
 import { OPCode } from '../domain-primitives/opcode.domain-primitive';
-import type { OPCodeFrom } from '../constants/opcodes.constant';
 import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
 
 /** Describes the properties of a payload. */
 export interface PayloadProps<Name extends PayloadObjectName> {
   /** The opcode of the payload. */
-  opcode: OPCode<OPCodeFrom<Name>>;
+  opcode: OPCode<Name>;
   /** The buffer representation of the payload. */
   buffer: Buffer;
   /** The object representation of the payload. */
@@ -24,7 +23,7 @@ export interface JSONPayload<Name extends PayloadObjectName> {
 /** Describes a payload. */
 export class Payload<Name extends PayloadObjectName> extends ValueObject<PayloadProps<Name>> {
   /** Returns the opcode of the payload. */
-  get opcode(): OPCode<OPCodeFrom<Name>> {
+  get opcode(): OPCode<Name> {
     return this.props.opcode;
   }
 

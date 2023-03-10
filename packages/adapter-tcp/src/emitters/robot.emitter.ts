@@ -1150,7 +1150,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
       message.respond('COMMON_ERROR_REPLY', {
         result: 11001,
         error: 'Target user is offline',
-        opcode: message.packet.payload.opcode.value,
+        opcode: message.packet.payload.opcode.code,
       });
       return;
     }
