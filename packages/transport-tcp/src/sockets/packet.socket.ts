@@ -4,7 +4,7 @@ import { DomainException } from '@agnoc/toolkit';
 import type { PayloadObjectName } from '../constants/payloads.constant';
 import type { PacketMapper } from '../mappers/packet.mapper';
 import type { Packet } from '../value-objects/packet.value-object';
-import type { AddressInfo, SocketConnectOpts } from 'net';
+import type { SocketConnectOpts } from 'net';
 
 export type Callback = (error?: Error | null) => void;
 
@@ -23,11 +23,8 @@ export interface PacketSocketEvents {
 
 export declare interface PacketSocket extends Duplex {
   emit<U extends keyof PacketSocketEvents>(event: U, ...args: Parameters<PacketSocketEvents[U]>): boolean;
-
   on<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
-
   once<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
-
   write(
     packet: Packet<PayloadObjectName>,
     encoding?: BufferEncoding,
@@ -38,6 +35,7 @@ export declare interface PacketSocket extends Duplex {
   end(packet: Packet<PayloadObjectName>, cb?: () => void): this;
 }
 
+/** Socket that parses and serializes packets sent through a socket. */
 export class PacketSocket extends Duplex {
   private socket?: Socket;
   private readingPaused = false;
@@ -61,14 +59,19 @@ export class PacketSocket extends Duplex {
 
     return new Promise((resolve) => {
       if (typeof portOrPathOrOptions === 'number' && host) {
-        socket.connect(portOrPathOrOptions, host, resolve);
-      } else if (typeof portOrPathOrOptions === 'number') {
-        socket.connect(portOrPathOrOptions, resolve);
-      } else if (typeof portOrPathOrOptions === 'string') {
-        socket.connect(portOrPathOrOptions, resolve);
-      } else {
-        socket.connect(portOrPathOrOptions, resolve);
+        return socket.connect(portOrPathOrOptions, host, resolve);
       }
+
+      if (typeof portOrPathOrOptions === 'number') {
+        return socket.connect(portOrPathOrOptions, resolve);
+      }
+
+      /* istanbul ignore if - unable to test */
+      if (typeof portOrPathOrOptions === 'string') {
+        return socket.connect(portOrPathOrOptions, resolve);
+      }
+
+      return socket.connect(portOrPathOrOptions, resolve);
     });
   }
 
@@ -88,10 +91,6 @@ export class PacketSocket extends Duplex {
     return this.socket?.remotePort;
   }
 
-  address(): AddressInfo | Record<string, never> {
-    return this.socket?.address() || {};
-  }
-
   get connecting(): boolean {
     return Boolean(this.socket?.connecting);
   }
@@ -100,13 +99,15 @@ export class PacketSocket extends Duplex {
     this.socket = socket;
     this.socket.on('close', (hadError) => this.emit('close', hadError));
     this.socket.on('connect', () => this.emit('connect'));
-    this.socket.on('drain', () => this.emit('drain'));
     this.socket.on('end', () => this.emit('end'));
     this.socket.on('error', (err) => this.emit('error', err));
     this.socket.on('lookup', (err, address, family, host) => this.emit('lookup', err, address, family, host)); // prettier-ignore
     this.socket.on('ready', () => this.emit('ready'));
-    this.socket.on('timeout', () => this.emit('timeout'));
     this.socket.on('readable', () => setImmediate(this.onReadable.bind(this)));
+    /* istanbul ignore next - unable to test */
+    this.socket.on('drain', () => this.emit('drain'));
+    /* istanbul ignore next - unable to test */
+    this.socket.on('timeout', () => this.emit('timeout'));
   }
 
   private onReadable(): void {
@@ -124,7 +125,7 @@ export class PacketSocket extends Duplex {
       const len = lenBuf.readUInt32LE();
 
       if (len > 2 ** 20) {
-        this.socket.destroy(new DomainException('Max length exceeded'));
+        this.socket.destroy(new DomainException('Packet max length exceeded'));
         return;
       }
 
@@ -147,6 +148,7 @@ export class PacketSocket extends Duplex {
 
       const pushOk = this.push(packet);
 
+      /* istanbul ignore if - unable to test */
       if (!pushOk) {
         this.readingPaused = true;
       }
@@ -160,29 +162,21 @@ export class PacketSocket extends Duplex {
 
   override _write(packet: Packet<PayloadObjectName>, _: BufferEncoding, done: Callback): void {
     if (!this.socket) {
-      done(new DomainException('Called _write without connection'));
+      done(new DomainException('Socket is not connected'));
       return;
     }
 
     const buffer = this.packetMapper.fromDomain(packet);
 
-    try {
-      this.socket.write(buffer, done);
-    } catch (e) {
-      done(e as Error);
-    }
+    this.socket.write(buffer, done);
   }
 
   override _final(done: Callback): void {
     if (!this.socket) {
-      done(new DomainException('Called _final without connection'));
+      done(new DomainException('Socket is not connected'));
       return;
     }
 
-    try {
-      this.socket.end(done);
-    } catch (e) {
-      done(e as Error);
-    }
+    this.socket.end(done);
   }
 }

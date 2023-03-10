@@ -1,4 +1,5 @@
 import {
+  ArgumentInvalidException,
   BufferWriter,
   ID,
   readByte,
@@ -11,7 +12,6 @@ import {
   writeShort,
   writeWord,
 } from '@agnoc/toolkit';
-import { assert } from 'chai';
 import { OPCode } from '../domain-primitives/opcode.domain-primitive';
 import { PacketSequence } from '../domain-primitives/packet-sequence.domain-primitive';
 import { Packet } from '../value-objects/packet.value-object';
@@ -20,14 +20,18 @@ import type { PayloadObjectName } from '../constants/payloads.constant';
 import type { PayloadFactory } from '../factories/payload.factory';
 import type { Mapper } from '@agnoc/toolkit';
 
+/** Mapper for converting packets to and from buffers. */
 export class PacketMapper implements Mapper<Packet<PayloadObjectName>, Buffer> {
   constructor(private readonly payloadFactory: PayloadFactory) {}
 
+  /** Converts a buffer to a packet. */
   toDomain<Name extends PayloadObjectName>(data: Buffer): Packet<Name> {
     const stream = toStream(data);
     const size = readWord(stream);
 
-    assert(data.length >= size, 'unpack: missing data');
+    if (data.length !== size) {
+      throw new ArgumentInvalidException('Buffer is too short to be a valid packet');
+    }
 
     const ctype = readByte(stream);
     const flow = readByte(stream);
@@ -48,6 +52,7 @@ export class PacketMapper implements Mapper<Packet<PayloadObjectName>, Buffer> {
     });
   }
 
+  /** Converts a packet to a buffer. */
   fromDomain(packet: Packet<PayloadObjectName>): Buffer {
     const size = 24 + Number(packet.payload?.buffer.length);
     const stream = new BufferWriter();

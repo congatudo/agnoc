@@ -6,9 +6,11 @@ import type { OPCode } from '../domain-primitives/opcode.domain-primitive';
 import type { PayloadObjectParserService } from '../services/payload-object-parser.service';
 import type { Factory } from '@agnoc/toolkit';
 
+/** Factory for creating payloads. */
 export class PayloadFactory implements Factory<Payload<PayloadObjectName>> {
   constructor(private readonly payloadObjectParserService: PayloadObjectParserService) {}
 
+  /** Creates a payload from a buffer or an object. */
   create<Name extends PayloadObjectName>(opcode: OPCode<OPCodeFrom<Name>>, buffer: Buffer): Payload<Name>;
   create<Name extends PayloadObjectName>(
     opcode: OPCode<OPCodeFrom<Name>>,

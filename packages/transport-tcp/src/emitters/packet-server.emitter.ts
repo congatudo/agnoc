@@ -2,15 +2,17 @@ import { Server } from 'net';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { PacketSocket } from '../sockets/packet.socket';
 import type { PacketMapper } from '../mappers/packet.mapper';
-import type { AddressInfo, ListenOptions, Socket } from 'net';
+import type { AddressInfo, ListenOptions, Socket, DropArgument } from 'net';
 
 export interface PacketServerEvents {
   connection: (socket: PacketSocket) => void;
   error: (err: Error) => void;
   listening: () => void;
   close: () => void;
+  drop: (data?: DropArgument) => void;
 }
 
+/** Server that emits `PacketSockets`. */
 export class PacketServer extends TypedEmitter<PacketServerEvents> {
   private server: Server;
 
@@ -20,14 +22,20 @@ export class PacketServer extends TypedEmitter<PacketServerEvents> {
     this.addListeners();
   }
 
+  /** Returns whether the server is listening for connections. */
   get isListening(): boolean {
     return this.server.listening;
   }
 
+  /**
+   * Returns the bound address, the address family name and port of the server
+   * as reported by the operating system.
+   */
   get address(): AddressInfo | null {
     return this.server.address() as AddressInfo | null;
   }
 
+  /** Starts a server listening for connections. */
   async listen(port?: number): Promise<void>;
   async listen(port?: number, hostname?: string): Promise<void>;
   async listen(options: ListenOptions): Promise<void>;
@@ -41,6 +49,7 @@ export class PacketServer extends TypedEmitter<PacketServerEvents> {
     });
   }
 
+  /** Stops the server from accepting new connections and keeps existing connections. */
   async close(): Promise<void> {
     return await new Promise((resolve, reject) => {
       this.server.close((e) => {
@@ -62,8 +71,11 @@ export class PacketServer extends TypedEmitter<PacketServerEvents> {
 
   private addListeners(): void {
     this.server.on('connection', this.onConnection.bind(this));
-    this.server.on('error', (e) => this.emit('error', e));
     this.server.on('listening', () => this.emit('listening'));
     this.server.on('close', () => this.emit('close'));
+    /* istanbul ignore next - unable to test */
+    this.server.on('error', (error) => this.emit('error', error));
+    /* istanbul ignore next - unable to test */
+    this.server.on('drop', (data) => this.emit('drop', data));
   }
 }

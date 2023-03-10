@@ -8,6 +8,7 @@ export type Encoder<Name extends PayloadObjectName = PayloadObjectName> = (objec
 export type EncoderMap<Name extends PayloadObjectName = PayloadObjectName> = Record<Name, Encoder<Name>>;
 export type DecoderMap<Name extends PayloadObjectName = PayloadObjectName> = Record<Name, Decoder<Name>>;
 
+/** Service to encde and decode payload objects. */
 export class PayloadObjectParserService {
   constructor(
     private readonly protoRoot: Root,
@@ -15,6 +16,7 @@ export class PayloadObjectParserService {
     private readonly encoders?: Partial<EncoderMap>,
   ) {}
 
+  /** Returns a decoder for a payload object. */
   getDecoder<Name extends PayloadObjectName>(name: Name): Decoder<Name> | undefined {
     const schema = this.protoRoot.get(name) as Type | null;
 
@@ -25,6 +27,7 @@ export class PayloadObjectParserService {
     return this.decoders?.[name] as Decoder<Name> | undefined;
   }
 
+  /** Returns an encoder for a payload object. */
   getEncoder<Name extends PayloadObjectName>(name: Name): Encoder<Name> | undefined {
     const schema = this.protoRoot.get(name) as Type | null;
 

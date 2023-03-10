@@ -2,7 +2,7 @@ export * from './constants/opcodes.constant';
 export * from './constants/payloads.constant';
 export * from './decoders/area.decoder';
 export * from './decoders/charge-position.decoder';
-export * from './utils/get-custom-decoders';
+export * from './utils/get-custom-decoders.util';
 export * from './decoders/map.decoder';
 export * from './decoders/robot-position.decoder';
 export * from './domain-primitives/opcode.domain-primitive';
