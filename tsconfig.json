@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
-  "include": ["packages/*/src", "packages/*/test", "packages/**/typings.d.ts"],
+  "include": ["packages/*/src", "packages/*/test", "packages/*/types"],
   "typedocOptions": {
     "entryPoints": [
       "packages/cli",

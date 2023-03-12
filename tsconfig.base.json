@@ -31,9 +31,9 @@
     "paths": {
       "@agnoc/schemas-tcp/json": ["packages/schemas-tcp/lib/index.json"],
       "@agnoc/schemas-tcp": ["packages/schemas-tcp/lib"],
+      "@agnoc/*/test-support": ["packages/*/src/test-support"],
       "@agnoc/*": ["packages/*/src"]
     }
   },
-  "exclude": ["node_modules", "packages/*/lib"],
-  "typeRoots": ["node_modules/@types", "packages/*/src/types"]
+  "exclude": ["node_modules", "packages/*/lib"]
 }

@@ -21,7 +21,7 @@ export interface ConnectionSendProps<Name extends PayloadObjectName> {
 }
 
 export interface ConnectionRespondProps<Name extends PayloadObjectName> {
-  packet: Packet<PayloadObjectName>;
+  packet: Packet;
   opname: Name;
   object: PayloadObjectFrom<Name>;
 }
@@ -85,7 +85,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<PayloadObjectName>
     return this.write(response);
   }
 
-  private write(packet: Packet<PayloadObjectName>): boolean {
+  private write(packet: Packet): boolean {
     if (!this.socket.destroyed && !this.socket.connecting) {
       return this.socket.write(packet);
     }
@@ -99,7 +99,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<PayloadObjectName>
   }
 
   @bind
-  private handlePacket(packet: Packet<PayloadObjectName>): void {
+  private handlePacket(packet: Packet): void {
     this.validatePacket(packet);
 
     const opname = packet.payload.opcode.name as PayloadObjectName;
@@ -129,7 +129,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<PayloadObjectName>
     }:${this.socket.localPort || 0}`;
   }
 
-  protected validatePacket(packet: Packet<PayloadObjectName>): void {
+  protected validatePacket(packet: Packet): void {
     if (!(packet instanceof Packet)) {
       throw new DomainException('Connection socket emitted non-packet data');
     }

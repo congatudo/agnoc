@@ -34,7 +34,7 @@
   "scripts": {
     "build": "npm-run-all build:lib",
     "build:lib": "tsc -b tsconfig.build.json",
-    "clean": "rm -rf .build-cache lib",
+    "clean": "rm -rf .build-cache lib coverage",
     "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
     "test": "nyc mocha src test"
   },

@@ -22,6 +22,16 @@
   "bin": {
     "agnoc": "./bin/agnoc"
   },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./test-support": {
+      "types": "./lib/test-support.d.ts",
+      "default": "./lib/test-support.js"
+    }
+  },
   "files": [
     "bin",
     "lib"
@@ -37,9 +47,9 @@
   "scripts": {
     "build": "npm-run-all build:lib",
     "build:lib": "tsc -b tsconfig.build.json",
-    "clean": "rm -rf .build-cache lib",
+    "clean": "rm -rf .build-cache lib coverage",
     "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
-    "test": "nyc mocha test"
+    "test": "nyc mocha src test"
   },
   "nx": {
     "targets": {
@@ -83,6 +93,7 @@
     "pcap": "^3.1.0"
   },
   "devDependencies": {
+    "@johanblumenberg/ts-mockito": "^1.0.35",
     "chai": "^4.3.7",
     "execa": "^5.1.1",
     "mocha": "^10.2.0",

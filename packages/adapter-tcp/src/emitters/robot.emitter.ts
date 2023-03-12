@@ -1187,7 +1187,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   recv<Name extends PayloadObjectName>(opname: Name): Promise<Packet<Name>> {
     return new Promise((resolve, reject) => {
-      const done = (packet: Packet<PayloadObjectName>) => {
+      const done = (packet: Packet) => {
         clearTimeout(timer);
         resolve(packet as Packet<Name>);
       };

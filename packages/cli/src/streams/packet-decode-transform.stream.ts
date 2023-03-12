@@ -26,7 +26,7 @@ export class PacketDecodeTransform extends Transform {
         return done(e as Error);
       }
 
-      this.buffer = this.buffer.slice(size);
+      this.buffer = this.buffer.subarray(size);
 
       if (this.buffer.length < 4) {
         break;
@@ -40,7 +40,9 @@ export class PacketDecodeTransform extends Transform {
 
   override _final(done: TransformCallback): void {
     if (this.buffer.length > 0) {
-      return done(new DomainException(`Unable to decode ${this.buffer.length} bytes. Possible malformed data stream.`));
+      return done(
+        new DomainException(`Unable to decode ${this.buffer.length} byte(s). Possible malformed data stream`),
+      );
     }
 
     done();

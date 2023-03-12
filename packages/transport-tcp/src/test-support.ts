@@ -17,9 +17,9 @@ export function givenSomePacketProps(): PacketProps<'DEVICE_GETTIME_RSP'> {
   return {
     ctype: 2,
     flow: 1,
-    deviceId: ID.generate(),
-    userId: ID.generate(),
-    sequence: PacketSequence.generate(),
+    deviceId: new ID(3),
+    userId: new ID(4),
+    sequence: PacketSequence.fromString('fb3dd1ebc0e6c58f'),
     payload: new Payload(givenSomePayloadProps()),
   };
 }

@@ -9,7 +9,7 @@ export class PacketEncodeTransform extends Transform {
     super({ objectMode: true });
   }
 
-  override _transform(array: JSONPacket<PayloadObjectName>[], _: BufferEncoding, done: TransformCallback): void {
+  override _transform(array: JSONPacket[], _: BufferEncoding, done: TransformCallback): void {
     array.forEach((serialized) => {
       this.push(this.packetMapper.fromDomain(this.buildPacketFromJSON(serialized)));
     });
@@ -30,7 +30,7 @@ export class PacketEncodeTransform extends Transform {
   }
 }
 
-interface JSONPacket<Name extends PayloadObjectName> {
+export interface JSONPacket<Name extends PayloadObjectName = PayloadObjectName> {
   ctype: number;
   flow: number;
   deviceId: number;

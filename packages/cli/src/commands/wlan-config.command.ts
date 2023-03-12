@@ -1,5 +1,52 @@
 import { Socket } from 'net';
 import { BufferWriter, writeWord, debug } from '@agnoc/toolkit';
+import type { Command } from '../interfaces/command';
+
+export interface WlanConfigCommandOptions {
+  timeout: number;
+}
+
+export class WlanConfigCommand implements Command {
+  constructor(private readonly host: string, private readonly port: number) {}
+
+  action(ssid: string, pass: string, { timeout }: WlanConfigCommandOptions): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const debugInstance = debug('wlan:config');
+      const socket = new Socket();
+
+      socket.on('data', (data) => {
+        debugInstance(`Received data: ${data.toString('hex')}`);
+        socket.end();
+        resolve();
+      });
+
+      socket.on('connect', () => {
+        debugInstance('Sending wifi headers...');
+        socket.write(buildHeaders());
+        debugInstance('Sending wifi payload...');
+        socket.write(buildPayload(ssid, pass));
+      });
+
+      socket.on('error', (e) => {
+        reject(e);
+      });
+
+      /* istanbul ignore next - hard to test */
+      socket.on('timeout', () => {
+        socket.destroy(new Error('Timeout connecting to robot.'));
+      });
+
+      socket.setTimeout(timeout);
+      socket.connect({
+        host: this.host,
+        port: this.port,
+        family: 4,
+      });
+
+      debugInstance(`Connecting to robot at ${this.host}`);
+    });
+  }
+}
 
 function buildHeaders() {
   const stream = new BufferWriter();
@@ -30,47 +77,4 @@ function buildPayload(ssid: string, pass: string) {
   writeWord(stream, 290826);
 
   return stream.buffer;
-}
-
-interface WlanConfigOptions {
-  timeout: number;
-}
-
-export function wlanConfig(ssid: string, pass: string, { timeout }: WlanConfigOptions): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const debugInstance = debug('wlan:config');
-    const socket = new Socket();
-    const gateway = '192.168.5.1';
-    const port = 6008;
-
-    socket.on('data', (data) => {
-      debugInstance(`Received data: ${data.toString('hex')}`);
-      socket.end();
-      resolve();
-    });
-
-    socket.on('connect', () => {
-      debugInstance('Sending wifi headers...');
-      socket.write(buildHeaders());
-      debugInstance('Sending wifi payload...');
-      socket.write(buildPayload(ssid, pass));
-    });
-
-    socket.on('error', (e) => {
-      reject(e);
-    });
-
-    socket.on('timeout', () => {
-      socket.destroy(new Error('Timeout connecting to robot.'));
-    });
-
-    socket.setTimeout(timeout);
-    socket.connect({
-      host: gateway,
-      port,
-      family: 4,
-    });
-
-    debugInstance(`Connecting to robot at ${gateway}`);
-  });
 }

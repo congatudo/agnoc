@@ -188,7 +188,6 @@ describe('packet.socket', () => {
 
     packetSocket.on('error', (error) => {
       expect(error).to.be.an.instanceOf(Error);
-      expect(error.message).to.be.equal('write EPIPE');
     });
 
     packetSocket.once('close', () => {

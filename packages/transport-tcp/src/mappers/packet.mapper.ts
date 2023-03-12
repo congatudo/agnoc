@@ -20,7 +20,7 @@ import type { PayloadFactory } from '../factories/payload.factory';
 import type { Mapper } from '@agnoc/toolkit';
 
 /** Mapper for converting packets to and from buffers. */
-export class PacketMapper implements Mapper<Packet<PayloadObjectName>, Buffer> {
+export class PacketMapper implements Mapper<Packet, Buffer> {
   constructor(private readonly payloadFactory: PayloadFactory) {}
 
   /** Converts a buffer to a packet. */
@@ -52,7 +52,7 @@ export class PacketMapper implements Mapper<Packet<PayloadObjectName>, Buffer> {
   }
 
   /** Converts a packet to a buffer. */
-  fromDomain(packet: Packet<PayloadObjectName>): Buffer {
+  fromDomain(packet: Packet): Buffer {
     const size = 24 + Number(packet.payload?.buffer.length);
     const stream = new BufferWriter();
 

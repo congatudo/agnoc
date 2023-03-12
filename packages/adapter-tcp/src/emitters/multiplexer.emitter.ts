@@ -8,7 +8,7 @@ import type { PayloadObjectName, Packet, PayloadObjectFrom } from '@agnoc/transp
 export type MultiplexerEvents<Name extends PayloadObjectName> = {
   [key in Name]: (packet: Packet<Name>) => void;
 } & {
-  data: (packet: Packet<PayloadObjectName>) => void;
+  data: (packet: Packet) => void;
   error: (err: Error) => void;
 };
 
@@ -66,7 +66,7 @@ export class Multiplexer extends TypedEmitter<MultiplexerEvents<PayloadObjectNam
   }
 
   @bind
-  private handlePacket(packet: Packet<PayloadObjectName>): void {
+  private handlePacket(packet: Packet): void {
     const opname = packet.payload.opcode.name as PayloadObjectName;
 
     if (!opname) {

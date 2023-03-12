@@ -20,7 +20,7 @@ export interface PacketProps<Name extends PayloadObjectName> {
 }
 
 /** Describes a packet. */
-export class Packet<Name extends PayloadObjectName> extends ValueObject<PacketProps<Name>> {
+export class Packet<Name extends PayloadObjectName = PayloadObjectName> extends ValueObject<PacketProps<Name>> {
   /** Returns the packet type. */
   get ctype(): number {
     return this.props.ctype;

@@ -73,6 +73,7 @@ module.exports = {
         '@typescript-eslint/no-unsafe-argument': 'off',
         '@typescript-eslint/unbound-method': 'off',
         '@typescript-eslint/no-misused-promises': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
       },
     },
   ],

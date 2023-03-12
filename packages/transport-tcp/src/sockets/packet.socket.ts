@@ -1,7 +1,6 @@
 import { Socket } from 'net';
 import { Duplex } from 'stream';
 import { DomainException } from '@agnoc/toolkit';
-import type { PayloadObjectName } from '../constants/payloads.constant';
 import type { PacketMapper } from '../mappers/packet.mapper';
 import type { Packet } from '../value-objects/packet.value-object';
 import type { SocketConnectOpts } from 'net';
@@ -9,7 +8,7 @@ import type { SocketConnectOpts } from 'net';
 export type Callback = (error?: Error | null) => void;
 
 export interface PacketSocketEvents {
-  data: (packet: Packet<PayloadObjectName>) => void;
+  data: (packet: Packet) => void;
   connect: () => void;
   close: (hasError: boolean) => void;
   drain: () => void;
@@ -25,14 +24,10 @@ export declare interface PacketSocket extends Duplex {
   emit<U extends keyof PacketSocketEvents>(event: U, ...args: Parameters<PacketSocketEvents[U]>): boolean;
   on<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
   once<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
-  write(
-    packet: Packet<PayloadObjectName>,
-    encoding?: BufferEncoding,
-    cb?: (error: Error | null | undefined) => void,
-  ): boolean;
-  write(packet: Packet<PayloadObjectName>, cb?: (error: Error | null | undefined) => void): boolean;
+  write(packet: Packet, encoding?: BufferEncoding, cb?: (error: Error | null | undefined) => void): boolean;
+  write(packet: Packet, cb?: (error: Error | null | undefined) => void): boolean;
   end(cb?: () => void): this;
-  end(packet: Packet<PayloadObjectName>, cb?: () => void): this;
+  end(packet: Packet, cb?: () => void): this;
 }
 
 /** Socket that parses and serializes packets sent through a socket. */
@@ -160,7 +155,7 @@ export class PacketSocket extends Duplex {
     setImmediate(this.onReadable.bind(this));
   }
 
-  override _write(packet: Packet<PayloadObjectName>, _: BufferEncoding, done: Callback): void {
+  override _write(packet: Packet, _: BufferEncoding, done: Callback): void {
     if (!this.socket) {
       done(new DomainException('Socket is not connected'));
       return;
