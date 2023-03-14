@@ -15,8 +15,6 @@ describe('decodeMap', function () {
   it('should throw an error when there are bytes left after decoding the map', function () {
     const buffer = Buffer.from('789c63606060606462660100001c000b', 'hex');
 
-    console.log(buffer.toString('hex'));
-
     expect(() => decodeMap(buffer)).to.throw(
       DomainException,
       `Data left on stream after decoding MapInfo: 000001020304`,

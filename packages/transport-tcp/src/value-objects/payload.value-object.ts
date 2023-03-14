@@ -6,8 +6,6 @@ import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads
 export interface PayloadProps<Name extends PayloadObjectName> {
   /** The opcode of the payload. */
   opcode: OPCode<Name>;
-  /** The buffer representation of the payload. */
-  buffer: Buffer;
   /** The object representation of the payload. */
   object: PayloadObjectFrom<Name>;
 }
@@ -21,15 +19,10 @@ export interface JSONPayload<Name extends PayloadObjectName> {
 }
 
 /** Describes a payload. */
-export class Payload<Name extends PayloadObjectName> extends ValueObject<PayloadProps<Name>> {
+export class Payload<Name extends PayloadObjectName = PayloadObjectName> extends ValueObject<PayloadProps<Name>> {
   /** Returns the opcode of the payload. */
   get opcode(): OPCode<Name> {
     return this.props.opcode;
-  }
-
-  /** Returns the buffer representation of the payload. */
-  get buffer(): Buffer {
-    return this.props.buffer;
   }
 
   /** Returns the object representation of the payload. */
@@ -48,14 +41,13 @@ export class Payload<Name extends PayloadObjectName> extends ValueObject<Payload
   }
 
   protected validate(props: PayloadProps<Name>): void {
-    const keys: (keyof PayloadProps<Name>)[] = ['opcode', 'buffer', 'object'];
+    const keys: (keyof PayloadProps<Name>)[] = ['opcode', 'object'];
 
     keys.forEach((prop) => {
       this.validateDefinedProp(props, prop);
     });
 
     this.validateInstanceProp(props, 'opcode', OPCode);
-    this.validateInstanceProp(props, 'buffer', Buffer);
     this.validateInstanceProp(props, 'object', Object);
   }
 }

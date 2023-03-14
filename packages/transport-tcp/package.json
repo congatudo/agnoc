@@ -53,6 +53,7 @@
       "build": {
         "inputs": [
           "{workspaceRoot}/package.json",
+          "{workspaceRoot}/tsconfig.*",
           "{projectRoot}/src/**/*",
           "{projectRoot}/package.json",
           "{projectRoot}/tsconfig.*"
@@ -63,12 +64,11 @@
         ]
       },
       "test": {
-        "dependsOn": [
-          "build"
-        ],
         "inputs": [
           "{workspaceRoot}/.mocharc.yml",
-          "{projectRoot}/src/**/*"
+          "{workspaceRoot}/nyc.config.js",
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/test/**/*"
         ],
         "outputs": [
           "{projectRoot}/coverage"

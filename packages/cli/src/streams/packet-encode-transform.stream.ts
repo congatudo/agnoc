@@ -1,11 +1,11 @@
 import { Transform } from 'stream';
 import { ID } from '@agnoc/toolkit';
-import { OPCode, Packet, PacketSequence } from '@agnoc/transport-tcp';
-import type { PayloadObjectName, PacketProps, JSONPayload, PacketMapper, PayloadFactory } from '@agnoc/transport-tcp';
+import { OPCode, Packet, PacketSequence, Payload } from '@agnoc/transport-tcp';
+import type { PayloadObjectName, PacketProps, JSONPayload, PacketMapper } from '@agnoc/transport-tcp';
 import type { TransformCallback } from 'stream';
 
 export class PacketEncodeTransform extends Transform {
-  constructor(private readonly packetMapper: PacketMapper, private readonly payloadFactory: PayloadFactory) {
+  constructor(private readonly packetMapper: PacketMapper) {
     super({ objectMode: true });
   }
 
@@ -23,7 +23,7 @@ export class PacketEncodeTransform extends Transform {
       deviceId: new ID(serialized.deviceId),
       userId: new ID(serialized.userId),
       sequence: PacketSequence.fromString(serialized.sequence),
-      payload: this.payloadFactory.create(OPCode.fromName(serialized.payload.opcode), serialized.payload.object),
+      payload: new Payload({ opcode: OPCode.fromName(serialized.payload.opcode), object: serialized.payload.object }),
     };
 
     return new Packet(props);

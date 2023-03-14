@@ -36,13 +36,14 @@
     "build:lib": "tsc -b tsconfig.build.json",
     "clean": "rm -rf .build-cache lib coverage",
     "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
-    "test": "nyc mocha src test"
+    "test": "nyc mocha src"
   },
   "nx": {
     "targets": {
       "build": {
         "inputs": [
           "{workspaceRoot}/package.json",
+          "{workspaceRoot}/tsconfig.*",
           "{projectRoot}/src/**/*",
           "{projectRoot}/package.json",
           "{projectRoot}/tsconfig.*"
@@ -53,13 +54,10 @@
         ]
       },
       "test": {
-        "dependsOn": [
-          "build"
-        ],
         "inputs": [
           "{workspaceRoot}/.mocharc.yml",
-          "{projectRoot}/src/**/*",
-          "{projectRoot}/test/**/*"
+          "{workspaceRoot}/nyc.config.js",
+          "{projectRoot}/src/**/*"
         ],
         "outputs": [
           "{projectRoot}/coverage"

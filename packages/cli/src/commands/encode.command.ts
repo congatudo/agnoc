@@ -5,20 +5,16 @@ import { JSONTransform } from '../streams/json-transform.stream';
 import { PacketEncodeTransform } from '../streams/packet-encode-transform.stream';
 import type { Command } from '../interfaces/command';
 import type { Stdio } from '../interfaces/stdio';
-import type { PacketMapper, PayloadFactory } from '@agnoc/transport-tcp';
+import type { PacketMapper } from '@agnoc/transport-tcp';
 
 export class EncodeCommand implements Command {
-  constructor(
-    private readonly stdio: Stdio,
-    private readonly packetMapper: PacketMapper,
-    private readonly payloadFactory: PayloadFactory,
-  ) {}
+  constructor(private readonly stdio: Stdio, private readonly packetMapper: PacketMapper) {}
 
   action(file: string): void {
     pipeline(
       file === '-' ? this.stdio.stdin : createReadStream(file),
       new JSONTransform(),
-      new PacketEncodeTransform(this.packetMapper, this.payloadFactory),
+      new PacketEncodeTransform(this.packetMapper),
       this.stdio.stdout,
       (err) => {
         if (err instanceof Error) {

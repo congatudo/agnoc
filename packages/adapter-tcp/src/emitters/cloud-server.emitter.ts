@@ -8,7 +8,7 @@ import { Connection } from './connection.emitter';
 import { Multiplexer } from './multiplexer.emitter';
 import { Robot } from './robot.emitter';
 import type { MessageHandlers } from '../value-objects/message.value-object';
-import type { PacketMapper, PayloadFactory, PayloadObjectName, PacketSocket } from '@agnoc/transport-tcp';
+import type { PacketMapper, PayloadObjectName, PacketSocket } from '@agnoc/transport-tcp';
 
 interface Servers {
   cmd: PacketServer;
@@ -29,7 +29,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
     DEVICE_REGISTER_REQ: this.handleClientRegister,
   } as const;
 
-  constructor(private readonly packetMapper: PacketMapper, private readonly payloadFactory: PayloadFactory) {
+  constructor(private readonly packetMapper: PacketMapper) {
     super();
     this.servers = {
       cmd: new PacketServer(this.packetMapper),
@@ -135,7 +135,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
 
   @bind
   private handleConnection(socket: PacketSocket): void {
-    const connection = new Connection(this.payloadFactory, socket);
+    const connection = new Connection(socket);
 
     connection.on('data', (packet) => {
       const message = new Message({ connection, packet });
@@ -146,7 +146,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
 
   @bind
   private handleRTPConnection(socket: PacketSocket) {
-    const connection = new Connection(this.payloadFactory, socket);
+    const connection = new Connection(socket);
 
     connection.send({
       opname: 'DEVICE_TIME_SYNC_RSP',

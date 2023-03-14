@@ -7,10 +7,10 @@ import {
   ArgumentNotProvidedException,
   ArgumentInvalidException,
 } from '@agnoc/toolkit';
-import { Packet, PacketSocket, PacketSequence, OPCode } from '@agnoc/transport-tcp';
+import { Packet, PacketSocket, PacketSequence, OPCode, Payload } from '@agnoc/transport-tcp';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import type { ID } from '@agnoc/toolkit';
-import type { PayloadObjectName, PayloadObjectFrom, PayloadFactory } from '@agnoc/transport-tcp';
+import type { PayloadObjectName, PayloadObjectFrom } from '@agnoc/transport-tcp';
 import type { Debugger } from 'debug';
 
 export interface ConnectionSendProps<Name extends PayloadObjectName> {
@@ -38,7 +38,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<PayloadObjectName>
   private socket: PacketSocket;
   private debug: Debugger;
 
-  constructor(private readonly payloadFactory: PayloadFactory, socket: PacketSocket) {
+  constructor(socket: PacketSocket) {
     super();
     this.validate(socket);
     this.socket = socket;
@@ -61,7 +61,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<PayloadObjectName>
       userId: deviceId,
       deviceId: userId,
       sequence: PacketSequence.generate(),
-      payload: this.payloadFactory.create(OPCode.fromName(opname), object),
+      payload: new Payload({ opcode: OPCode.fromName(opname), object }),
     });
 
     this.debug(`sending packet ${packet.toString()}`);
@@ -77,7 +77,7 @@ export class Connection extends TypedEmitter<ConnectionEvents<PayloadObjectName>
       userId: packet.deviceId,
       deviceId: packet.userId,
       sequence: packet.sequence,
-      payload: this.payloadFactory.create(OPCode.fromName(opname), object),
+      payload: new Payload({ opcode: OPCode.fromName(opname), object }),
     });
 
     this.debug(`responding to packet with ${response.toString()}`);

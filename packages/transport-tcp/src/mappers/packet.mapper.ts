@@ -15,13 +15,13 @@ import {
 import { OPCode } from '../domain-primitives/opcode.domain-primitive';
 import { PacketSequence } from '../domain-primitives/packet-sequence.domain-primitive';
 import { Packet } from '../value-objects/packet.value-object';
+import type { PayloadMapper } from './payload.mapper';
 import type { PayloadObjectName } from '../constants/payloads.constant';
-import type { PayloadFactory } from '../factories/payload.factory';
 import type { Mapper } from '@agnoc/toolkit';
 
 /** Mapper for converting packets to and from buffers. */
 export class PacketMapper implements Mapper<Packet, Buffer> {
-  constructor(private readonly payloadFactory: PayloadFactory) {}
+  constructor(private readonly payloadMapper: PayloadMapper) {}
 
   /** Converts a buffer to a packet. */
   toDomain<Name extends PayloadObjectName>(data: Buffer): Packet<Name> {
@@ -39,7 +39,7 @@ export class PacketMapper implements Mapper<Packet, Buffer> {
     const sequence = new PacketSequence(readLong(stream));
     const opcode = OPCode.fromCode(readShort(stream));
     const buffer = size > 24 ? (stream.read(size - 24) as Buffer) : Buffer.alloc(0);
-    const payload = this.payloadFactory.create(opcode as OPCode<Name>, buffer);
+    const payload = this.payloadMapper.toDomain(buffer, opcode as OPCode<Name>);
 
     return new Packet({
       ctype,
@@ -53,7 +53,8 @@ export class PacketMapper implements Mapper<Packet, Buffer> {
 
   /** Converts a packet to a buffer. */
   fromDomain(packet: Packet): Buffer {
-    const size = 24 + Number(packet.payload?.buffer.length);
+    const payload = this.payloadMapper.fromDomain(packet.payload);
+    const size = 24 + Number(payload.length);
     const stream = new BufferWriter();
 
     writeWord(stream, size);
@@ -64,7 +65,7 @@ export class PacketMapper implements Mapper<Packet, Buffer> {
     writeLong(stream, packet.sequence.value);
     writeShort(stream, packet.payload.opcode.code);
 
-    stream.write(packet.payload.buffer);
+    stream.write(payload);
 
     return stream.buffer;
   }

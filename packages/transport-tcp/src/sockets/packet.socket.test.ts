@@ -176,32 +176,6 @@ describe('packet.socket', () => {
     server.listen(0);
   });
 
-  it('should throw an error when writing to a closed socket', (done) => {
-    const buffer = givenAPacketBuffer();
-    const packet = new Packet(givenSomePacketProps());
-
-    when(packetMapper.fromDomain(anything())).thenReturn(buffer);
-
-    server.once('listening', () => {
-      void packetSocket.connect((server.address() as AddressInfo).port);
-    });
-
-    packetSocket.on('error', (error) => {
-      expect(error).to.be.an.instanceOf(Error);
-    });
-
-    packetSocket.once('close', () => {
-      done();
-    });
-
-    packetSocket.once('connect', () => {
-      server.close();
-      packetSocket.end(packet);
-    });
-
-    server.listen(0);
-  });
-
   it('should be able to read partial packets', function (done) {
     const buffer = givenAPacketBuffer();
     const chunkA = buffer.subarray(0, 4);

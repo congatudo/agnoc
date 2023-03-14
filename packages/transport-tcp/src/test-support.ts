@@ -8,7 +8,6 @@ import type { PayloadProps } from './value-objects/payload.value-object';
 export function givenSomePayloadProps(): PayloadProps<'DEVICE_GETTIME_RSP'> {
   return {
     opcode: OPCode.fromName('DEVICE_GETTIME_RSP'),
-    buffer: Buffer.alloc(0),
     object: { result: 0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
   };
 }

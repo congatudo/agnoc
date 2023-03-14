@@ -3,7 +3,7 @@ import { OPNAMES, OPCODES } from '../constants/opcodes.constant';
 import type { OPCodeLiteral, OPNameLiteral } from '../constants/opcodes.constant';
 
 /** Describes an opcode. */
-export class OPCode<Name extends OPNameLiteral> extends DomainPrimitive<Name> {
+export class OPCode<Name extends OPNameLiteral = OPNameLiteral> extends DomainPrimitive<Name> {
   /** Returns the code of the opcode. */
   get code(): number {
     return OPCODES[this.value];

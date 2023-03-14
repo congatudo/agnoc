@@ -1,5 +1,6 @@
 import { anything, fnmock, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
+import { readStream } from '../test-support';
 import { PCapReader } from './pcap-reader.stream';
 import type { PCapReaderOptions } from './pcap-reader.stream';
 import type { Decode, LiveSessionOptions, PacketWithHeader, PcapPacket, PcapSession } from 'pcap';
@@ -21,7 +22,7 @@ describe('TCPStream', function () {
     pcapPacket = imock();
   });
 
-  it('should read stream chunks from pcap', function () {
+  it('should read stream chunks from pcap', async function () {
     const options = { createSession: instance(createSession), decode: instance(decode) };
     const chunk = instance(pcapPacket);
     let onPacket: OnPacket;
@@ -43,7 +44,7 @@ describe('TCPStream', function () {
     onPacket!(raw);
     onComplete!();
 
-    const ret = stream.read() as Buffer;
+    const [ret] = await readStream(stream);
 
     expect(ret).to.be.equal(chunk);
 

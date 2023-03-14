@@ -42,6 +42,7 @@
       "build": {
         "inputs": [
           "{workspaceRoot}/package.json",
+          "{workspaceRoot}/tsconfig.*",
           "{projectRoot}/src/**/*",
           "{projectRoot}/package.json",
           "{projectRoot}/tsconfig.*"
@@ -54,6 +55,7 @@
       "test": {
         "inputs": [
           "{workspaceRoot}/.mocharc.yml",
+          "{workspaceRoot}/nyc.config.js",
           "{projectRoot}/src/**/*"
         ],
         "outputs": [

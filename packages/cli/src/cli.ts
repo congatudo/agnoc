@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 import {
-  PayloadFactory,
   PayloadObjectParserService,
   getProtobufRoot,
   PacketMapper,
   getCustomDecoders,
+  PayloadMapper,
 } from '@agnoc/transport-tcp';
 import chalk from 'chalk';
 import cliUx from 'cli-ux';
@@ -33,11 +33,11 @@ export function main(): void {
     stderr: process.stderr,
   };
 
-  const payloadFactory = new PayloadFactory(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
-  const packetMapper = new PacketMapper(payloadFactory);
+  const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
+  const packetMapper = new PacketMapper(payloadMapper);
   const decodeCommand = new DecodeCommand(stdio, packetMapper);
   const readCommand = new ReadCommand(stdio, packetMapper);
-  const encodeCommand = new EncodeCommand(stdio, packetMapper, payloadFactory);
+  const encodeCommand = new EncodeCommand(stdio, packetMapper);
   const wlanConfigCommand = new WlanConfigCommand('192.168.5.1', 6008);
   const wlanCommand = new WlanCommand(cliUx, wifi, wlanConfigCommand);
 

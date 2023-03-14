@@ -126,7 +126,6 @@ describe('Packet', function () {
         sequence: new PacketSequence(5n),
         payload: new Payload({
           opcode: OPCode.fromName('DEVICE_GETTIME_RSP'),
-          buffer: Buffer.alloc(0),
           object: { result: 0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
         }),
       });

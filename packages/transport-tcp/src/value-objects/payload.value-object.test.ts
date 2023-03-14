@@ -11,7 +11,6 @@ describe('Payload', function () {
 
     expect(payload).to.be.instanceOf(ValueObject);
     expect(payload.opcode).to.be.equal(payloadProps.opcode);
-    expect(payload.buffer).to.be.equal(payloadProps.buffer);
     expect(payload.object).to.be.equal(payloadProps.object);
   });
 
@@ -20,14 +19,6 @@ describe('Payload', function () {
     expect(() => new Payload({ ...givenSomePayloadProps(), opcode: undefined })).to.throw(
       ArgumentNotProvidedException,
       `Property 'opcode' for Payload not provided`,
-    );
-  });
-
-  it("should throw an error when 'buffer' is not provided", function () {
-    // @ts-expect-error - missing property
-    expect(() => new Payload({ ...givenSomePayloadProps(), buffer: undefined })).to.throw(
-      ArgumentNotProvidedException,
-      `Property 'buffer' for Payload not provided`,
     );
   });
 
@@ -47,14 +38,6 @@ describe('Payload', function () {
     );
   });
 
-  it('should throw an error when "buffer" is not an instance of Buffer', function () {
-    // @ts-expect-error - invalid property
-    expect(() => new Payload({ ...givenSomePayloadProps(), buffer: 'foo' })).to.throw(
-      ArgumentInvalidException,
-      `Value 'foo' for property 'buffer' of Payload is not an instance of Buffer`,
-    );
-  });
-
   it('should throw an error when "object" is not an object', function () {
     // @ts-expect-error - invalid property
     expect(() => new Payload({ ...givenSomePayloadProps(), object: 'foo' })).to.throw(
@@ -67,7 +50,6 @@ describe('Payload', function () {
     it('should return a string representation of the Payload', function () {
       const payload = new Payload<'DEVICE_MAPID_PUSH_MAP_INFO'>({
         opcode: OPCode.fromName('DEVICE_MAPID_PUSH_MAP_INFO'),
-        buffer: Buffer.alloc(0),
         object: { mask: 0, mapGrid: Buffer.from('example') },
       });
 
@@ -82,7 +64,6 @@ describe('Payload', function () {
       const object = { mask: 0, mapGrid: Buffer.from('example') };
       const payload = new Payload<'DEVICE_MAPID_PUSH_MAP_INFO'>({
         opcode: OPCode.fromName('DEVICE_MAPID_PUSH_MAP_INFO'),
-        buffer: Buffer.alloc(0),
         object,
       });
 
