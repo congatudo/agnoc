@@ -1,10 +1,9 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { DomainPrimitive } from '../base-classes/domain-primitive.base';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import { ID } from './id.domain-primitive';
 
-describe('ID', () => {
+describe('ID', function () {
   it('should be created', function () {
     const id = new ID(123);
 
@@ -25,8 +24,8 @@ describe('ID', () => {
     expect(() => new ID(-5)).to.throw(ArgumentInvalidException, `Value '-5' for id is not a positive integer`);
   });
 
-  describe('#generate()', () => {
-    it('generates random id', () => {
+  describe('#generate()', function () {
+    it('generates random id', function () {
       const id = ID.generate();
 
       expect(id).to.be.instanceof(ID);

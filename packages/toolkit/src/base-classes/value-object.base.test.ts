@@ -1,10 +1,9 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { Validatable } from './validatable.base';
 import { ValueObject } from './value-object.base';
 
-describe('value-object.base', () => {
-  it('should be created', () => {
+describe('value-object.base', function () {
+  it('should be created', function () {
     type Props = { foo: string };
 
     class DummyValueObject extends ValueObject<Props> {
@@ -18,7 +17,7 @@ describe('value-object.base', () => {
     expect(dummyValueObject).to.be.instanceOf(Validatable);
   });
 
-  it('should have structural equality', () => {
+  it('should have structural equality', function () {
     type Props = { foo: string };
 
     class FirstValueObject extends ValueObject<Props> {
@@ -47,7 +46,7 @@ describe('value-object.base', () => {
     expect(firstValueObject.equals(thirdValueObject)).to.be.false;
   });
 
-  it('should not be equal to null', () => {
+  it('should not be equal to null', function () {
     type Props = { foo: string };
 
     class DummyValueObject extends ValueObject<Props> {
@@ -61,7 +60,7 @@ describe('value-object.base', () => {
     expect(dummyValueObject.equals(null)).to.be.false;
   });
 
-  it('should be converted to string', () => {
+  it('should be converted to string', function () {
     type Props = { foo: string };
 
     class DummyValueObject extends ValueObject<Props> {
@@ -75,7 +74,7 @@ describe('value-object.base', () => {
     expect(dummyValueObject.toString()).to.be.equal('{"foo":"bar"}');
   });
 
-  it('should be converted to object', () => {
+  it('should be converted to object', function () {
     type Props = { foo: string };
 
     class DummyValueObject extends ValueObject<Props> {
@@ -89,7 +88,7 @@ describe('value-object.base', () => {
     expect(dummyValueObject.toJSON()).to.be.deep.equal({ foo: 'bar' });
   });
 
-  it('should clone itself', () => {
+  it('should clone itself', function () {
     type Props = { foo: string; bar: string };
 
     class DummyValueObject extends ValueObject<Props> {
@@ -105,8 +104,8 @@ describe('value-object.base', () => {
     expect(cloneValueObject).to.be.instanceof(DummyValueObject);
   });
 
-  describe('#isValueObject', () => {
-    it('should check if the instance is a value object', () => {
+  describe('#isValueObject', function () {
+    it('should check if the instance is a value object', function () {
       type Props = { foo: string };
 
       class DummyValueObject extends ValueObject<Props> {

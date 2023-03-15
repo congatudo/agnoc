@@ -4,14 +4,13 @@ import { setTimeout } from 'timers/promises';
 import { DomainException } from '@agnoc/toolkit';
 import { anything, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { givenSomePacketProps } from '../test-support';
 import { Packet } from '../value-objects/packet.value-object';
 import { PacketSocket } from './packet.socket';
 import type { PacketMapper } from '../mappers/packet.mapper';
 import type { AddressInfo } from 'net';
 
-describe('packet.socket', () => {
+describe('packet.socket', function () {
   let packetMapper: PacketMapper;
   let packetSocket: PacketSocket;
   let server: Server;
@@ -229,7 +228,7 @@ describe('packet.socket', () => {
     server.listen(0);
   });
 
-  describe('#connect()', () => {
+  describe('#connect()', function () {
     it('should connect to a server by options', function (done) {
       server.once('listening', () => {
         const address = server.address() as AddressInfo;

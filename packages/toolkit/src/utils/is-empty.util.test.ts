@@ -1,6 +1,5 @@
 /* eslint-disable mocha/no-setup-in-describe */
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { isEmpty } from './is-empty.util';
 
 interface Item {
@@ -26,15 +25,15 @@ const presentList: Item[] = [
   { title: 'date', value: new Date() },
 ];
 
-describe('is-empty.util', () => {
+describe('is-empty.util', function () {
   emptyList.forEach(({ title, value }) => {
-    it(`returns true when it is empty [${title}]`, () => {
+    it(`returns true when it is empty [${title}]`, function () {
       expect(isEmpty(value), `${title} is empty`).to.be.true;
     });
   });
 
   presentList.forEach(({ title, value }) => {
-    it(`returns false when it is not empty [${title}]`, () => {
+    it(`returns false when it is not empty [${title}]`, function () {
       expect(isEmpty(value), `${title} is empty`).to.be.false;
     });
   });

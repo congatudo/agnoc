@@ -1,13 +1,12 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { ID } from '../domain-primitives/id.domain-primitive';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
 import { Entity } from './entity.base';
 import { Validatable } from './validatable.base';
 
-describe('entity.base', () => {
-  it('throws an error when does not have an id', () => {
+describe('entity.base', function () {
+  it('throws an error when does not have an id', function () {
     type EntityProps = { id: ID };
 
     class DummyEntity extends Entity<EntityProps> {
@@ -22,7 +21,7 @@ describe('entity.base', () => {
     }).to.throw(ArgumentNotProvidedException, `Property 'id' for DummyEntity not provided`);
   });
 
-  it('throws an error when has an invalid id', () => {
+  it('throws an error when has an invalid id', function () {
     type EntityProps = { id: ID };
 
     class DummyEntity extends Entity<EntityProps> {
@@ -37,7 +36,7 @@ describe('entity.base', () => {
     }).to.throw(ArgumentInvalidException, `Value '123' for property 'id' of DummyEntity is not an instance of ID`);
   });
 
-  it('has id property', () => {
+  it('has id property', function () {
     type EntityProps = { id: ID };
 
     class DummyEntity extends Entity<EntityProps> {
@@ -53,7 +52,7 @@ describe('entity.base', () => {
     expect(dummyEntity.id.equals(id)).to.be.true;
   });
 
-  it('has identity equality', () => {
+  it('has identity equality', function () {
     type EntityProps = { id: ID };
 
     class DummyEntity extends Entity<EntityProps> {
@@ -74,7 +73,7 @@ describe('entity.base', () => {
     expect(firstEntity.equals('foo'), 'a not equals a non-entity').to.be.false;
   });
 
-  it('is an entity', () => {
+  it('is an entity', function () {
     type EntityProps = { id: ID };
 
     class DummyEntity extends Entity<EntityProps> {
@@ -88,7 +87,7 @@ describe('entity.base', () => {
     expect(Entity.isEntity(dummyEntity)).to.be.true;
   });
 
-  it('returns a copy of itself', () => {
+  it('returns a copy of itself', function () {
     type EntityProps = { id: ID; foo: string };
 
     class DummyEntity extends Entity<EntityProps> {
@@ -107,7 +106,7 @@ describe('entity.base', () => {
     });
   });
 
-  it('returns a copy of its props as a frozen object', () => {
+  it('returns a copy of its props as a frozen object', function () {
     type EntityProps = { id: ID; foo: string };
 
     class DummyEntity extends Entity<EntityProps> {
@@ -124,7 +123,7 @@ describe('entity.base', () => {
     });
   });
 
-  it('returns a copy of its props as a string', () => {
+  it('returns a copy of its props as a string', function () {
     type EntityProps = { id: ID; foo: string };
 
     class DummyEntity extends Entity<EntityProps> {

@@ -1,9 +1,8 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { Exception } from './exception.base';
 
-describe('exception.base', () => {
-  it('extends from error', () => {
+describe('exception.base', function () {
+  it('extends from error', function () {
     class DummyException extends Exception {}
 
     const dummyException = new DummyException('foo');
@@ -11,7 +10,7 @@ describe('exception.base', () => {
     expect(dummyException).to.be.instanceof(Error);
   });
 
-  it('has metadata', () => {
+  it('has metadata', function () {
     class DummyException extends Exception {}
 
     const dummyException = new DummyException('foo', { foo: 'bar' });
@@ -19,7 +18,7 @@ describe('exception.base', () => {
     expect(dummyException.metadata).to.be.deep.equal({ foo: 'bar' });
   });
 
-  it('can be converted to object', () => {
+  it('can be converted to object', function () {
     class DummyException extends Exception {}
 
     const dummyException = new DummyException('foo');
@@ -31,7 +30,7 @@ describe('exception.base', () => {
     });
   });
 
-  it('can be converted to object with metadata', () => {
+  it('can be converted to object with metadata', function () {
     class DummyException extends Exception {}
 
     const dummyException = new DummyException('foo', { foo: 'bar' });
@@ -46,7 +45,7 @@ describe('exception.base', () => {
     });
   });
 
-  it('can be converted to object with an exception as cause', () => {
+  it('can be converted to object with an exception as cause', function () {
     class DummyException extends Exception {}
 
     const causeDummyException = new DummyException('bar', { bar: 'baz' });
@@ -66,7 +65,7 @@ describe('exception.base', () => {
     });
   });
 
-  it('can be converted to object with an error as cause', () => {
+  it('can be converted to object with an error as cause', function () {
     class DummyException extends Exception {}
 
     const causeError = new Error('bar');
@@ -85,7 +84,7 @@ describe('exception.base', () => {
     });
   });
 
-  it('can be converted to object with not an error as cause', () => {
+  it('can be converted to object with not an error as cause', function () {
     class DummyException extends Exception {}
 
     const causeNotAnError = 'not an error';
@@ -100,7 +99,7 @@ describe('exception.base', () => {
     });
   });
 
-  it('can be converted to object with a nested error as cause', () => {
+  it('can be converted to object with a nested error as cause', function () {
     class DummyException extends Exception {}
 
     const causeNestedError = new Error('nested');

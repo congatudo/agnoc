@@ -1,9 +1,8 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { flipObject } from './flip-object.util';
 
-describe('flip-object.util', () => {
-  it('flips object keys', () => {
+describe('flip-object.util', function () {
+  it('flips object keys', function () {
     const obj = {
       foo: 'bar',
       1: 2,

@@ -96,10 +96,7 @@
     "@johanblumenberg/ts-mockito": "^1.0.35",
     "chai": "^4.3.7",
     "execa": "^5.1.1",
-    "mocha": "^10.2.0",
-    "mock-fs": "^5.2.0",
-    "sinon": "^15.0.1",
-    "sinon-chai": "^3.7.0"
+    "mock-fs": "^5.2.0"
   },
   "engines": {
     "node": ">=18.12"
