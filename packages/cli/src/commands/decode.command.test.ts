@@ -1,10 +1,10 @@
 import { PassThrough } from 'stream';
+import { readStream } from '@agnoc/test-support';
 import { Packet } from '@agnoc/transport-tcp';
 import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { imock, when, anything, verify, instance, deepEqual } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import mockFS, { restore } from 'mock-fs';
-import { readStream } from '../test-support';
 import { DecodeCommand } from './decode.command';
 import type { Stdio } from '../interfaces/stdio';
 import type { PacketMapper } from '@agnoc/transport-tcp';

@@ -1,10 +1,10 @@
 import path from 'path';
 import { PassThrough } from 'stream';
+import { readStream } from '@agnoc/test-support';
 import { Packet } from '@agnoc/transport-tcp';
 import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { anything, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { readStream } from '../test-support';
 import { ReadCommand } from './read.command';
 import type { Stdio } from '../interfaces/stdio';
 import type { PacketMapper } from '@agnoc/transport-tcp';

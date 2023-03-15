@@ -1,5 +1,5 @@
+import { readStream } from '@agnoc/test-support';
 import { expect } from 'chai';
-import { readStream } from '../test-support';
 import { StringTransform } from './string-transform.stream';
 
 describe('StringTransform', function () {

@@ -1,5 +1,5 @@
+import { readStream } from '@agnoc/test-support';
 import { expect } from 'chai';
-import { readStream } from '../test-support';
 import { ArrayTransform } from './array-transform.stream';
 
 describe('ArrayTransform', function () {

@@ -1,9 +1,9 @@
+import { readStream } from '@agnoc/test-support';
 import { DomainException } from '@agnoc/toolkit';
 import { Packet } from '@agnoc/transport-tcp';
 import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { verify, anything, imock, instance, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { readStream } from '../test-support';
 import { PacketDecodeTransform } from './packet-decode-transform.stream';
 import type { PacketMapper } from '@agnoc/transport-tcp';
 

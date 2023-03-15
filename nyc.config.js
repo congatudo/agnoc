@@ -3,5 +3,5 @@ module.exports = {
   all: true,
   reporter: ['html', 'lcov', 'json', 'json-summary', 'text-summary'],
   'report-dir': 'coverage',
-  exclude: ['**/*.test.ts', '**/test-support/**/*', '**/test-support.ts', '**/coverage/**', '**/lib/**', '**/types/**'],
+  exclude: ['**/*.test.ts', '**/coverage/**', '**/lib/**', '**/types/**'],
 };

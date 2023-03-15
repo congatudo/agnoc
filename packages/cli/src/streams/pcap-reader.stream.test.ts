@@ -1,6 +1,6 @@
+import { readStream } from '@agnoc/test-support';
 import { anything, fnmock, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { readStream } from '../test-support';
 import { PCapReader } from './pcap-reader.stream';
 import type { PCapReaderOptions } from './pcap-reader.stream';
 import type { Decode, LiveSessionOptions, PacketWithHeader, PcapPacket, PcapSession } from 'pcap';
