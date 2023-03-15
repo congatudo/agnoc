@@ -1,9 +1,9 @@
 import { Socket } from 'net';
 import { imock, instance } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { PacketSocket } from '../sockets/packet.socket';
-import { PacketServer } from './packet-server.emitter';
-import type { PacketMapper } from '../mappers/packet.mapper';
+import { PacketServer } from './packet.server';
+import { PacketSocket } from './packet.socket';
+import type { PacketMapper } from './mappers/packet.mapper';
 
 describe('PacketServer', function () {
   let packetServer: PacketServer;

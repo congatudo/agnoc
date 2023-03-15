@@ -4,10 +4,10 @@ import { setTimeout } from 'timers/promises';
 import { DomainException } from '@agnoc/toolkit';
 import { anything, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { givenSomePacketProps } from '../test-support';
-import { Packet } from '../value-objects/packet.value-object';
 import { PacketSocket } from './packet.socket';
-import type { PacketMapper } from '../mappers/packet.mapper';
+import { givenSomePacketProps } from './test-support';
+import { Packet } from './value-objects/packet.value-object';
+import type { PacketMapper } from './mappers/packet.mapper';
 import type { AddressInfo } from 'net';
 
 describe('packet.socket', function () {

@@ -1,14 +1,20 @@
 import { Server } from 'net';
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { PacketSocket } from '../sockets/packet.socket';
-import type { PacketMapper } from '../mappers/packet.mapper';
+import { PacketSocket } from './packet.socket';
+import type { PacketMapper } from './mappers/packet.mapper';
 import type { AddressInfo, ListenOptions, Socket, DropArgument } from 'net';
 
+/** Events emitted by the {@link PacketServer}. */
 export interface PacketServerEvents {
+  /** Emits a {@link PacketSocket} when a new connection is established. */
   connection: (socket: PacketSocket) => void;
+  /** Emits an error when an error occurs. */
   error: (err: Error) => void;
+  /** Emits when the server has been bound after calling `server.listen`. */
   listening: () => void;
+  /** Emits when the server closes. */
   close: () => void;
+  /** Emits when a packet is dropped due to a full socket buffer. */
   drop: (data?: DropArgument) => void;
 }
 

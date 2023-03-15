@@ -1,13 +1,13 @@
 import { Socket } from 'net';
 import { Duplex } from 'stream';
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketMapper } from '../mappers/packet.mapper';
-import type { Packet } from '../value-objects/packet.value-object';
+import type { PacketMapper } from './mappers/packet.mapper';
+import type { Packet } from './value-objects/packet.value-object';
 import type { SocketConnectOpts } from 'net';
 
-export type Callback = (error?: Error | null) => void;
-
+/** Events emitted by the {@link PacketSocket}. */
 export interface PacketSocketEvents {
+  /** Emits a {@link Packet} when `data` is received. */
   data: (packet: Packet) => void;
   connect: () => void;
   close: (hasError: boolean) => void;
@@ -18,16 +18,6 @@ export interface PacketSocketEvents {
   ready: () => void;
   timeout: () => void;
   readable: () => void;
-}
-
-export declare interface PacketSocket extends Duplex {
-  emit<U extends keyof PacketSocketEvents>(event: U, ...args: Parameters<PacketSocketEvents[U]>): boolean;
-  on<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
-  once<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
-  write(packet: Packet, encoding?: BufferEncoding, cb?: (error: Error | null | undefined) => void): boolean;
-  write(packet: Packet, cb?: (error: Error | null | undefined) => void): boolean;
-  end(cb?: () => void): this;
-  end(packet: Packet, cb?: () => void): this;
 }
 
 /** Socket that parses and serializes packets sent through a socket. */
@@ -43,6 +33,7 @@ export class PacketSocket extends Duplex {
     }
   }
 
+  /** Connects to a socket. */
   connect(port: number): Promise<void>;
   connect(port: number, host: string): Promise<void>;
   connect(path: string): Promise<void>;
@@ -70,22 +61,27 @@ export class PacketSocket extends Duplex {
     });
   }
 
+  /** Returns the local address of the socket. */
   get localAddress(): string | undefined {
     return this.socket?.localAddress;
   }
 
+  /** Returns the local port of the socket. */
   get localPort(): number | undefined {
     return this.socket?.localPort;
   }
 
+  /** Returns the remote address of the socket. */
   get remoteAddress(): string | undefined {
     return this.socket?.remoteAddress;
   }
 
+  /** Returns the remote port of the socket. */
   get remotePort(): number | undefined {
     return this.socket?.remotePort;
   }
 
+  /** Returns whether the socket is connecting. */
   get connecting(): boolean {
     return Boolean(this.socket?.connecting);
   }
@@ -174,4 +170,16 @@ export class PacketSocket extends Duplex {
 
     this.socket.end(done);
   }
+}
+
+export type Callback = (error?: Error | null) => void;
+
+export declare interface PacketSocket extends Duplex {
+  emit<U extends keyof PacketSocketEvents>(event: U, ...args: Parameters<PacketSocketEvents[U]>): boolean;
+  on<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
+  once<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
+  write(packet: Packet, encoding?: BufferEncoding, cb?: (error: Error | null | undefined) => void): boolean;
+  write(packet: Packet, cb?: (error: Error | null | undefined) => void): boolean;
+  end(cb?: () => void): this;
+  end(packet: Packet, cb?: () => void): this;
 }
