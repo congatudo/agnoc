@@ -2,9 +2,10 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "declaration": true,
-    "emitDeclarationOnly": true,
     "noEmit": false,
-    "composite": true
+    "composite": true,
+    "incremental": true,
+    "types": ["node"]
   },
   "files": []
 }

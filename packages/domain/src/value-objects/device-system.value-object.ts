@@ -1,12 +1,37 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 import type { ValueOf } from '@agnoc/toolkit';
 
+/** Describes the device system properties. */
 export interface DeviceSystemProps {
-  deviceSerialNumber: string;
-  deviceMac: string;
-  deviceType: number;
-  customerFirmwareId: number;
-  ctrlVersion: string;
+  type: number;
+}
+
+/** Describes the device system. */
+export class DeviceSystem extends ValueObject<DeviceSystemProps> {
+  /** Returns the device type. */
+  get type(): number {
+    return this.props.type;
+  }
+
+  /** Returns the device model. */
+  get model(): DeviceModel {
+    return DeviceType[this.props.type as DeviceType] || DeviceModel.UNKNOWN;
+  }
+
+  /** Returns the device capabilities. */
+  get capabilities(): number {
+    return DeviceModelCapability[this.model];
+  }
+
+  /** Returns true whether the device supports the given capability. */
+  supports(capability: DeviceCapability): boolean {
+    return Boolean(this.capabilities & capability);
+  }
+
+  protected validate(props: DeviceSystemProps): void {
+    this.validateDefinedProp(props, 'type');
+    this.validateNumberProp(props, 'type');
+  }
 }
 
 export enum DeviceModel {
@@ -35,27 +60,3 @@ export const DeviceModelCapability = {
   [DeviceModel.C3490]: DeviceCapability.MAP_PLANS | DeviceCapability.WATER_SENSOR | DeviceCapability.CONSUMABLES,
   [DeviceModel.UNKNOWN]: DeviceCapability.MAP_PLANS | DeviceCapability.WATER_SENSOR | DeviceCapability.CONSUMABLES,
 } as const;
-
-export class DeviceSystem extends ValueObject<DeviceSystemProps> {
-  get model(): DeviceModel {
-    return DeviceType[this.props.deviceType as DeviceType] || DeviceModel.UNKNOWN;
-  }
-
-  get capabilities(): number {
-    return DeviceModelCapability[this.model];
-  }
-
-  supports(capability: DeviceCapability): boolean {
-    return Boolean(this.capabilities & capability);
-  }
-
-  protected validate(props: DeviceSystemProps): void {
-    if (
-      ![props.deviceSerialNumber, props.deviceMac, props.deviceType, props.customerFirmwareId, props.ctrlVersion].every(
-        isPresent,
-      )
-    ) {
-      throw new ArgumentNotProvidedException('Missing property in device system constructor');
-    }
-  }
-}

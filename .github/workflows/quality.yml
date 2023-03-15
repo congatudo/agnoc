@@ -43,7 +43,6 @@ jobs:
           path: |
             node_modules/.cache/nx
             packages/*/lib
-            packages/transport-tcp/schemas
           key: cache-build-${{ github.sha }}
       - name: Build packages
         run: yarn build
@@ -73,5 +72,5 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./packages/cli/coverage/lcov.info,./packages/transport-tcp/coverage/lcov.info,./packages/domain/coverage/lcov.info,./packages/toolkit/coverage/lcov.info
+          files: ./coverage/lcov.info
           fail_ci_if_error: true

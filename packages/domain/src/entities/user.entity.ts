@@ -1,8 +1,12 @@
 import { Entity } from '@agnoc/toolkit';
-import type { ID } from '@agnoc/toolkit';
+import type { EntityProps } from '@agnoc/toolkit';
 
-export type UserProps = {
-  id: ID;
-};
+/** Describes the user properties. */
+export type UserProps = EntityProps;
 
-export class User extends Entity<UserProps> {}
+/** Describes a user. */
+export class User extends Entity<UserProps> {
+  protected validate(_: EntityProps): void {
+    // noop
+  }
+}

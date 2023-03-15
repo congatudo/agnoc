@@ -1,13 +1,21 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "baseUrl": ".",
+    "declaration": false,
+    "emitDecoratorMetadata": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
     "isolatedModules": true,
+    "lib": ["ES2022"],
+    "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": true,
+    "noEmitHelpers": true,
     "noErrorTruncation": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -15,11 +23,17 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "resolveJsonModule": false,
+    "sourceMap": true,
     "strict": true,
+    "stripInternal": true,
+    "target": "ES2022",
     "paths": {
+      "@agnoc/schemas-tcp/json": ["packages/schemas-tcp/lib/index.json"],
+      "@agnoc/schemas-tcp": ["packages/schemas-tcp/lib"],
+      "@agnoc/*/test-support": ["packages/*/src/test-support"],
       "@agnoc/*": ["packages/*/src"]
     }
   },
-  "exclude": ["node_modules", "packages/*/lib"],
-  "typeRoots": ["node_modules/@types", "packages/*/src/types"]
+  "exclude": ["node_modules", "packages/*/lib"]
 }

@@ -5,6 +5,7 @@
     "outDir": "lib",
     "tsBuildInfoFile": ".build-cache/tsconfig.build.tsbuildinfo"
   },
-  "include": ["src", "schemas"],
-  "references": [{ "path": "../toolkit/tsconfig.build.json" }, { "path": "../domain/tsconfig.build.json" }]
+  "include": ["src"],
+  "exclude": ["**/*.test.ts"],
+  "references": [{ "path": "../toolkit/tsconfig.build.json" }]
 }

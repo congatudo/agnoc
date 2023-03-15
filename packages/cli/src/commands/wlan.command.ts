@@ -1,60 +1,80 @@
-import cli from 'cli-ux';
-import wifi from 'node-wifi';
-import { wlanConfig } from './wlan-config.command';
-import type { Network } from 'node-wifi';
+import { setTimeout } from 'timers/promises';
+import type { WlanConfigCommand } from './wlan-config.command';
+import type { Command } from '../interfaces/command';
+import type { Network, ConnectOptions, InitOptions } from 'node-wifi';
 
-interface WlanOptions {
+interface WlanCommandOptions {
   timeout: number;
   iface: string | null;
 }
 
-function timeout(time: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, time));
+export class WlanCommand implements Command {
+  constructor(
+    private readonly cliUx: CliUx,
+    private readonly wifi: Wifi,
+    private readonly wlanConfigCommand: WlanConfigCommand,
+  ) {}
+
+  async action(ssid: string, pass: string, options: WlanCommandOptions): Promise<void> {
+    await this.wifi.init({ iface: options.iface });
+    await this.cliUx.anykey('Put your robot in AP mode and press any key to continue');
+
+    this.cliUx.action.start('Checking current connection');
+    const currentNetworks = await this.wifi.getCurrentConnections();
+    this.cliUx.action.stop();
+
+    let ap = currentNetworks.find(isCongaAP);
+
+    if (!ap) {
+      this.cliUx.action.start('Looking for robot AP');
+
+      do {
+        const networks = await this.wifi.scan();
+
+        ap = networks.find(isCongaAP);
+
+        /* istanbul ignore if */
+        if (!ap) {
+          await setTimeout(1000);
+        }
+      } while (!ap);
+
+      this.cliUx.action.stop();
+
+      this.cliUx.action.start('Connecting to robot AP');
+      await this.wifi.connect({ ssid: ap.ssid });
+      this.cliUx.action.stop();
+
+      this.cliUx.action.start('Checking current connection');
+      const currentNetworks = await this.wifi.getCurrentConnections();
+      this.cliUx.action.stop();
+
+      if (!currentNetworks.find(isCongaAP)) {
+        throw new Error('Unable to connect to robot AP');
+      }
+    }
+
+    this.cliUx.action.start('Configuring wifi settings in the robot');
+    await this.wlanConfigCommand.action(ssid, pass, { timeout: options.timeout });
+    this.cliUx.action.stop();
+  }
 }
 
 function isCongaAP(network: Network): boolean {
   return Boolean(/CongaLaser/.exec(network.ssid));
 }
 
-export async function wlan(ssid: string, pass: string, options: WlanOptions): Promise<void> {
-  await wifi.init({ iface: options.iface });
-  await cli.anykey('Put your robot in AP mode and press any key to continue');
+export interface CliUx {
+  anykey(message: string): Promise<void>;
+  action: {
+    start(message: string): void;
+    stop(): void;
+  };
+}
 
-  cli.action.start('Checking current connection');
-  const currentNetworks = await wifi.getCurrentConnections();
-  cli.action.stop();
-
-  let ap = currentNetworks.find(isCongaAP);
-
-  if (!ap) {
-    cli.action.start('Looking for robot AP');
-
-    do {
-      const networks = await wifi.scan();
-
-      ap = networks.find(isCongaAP);
-
-      if (!ap) {
-        await timeout(1000);
-      }
-    } while (!ap);
-
-    cli.action.stop();
-
-    cli.action.start('Connecting to robot AP');
-    await wifi.connect({ ssid: ap.ssid });
-    cli.action.stop();
-
-    cli.action.start('Checking current connection');
-    const currentNetworks = await wifi.getCurrentConnections();
-    cli.action.stop();
-
-    if (!currentNetworks.find(isCongaAP)) {
-      throw new Error('Unable to connect to robot AP');
-    }
-  }
-
-  cli.action.start('Configuring wifi settings in the robot');
-  await wlanConfig(ssid, pass, { timeout: Number(options.timeout) });
-  cli.action.stop();
+export interface Wifi {
+  init(options: InitOptions): Promise<void>;
+  getCurrentConnections(): Promise<Network[]>;
+  scan(): Promise<Network[]>;
+  connect(options: ConnectOptions): Promise<void>;
 }

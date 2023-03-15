@@ -1,117 +1,139 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { ID } from '../domain-primitives/id.domain-primitive';
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
-import { ID } from '../value-objects/id.value-object';
 import { Entity } from './entity.base';
+import { Validatable } from './validatable.base';
 
-describe('entity.base', () => {
-  it('throws an error when does not have props', () => {
+describe('entity.base', function () {
+  it('throws an error when does not have an id', function () {
     type EntityProps = { id: ID };
 
-    class A extends Entity<EntityProps> {}
-
-    expect(() => {
-      // @ts-expect-error expected argument
-      new A();
-    }).to.throw(ArgumentInvalidException);
-  });
-
-  it('throws an error when does not have an id', () => {
-    type EntityProps = { id: ID };
-
-    class A extends Entity<EntityProps> {}
+    class DummyEntity extends Entity<EntityProps> {
+      protected validate(_: EntityProps): void {
+        // noop
+      }
+    }
 
     expect(() => {
       // @ts-expect-error argument invalid
-      new A({ foo: 'bar' });
-    }).to.throw(ArgumentNotProvidedException);
+      new DummyEntity({ foo: 'bar' });
+    }).to.throw(ArgumentNotProvidedException, `Property 'id' for DummyEntity not provided`);
   });
 
-  it('throws an error when has an invalid id', () => {
+  it('throws an error when has an invalid id', function () {
     type EntityProps = { id: ID };
 
-    class A extends Entity<EntityProps> {}
+    class DummyEntity extends Entity<EntityProps> {
+      protected validate(_: EntityProps): void {
+        // noop
+      }
+    }
 
     expect(() => {
       // @ts-expect-error argument invalid
-      new A({ id: 123 });
-    }).to.throw(ArgumentInvalidException);
+      new DummyEntity({ id: 123 });
+    }).to.throw(ArgumentInvalidException, `Value '123' for property 'id' of DummyEntity is not an instance of ID`);
   });
 
-  it('has id property', () => {
+  it('has id property', function () {
     type EntityProps = { id: ID };
 
-    class A extends Entity<EntityProps> {}
+    class DummyEntity extends Entity<EntityProps> {
+      protected validate(_: EntityProps): void {
+        // noop
+      }
+    }
 
     const id = ID.generate();
-    const a = new A({ id });
+    const dummyEntity = new DummyEntity({ id });
 
-    expect(a.id.equals(id)).to.be.true;
+    expect(dummyEntity).to.be.instanceOf(Validatable);
+    expect(dummyEntity.id.equals(id)).to.be.true;
   });
 
-  it('has identity equality', () => {
+  it('has identity equality', function () {
     type EntityProps = { id: ID };
 
-    class A extends Entity<EntityProps> {}
+    class DummyEntity extends Entity<EntityProps> {
+      protected validate(_: EntityProps): void {
+        // noop
+      }
+    }
 
-    const a = new A({ id: new ID(1) });
-    const b = new A({ id: new ID(1) });
-    const c = new A({ id: new ID(2) });
+    const firstEntity = new DummyEntity({ id: new ID(1) });
+    const secondEntity = new DummyEntity({ id: new ID(1) });
+    const thirdEntity = new DummyEntity({ id: new ID(2) });
 
-    expect(a.equals(a), 'a equals a').to.be.true;
-    expect(a.equals(b), 'a equals b').to.be.true;
-    expect(a.equals(c), 'a not equals c').to.be.false;
-    expect(a.equals(), 'a not equals null').to.be.false;
+    expect(firstEntity.equals(firstEntity), 'a equals a').to.be.true;
+    expect(firstEntity.equals(secondEntity), 'a equals b').to.be.true;
+    expect(firstEntity.equals(thirdEntity), 'a not equals c').to.be.false;
+    expect(firstEntity.equals(), 'a not equals null').to.be.false;
     // @ts-expect-error argument not assignable
-    expect(a.equals('foo'), 'a not equals a non-entity').to.be.false;
+    expect(firstEntity.equals('foo'), 'a not equals a non-entity').to.be.false;
   });
 
-  it('is an entity', () => {
+  it('is an entity', function () {
     type EntityProps = { id: ID };
 
-    class A extends Entity<EntityProps> {}
+    class DummyEntity extends Entity<EntityProps> {
+      protected validate(_: EntityProps): void {
+        // noop
+      }
+    }
 
-    const a = new A({ id: ID.generate() });
+    const dummyEntity = new DummyEntity({ id: ID.generate() });
 
-    expect(Entity.isEntity(a)).to.be.true;
+    expect(Entity.isEntity(dummyEntity)).to.be.true;
   });
 
-  it('returns a copy of itself', () => {
+  it('returns a copy of itself', function () {
     type EntityProps = { id: ID; foo: string };
 
-    class A extends Entity<EntityProps> {}
+    class DummyEntity extends Entity<EntityProps> {
+      protected validate(_: EntityProps): void {
+        // noop
+      }
+    }
 
-    const a = new A({ id: new ID(1), foo: 'bar' });
-    const b = a.clone({ foo: 'foo' });
+    const dummyEntity = new DummyEntity({ id: new ID(1), foo: 'bar' });
+    const cloneEntity = dummyEntity.clone({ foo: 'foo' });
 
-    expect(b).to.be.instanceof(A);
-    expect(b.toJSON()).to.be.deep.equal({
+    expect(cloneEntity).to.be.instanceof(DummyEntity);
+    expect(cloneEntity.toJSON()).to.be.deep.equal({
       id: 1,
       foo: 'foo',
     });
   });
 
-  it('returns a copy of its props as a frozen object', () => {
+  it('returns a copy of its props as a frozen object', function () {
     type EntityProps = { id: ID; foo: string };
 
-    class A extends Entity<EntityProps> {}
+    class DummyEntity extends Entity<EntityProps> {
+      protected validate(_: EntityProps): void {
+        // noop
+      }
+    }
 
-    const a = new A({ id: new ID(1), foo: 'bar' });
+    const dummyEntity = new DummyEntity({ id: new ID(1), foo: 'bar' });
 
-    expect(a.toJSON()).to.be.deep.equal({
+    expect(dummyEntity.toJSON()).to.be.deep.equal({
       id: 1,
       foo: 'bar',
     });
   });
 
-  it('returns a copy of its props as a string', () => {
+  it('returns a copy of its props as a string', function () {
     type EntityProps = { id: ID; foo: string };
 
-    class A extends Entity<EntityProps> {}
+    class DummyEntity extends Entity<EntityProps> {
+      protected validate(_: EntityProps): void {
+        // noop
+      }
+    }
 
-    const a = new A({ id: new ID(1), foo: 'bar' });
+    const dummyEntity = new DummyEntity({ id: new ID(1), foo: 'bar' });
 
-    expect(a.toString()).to.be.deep.equal('{"id":1,"foo":"bar"}');
+    expect(dummyEntity.toString()).to.be.deep.equal('{"id":1,"foo":"bar"}');
   });
 });

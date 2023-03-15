@@ -7,7 +7,7 @@ import {
   readCleanRoomList,
   readCleanPlanList,
 } from './map.decoder';
-import type { CleanPlan, CleanPlanInfo, CleanRoom, MapHeadInfo, MapPlanInfo } from '../interfaces/map.interface';
+import type { CleanPlan, CleanPlanInfo, CleanRoom, MapHeadInfo, MapPlanInfo } from './map.interface';
 
 interface Unk1 {
   unk1: number;

@@ -1,4 +1,4 @@
-import { ValueObject, isPresent, ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 import { DeviceSetting } from './device-setting.value-object';
 import { QuietHoursSetting } from './quiet-hours-setting.value-object';
 import { VoiceSetting } from './voice-setting.value-object';
@@ -59,7 +59,7 @@ export class DeviceSettings extends ValueObject<DeviceSettingsProps> {
   }
 
   protected validate(props: DeviceSettingsProps): void {
-    const keys = [
+    const keys: (keyof DeviceSettingsProps)[] = [
       'voice',
       'quietHours',
       'ecoMode',
@@ -67,56 +67,18 @@ export class DeviceSettings extends ValueObject<DeviceSettingsProps> {
       'brokenClean',
       'carpetMode',
       'historyMap',
-    ] as (keyof DeviceSettingsProps)[];
+    ];
 
     keys.forEach((prop) => {
-      if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for device settings not provided`);
-      }
+      this.validateDefinedProp(props, prop);
     });
 
-    if (!(props.voice instanceof VoiceSetting)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.voice as string}' for property 'voice' for device settings is not a voice setting`,
-      );
-    }
-
-    if (!(props.quietHours instanceof QuietHoursSetting)) {
-      throw new ArgumentInvalidException(
-        `Value '${
-          props.quietHours as string
-        }' for property 'quietHours' for device settings is not a quiet hours setting`,
-      );
-    }
-
-    if (!(props.ecoMode instanceof DeviceSetting)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.ecoMode as string}' for property 'ecoMode' for device settings is not a device setting`,
-      );
-    }
-
-    if (!(props.repeatClean instanceof DeviceSetting)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.repeatClean as string}' for property 'repeatClean' for device settings is not a device setting`,
-      );
-    }
-
-    if (!(props.brokenClean instanceof DeviceSetting)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.brokenClean as string}' for property 'brokenClean' for device settings is not a device setting`,
-      );
-    }
-
-    if (!(props.carpetMode instanceof DeviceSetting)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.carpetMode as string}' for property 'carpetMode' for device settings is not a device setting`,
-      );
-    }
-
-    if (!(props.historyMap instanceof DeviceSetting)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.historyMap as string}' for property 'historyMap' for device settings is not a device setting`,
-      );
-    }
+    this.validateInstanceProp(props, 'voice', VoiceSetting);
+    this.validateInstanceProp(props, 'quietHours', QuietHoursSetting);
+    this.validateInstanceProp(props, 'ecoMode', DeviceSetting);
+    this.validateInstanceProp(props, 'repeatClean', DeviceSetting);
+    this.validateInstanceProp(props, 'brokenClean', DeviceSetting);
+    this.validateInstanceProp(props, 'carpetMode', DeviceSetting);
+    this.validateInstanceProp(props, 'historyMap', DeviceSetting);
   }
 }

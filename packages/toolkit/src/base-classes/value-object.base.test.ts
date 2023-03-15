@@ -1,205 +1,122 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
-import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
+import { Validatable } from './validatable.base';
 import { ValueObject } from './value-object.base';
-import type { DomainPrimitive } from './value-object.base';
 
-describe('value-object.base', () => {
-  it('throws an error when has no props', () => {
-    class A extends ValueObject<void> {
+describe('value-object.base', function () {
+  it('should be created', function () {
+    type Props = { foo: string };
+
+    class DummyValueObject extends ValueObject<Props> {
       protected validate(): void {
         return;
       }
     }
 
-    expect(() => new A()).to.throws(ArgumentNotProvidedException);
+    const dummyValueObject = new DummyValueObject({ foo: 'bar' });
+
+    expect(dummyValueObject).to.be.instanceOf(Validatable);
   });
 
-  it('validates instances', () => {
-    class A extends ValueObject<string> {
+  it('should have structural equality', function () {
+    type Props = { foo: string };
+
+    class FirstValueObject extends ValueObject<Props> {
       protected validate(): void {
         return;
       }
     }
 
-    const a = new A({ value: 'foo' });
+    class SecondValueObject extends ValueObject<Props> {
+      protected validate(): void {
+        return;
+      }
+    }
 
-    expect(ValueObject.isValueObject(a)).to.be.true;
+    class ThirdValueObject extends ValueObject<Props & { bar: string }> {
+      protected validate(): void {
+        return;
+      }
+    }
+
+    const firstValueObject = new FirstValueObject({ foo: 'bar' });
+    const secondValueObject = new SecondValueObject({ foo: 'bar' });
+    const thirdValueObject = new ThirdValueObject({ foo: 'bar', bar: 'baz' });
+
+    expect(firstValueObject.equals(secondValueObject)).to.be.true;
+    expect(firstValueObject.equals(thirdValueObject)).to.be.false;
   });
 
-  describe('as primitive', () => {
-    it('validates its own props', (done) => {
-      class A extends ValueObject<string> {
-        protected validate(props: DomainPrimitive<string>): void {
-          expect(props).to.contain({ value: 'foo' });
-          done();
-        }
+  it('should not be equal to null', function () {
+    type Props = { foo: string };
+
+    class DummyValueObject extends ValueObject<Props> {
+      protected validate(): void {
+        return;
       }
+    }
 
-      new A({ value: 'foo' });
-    });
+    const dummyValueObject = new DummyValueObject({ foo: 'bar' });
 
-    it('has structural equality', () => {
-      class A extends ValueObject<string> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      class B extends ValueObject<string> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      const a = new A({ value: 'foo' });
-      const b = new B({ value: 'foo' });
-
-      expect(a.equals(b)).to.be.true;
-    });
-
-    it('is not equal to null', () => {
-      class A extends ValueObject<string> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      const a = new A({ value: 'foo' });
-
-      expect(a.equals(null)).to.be.false;
-    });
-
-    it('can be converted to string', () => {
-      class A extends ValueObject<string> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      const a = new A({ value: 'foo' });
-
-      expect(a.toString()).to.be.equal('foo');
-    });
-
-    it('can be converted to object', () => {
-      class A extends ValueObject<string> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      const a = new A({ value: 'foo' });
-
-      expect(a.toJSON()).to.be.deep.equal('foo');
-    });
-
-    it('clones itself', () => {
-      class A extends ValueObject<string> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      const a = new A({ value: 'foo' });
-      const b = a.clone({ value: 'bar' });
-
-      expect(b.toJSON()).to.be.deep.equal('bar');
-      expect(b).to.be.instanceof(A);
-    });
+    expect(dummyValueObject.equals(null)).to.be.false;
   });
 
-  describe('as object', () => {
-    it('validates its own props', (done) => {
+  it('should be converted to string', function () {
+    type Props = { foo: string };
+
+    class DummyValueObject extends ValueObject<Props> {
+      protected validate(): void {
+        return;
+      }
+    }
+
+    const dummyValueObject = new DummyValueObject({ foo: 'bar' });
+
+    expect(dummyValueObject.toString()).to.be.equal('{"foo":"bar"}');
+  });
+
+  it('should be converted to object', function () {
+    type Props = { foo: string };
+
+    class DummyValueObject extends ValueObject<Props> {
+      protected validate(): void {
+        return;
+      }
+    }
+
+    const dummyValueObject = new DummyValueObject({ foo: 'bar' });
+
+    expect(dummyValueObject.toJSON()).to.be.deep.equal({ foo: 'bar' });
+  });
+
+  it('should clone itself', function () {
+    type Props = { foo: string; bar: string };
+
+    class DummyValueObject extends ValueObject<Props> {
+      protected validate(): void {
+        return;
+      }
+    }
+
+    const dummyValueObject = new DummyValueObject({ foo: 'foo', bar: 'bar' });
+    const cloneValueObject = dummyValueObject.clone({ foo: 'bar' });
+
+    expect(cloneValueObject.toJSON()).to.be.deep.equal({ foo: 'bar', bar: 'bar' });
+    expect(cloneValueObject).to.be.instanceof(DummyValueObject);
+  });
+
+  describe('#isValueObject', function () {
+    it('should check if the instance is a value object', function () {
       type Props = { foo: string };
 
-      class A extends ValueObject<Props> {
-        protected validate(props: Props): void {
-          expect(props).to.contain({ foo: 'bar' });
-          done();
-        }
-      }
-
-      new A({ foo: 'bar' });
-    });
-
-    it('has structural equality', () => {
-      type Props = { foo: string };
-
-      class A extends ValueObject<Props> {
+      class DummyValueObject extends ValueObject<Props> {
         protected validate(): void {
           return;
         }
       }
 
-      class B extends ValueObject<Props> {
-        protected validate(): void {
-          return;
-        }
-      }
+      const dummyValueObject = new DummyValueObject({ foo: 'bar' });
 
-      const a = new A({ foo: 'bar' });
-      const b = new B({ foo: 'bar' });
-
-      expect(a.equals(b)).to.be.true;
-    });
-
-    it('is not equal to null', () => {
-      type Props = { foo: string };
-
-      class A extends ValueObject<Props> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      const a = new A({ foo: 'bar' });
-
-      expect(a.equals(null)).to.be.false;
-    });
-
-    it('can be converted to string', () => {
-      type Props = { foo: string };
-
-      class A extends ValueObject<Props> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      const a = new A({ foo: 'bar' });
-
-      expect(a.toString()).to.be.equal('{"foo":"bar"}');
-    });
-
-    it('can be converted to object', () => {
-      type Props = { foo: string };
-
-      class A extends ValueObject<Props> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      const a = new A({ foo: 'bar' });
-
-      expect(a.toJSON()).to.be.deep.equal({ foo: 'bar' });
-    });
-
-    it('clones itself', () => {
-      type Props = { foo: string; bar: string };
-
-      class A extends ValueObject<Props> {
-        protected validate(): void {
-          return;
-        }
-      }
-
-      const a = new A({ foo: 'foo', bar: 'bar' });
-      const b = a.clone({ foo: 'bar' });
-
-      expect(b.toJSON()).to.be.deep.equal({ foo: 'bar', bar: 'bar' });
-      expect(b).to.be.instanceof(A);
+      expect(ValueObject.isValueObject(dummyValueObject)).to.be.true;
     });
   });
 });

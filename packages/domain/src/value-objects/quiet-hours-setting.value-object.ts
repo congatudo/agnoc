@@ -1,4 +1,4 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 import { DeviceTime } from './device-time.value-object';
 
 /** Describe the props of a device quiet hours. */
@@ -29,30 +29,14 @@ export class QuietHoursSetting extends ValueObject<QuietHoursSettingProps> {
   }
 
   protected validate(props: QuietHoursSettingProps): void {
-    const keys = ['isEnabled', 'beginTime', 'endTime'] as (keyof QuietHoursSettingProps)[];
+    const keys: (keyof QuietHoursSettingProps)[] = ['isEnabled', 'beginTime', 'endTime'];
 
     keys.forEach((prop) => {
-      if (!isPresent(props[prop])) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for device quiet hours not provided`);
-      }
+      this.validateDefinedProp(props, prop);
     });
 
-    if (typeof props.isEnabled !== 'boolean') {
-      throw new ArgumentInvalidException(
-        `Value '${props.isEnabled as string}' for property 'isEnabled' for device quiet hours is not a boolean`,
-      );
-    }
-
-    if (!(props.beginTime instanceof DeviceTime)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.beginTime as string}' for property 'beginTime' for device quiet hours is not a device time`,
-      );
-    }
-
-    if (!(props.endTime instanceof DeviceTime)) {
-      throw new ArgumentInvalidException(
-        `Value '${props.endTime as string}' for property 'endTime' for device quiet hours is not a device time`,
-      );
-    }
+    this.validateTypeProp(props, 'isEnabled', 'boolean');
+    this.validateInstanceProp(props, 'beginTime', DeviceTime);
+    this.validateInstanceProp(props, 'endTime', DeviceTime);
   }
 }

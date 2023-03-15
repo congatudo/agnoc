@@ -1,4 +1,4 @@
-import { ValueObject, isPresent, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 
 /** The properties of the device setting. */
 export interface DeviceSettingProps {
@@ -14,14 +14,7 @@ export class DeviceSetting extends ValueObject<DeviceSettingProps> {
   }
 
   protected validate(props: DeviceSettingProps): void {
-    if (!isPresent(props.isEnabled)) {
-      throw new ArgumentNotProvidedException(`Property 'isEnabled' for device setting not provided`);
-    }
-
-    if (typeof props.isEnabled !== 'boolean') {
-      throw new ArgumentInvalidException(
-        `Value '${props.isEnabled as string}' for property 'isEnabled' for device setting is not a boolean`,
-      );
-    }
+    this.validateDefinedProp(props, 'isEnabled');
+    this.validateTypeProp(props, 'isEnabled', 'boolean');
   }
 }

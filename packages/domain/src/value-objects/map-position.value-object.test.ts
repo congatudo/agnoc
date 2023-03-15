@@ -1,64 +1,66 @@
 import { ValueObject, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 import { expect } from 'chai';
+import { givenSomeMapPositionProps } from '../test-support';
 import { MapCoordinate } from './map-coordinate.value-object';
 import { MapPosition } from './map-position.value-object';
 
 describe('MapPosition', function () {
   it('should be created', function () {
-    const mapPosition = new MapPosition({ x: 10, y: 20, phi: 0 });
+    const mapPositionProps = givenSomeMapPositionProps();
+    const mapPosition = new MapPosition({ ...mapPositionProps, phi: 0 });
 
     expect(mapPosition).to.be.instanceOf(ValueObject);
-    expect(mapPosition.x).to.be.equal(10);
-    expect(mapPosition.y).to.be.equal(20);
-    expect(mapPosition.phi).to.be.equal(0);
+    expect(mapPosition.x).to.be.equal(mapPositionProps.x);
+    expect(mapPosition.y).to.be.equal(mapPositionProps.y);
+    expect(mapPosition.phi).to.be.equal(mapPositionProps.phi);
     expect(mapPosition.degrees).to.be.equal(90);
   });
 
   it("should throw an error when 'x' property is not provided", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapPosition({ y: 20, phi: 0 })).to.throw(
+    expect(() => new MapPosition({ ...givenSomeMapPositionProps(), x: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'x' for map position not provided`,
+      `Property 'x' for MapPosition not provided`,
     );
   });
 
   it("should throw an error when 'x' property is invalid", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapPosition({ x: 'foo', y: 20, phi: 0 })).to.throw(
+    expect(() => new MapPosition({ ...givenSomeMapPositionProps(), x: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'x' for map position is not a number`,
+      `Value 'foo' for property 'x' of MapPosition is not a number`,
     );
   });
 
   it("should throw an error when 'y' property is not provided", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapPosition({ x: 10, phi: 0 })).to.throw(
+    expect(() => new MapPosition({ ...givenSomeMapPositionProps(), y: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'y' for map position not provided`,
+      `Property 'y' for MapPosition not provided`,
     );
   });
 
   it("should throw an error when 'y' property is invalid", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapPosition({ x: 10, y: 'foo', phi: 0 })).to.throw(
+    expect(() => new MapPosition({ ...givenSomeMapPositionProps(), y: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'y' for map position is not a number`,
+      `Value 'foo' for property 'y' of MapPosition is not a number`,
     );
   });
 
   it("should throw an error when 'phi' property is not provided", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapPosition({ x: 10, y: 20 })).to.throw(
+    expect(() => new MapPosition({ ...givenSomeMapPositionProps(), phi: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'phi' for map position not provided`,
+      `Property 'phi' for MapPosition not provided`,
     );
   });
 
   it("should throw an error when 'phi' property is invalid", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapPosition({ x: 10, y: 20, phi: 'foo' })).to.throw(
+    expect(() => new MapPosition({ ...givenSomeMapPositionProps(), phi: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'phi' for map position is not a number`,
+      `Value 'foo' for property 'phi' of MapPosition is not a number`,
     );
   });
 

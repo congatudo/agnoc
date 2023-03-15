@@ -1,5 +1,14 @@
 import { inflateSync } from 'zlib';
-import { readWord, readFloat, readShort, readByte, readString, DomainException, toStream } from '@agnoc/toolkit';
+import {
+  readWord,
+  readFloat,
+  readShort,
+  readByte,
+  readString,
+  DomainException,
+  toStream,
+  ArgumentOutOfRangeException,
+} from '@agnoc/toolkit';
 import type {
   AreaInfo,
   CleanArea,
@@ -15,7 +24,7 @@ import type {
   Point,
   RoomConnection,
   RoomSegment,
-} from '../interfaces/map.interface';
+} from './map.interface';
 import type { Readable } from 'stream';
 
 export function readMapHeadInfo(stream: Readable): MapHeadInfo {
@@ -257,7 +266,9 @@ function readMap(stream: Readable, mask: number): MapInfo {
   const data: MapInfo = { mask };
 
   if (data.mask > 0x7fff) {
-    throw new DomainException(`Invalid mask ${data.mask}`);
+    throw new ArgumentOutOfRangeException(
+      `Value '${data.mask}' for property 'mask' of MapInfo is out of range [0, ${0x7fff}]`,
+    );
   }
 
   if (data.mask & 0x1) {
@@ -373,9 +384,9 @@ function readMap(stream: Readable, mask: number): MapInfo {
       size: readByte(stream),
     };
 
-    if (data.roomEnableInfo.size) {
-      // throw new DomainException("handleMap: unhandled room enable info");
-    }
+    // if (data.roomEnableInfo.size) {
+    //   throw new DomainException("handleMap: unhandled room enable info");
+    // }
 
     // dump unknown bytes
     data.unk1 = stream.read(50) as Buffer;
@@ -386,7 +397,9 @@ function readMap(stream: Readable, mask: number): MapInfo {
   }
 
   if (stream.readableLength) {
-    throw new DomainException('handleMap: unread bytes on stream');
+    const data = stream.read() as Buffer;
+
+    throw new DomainException(`Data left on stream after decoding MapInfo: ${data.toString('hex')}`);
   }
 
   return data;

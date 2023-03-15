@@ -1,0 +1,33 @@
+import { DeviceBattery, DeviceBatteryMaxValue, DeviceBatteryMinValue } from '@agnoc/domain';
+import { interpolate } from '@agnoc/toolkit';
+import type { Mapper } from '@agnoc/toolkit';
+
+const ROBOT_MAX_VALUE = 200;
+const ROBOT_MIN_VALUE = 100;
+
+const ROBOT = {
+  min: ROBOT_MIN_VALUE,
+  max: ROBOT_MAX_VALUE,
+};
+const DEVICE = {
+  min: DeviceBatteryMinValue,
+  max: DeviceBatteryMaxValue,
+};
+
+export class DeviceBatteryMapper implements Mapper<DeviceBattery, number> {
+  toDomain(battery: number): DeviceBattery {
+    if (battery < ROBOT_MIN_VALUE) {
+      battery = ROBOT_MIN_VALUE;
+    }
+
+    if (battery > ROBOT_MAX_VALUE) {
+      battery = ROBOT_MAX_VALUE;
+    }
+
+    return new DeviceBattery(interpolate(battery, ROBOT, DEVICE));
+  }
+
+  fromDomain(battery: DeviceBattery): number {
+    return Math.floor(interpolate(battery.value, DEVICE, ROBOT));
+  }
+}

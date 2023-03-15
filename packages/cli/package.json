@@ -20,7 +20,17 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "bin": {
-    "agnoc": "./bin/agnoc.js"
+    "agnoc": "./bin/agnoc"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./test-support": {
+      "types": "./lib/test-support.d.ts",
+      "default": "./lib/test-support.js"
+    }
   },
   "files": [
     "bin",
@@ -36,12 +46,10 @@
   },
   "scripts": {
     "build": "npm-run-all build:lib",
-    "build:lib": "npm-run-all build:lib:js build:lib:ts",
-    "build:lib:js": "NODE_ENV=production babel --out-dir lib --root-mode upward --extensions '.ts' src",
-    "build:lib:ts": "tsc -b tsconfig.build.json",
-    "clean": "rm -rf .build-cache lib",
+    "build:lib": "tsc -b tsconfig.build.json",
+    "clean": "rm -rf .build-cache lib coverage",
     "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
-    "test": "nyc mocha test"
+    "test": "nyc mocha src test"
   },
   "nx": {
     "targets": {
@@ -78,18 +86,17 @@
     "chalk": "^4.1.1",
     "cli-ux": "^5.5.1",
     "commander": "^10.0.0",
-    "node-wifi": "^2.0.16"
+    "node-wifi": "^2.0.16",
+    "tslib": "^2.5.0"
   },
   "optionalDependencies": {
     "pcap": "^3.1.0"
   },
   "devDependencies": {
+    "@johanblumenberg/ts-mockito": "^1.0.35",
     "chai": "^4.3.7",
     "execa": "^5.1.1",
-    "mocha": "^10.2.0",
-    "mock-fs": "^5.2.0",
-    "sinon": "^15.0.1",
-    "sinon-chai": "^3.7.0"
+    "mock-fs": "^5.2.0"
   },
   "engines": {
     "node": ">=18.12"

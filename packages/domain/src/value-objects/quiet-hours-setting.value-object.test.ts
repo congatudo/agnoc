@@ -1,71 +1,64 @@
 import { ValueObject, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { DeviceTime } from './device-time.value-object';
+import { givenSomeQuietHoursSettingProps } from '../test-support';
 import { QuietHoursSetting } from './quiet-hours-setting.value-object';
 
 describe('QuietHoursSetting', function () {
-  let beginTime: DeviceTime;
-  let endTime: DeviceTime;
-
-  beforeEach(function () {
-    beginTime = DeviceTime.fromMinutes(120);
-    endTime = DeviceTime.fromMinutes(240);
-  });
-
   it('should be created', function () {
-    const deviceQuietHours = new QuietHoursSetting({ isEnabled: true, beginTime, endTime });
+    const quietHoursSettingProps = givenSomeQuietHoursSettingProps();
+    const quietHoursSetting = new QuietHoursSetting(quietHoursSettingProps);
 
-    expect(deviceQuietHours).to.be.instanceOf(ValueObject);
-    expect(deviceQuietHours.isEnabled).to.be.equal(true);
-    expect(deviceQuietHours.beginTime).to.be.equal(beginTime);
-    expect(deviceQuietHours.endTime).to.be.equal(endTime);
+    expect(quietHoursSetting).to.be.instanceOf(ValueObject);
+    expect(quietHoursSetting.isEnabled).to.be.equal(quietHoursSettingProps.isEnabled);
+    expect(quietHoursSetting.beginTime).to.be.equal(quietHoursSettingProps.beginTime);
+    expect(quietHoursSetting.endTime).to.be.equal(quietHoursSettingProps.endTime);
   });
 
   it("should throw an error when 'isEnabled' property is not provided", function () {
     // @ts-expect-error - missing property
-    expect(() => new QuietHoursSetting({ beginTime, endTime })).to.throw(
+    expect(() => new QuietHoursSetting({ ...givenSomeQuietHoursSettingProps(), isEnabled: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'isEnabled' for device quiet hours not provided`,
+      `Property 'isEnabled' for QuietHoursSetting not provided`,
     );
   });
 
   it("should throw an error when 'isEnabled' property is invalid", function () {
     // @ts-expect-error - invalid property
-    expect(() => new QuietHoursSetting({ isEnabled: 'foo', beginTime, endTime })).to.throw(
+    expect(() => new QuietHoursSetting({ ...givenSomeQuietHoursSettingProps(), isEnabled: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isEnabled' for device quiet hours is not a boolean`,
+      `Value 'foo' for property 'isEnabled' of QuietHoursSetting is not a boolean`,
     );
   });
 
   it("should throw an error when 'beginTime' property is not provided", function () {
     // @ts-expect-error - missing property
-    expect(() => new QuietHoursSetting({ isEnabled: true, endTime })).to.throw(
+    expect(() => new QuietHoursSetting({ ...givenSomeQuietHoursSettingProps(), beginTime: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'beginTime' for device quiet hours not provided`,
+      `Property 'beginTime' for QuietHoursSetting not provided`,
     );
   });
 
   it("should throw an error when 'beginTime' property is invalid", function () {
     // @ts-expect-error - invalid property
-    expect(() => new QuietHoursSetting({ isEnabled: true, beginTime: 'foo', endTime })).to.throw(
+    expect(() => new QuietHoursSetting({ ...givenSomeQuietHoursSettingProps(), beginTime: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'beginTime' for device quiet hours is not a device time`,
+      `Value 'foo' for property 'beginTime' of QuietHoursSetting is not an instance of DeviceTime`,
     );
   });
 
   it("should throw an error when 'endTime' property is not provided", function () {
     // @ts-expect-error - missing property
-    expect(() => new QuietHoursSetting({ isEnabled: true, beginTime })).to.throw(
+    expect(() => new QuietHoursSetting({ ...givenSomeQuietHoursSettingProps(), endTime: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'endTime' for device quiet hours not provided`,
+      `Property 'endTime' for QuietHoursSetting not provided`,
     );
   });
 
   it("should throw an error when 'endTime' property is invalid", function () {
     // @ts-expect-error - invalid property
-    expect(() => new QuietHoursSetting({ isEnabled: true, beginTime, endTime: 'foo' })).to.throw(
+    expect(() => new QuietHoursSetting({ ...givenSomeQuietHoursSettingProps(), endTime: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'endTime' for device quiet hours is not a device time`,
+      `Value 'foo' for property 'endTime' of QuietHoursSetting is not an instance of DeviceTime`,
     );
   });
 });

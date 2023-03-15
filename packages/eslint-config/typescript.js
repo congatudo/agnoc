@@ -20,12 +20,12 @@ module.exports = {
   ],
   plugins: ['eslint-plugin-tsdoc'],
   settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts'],
+    },
     'import/resolver': {
-      'babel-module': {
-        extensions: ['.js', '.ts', '.json'],
-        alias: {
-          '^(@agnoc/[^/]+)$': '\\1/src',
-        },
+      typescript: {
+        project: path.resolve(__dirname, '../../tsconfig.json'),
       },
     },
   },
@@ -49,6 +49,12 @@ module.exports = {
     'import/no-relative-packages': 'error',
     'import/no-useless-path-segments': 'error',
     'import/no-unused-modules': 'warn',
+    'import/no-internal-modules': [
+      'error',
+      {
+        forbid: ['packages/**/*', '@agnoc/*/src/**/*'],
+      },
+    ],
     'import/order': [
       'warn',
       {
@@ -60,4 +66,15 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['**/*.test.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/unbound-method': 'off',
+        '@typescript-eslint/no-misused-promises': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
+      },
+    },
+  ],
 };

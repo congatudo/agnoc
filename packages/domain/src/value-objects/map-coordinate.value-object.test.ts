@@ -1,45 +1,47 @@
 import { ValueObject, ArgumentNotProvidedException, ArgumentInvalidException } from '@agnoc/toolkit';
 import { expect } from 'chai';
+import { givenSomeMapCoordinateProps } from '../test-support';
 import { MapCoordinate } from './map-coordinate.value-object';
 
 describe('MapCoordinate', function () {
   it('should be created', function () {
-    const mapCoordinate = new MapCoordinate({ x: 10, y: 20 });
+    const mapCoordinateProps = givenSomeMapCoordinateProps();
+    const mapCoordinate = new MapCoordinate(mapCoordinateProps);
 
     expect(mapCoordinate).to.be.instanceOf(ValueObject);
-    expect(mapCoordinate.x).to.be.equal(10);
-    expect(mapCoordinate.y).to.be.equal(20);
+    expect(mapCoordinate.x).to.be.equal(mapCoordinateProps.x);
+    expect(mapCoordinate.y).to.be.equal(mapCoordinateProps.y);
   });
 
   it("should throw an error when 'x' property is not provided", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapCoordinate({ y: 20 })).to.throw(
+    expect(() => new MapCoordinate({ ...givenSomeMapCoordinateProps(), x: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'x' for map coordinate not provided`,
+      `Property 'x' for MapCoordinate not provided`,
     );
   });
 
   it("should throw an error when 'x' property is invalid", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapCoordinate({ x: 'foo', y: 20 })).to.throw(
+    expect(() => new MapCoordinate({ ...givenSomeMapCoordinateProps(), x: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'x' for map coordinate is not a number`,
+      `Value 'foo' for property 'x' of MapCoordinate is not a number`,
     );
   });
 
   it("should throw an error when 'y' property is not provided", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapCoordinate({ x: 10 })).to.throw(
+    expect(() => new MapCoordinate({ ...givenSomeMapCoordinateProps(), y: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'y' for map coordinate not provided`,
+      `Property 'y' for MapCoordinate not provided`,
     );
   });
 
   it("should throw an error when 'y' property is invalid", function () {
     // @ts-expect-error - missing property
-    expect(() => new MapCoordinate({ x: 10, y: 'foo' })).to.throw(
+    expect(() => new MapCoordinate({ ...givenSomeMapCoordinateProps(), y: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' of property 'y' for map coordinate is not a number`,
+      `Value 'foo' for property 'y' of MapCoordinate is not a number`,
     );
   });
 });

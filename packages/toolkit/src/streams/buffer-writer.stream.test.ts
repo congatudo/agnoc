@@ -1,9 +1,8 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { BufferWriter } from './buffer-writer.stream';
 
-describe('buffer-writer.stream', () => {
-  it('creates an empty writable stream', () => {
+describe('buffer-writer.stream', function () {
+  it('creates an empty writable stream', function () {
     const stream = new BufferWriter();
 
     expect(stream.buffer).to.be.empty;
@@ -13,7 +12,7 @@ describe('buffer-writer.stream', () => {
     expect(stream.buffer.toString('utf8')).to.be.equal('hello');
   });
 
-  it('creates a writable stream from a buffer', () => {
+  it('creates a writable stream from a buffer', function () {
     const stream = new BufferWriter(Buffer.from('hello', 'utf8'));
 
     expect(stream.buffer.toString('utf8')).to.be.equal('hello');

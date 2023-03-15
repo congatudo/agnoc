@@ -1,11 +1,10 @@
 import { setTimeout } from 'timers/promises';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { TimeoutException } from '../exceptions/timeout.exception';
 import { waitFor } from './wait-for.util';
 
-describe('wait-for.util', () => {
-  it('resolves when condition is met', async () => {
+describe('wait-for.util', function () {
+  it('resolves when condition is met', async function () {
     let check = false,
       called = false;
     const promise = waitFor(() => check);
@@ -23,7 +22,7 @@ describe('wait-for.util', () => {
     expect(called).to.be.true;
   });
 
-  it('rejects when condition is not met and timeout triggers', async () => {
+  it('rejects when condition is not met and timeout triggers', async function () {
     let called = false;
     const check = false;
     const promise = waitFor(() => check, { timeout: 100 });

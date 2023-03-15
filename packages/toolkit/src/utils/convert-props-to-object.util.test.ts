@@ -1,9 +1,8 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import { convertPropsToObject } from './convert-props-to-object.util';
 
-describe('convert-props-to-object.util', () => {
-  it('converts props to object', () => {
+describe('convert-props-to-object.util', function () {
+  it('converts props to object', function () {
     class Foo {}
     class Serializable {
       toJSON() {
@@ -28,7 +27,7 @@ describe('convert-props-to-object.util', () => {
     });
   });
 
-  it('throws an error when props are not an object', () => {
+  it('throws an error when props are not an object', function () {
     expect(() => {
       convertPropsToObject('foo');
     }).to.throw(TypeError);

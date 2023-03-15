@@ -19,6 +19,16 @@
   "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./test-support": {
+      "types": "./lib/test-support.d.ts",
+      "default": "./lib/test-support.js"
+    }
+  },
   "files": [
     "lib"
   ],
@@ -32,10 +42,8 @@
   },
   "scripts": {
     "build": "npm-run-all build:lib",
-    "build:lib": "npm-run-all build:lib:js build:lib:ts",
-    "build:lib:js": "NODE_ENV=production babel --out-dir lib --root-mode upward --extensions '.ts' src",
-    "build:lib:ts": "tsc -b tsconfig.build.json",
-    "clean": "rm -rf .build-cache lib",
+    "build:lib": "tsc -b tsconfig.build.json",
+    "clean": "rm -rf .build-cache lib coverage",
     "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
     "test": "nyc mocha src"
   },
@@ -44,6 +52,7 @@
       "build": {
         "inputs": [
           "{workspaceRoot}/package.json",
+          "{workspaceRoot}/tsconfig.*",
           "{projectRoot}/src/**/*",
           "{projectRoot}/package.json",
           "{projectRoot}/tsconfig.*"
@@ -56,6 +65,7 @@
       "test": {
         "inputs": [
           "{workspaceRoot}/.mocharc.yml",
+          "{workspaceRoot}/nyc.config.js",
           "{projectRoot}/src/**/*"
         ],
         "outputs": [
@@ -65,18 +75,16 @@
     }
   },
   "dependencies": {
-    "@agnoc/toolkit": "^0.18.0-next.0"
+    "@agnoc/toolkit": "^0.18.0-next.0",
+    "tslib": "^2.5.0"
   },
   "devDependencies": {
-    "chai": "^4.3.7",
-    "mocha": "^10.2.0"
+    "chai": "^4.3.7"
   },
   "engines": {
     "node": ">=18.12"
   },
   "typedoc": {
-    "entryPoint": "./src/index.ts",
-    "readmeFile": "./README.md",
     "displayName": "Domain"
   }
 }

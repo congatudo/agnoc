@@ -1,19 +1,22 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "noEmit": true
-  },
-  "include": ["packages/*/src", "packages/*/test", "packages/**/typings.d.ts"],
+  "include": ["packages/*/src", "packages/*/test", "packages/*/types"],
   "typedocOptions": {
-    "entryPoints": ["packages/cli", "packages/transport-tcp", "packages/domain", "packages/toolkit"],
+    "entryPoints": [
+      "packages/cli",
+      "packages/adapter-tcp",
+      "packages/transport-tcp",
+      "packages/domain",
+      "packages/toolkit"
+    ],
     "entryPointStrategy": "packages",
     "out": "public/typedoc",
     "excludePrivate": false,
     "excludeProtected": false,
     "excludeInternal": false,
+    "excludeExternals": false,
     "includeVersion": true,
     "sort": ["kind", "instance-first", "static-first"],
-    "hideGenerator": true,
-    "noMissingExports": true
+    "hideGenerator": true
   }
 }

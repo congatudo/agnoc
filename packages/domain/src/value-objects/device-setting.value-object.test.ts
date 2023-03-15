@@ -13,7 +13,7 @@ describe('DeviceSetting', function () {
     // @ts-expect-error - missing property
     expect(() => new DeviceSetting({ foo: 'bar' })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'isEnabled' for device setting not provided`,
+      `Property 'isEnabled' for DeviceSetting not provided`,
     );
   });
 
@@ -21,7 +21,7 @@ describe('DeviceSetting', function () {
     // @ts-expect-error - invalid property
     expect(() => new DeviceSetting({ isEnabled: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'isEnabled' for device setting is not a boolean`,
+      `Value 'foo' for property 'isEnabled' of DeviceSetting is not a boolean`,
     );
   });
 });

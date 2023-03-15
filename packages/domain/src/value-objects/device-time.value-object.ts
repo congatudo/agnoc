@@ -1,10 +1,4 @@
-import {
-  ValueObject,
-  isPresent,
-  ArgumentNotProvidedException,
-  ArgumentOutOfRangeException,
-  ArgumentInvalidException,
-} from '@agnoc/toolkit';
+import { ValueObject } from '@agnoc/toolkit';
 
 /** Properties for a device time. */
 export interface DeviceTimeProps {
@@ -38,32 +32,14 @@ export class DeviceTime extends ValueObject<DeviceTimeProps> {
   }
 
   protected validate(props: DeviceTimeProps): void {
-    const keys = ['hours', 'minutes'] as (keyof DeviceTimeProps)[];
+    const keys: (keyof DeviceTimeProps)[] = ['hours', 'minutes'];
 
     keys.forEach((prop) => {
-      const value = props[prop];
-
-      if (!isPresent(value)) {
-        throw new ArgumentNotProvidedException(`Property '${prop}' for device time not provided`);
-      }
-
-      if (typeof value !== 'number') {
-        throw new ArgumentInvalidException(
-          `Value '${value as string}' for property '${prop}' for device time is not a number`,
-        );
-      }
+      this.validateDefinedProp(props, prop);
+      this.validateNumberProp(props, prop);
     });
 
-    if (props.hours < 0 || props.hours > 23) {
-      throw new ArgumentOutOfRangeException(
-        `Value '${props.hours}' for property 'hours' for device time is out of range`,
-      );
-    }
-
-    if (props.minutes < 0 || props.minutes > 59) {
-      throw new ArgumentOutOfRangeException(
-        `Value '${props.minutes}' for property 'minutes' for device time is out of range`,
-      );
-    }
+    this.validateNumberProp(props, 'hours', { min: 0, max: 23 });
+    this.validateNumberProp(props, 'minutes', { min: 0, max: 59 });
   }
 }

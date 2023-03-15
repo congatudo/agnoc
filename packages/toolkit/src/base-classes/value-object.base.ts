@@ -1,52 +1,40 @@
-import { ArgumentNotProvidedException } from '../exceptions/argument-not-provided.exception';
 import { convertPropsToObject } from '../utils/convert-props-to-object.util';
-import { isEmpty } from '../utils/is-empty.util';
 import { isPresent } from '../utils/is-present.util';
+import { Validatable } from './validatable.base';
 
-export type Primitives = string | number | boolean | bigint;
-export interface DomainPrimitive<T extends Primitives | Date> {
-  value: T;
-}
+/** Abstract base class that provides basic tools for building the value objects of the domain. */
+export abstract class ValueObject<T> extends Validatable<T> {
+  protected readonly props: T;
 
-export type ValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T> : T;
-export type PartialValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T> : Partial<T>;
-
-export abstract class ValueObject<T> {
-  protected readonly props: ValueObjectProps<T>;
-
-  constructor(props: ValueObjectProps<T>) {
-    this.checkIfEmpty(props);
-    this.validate(props);
+  constructor(props: T) {
+    super(props);
     this.props = props;
   }
 
+  /** Checks whether the provided value object is equal to this one. */
   equals(vo?: unknown): boolean {
     if (!isPresent(vo)) {
       return false;
     }
+
     return JSON.stringify(this) === JSON.stringify(vo);
   }
 
-  toString(): string {
-    if (this.isDomainPrimitive(this.props)) {
-      return String(this.props.value);
-    }
-
+  /** Returns a string representation of this value object. */
+  override toString(): string {
     return JSON.stringify(this.toJSON());
   }
 
+  /** Returns a JSON representation of this value object. */
   toJSON(): unknown {
-    if (this.isDomainPrimitive(this.props)) {
-      return this.props.value;
-    }
-
     const propsCopy = convertPropsToObject(this.props);
 
     return Object.freeze(propsCopy as T);
   }
 
-  clone<C extends ValueObject<T>>(this: C, props: PartialValueObjectProps<T>): C {
-    const ctor = this.constructor as new (props: ValueObjectProps<T>) => C;
+  /** Creates a new instance of this value object with the provided props. */
+  clone<C extends ValueObject<T>>(this: C, props: Partial<T>): C {
+    const ctor = this.constructor as new (props: T) => C;
 
     return new ctor({
       ...this.props,
@@ -54,21 +42,7 @@ export abstract class ValueObject<T> {
     });
   }
 
-  protected abstract validate(props: ValueObjectProps<T>): void;
-
-  private checkIfEmpty(props: ValueObjectProps<T>): void {
-    if (isEmpty(props) || (this.isDomainPrimitive(props) && isEmpty(props.value))) {
-      throw new ArgumentNotProvidedException('Property cannot be empty');
-    }
-  }
-
-  private isDomainPrimitive(obj: unknown): obj is DomainPrimitive<T & (Primitives | Date)> {
-    if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
-      return true;
-    }
-    return false;
-  }
-
+  /** Checks whether the provided object is a value object. */
   static isValueObject(obj: unknown): obj is ValueObject<unknown> {
     return obj instanceof ValueObject;
   }

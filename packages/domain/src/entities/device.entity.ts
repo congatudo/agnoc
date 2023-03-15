@@ -1,180 +1,258 @@
-import { Entity, isPresent, ArgumentNotProvidedException } from '@agnoc/toolkit';
-import type { DeviceMap } from './device-map.entity';
-import type { DeviceOrder } from './device-order.entity';
-import type { DeviceBattery } from '../primitives/device-battery.value-object';
-import type { DeviceError } from '../primitives/device-error.value-object';
-import type { DeviceFanSpeed } from '../primitives/device-fan-speed.value-object';
-import type { DeviceMode } from '../primitives/device-mode.value-object';
-import type { DeviceState } from '../primitives/device-state.value-object';
-import type { DeviceWaterLevel } from '../primitives/device-water-level.value-object';
-import type { DeviceCleanWork } from '../value-objects/device-clean-work.value-object';
-import type { DeviceConsumable } from '../value-objects/device-consumable.value-object';
-import type { DeviceSettings } from '../value-objects/device-settings.value-object';
-import type { DeviceSystem } from '../value-objects/device-system.value-object';
-import type { DeviceVersion } from '../value-objects/device-version.value-object';
-import type { DeviceWlan } from '../value-objects/device-wlan.value-object';
-import type { ID } from '@agnoc/toolkit';
+import { Entity } from '@agnoc/toolkit';
+import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
+import { DeviceError } from '../domain-primitives/device-error.domain-primitive';
+import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
+import { DeviceMode } from '../domain-primitives/device-mode.domain-primitive';
+import { DeviceState } from '../domain-primitives/device-state.domain-primitive';
+import { DeviceWaterLevel } from '../domain-primitives/device-water-level.domain-primitive';
+import { DeviceCleanWork } from '../value-objects/device-clean-work.value-object';
+import { DeviceConsumable } from '../value-objects/device-consumable.value-object';
+import { DeviceSettings } from '../value-objects/device-settings.value-object';
+import { DeviceSystem } from '../value-objects/device-system.value-object';
+import { DeviceVersion } from '../value-objects/device-version.value-object';
+import { DeviceWlan } from '../value-objects/device-wlan.value-object';
+import { DeviceMap } from './device-map.entity';
+import { DeviceOrder } from './device-order.entity';
+import type { EntityProps } from '@agnoc/toolkit';
 
-export interface DeviceProps {
-  id: ID;
+/** Describes the properties of a device. */
+export interface DeviceProps extends EntityProps {
+  /** The device system. */
   system: DeviceSystem;
+  /** The device version. */
   version: DeviceVersion;
+  /** The device settings. */
   config?: DeviceSettings;
+  /** The device current clean. */
   currentClean?: DeviceCleanWork;
+  /** The device orders. */
   orders?: DeviceOrder[];
+  /** The device consumables. */
   consumables?: DeviceConsumable[];
+  /** The device map. */
   map?: DeviceMap;
+  /** The device wlan. */
   wlan?: DeviceWlan;
+  /** The device battery. */
   battery?: DeviceBattery;
+  /** The device state. */
   state?: DeviceState;
+  /** The device mode. */
   mode?: DeviceMode;
+  /** The device error. */
   error?: DeviceError;
+  /** The device fan speed. */
   fanSpeed?: DeviceFanSpeed;
+  /** The device water level. */
   waterLevel?: DeviceWaterLevel;
+  /** whether the device has a mop attached. */
   hasMopAttached?: boolean;
+  /** Whether the device has a waiting map. */
   hasWaitingMap?: boolean;
 }
 
+/** Describes a device. */
 export class Device extends Entity<DeviceProps> {
-  constructor(props: DeviceProps) {
-    super({
-      hasWaitingMap: false,
-      ...props,
-    });
-    this.validate(props);
-  }
-
+  /** Returns the device system. */
   get system(): DeviceSystem {
     return this.props.system;
   }
 
+  /** Returns the device version. */
   get version(): DeviceVersion {
     return this.props.version;
   }
 
+  /** Returns the device settings. */
   get config(): DeviceSettings | undefined {
     return this.props.config;
   }
 
+  /** Returns the device current clean. */
   get currentClean(): DeviceCleanWork | undefined {
     return this.props.currentClean;
   }
 
+  /** Returns the device orders. */
   get orders(): DeviceOrder[] | undefined {
     return this.props.orders;
   }
 
+  /** Returns the device consumables. */
   get consumables(): DeviceConsumable[] | undefined {
     return this.props.consumables;
   }
 
+  /** Returns the device map. */
   get map(): DeviceMap | undefined {
     return this.props.map;
   }
 
+  /** Returns the device wlan. */
   get wlan(): DeviceWlan | undefined {
     return this.props.wlan;
   }
 
+  /** Returns the device battery. */
   get battery(): DeviceBattery | undefined {
     return this.props.battery;
   }
 
+  /** Returns the device state. */
   get state(): DeviceState | undefined {
     return this.props.state;
   }
 
+  /** Returns the device mode. */
   get mode(): DeviceMode | undefined {
     return this.props.mode;
   }
 
+  /** Returns the device error. */
   get error(): DeviceError | undefined {
     return this.props.error;
   }
 
+  /** Returns the device fan speed. */
   get fanSpeed(): DeviceFanSpeed | undefined {
     return this.props.fanSpeed;
   }
 
+  /** Returns the device water level. */
   get waterLevel(): DeviceWaterLevel | undefined {
     return this.props.waterLevel;
   }
 
-  get hasMopAttached(): boolean | undefined {
-    return this.props.hasMopAttached;
+  /** Returns whether the device has a mop attached. */
+  get hasMopAttached(): boolean {
+    return Boolean(this.props.hasMopAttached);
   }
 
-  get hasWaitingMap(): boolean | undefined {
-    return this.props.hasWaitingMap;
+  /** Returns whether the device has a waiting map. */
+  get hasWaitingMap(): boolean {
+    return Boolean(this.props.hasWaitingMap);
   }
 
+  /** Updates the device system. */
   updateSystem(system: DeviceSystem): void {
+    this.validateDefinedProp({ system }, 'system');
+    this.validateInstanceProp({ system }, 'system', DeviceSystem);
     this.props.system = system;
   }
 
+  /** Updates the device version. */
   updateVersion(version: DeviceVersion): void {
+    this.validateDefinedProp({ version }, 'version');
+    this.validateInstanceProp({ version }, 'version', DeviceVersion);
     this.props.version = version;
   }
 
+  /** Updates the device settings. */
   updateConfig(config?: DeviceSettings): void {
+    this.validateInstanceProp({ config }, 'config', DeviceSettings);
     this.props.config = config;
   }
 
-  updateCurrentClean(currentClean: DeviceCleanWork): void {
+  /** Updates the device current clean. */
+  updateCurrentClean(currentClean?: DeviceCleanWork): void {
+    this.validateInstanceProp({ currentClean }, 'currentClean', DeviceCleanWork);
     this.props.currentClean = currentClean;
   }
 
-  updateOrders(orders: DeviceOrder[]): void {
+  /** Updates the device orders. */
+  updateOrders(orders?: DeviceOrder[]): void {
+    this.validateArrayProp({ orders }, 'orders', DeviceOrder);
     this.props.orders = orders;
   }
 
-  updateConsumables(consumables: DeviceConsumable[]): void {
+  /** Updates the device consumables. */
+  updateConsumables(consumables?: DeviceConsumable[]): void {
+    this.validateArrayProp({ consumables }, 'consumables', DeviceConsumable);
     this.props.consumables = consumables;
   }
 
-  updateMap(map: DeviceMap): void {
+  /** Updates the device map. */
+  updateMap(map?: DeviceMap): void {
+    this.validateInstanceProp({ map }, 'map', DeviceMap);
     this.props.map = map;
   }
 
-  updateWlan(wlan: DeviceWlan): void {
+  /** Updates the device wlan. */
+  updateWlan(wlan?: DeviceWlan): void {
+    this.validateInstanceProp({ wlan }, 'wlan', DeviceWlan);
     this.props.wlan = wlan;
   }
 
-  updateBattery(battery: DeviceBattery): void {
+  /** Updates the device battery. */
+  updateBattery(battery?: DeviceBattery): void {
+    this.validateInstanceProp({ battery }, 'battery', DeviceBattery);
     this.props.battery = battery;
   }
 
-  updateState(state: DeviceState): void {
+  /** Updates the device state. */
+  updateState(state?: DeviceState): void {
+    this.validateInstanceProp({ state }, 'state', DeviceState);
     this.props.state = state;
   }
 
-  updateMode(mode: DeviceMode): void {
+  /** Updates the device mode. */
+  updateMode(mode?: DeviceMode): void {
+    this.validateInstanceProp({ mode }, 'mode', DeviceMode);
     this.props.mode = mode;
   }
 
-  updateError(error: DeviceError): void {
+  /** Updates the device error. */
+  updateError(error?: DeviceError): void {
+    this.validateInstanceProp({ error }, 'error', DeviceError);
     this.props.error = error;
   }
 
-  updateFanSpeed(fanSpeed: DeviceFanSpeed): void {
+  /** Updates the device fan speed. */
+  updateFanSpeed(fanSpeed?: DeviceFanSpeed): void {
+    this.validateInstanceProp({ fanSpeed }, 'fanSpeed', DeviceFanSpeed);
     this.props.fanSpeed = fanSpeed;
   }
 
-  updateWaterLevel(waterLevel: DeviceWaterLevel): void {
+  /** Updates the device water level. */
+  updateWaterLevel(waterLevel?: DeviceWaterLevel): void {
+    this.validateInstanceProp({ waterLevel }, 'waterLevel', DeviceWaterLevel);
     this.props.waterLevel = waterLevel;
   }
 
+  /** Updates whether the device has a mop attached. */
   updateHasMopAttached(value: boolean): void {
+    this.validateTypeProp({ hasMopAttached: value }, 'hasMopAttached', 'boolean');
     this.props.hasMopAttached = value;
   }
 
+  /** Updates whether the device has a waiting map. */
   updateHasWaitingMap(value: boolean): void {
+    this.validateTypeProp({ hasWaitingMap: value }, 'hasWaitingMap', 'boolean');
     this.props.hasWaitingMap = value;
   }
 
   protected validate(props: DeviceProps): void {
-    if (![props.system, props.version].every(isPresent)) {
-      throw new ArgumentNotProvidedException('Missing property in device constructor');
-    }
+    const keys: (keyof DeviceProps)[] = ['system', 'version'];
+
+    keys.forEach((prop) => {
+      this.validateDefinedProp(props, prop);
+    });
+
+    this.validateInstanceProp(props, 'system', DeviceSystem);
+    this.validateInstanceProp(props, 'version', DeviceVersion);
+    this.validateInstanceProp(props, 'config', DeviceSettings);
+    this.validateInstanceProp(props, 'currentClean', DeviceCleanWork);
+    this.validateArrayProp(props, 'orders', DeviceOrder);
+    this.validateArrayProp(props, 'consumables', DeviceConsumable);
+    this.validateInstanceProp(props, 'map', DeviceMap);
+    this.validateInstanceProp(props, 'wlan', DeviceWlan);
+    this.validateInstanceProp(props, 'battery', DeviceBattery);
+    this.validateInstanceProp(props, 'state', DeviceState);
+    this.validateInstanceProp(props, 'mode', DeviceMode);
+    this.validateInstanceProp(props, 'error', DeviceError);
+    this.validateInstanceProp(props, 'fanSpeed', DeviceFanSpeed);
+    this.validateInstanceProp(props, 'waterLevel', DeviceWaterLevel);
+    this.validateTypeProp(props, 'hasMopAttached', 'boolean');
+    this.validateTypeProp(props, 'hasWaitingMap', 'boolean');
   }
 }
