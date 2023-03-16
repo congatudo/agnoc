@@ -10,6 +10,8 @@ export * from './domain-primitives/packet-sequence.domain-primitive';
 export * from './factories/packet.factory';
 export * from './mappers/packet.mapper';
 export * from './mappers/payload.mapper';
+export * from './packet.event-bus';
+export * from './packet.event-handler';
 export * from './packet.server';
 export * from './packet.socket';
 export * from './services/payload-object-parser.service';
