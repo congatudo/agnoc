@@ -10,7 +10,7 @@ import { Packet } from './value-objects/packet.value-object';
 import type { PacketMapper } from './mappers/packet.mapper';
 import type { AddressInfo } from 'net';
 
-describe('packet.socket', function () {
+describe('PacketSocket', function () {
   let packetMapper: PacketMapper;
   let packetSocket: PacketSocket;
   let server: Server;
@@ -35,6 +35,9 @@ describe('packet.socket', function () {
     expect(packetSocket.localPort).to.be.undefined;
     expect(packetSocket.remoteAddress).to.be.undefined;
     expect(packetSocket.remotePort).to.be.undefined;
+    expect(packetSocket.toString()).to.be.equal('unknown:0::unknown:0');
+    expect(packetSocket.connecting).to.be.false;
+    expect(packetSocket.connected).to.be.false;
   });
 
   it('should connect to a server', function (done) {
@@ -42,6 +45,7 @@ describe('packet.socket', function () {
       void packetSocket.connect((server.address() as AddressInfo).port);
 
       expect(packetSocket.connecting).to.be.true;
+      expect(packetSocket.connected).to.be.false;
     });
 
     packetSocket.once('connect', () => {
@@ -49,8 +53,10 @@ describe('packet.socket', function () {
       expect(packetSocket.localPort).to.be.a('number');
       expect(packetSocket.remoteAddress).to.be.a('string');
       expect(packetSocket.remotePort).to.be.a('number');
+      expect(packetSocket.toString()).to.be.not.equal('unknown:0::unknown:0');
       expect(packetSocket.connecting).to.be.false;
-      packetSocket.end();
+      expect(packetSocket.connected).to.be.true;
+      void packetSocket.end();
     });
 
     packetSocket.once('end', done);
@@ -77,7 +83,7 @@ describe('packet.socket', function () {
     });
 
     packetSocket.once('connect', () => {
-      packetSocket.end(packet);
+      void packetSocket.end(packet);
     });
 
     server.listen(0);
@@ -140,7 +146,7 @@ describe('packet.socket', function () {
       done();
     });
 
-    packetSocket.write(packet);
+    void packetSocket.write(packet);
   });
 
   it('should not try to end when is not connected', function (done) {
@@ -150,7 +156,7 @@ describe('packet.socket', function () {
       done();
     });
 
-    packetSocket.end();
+    void packetSocket.end();
   });
 
   it('should throw an error when unable to map the packet', function (done) {
@@ -217,7 +223,7 @@ describe('packet.socket', function () {
     server.once('connection', (socket) => {
       const packetSocketServer = new PacketSocket(instance(packetMapper), socket);
 
-      packetSocketServer.end(packet);
+      void packetSocketServer.end(packet);
     });
 
     packetSocket.once('data', (data) => {
@@ -237,7 +243,7 @@ describe('packet.socket', function () {
       });
 
       packetSocket.once('connect', () => {
-        packetSocket.end();
+        void packetSocket.end();
       });
 
       packetSocket.once('end', done);
@@ -251,7 +257,7 @@ describe('packet.socket', function () {
       });
 
       packetSocket.once('connect', () => {
-        packetSocket.end();
+        void packetSocket.end();
       });
 
       packetSocket.once('end', done);
@@ -267,10 +273,180 @@ describe('packet.socket', function () {
       });
 
       packetSocket.once('connect', () => {
-        packetSocket.end();
+        void packetSocket.end();
       });
 
       packetSocket.once('end', done);
+
+      server.listen(0);
+    });
+  });
+
+  describe('#write()', function () {
+    it('should write packets with encoding and callback', function (done) {
+      const buffer = givenAPacketBuffer();
+      const packet = new Packet(givenSomePacketProps());
+
+      when(packetMapper.fromDomain(anything())).thenReturn(buffer);
+
+      server.once('listening', () => {
+        void packetSocket.connect((server.address() as AddressInfo).port);
+      });
+
+      server.once('connection', (socket) => {
+        socket.once('data', (data) => {
+          expect(Buffer.compare(data, buffer)).to.be.equal(0);
+          verify(packetMapper.fromDomain(packet)).once();
+          socket.end();
+        });
+      });
+
+      packetSocket.once('connect', () => {
+        packetSocket.write(packet, 'utf8', done);
+      });
+
+      server.listen(0);
+    });
+
+    it('should write packets with callback', function (done) {
+      const buffer = givenAPacketBuffer();
+      const packet = new Packet(givenSomePacketProps());
+
+      when(packetMapper.fromDomain(anything())).thenReturn(buffer);
+
+      server.once('listening', () => {
+        void packetSocket.connect((server.address() as AddressInfo).port);
+      });
+
+      server.once('connection', (socket) => {
+        socket.once('data', (data) => {
+          expect(Buffer.compare(data, buffer)).to.be.equal(0);
+          verify(packetMapper.fromDomain(packet)).once();
+          socket.end();
+        });
+      });
+
+      packetSocket.once('connect', () => {
+        packetSocket.write(packet, done);
+      });
+
+      server.listen(0);
+    });
+
+    it('should write packets as a promise', function (done) {
+      const buffer = givenAPacketBuffer();
+      const packet = new Packet(givenSomePacketProps());
+
+      when(packetMapper.fromDomain(anything())).thenReturn(buffer);
+
+      server.once('listening', () => {
+        void packetSocket.connect((server.address() as AddressInfo).port);
+      });
+
+      server.once('connection', (socket) => {
+        socket.once('data', (data) => {
+          expect(Buffer.compare(data, buffer)).to.be.equal(0);
+          verify(packetMapper.fromDomain(packet)).once();
+          socket.end();
+        });
+      });
+
+      packetSocket.once('connect', async () => {
+        await packetSocket.write(packet);
+        done();
+      });
+
+      server.listen(0);
+    });
+
+    it('should reject the write when it fails', function (done) {
+      const packet = new Packet(givenSomePacketProps());
+
+      packetSocket.once('error', () => {
+        // noop
+      });
+
+      packetSocket.write(packet).catch((error) => {
+        expect(error).to.be.an.instanceOf(DomainException);
+        expect((error as Error).message).to.be.equal('Socket is not connected');
+        done();
+      });
+    });
+  });
+
+  describe('#end()', function () {
+    it('should end socket with packet and callback', function (done) {
+      const buffer = givenAPacketBuffer();
+      const packet = new Packet(givenSomePacketProps());
+
+      when(packetMapper.fromDomain(anything())).thenReturn(buffer);
+
+      server.once('listening', () => {
+        void packetSocket.connect((server.address() as AddressInfo).port);
+      });
+
+      server.once('connection', (socket) => {
+        socket.once('data', (data) => {
+          expect(Buffer.compare(data, buffer)).to.be.equal(0);
+          verify(packetMapper.fromDomain(packet)).once();
+          socket.end();
+        });
+      });
+
+      packetSocket.once('connect', () => {
+        packetSocket.end(packet, done);
+      });
+
+      server.listen(0);
+    });
+
+    it('should end socket with callback', function (done) {
+      server.once('listening', () => {
+        void packetSocket.connect((server.address() as AddressInfo).port);
+      });
+
+      packetSocket.once('connect', () => {
+        packetSocket.end(done);
+      });
+
+      server.listen(0);
+    });
+
+    it('should end socket with packet as a promise', function (done) {
+      const buffer = givenAPacketBuffer();
+      const packet = new Packet(givenSomePacketProps());
+
+      when(packetMapper.fromDomain(anything())).thenReturn(buffer);
+
+      server.once('listening', () => {
+        void packetSocket.connect((server.address() as AddressInfo).port);
+      });
+
+      server.once('connection', (socket) => {
+        socket.once('data', (data) => {
+          expect(Buffer.compare(data, buffer)).to.be.equal(0);
+          verify(packetMapper.fromDomain(packet)).once();
+          socket.end();
+        });
+      });
+
+      packetSocket.once('connect', async () => {
+        await packetSocket.end(packet);
+        done();
+      });
+
+      server.listen(0);
+    });
+
+    it('should end socket as a promise', function (done) {
+      server.once('listening', () => {
+        void packetSocket.connect((server.address() as AddressInfo).port);
+      });
+
+      packetSocket.once('connect', async () => {
+        await packetSocket.end();
+        done();
+      });
 
       server.listen(0);
     });

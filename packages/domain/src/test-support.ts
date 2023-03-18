@@ -19,7 +19,6 @@ import type { DeviceMapProps } from './entities/device-map.entity';
 import type { DeviceOrderProps } from './entities/device-order.entity';
 import type { DeviceProps } from './entities/device.entity';
 import type { RoomProps } from './entities/room.entity';
-import type { UserProps } from './entities/user.entity';
 import type { ZoneProps } from './entities/zone.entity';
 import type { DeviceCleanWorkProps } from './value-objects/device-clean-work.value-object';
 import type { DeviceConsumableProps } from './value-objects/device-consumable.value-object';
@@ -159,12 +158,6 @@ export function givenSomeDeviceMapProps(): DeviceMapProps {
   };
 }
 
-export function givenSomeUserProps(): UserProps {
-  return {
-    id: ID.generate(),
-  };
-}
-
 export function givenSomeDeviceOrderProps(): DeviceOrderProps {
   return {
     id: ID.generate(),
@@ -184,12 +177,14 @@ export function givenSomeDeviceOrderProps(): DeviceOrderProps {
 export function givenSomeDeviceSystemProps(): DeviceSystemProps {
   return {
     type: 9,
+    serialNumber: 'serialNumber',
   };
 }
 
 export function givenSomeDeviceProps(): DeviceProps {
   return {
     id: ID.generate(),
+    userId: ID.generate(),
     system: new DeviceSystem(givenSomeDeviceSystemProps()),
     version: new DeviceVersion(givenSomeDeviceVersionProps()),
   };

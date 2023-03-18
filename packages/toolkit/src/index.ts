@@ -1,9 +1,11 @@
+export * from './adapters/memory.adapter';
+export * from './base-classes/adapter.base';
 export * from './base-classes/domain-primitive.base';
 export * from './base-classes/entity.base';
-export * from './base-classes/event-handler.base';
 export * from './base-classes/exception.base';
 export * from './base-classes/factory.base';
 export * from './base-classes/mapper.base';
+export * from './base-classes/repository.base';
 export * from './base-classes/validatable.base';
 export * from './base-classes/value-object.base';
 export * from './decorators/bind.decorator';
@@ -31,4 +33,3 @@ export * from './utils/is-present.util';
 export * from './utils/stream.util';
 export * from './utils/to-stream.util';
 export * from './utils/wait-for.util';
-export * from './event-handler.manager';

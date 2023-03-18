@@ -1,4 +1,4 @@
-import { Entity } from '@agnoc/toolkit';
+import { Entity, ID } from '@agnoc/toolkit';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
@@ -17,6 +17,8 @@ import type { EntityProps } from '@agnoc/toolkit';
 
 /** Describes the properties of a device. */
 export interface DeviceProps extends EntityProps {
+  /** The user id. */
+  userId: ID;
   /** The device system. */
   system: DeviceSystem;
   /** The device version. */
@@ -53,6 +55,11 @@ export interface DeviceProps extends EntityProps {
 
 /** Describes a device. */
 export class Device extends Entity<DeviceProps> {
+  /** Returns the user id. */
+  get userId(): ID {
+    return this.props.userId;
+  }
+
   /** Returns the device system. */
   get system(): DeviceSystem {
     return this.props.system;
@@ -232,12 +239,13 @@ export class Device extends Entity<DeviceProps> {
   }
 
   protected validate(props: DeviceProps): void {
-    const keys: (keyof DeviceProps)[] = ['system', 'version'];
+    const keys: (keyof DeviceProps)[] = ['userId', 'system', 'version'];
 
     keys.forEach((prop) => {
       this.validateDefinedProp(props, prop);
     });
 
+    this.validateInstanceProp(props, 'userId', ID);
     this.validateInstanceProp(props, 'system', DeviceSystem);
     this.validateInstanceProp(props, 'version', DeviceVersion);
     this.validateInstanceProp(props, 'config', DeviceSettings);

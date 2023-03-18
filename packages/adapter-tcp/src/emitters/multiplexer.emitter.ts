@@ -2,7 +2,7 @@
 import { DomainException, debug, bind } from '@agnoc/toolkit';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import type { Connection } from './connection.emitter';
-import type { ID } from '@agnoc/toolkit';
+import type { Device } from '@agnoc/domain';
 import type { PayloadObjectName, Packet, PayloadObjectFrom } from '@agnoc/transport-tcp';
 
 export type MultiplexerEvents<Name extends PayloadObjectName> = {
@@ -14,8 +14,7 @@ export type MultiplexerEvents<Name extends PayloadObjectName> = {
 
 export interface MultiplexerSendProps<Name extends PayloadObjectName> {
   opname: Name;
-  userId: ID;
-  deviceId: ID;
+  device: Device;
   object: PayloadObjectFrom<Name>;
 }
 
@@ -46,23 +45,24 @@ export class Multiplexer extends TypedEmitter<MultiplexerEvents<PayloadObjectNam
     return false;
   }
 
-  send(props: MultiplexerSendProps<PayloadObjectName>): boolean {
+  send(props: MultiplexerSendProps<PayloadObjectName>): Promise<void> {
     const connection = this.connections[0];
 
     if (!connection) {
-      this.emit('error', new DomainException(`No valid connection found to send packet ${props.opname}`));
+      const error = new DomainException(`No valid connection found to send packet ${props.opname}`);
 
-      return false;
+      this.emit('error', error);
+
+      throw error;
     }
 
     return connection.send(props);
   }
 
-  close(): void {
+  async close(): Promise<void> {
     this.debug('closing connections...');
-    this.connections.forEach((connection) => {
-      connection.close();
-    });
+
+    await Promise.all([this.connections.map((connection) => connection.close())]);
   }
 
   @bind

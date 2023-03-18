@@ -4,6 +4,7 @@ import type { ValueOf } from '@agnoc/toolkit';
 /** Describes the device system properties. */
 export interface DeviceSystemProps {
   type: number;
+  serialNumber: string;
 }
 
 /** Describes the device system. */
@@ -11,6 +12,11 @@ export class DeviceSystem extends ValueObject<DeviceSystemProps> {
   /** Returns the device type. */
   get type(): number {
     return this.props.type;
+  }
+
+  /** Returns the device serial number. */
+  get serialNumber(): string {
+    return this.props.serialNumber;
   }
 
   /** Returns the device model. */
@@ -29,8 +35,14 @@ export class DeviceSystem extends ValueObject<DeviceSystemProps> {
   }
 
   protected validate(props: DeviceSystemProps): void {
-    this.validateDefinedProp(props, 'type');
+    const keys: (keyof DeviceSystemProps)[] = ['type', 'serialNumber'];
+
+    keys.forEach((prop) => {
+      this.validateDefinedProp(props, prop);
+    });
+
     this.validateNumberProp(props, 'type');
+    this.validateTypeProp(props, 'serialNumber', 'string');
   }
 }
 

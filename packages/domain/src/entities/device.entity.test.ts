@@ -38,8 +38,17 @@ describe('Device', function () {
 
     expect(device).to.be.instanceOf(Entity);
     expect(device.id).to.be.equal(deviceProps.id);
+    expect(device.userId).to.be.equal(deviceProps.userId);
     expect(device.system).to.be.equal(deviceProps.system);
     expect(device.version).to.be.equal(deviceProps.version);
+  });
+
+  it("should throw an error when 'userId' is not provided", function () {
+    // @ts-expect-error - missing property
+    expect(() => new Device({ ...givenSomeDeviceProps(), userId: undefined })).to.throw(
+      ArgumentNotProvidedException,
+      `Property 'userId' for Device not provided`,
+    );
   });
 
   it("should throw an error when 'system' is not provided", function () {
@@ -55,6 +64,14 @@ describe('Device', function () {
     expect(() => new Device({ ...givenSomeDeviceProps(), version: undefined })).to.throw(
       ArgumentNotProvidedException,
       `Property 'version' for Device not provided`,
+    );
+  });
+
+  it("should throw an error when 'userId' is not an ID", function () {
+    // @ts-expect-error - invalid property
+    expect(() => new Device({ ...givenSomeDeviceProps(), userId: 'foo' })).to.throw(
+      ArgumentInvalidException,
+      `Value 'foo' for property 'userId' of Device is not an instance of ID`,
     );
   });
 

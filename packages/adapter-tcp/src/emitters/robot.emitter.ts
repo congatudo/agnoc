@@ -49,7 +49,6 @@ import type { Multiplexer } from './multiplexer.emitter';
 import type { Message, MessageHandlers } from '../value-objects/message.value-object';
 import type {
   Device,
-  User,
   DeviceFanSpeed,
   DeviceWaterLevel,
   DeviceOrder,
@@ -61,7 +60,6 @@ import type { Debugger } from 'debug';
 
 export interface RobotProps {
   device: Device;
-  user: User;
   multiplexer: Multiplexer;
 }
 
@@ -123,7 +121,6 @@ const deviceBatteryMapper = new DeviceBatteryMapper();
 
 export class Robot extends TypedEmitter<RobotEvents> {
   public readonly device: Device;
-  public readonly user: User;
   private readonly multiplexer: Multiplexer;
   private debug: Debugger;
   private handlers: MessageHandlers = {
@@ -146,10 +143,9 @@ export class Robot extends TypedEmitter<RobotEvents> {
     DEVICE_SETTIME_REQ: this.handleSetTime,
   };
 
-  constructor({ device, user, multiplexer }: RobotProps) {
+  constructor({ device, multiplexer }: RobotProps) {
     super();
     this.device = device;
-    this.user = user;
     this.multiplexer = multiplexer;
     this.debug = debug(__filename).extend(this.device.id.toString());
     this.debug('new robot');
@@ -768,10 +764,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   async handshake(): Promise<void> {
     await this.controlLock();
-
-    this.send('DEVICE_STATUS_GETTING_REQ', {});
-
-    void this.send('DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ', {
+    await this.send('DEVICE_STATUS_GETTING_REQ', {});
+    await this.send('DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ', {
       unk1: 0,
       unk2: '',
     });
@@ -793,7 +787,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
     );
     this.emit('updateDevice');
 
-    message.respond('DEVICE_VERSION_INFO_UPDATE_RSP', {
+    void message.respond('DEVICE_VERSION_INFO_UPDATE_RSP', {
       result: 0,
     });
   }
@@ -820,19 +814,19 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
     this.device.updateConfig(new DeviceSettings(props));
 
-    message.respond('PUSH_DEVICE_AGENT_SETTING_RSP', {
+    void message.respond('PUSH_DEVICE_AGENT_SETTING_RSP', {
       result: 0,
     });
   }
 
   @bind
   handleClientHeartbeat(message: Message<'CLIENT_HEARTBEAT_REQ'>): void {
-    message.respond('CLIENT_HEARTBEAT_RSP', {});
+    void message.respond('CLIENT_HEARTBEAT_RSP', {});
   }
 
   @bind
   handleDevicePackageUpgrade(message: Message<'PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ'>): void {
-    message.respond('PUSH_DEVICE_PACKAGE_UPGRADE_INFO_RSP', {
+    void message.respond('PUSH_DEVICE_PACKAGE_UPGRADE_INFO_RSP', {
       result: 0,
     });
   }
@@ -1071,7 +1065,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   @bind
   handleDeviceBatteryInfo(message: Message<'PUSH_DEVICE_BATTERY_INFO_REQ'>): void {
-    message.respond('PUSH_DEVICE_BATTERY_INFO_RSP', {
+    void message.respond('PUSH_DEVICE_BATTERY_INFO_RSP', {
       result: 0,
     });
 
@@ -1090,20 +1084,20 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   @bind
   handleWorkstatusReport(message: Message<'DEVICE_WORKSTATUS_REPORT_REQ'>): void {
-    message.respond('DEVICE_WORKSTATUS_REPORT_RSP', {
+    void message.respond('DEVICE_WORKSTATUS_REPORT_RSP', {
       result: 0,
     });
   }
 
   @bind
   handleReportCleantask(message: Message<'DEVICE_EVENT_REPORT_CLEANTASK'>): void {
-    message.respond('UNK_11A4', { unk1: 0 });
+    void message.respond('UNK_11A4', { unk1: 0 });
   }
 
   @bind
   handleReportCleanmap(message: Message<'DEVICE_EVENT_REPORT_CLEANMAP'>): void {
     const object = message.packet.payload.object;
-    message.respond('DEVICE_EVENT_REPORT_RSP', {
+    void message.respond('DEVICE_EVENT_REPORT_RSP', {
       result: 0,
       body: {
         cleanId: object.cleanId,
@@ -1114,7 +1108,7 @@ export class Robot extends TypedEmitter<RobotEvents> {
   @bind
   handleBinDataReport(message: Message<'DEVICE_CLEANMAP_BINDATA_REPORT_REQ'>): void {
     const object = message.packet.payload.object;
-    message.respond('DEVICE_CLEANMAP_BINDATA_REPORT_RSP', {
+    void message.respond('DEVICE_CLEANMAP_BINDATA_REPORT_RSP', {
       result: 0,
       cleanId: object.cleanId,
     });
@@ -1122,14 +1116,14 @@ export class Robot extends TypedEmitter<RobotEvents> {
 
   @bind
   handleEventReport(message: Message<'DEVICE_EVENT_REPORT_REQ'>): void {
-    message.respond('UNK_11A7', { unk1: 0 });
+    void message.respond('UNK_11A7', { unk1: 0 });
   }
 
   @bind
   handleSetTime(message: Message<'DEVICE_SETTIME_REQ'>): void {
     const date = new Date();
 
-    message.respond('DEVICE_SETTIME_RSP', {
+    void message.respond('DEVICE_SETTIME_RSP', {
       deviceTime: Math.floor(date.getTime() / 1000),
       deviceTimezone: -1 * (date.getTimezoneOffset() * 60),
     });
@@ -1146,8 +1140,8 @@ export class Robot extends TypedEmitter<RobotEvents> {
   handleMessage<Name extends PayloadObjectName>(message: Message<Name>): void {
     const handler = this.handlers[message.opname];
 
-    if (message.packet.userId.value !== 0 && message.packet.userId.value !== this.user.id.value) {
-      message.respond('COMMON_ERROR_REPLY', {
+    if (message.packet.userId.value !== 0 && message.packet.userId.value !== this.device.userId.value) {
+      void message.respond('COMMON_ERROR_REPLY', {
         result: 11001,
         error: 'Target user is offline',
         opcode: message.packet.payload.opcode.code,
@@ -1163,25 +1157,24 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   override toString(): string {
-    return [`device: ${this.device.toString()}`, `user: ${this.user.toString()}`].join(' ');
+    return [`device: ${this.device.toString()}`].join(' ');
   }
 
-  disconnect(): void {
+  disconnect(): Promise<void> {
     this.debug('disconnecting...');
 
     return this.multiplexer.close();
   }
 
-  send<Name extends PayloadObjectName>(opname: Name, object: PayloadObjectFrom<Name>): void {
-    const ret = this.multiplexer.send({
-      opname,
-      userId: this.user.id,
-      deviceId: this.device.id,
-      object,
-    });
-
-    if (!ret) {
-      throw new DomainException(`There was an error sending opcode '${opname}'`);
+  async send<Name extends PayloadObjectName>(opname: Name, object: PayloadObjectFrom<Name>): Promise<void> {
+    try {
+      await this.multiplexer.send({
+        opname,
+        device: this.device,
+        object,
+      });
+    } catch (err) {
+      throw new DomainException(`There was an error sending opcode '${opname}'`, {}, { cause: err });
     }
   }
 
@@ -1203,12 +1196,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
   }
 
-  sendRecv<SendName extends PayloadObjectName, RecvName extends PayloadObjectName>(
+  async sendRecv<SendName extends PayloadObjectName, RecvName extends PayloadObjectName>(
     sendOPName: SendName,
     recvOPName: RecvName,
     sendObject: PayloadObjectFrom<SendName>,
   ): Promise<Packet<RecvName>> {
-    this.send(sendOPName, sendObject);
+    await this.send(sendOPName, sendObject);
 
     return this.recv(recvOPName);
   }

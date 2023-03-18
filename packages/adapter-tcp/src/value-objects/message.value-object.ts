@@ -31,7 +31,7 @@ export class Message<Name extends PayloadObjectName> extends ValueObject<Message
     return this.packet.payload.opcode.name as Name;
   }
 
-  respond<RName extends PayloadObjectName>(opname: RName, object: PayloadObjectFrom<RName>): boolean {
+  respond<RName extends PayloadObjectName>(opname: RName, object: PayloadObjectFrom<RName>): Promise<void> {
     return this.connection.respond({ packet: this.packet, opname, object });
   }
 

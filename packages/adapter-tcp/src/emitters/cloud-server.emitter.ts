@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Device, DeviceSystem, DeviceVersion, User } from '@agnoc/domain';
+import { Device, DeviceSystem, DeviceVersion } from '@agnoc/domain';
 import { ID, bind } from '@agnoc/toolkit';
 import { PacketServer } from '@agnoc/transport-tcp';
 import { TypedEmitter } from 'tiny-typed-emitter';
@@ -53,7 +53,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
 
   async close(): Promise<void> {
     this.getRobots().map((robot) => {
-      robot.disconnect();
+      void robot.disconnect();
     });
 
     await Promise.all([this.servers.cmd.close(), this.servers.map.close(), this.servers.rtc.close()]);
@@ -66,12 +66,12 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
     if (!robot) {
       const object = message.packet.payload.object;
 
-      message.respond('CLIENT_ONLINE_RSP', {
+      void message.respond('CLIENT_ONLINE_RSP', {
         result: 12002,
         reason: `Device not registered(devsn: ${object.deviceSerialNumber})`,
       });
     } else {
-      message.respond('CLIENT_ONLINE_RSP', {
+      void message.respond('CLIENT_ONLINE_RSP', {
         result: 0,
       });
     }
@@ -83,16 +83,14 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
     const multiplexer = new Multiplexer();
     const device = new Device({
       id: ID.generate(),
-      system: new DeviceSystem({ type: props.deviceType }),
+      userId: ID.generate(),
+      system: new DeviceSystem({ type: props.deviceType, serialNumber: props.deviceSerialNumber }),
       version: new DeviceVersion({
         software: props.softwareVersion,
         hardware: props.hardwareVersion,
       }),
     });
-    const user = new User({
-      id: ID.generate(),
-    });
-    const robot = new Robot({ device, user, multiplexer });
+    const robot = new Robot({ device, multiplexer });
 
     multiplexer.on('error', (err) => this.emit('error', err));
 
@@ -102,7 +100,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
 
     this.emit('addRobot', robot);
 
-    message.respond('DEVICE_REGISTER_RSP', {
+    void message.respond('DEVICE_REGISTER_RSP', {
       result: 0,
       device: {
         id: device.id.value,
@@ -126,7 +124,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
       return;
     }
 
-    message.respond('COMMON_ERROR_REPLY', {
+    void message.respond('COMMON_ERROR_REPLY', {
       result: 1,
       opcode: message.packet.payload.opcode.code,
       error: 'Device not registered',
@@ -148,10 +146,8 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
   private handleRTPConnection(socket: PacketSocket) {
     const connection = new Connection(socket);
 
-    connection.send({
+    void connection.send({
       opname: 'DEVICE_TIME_SYNC_RSP',
-      userId: new ID(0),
-      deviceId: new ID(0),
       object: {
         result: 0,
         body: {
@@ -160,7 +156,7 @@ export class CloudServer extends TypedEmitter<CloudServerEvents> {
       },
     });
 
-    connection.close();
+    void connection.close();
   }
 
   private addListeners(): void {

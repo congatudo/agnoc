@@ -7,7 +7,7 @@ import type { AddressInfo, ListenOptions, Socket, DropArgument } from 'net';
 /** Events emitted by the {@link PacketServer}. */
 export interface PacketServerEvents {
   /** Emits a {@link PacketSocket} when a new connection is established. */
-  connection: (socket: PacketSocket) => void;
+  connection: (socket: PacketSocket) => void | Promise<void>;
   /** Emits an error when an error occurs. */
   error: (err: Error) => void;
   /** Emits when the server has been bound after calling `server.listen`. */

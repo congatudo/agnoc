@@ -6,17 +6,17 @@ import {
   isPresent,
   ArgumentNotProvidedException,
   ArgumentInvalidException,
+  ID,
 } from '@agnoc/toolkit';
 import { Packet, PacketSocket, PacketSequence, OPCode, Payload } from '@agnoc/transport-tcp';
 import { TypedEmitter } from 'tiny-typed-emitter';
-import type { ID } from '@agnoc/toolkit';
+import type { Device } from '@agnoc/domain';
 import type { PayloadObjectName, PayloadObjectFrom } from '@agnoc/transport-tcp';
 import type { Debugger } from 'debug';
 
 export interface ConnectionSendProps<Name extends PayloadObjectName> {
   opname: Name;
-  userId: ID;
-  deviceId: ID;
+  device?: Device;
   object: PayloadObjectFrom<Name>;
 }
 
@@ -53,23 +53,23 @@ export class Connection extends TypedEmitter<ConnectionEvents<PayloadObjectName>
     this.socket.on('close', this.handleClose);
   }
 
-  send<Name extends PayloadObjectName>({ opname, userId, deviceId, object }: ConnectionSendProps<Name>): boolean {
+  send<Name extends PayloadObjectName>({ opname, device, object }: ConnectionSendProps<Name>): Promise<void> {
     const packet = new Packet({
       ctype: 2,
       flow: 0,
       // This swap is intended.
-      userId: deviceId,
-      deviceId: userId,
+      userId: device?.id ?? new ID(0),
+      deviceId: device?.userId ?? new ID(0),
       sequence: PacketSequence.generate(),
       payload: new Payload({ opcode: OPCode.fromName(opname), object }),
     });
 
     this.debug(`sending packet ${packet.toString()}`);
 
-    return this.write(packet);
+    return this.socket.write(packet);
   }
 
-  respond<Name extends PayloadObjectName>({ packet, opname, object }: ConnectionRespondProps<Name>): boolean {
+  respond<Name extends PayloadObjectName>({ packet, opname, object }: ConnectionRespondProps<Name>): Promise<void> {
     const response = new Packet({
       ctype: packet.ctype,
       flow: packet.flow + 1,
@@ -82,20 +82,13 @@ export class Connection extends TypedEmitter<ConnectionEvents<PayloadObjectName>
 
     this.debug(`responding to packet with ${response.toString()}`);
 
-    return this.write(response);
+    return this.socket.write(response);
   }
 
-  private write(packet: Packet): boolean {
-    if (!this.socket.destroyed && !this.socket.connecting) {
-      return this.socket.write(packet);
-    }
-
-    return false;
-  }
-
-  close(): void {
+  close(): Promise<void> {
     this.debug('closing socket...');
-    this.socket.end();
+
+    return this.socket.end();
   }
 
   @bind
