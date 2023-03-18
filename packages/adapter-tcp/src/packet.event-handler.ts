@@ -1,8 +1,6 @@
-import type { EventHandler } from './event-handler.base';
 import type { PacketMessage } from './packet.message';
+import type { EventHandler } from '@agnoc/toolkit';
 import type { PayloadObjectName } from '@agnoc/transport-tcp';
-
-export type PacketEventHandleParameter<T extends PacketEventHandler> = PacketMessage<T['eventName']>;
 
 /** Base class for packet event handlers. */
 export abstract class PacketEventHandler implements EventHandler {
@@ -10,5 +8,5 @@ export abstract class PacketEventHandler implements EventHandler {
   abstract eventName: PayloadObjectName;
 
   /** Handle the event. */
-  abstract handle(message: PacketEventHandleParameter<this>): void;
+  abstract handle(message: PacketMessage<this['eventName']>): void;
 }

@@ -1,5 +1,5 @@
 import { Server } from 'net';
-import { TypedEmitter } from 'tiny-typed-emitter';
+import Emittery from 'emittery';
 import { PacketSocket } from './packet.socket';
 import type { PacketMapper } from './mappers/packet.mapper';
 import type { AddressInfo, ListenOptions, Socket, DropArgument } from 'net';
@@ -7,19 +7,19 @@ import type { AddressInfo, ListenOptions, Socket, DropArgument } from 'net';
 /** Events emitted by the {@link PacketServer}. */
 export interface PacketServerEvents {
   /** Emits a {@link PacketSocket} when a new connection is established. */
-  connection: (socket: PacketSocket) => void | Promise<void>;
+  connection: PacketSocket;
   /** Emits an error when an error occurs. */
-  error: (err: Error) => void;
+  error: Error;
   /** Emits when the server has been bound after calling `server.listen`. */
-  listening: () => void;
+  listening: undefined;
   /** Emits when the server closes. */
-  close: () => void;
+  close: undefined;
   /** Emits when a packet is dropped due to a full socket buffer. */
-  drop: (data?: DropArgument) => void;
+  drop: DropArgument | undefined;
 }
 
 /** Server that emits `PacketSockets`. */
-export class PacketServer extends TypedEmitter<PacketServerEvents> {
+export class PacketServer extends Emittery<PacketServerEvents> {
   private server: Server;
 
   constructor(private readonly packetMapper: PacketMapper) {
@@ -72,16 +72,16 @@ export class PacketServer extends TypedEmitter<PacketServerEvents> {
   private onConnection(socket: Socket): void {
     const client = new PacketSocket(this.packetMapper, socket);
 
-    this.emit('connection', client);
+    void this.emit('connection', client);
   }
 
   private addListeners(): void {
     this.server.on('connection', this.onConnection.bind(this));
-    this.server.on('listening', () => this.emit('listening'));
-    this.server.on('close', () => this.emit('close'));
+    this.server.on('listening', () => void this.emit('listening'));
+    this.server.on('close', () => void this.emit('close'));
     /* istanbul ignore next - unable to test */
-    this.server.on('error', (error) => this.emit('error', error));
+    this.server.on('error', (error) => void this.emit('error', error));
     /* istanbul ignore next - unable to test */
-    this.server.on('drop', (data) => this.emit('drop', data));
+    this.server.on('drop', (data) => void this.emit('drop', data));
   }
 }

@@ -1,7 +1,5 @@
 import { ID } from '@agnoc/toolkit';
-import type { PacketFactory } from './factories/packet.factory';
-import type { PacketServer } from './packet.server';
-import type { PacketSocket } from './packet.socket';
+import type { PacketServer, PacketFactory, PacketSocket } from '@agnoc/transport-tcp';
 
 /** Device time synchronization server implementation. */
 export class TimeSyncServer {

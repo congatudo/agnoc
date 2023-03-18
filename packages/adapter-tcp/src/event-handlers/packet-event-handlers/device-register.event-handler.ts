@@ -1,14 +1,15 @@
 import { Device, DeviceSystem, DeviceVersion } from '@agnoc/domain';
 import { ID } from '@agnoc/toolkit';
-import type { PacketEventHandler, PacketEventHandleParameter } from '../packet.event-handler';
+import type { PacketEventHandler } from '../../packet.event-handler';
+import type { PacketMessage } from '../../packet.message';
 import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceRegisterEventHandler implements PacketEventHandler {
-  eventName = 'DEVICE_REGISTER_REQ' as const;
+  readonly eventName = 'DEVICE_REGISTER_REQ';
 
   constructor(private readonly deviceRepository: DeviceRepository) {}
 
-  async handle(message: PacketEventHandleParameter<this>): Promise<void> {
+  async handle(message: PacketMessage<'DEVICE_REGISTER_REQ'>): Promise<void> {
     const data = message.packet.payload.object;
     const device = new Device({
       id: ID.generate(),

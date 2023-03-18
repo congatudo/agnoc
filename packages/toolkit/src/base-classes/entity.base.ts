@@ -7,7 +7,7 @@ export interface EntityProps {
   id: ID;
 }
 
-export abstract class Entity<T extends EntityProps> extends Validatable<T> {
+export abstract class Entity<T extends EntityProps = EntityProps> extends Validatable<T> {
   constructor(props: T) {
     super(props);
     this.validateId(props);

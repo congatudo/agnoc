@@ -30,6 +30,7 @@ module.exports = {
     },
   },
   rules: {
+    'object-shorthand': ['error', 'always'],
     'tsdoc/syntax': 'warn',
     'node/no-missing-import': 'off',
     'node/no-extraneous-import': 'off',

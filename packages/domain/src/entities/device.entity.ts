@@ -1,10 +1,12 @@
-import { Entity, ID } from '@agnoc/toolkit';
+import { AggregateRoot, ID } from '@agnoc/toolkit';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
 import { DeviceMode } from '../domain-primitives/device-mode.domain-primitive';
 import { DeviceState } from '../domain-primitives/device-state.domain-primitive';
 import { DeviceWaterLevel } from '../domain-primitives/device-water-level.domain-primitive';
+import { DeviceConnectedDomainEvent } from '../events/device-connected.domain-event';
+import { DeviceLockedDomainEvent } from '../events/device-locked.domain-event';
 import { DeviceCleanWork } from '../value-objects/device-clean-work.value-object';
 import { DeviceConsumable } from '../value-objects/device-consumable.value-object';
 import { DeviceSettings } from '../value-objects/device-settings.value-object';
@@ -23,6 +25,10 @@ export interface DeviceProps extends EntityProps {
   system: DeviceSystem;
   /** The device version. */
   version: DeviceVersion;
+  /** Whether the device is connected. */
+  isConnected?: boolean;
+  /** Whether the device is locked. */
+  isLocked?: boolean;
   /** The device settings. */
   config?: DeviceSettings;
   /** The device current clean. */
@@ -54,7 +60,7 @@ export interface DeviceProps extends EntityProps {
 }
 
 /** Describes a device. */
-export class Device extends Entity<DeviceProps> {
+export class Device extends AggregateRoot<DeviceProps> {
   /** Returns the user id. */
   get userId(): ID {
     return this.props.userId;
@@ -63,6 +69,16 @@ export class Device extends Entity<DeviceProps> {
   /** Returns the device system. */
   get system(): DeviceSystem {
     return this.props.system;
+  }
+
+  /** Returns whether the device is connected. */
+  get isConnected(): boolean {
+    return this.props.isConnected ?? false;
+  }
+
+  /** Returns whether the device is locked. */
+  get isLocked(): boolean {
+    return this.props.isLocked ?? false;
   }
 
   /** Returns the device version. */
@@ -138,6 +154,18 @@ export class Device extends Entity<DeviceProps> {
   /** Returns whether the device has a waiting map. */
   get hasWaitingMap(): boolean {
     return Boolean(this.props.hasWaitingMap);
+  }
+
+  /** Sets the device as connected. */
+  setAsConnected(): void {
+    this.props.isConnected = true;
+    this.addEvent(new DeviceConnectedDomainEvent({ aggregateId: this.id }));
+  }
+
+  /** Sets the device as connected. */
+  setAsLocked(): void {
+    this.props.isLocked = true;
+    this.addEvent(new DeviceLockedDomainEvent({ aggregateId: this.id }));
   }
 
   /** Updates the device system. */

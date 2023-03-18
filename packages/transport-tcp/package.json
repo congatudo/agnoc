@@ -80,7 +80,7 @@
     "@agnoc/schemas-tcp": "^0.16.0",
     "@agnoc/toolkit": "^0.18.0-next.0",
     "debug": "^4.3.4",
-    "tiny-typed-emitter": "^2.1.0",
+    "emittery": "^0.13.1",
     "tslib": "^2.5.0"
   },
   "devDependencies": {

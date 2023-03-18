@@ -54,7 +54,7 @@ describe('PayloadMapper', function () {
     it('should create a buffer from a payload', function () {
       const opcode = OPCode.fromName('CLIENT_HEARTBEAT_REQ');
       const object = { foo: 'bar' };
-      const payload = new Payload({ opcode: opcode, object: object });
+      const payload = new Payload({ opcode, object });
       const buffer = Buffer.from('test');
 
       when(payloadObjectParserService.getEncoder(anything())).thenReturn(instance(encoder));
@@ -70,7 +70,7 @@ describe('PayloadMapper', function () {
     it('should throw an error when the encoder does not exist', function () {
       const opcode = OPCode.fromName('CLIENT_HEARTBEAT_REQ');
       const object = { foo: 'bar' };
-      const payload = new Payload({ opcode: opcode, object: object });
+      const payload = new Payload({ opcode, object });
 
       when(payloadObjectParserService.getEncoder(anything())).thenReturn(undefined);
 

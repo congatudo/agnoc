@@ -1,11 +1,10 @@
 import { anything, capture, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { EventHandlerManager } from './event-handler.manager';
-import type { EventHandler } from './event-handler.base';
-import type { EventEmitter } from 'stream';
+import type { EventBus, EventHandler } from '@agnoc/toolkit';
 
 describe('EventHandlerManager', function () {
-  let eventBus: EventEmitter;
+  let eventBus: EventBus;
   let eventHandler: EventHandler;
   let eventHandlerManager: EventHandlerManager;
 
@@ -23,18 +22,18 @@ describe('EventHandlerManager', function () {
     verify(eventBus.on('event', anything())).once();
   });
 
-  it('should call handle when event is emitted', function () {
+  it('should call handle when event is emitted', async function () {
     const data = { foo: 'bar' };
 
     when(eventHandler.eventName).thenReturn('event');
 
     eventHandlerManager.register(instance(eventHandler));
 
-    const [eventName, callback] = capture(eventBus.on).first();
+    const [eventName, callback] = capture(eventBus.on<'event'>).first();
 
     expect(eventName).to.equal('event');
 
-    callback(data);
+    await callback(data);
 
     verify(eventHandler.handle(data)).once();
   });

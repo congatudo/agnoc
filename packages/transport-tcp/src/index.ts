@@ -13,7 +13,6 @@ export * from './mappers/payload.mapper';
 export * from './packet.server';
 export * from './packet.socket';
 export * from './services/payload-object-parser.service';
-export * from './time-sync.server';
 export * from './utils/get-custom-decoders.util';
 export * from './utils/get-protobuf-root.util';
 export * from './value-objects/packet.value-object';

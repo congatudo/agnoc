@@ -1,4 +1,4 @@
-import { ArgumentInvalidException, ArgumentNotProvidedException, Entity } from '@agnoc/toolkit';
+import { AggregateRoot, ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
 import { expect } from 'chai';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError, DeviceErrorValue } from '../domain-primitives/device-error.domain-primitive';
@@ -36,7 +36,7 @@ describe('Device', function () {
     };
     const device = new Device(deviceProps);
 
-    expect(device).to.be.instanceOf(Entity);
+    expect(device).to.be.instanceOf(AggregateRoot);
     expect(device.id).to.be.equal(deviceProps.id);
     expect(device.userId).to.be.equal(deviceProps.userId);
     expect(device.system).to.be.equal(deviceProps.system);

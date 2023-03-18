@@ -1,11 +1,12 @@
 import { DeviceVersion } from '@agnoc/domain';
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketEventHandler, PacketEventHandleParameter } from '../packet.event-handler';
+import type { PacketEventHandler } from '../../packet.event-handler';
+import type { PacketMessage } from '../../packet.message';
 
 export class DeviceVersionUpdateEventHandler implements PacketEventHandler {
-  eventName = 'DEVICE_VERSION_INFO_UPDATE_REQ' as const;
+  readonly eventName = 'DEVICE_VERSION_INFO_UPDATE_REQ';
 
-  async handle(message: PacketEventHandleParameter<this>): Promise<void> {
+  async handle(message: PacketMessage<'DEVICE_VERSION_INFO_UPDATE_REQ'>): Promise<void> {
     if (!message.device) {
       throw new DomainException('Device not found');
     }

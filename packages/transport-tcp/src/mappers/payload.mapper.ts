@@ -20,7 +20,7 @@ export class PayloadMapper implements Mapper<Payload, Buffer> {
     const object = decoder(buffer);
 
     return new Payload({
-      opcode: opcode,
+      opcode,
       object,
     });
   }

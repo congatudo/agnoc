@@ -1,4 +1,6 @@
 import { ID } from '@agnoc/toolkit';
+import { Packet } from '@agnoc/transport-tcp';
+import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import {
   anything,
   capture,
@@ -10,12 +12,8 @@ import {
   when,
 } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { givenSomePacketProps } from './test-support';
 import { TimeSyncServer } from './time-sync.server';
-import { Packet } from './value-objects/packet.value-object';
-import type { PacketFactory } from './factories/packet.factory';
-import type { PacketServer } from './packet.server';
-import type { PacketSocket } from './packet.socket';
+import type { PacketServer, PacketFactory, PacketSocket } from '@agnoc/transport-tcp';
 
 describe('TimeSyncServer', function () {
   let packetServer: PacketServer;

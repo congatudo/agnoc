@@ -1,14 +1,15 @@
 import { DeviceSetting, DeviceSettings, DeviceTime, QuietHoursSetting } from '@agnoc/domain';
 import { DomainException } from '@agnoc/toolkit';
-import type { DeviceVoiceMapper } from '../mappers/device-voice.mapper';
-import type { PacketEventHandler, PacketEventHandleParameter } from '../packet.event-handler';
+import type { DeviceVoiceMapper } from '../../mappers/device-voice.mapper';
+import type { PacketEventHandler } from '../../packet.event-handler';
+import type { PacketMessage } from '../../packet.message';
 
 export class DeviceSettingsUpdateEventHandler implements PacketEventHandler {
-  eventName = 'PUSH_DEVICE_AGENT_SETTING_REQ' as const;
+  readonly eventName = 'PUSH_DEVICE_AGENT_SETTING_REQ';
 
   constructor(private readonly deviceVoiceMapper: DeviceVoiceMapper) {}
 
-  async handle(message: PacketEventHandleParameter<this>): Promise<void> {
+  async handle(message: PacketMessage<'PUSH_DEVICE_AGENT_SETTING_REQ'>): Promise<void> {
     if (!message.device) {
       throw new DomainException('Device not found');
     }
