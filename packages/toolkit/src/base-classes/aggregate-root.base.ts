@@ -2,7 +2,7 @@ import { debug } from '../utils/debug.util';
 import { Entity } from './entity.base';
 import type { DomainEvent } from './domain-event.base';
 import type { EntityProps } from './entity.base';
-import type { DomainEventBus } from '../event-buses/domain.event-bus';
+import type { EventBus } from './event-bus.base';
 
 export abstract class AggregateRoot<T extends EntityProps = EntityProps> extends Entity<T> {
   private readonly debug = debug(__filename).extend(`${this.constructor.name.toLowerCase()}:${this.id.value}`);
@@ -16,11 +16,11 @@ export abstract class AggregateRoot<T extends EntityProps = EntityProps> extends
     this.#domainEvents.clear();
   }
 
-  async publishEvents(domainEventBus: DomainEventBus): Promise<void> {
+  async publishEvents(eventBus: EventBus): Promise<void> {
     await Promise.all(
       this.domainEvents.map(async (event) => {
         this.debug(`publishing domain event '${event.constructor.name}'`);
-        return domainEventBus.emit(event.constructor.name, event);
+        return eventBus.emit(event.constructor.name, event);
       }),
     );
 

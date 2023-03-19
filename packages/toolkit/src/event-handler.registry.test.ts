@@ -1,17 +1,17 @@
 import { anything, capture, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { EventHandlerManager } from './event-handler.manager';
+import { EventHandlerRegistry } from './event-handler.registry';
 import type { EventBus, EventHandler } from '@agnoc/toolkit';
 
-describe('EventHandlerManager', function () {
+describe('EventHandlerRegistry', function () {
   let eventBus: EventBus;
   let eventHandler: EventHandler;
-  let eventHandlerManager: EventHandlerManager;
+  let eventHandlerManager: EventHandlerRegistry;
 
   beforeEach(function () {
     eventBus = imock();
     eventHandler = imock();
-    eventHandlerManager = new EventHandlerManager(instance(eventBus));
+    eventHandlerManager = new EventHandlerRegistry(instance(eventBus));
   });
 
   it('should listen for events on the bus', function () {

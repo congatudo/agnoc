@@ -20,11 +20,11 @@ export interface PacketServerEvents {
 
 /** Server that emits `PacketSockets`. */
 export class PacketServer extends Emittery<PacketServerEvents> {
-  private server: Server;
+  private readonly sockets = new Set<PacketSocket>();
+  private readonly server = new Server();
 
   constructor(private readonly packetMapper: PacketMapper) {
     super();
-    this.server = new Server();
     this.addListeners();
   }
 
@@ -66,19 +66,29 @@ export class PacketServer extends Emittery<PacketServerEvents> {
 
         resolve();
       });
+
+      this.sockets.forEach((socket) => void socket.end());
     });
   }
 
   private onConnection(socket: Socket): void {
-    const client = new PacketSocket(this.packetMapper, socket);
+    const packetSocket = new PacketSocket(this.packetMapper, socket);
 
-    void this.emit('connection', client);
+    this.sockets.add(packetSocket);
+
+    packetSocket.on('close', () => {
+      this.sockets.delete(packetSocket);
+    });
+
+    void this.emit('connection', packetSocket);
   }
 
   private addListeners(): void {
     this.server.on('connection', this.onConnection.bind(this));
     this.server.on('listening', () => void this.emit('listening'));
-    this.server.on('close', () => void this.emit('close'));
+    this.server.on('close', () => {
+      void this.emit('close');
+    });
     /* istanbul ignore next - unable to test */
     this.server.on('error', (error) => void this.emit('error', error));
     /* istanbul ignore next - unable to test */

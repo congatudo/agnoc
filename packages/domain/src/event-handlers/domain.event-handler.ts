@@ -1,4 +1,4 @@
-import type { DomainEventNames, DomainEvents } from '../events';
+import type { DomainEventNames, DomainEvents } from '../domain-events/domain-events';
 import type { EventHandler } from '@agnoc/toolkit';
 
 /** Base class for domain event handlers. */

@@ -5,17 +5,17 @@ import { AggregateRoot } from './aggregate-root.base';
 import { Repository } from './repository.base';
 import type { Adapter } from './adapter.base';
 import type { EntityProps } from './entity.base';
-import type { DomainEventBus } from '../event-buses/domain.event-bus';
+import type { EventBus } from './event-bus.base';
 
 describe('Repository', function () {
-  let domainEventBus: DomainEventBus;
+  let eventBus: EventBus;
   let adapter: Adapter;
   let dummyRepository: DummyRepository;
 
   beforeEach(function () {
-    domainEventBus = imock();
+    eventBus = imock();
     adapter = imock();
-    dummyRepository = new DummyRepository(instance(domainEventBus), instance(adapter));
+    dummyRepository = new DummyRepository(instance(eventBus), instance(adapter));
   });
 
   it('should find one by id', async function () {
@@ -52,7 +52,7 @@ describe('Repository', function () {
     await dummyRepository.saveOne(entity);
 
     verify(adapter.set(id, entity)).once();
-    verify(entitySpy.publishEvents(instance(domainEventBus))).once();
+    verify(entitySpy.publishEvents(instance(eventBus))).once();
   });
 
   it('should delete one', async function () {
@@ -63,7 +63,7 @@ describe('Repository', function () {
     await dummyRepository.deleteOne(entity);
 
     verify(adapter.delete(id)).once();
-    verify(entitySpy.publishEvents(instance(domainEventBus))).once();
+    verify(entitySpy.publishEvents(instance(eventBus))).once();
   });
 });
 

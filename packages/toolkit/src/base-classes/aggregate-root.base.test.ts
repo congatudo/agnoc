@@ -6,13 +6,13 @@ import { DomainEvent } from './domain-event.base';
 import { Entity } from './entity.base';
 import type { DomainEventProps } from './domain-event.base';
 import type { EntityProps } from './entity.base';
-import type { DomainEventBus } from '../event-buses/domain.event-bus';
+import type { EventBus } from './event-bus.base';
 
 describe('AggregateRoot', function () {
-  let domainEventBus: DomainEventBus;
+  let eventBus: EventBus;
 
   beforeEach(function () {
-    domainEventBus = imock();
+    eventBus = imock();
   });
 
   it('should be created', function () {
@@ -34,15 +34,15 @@ describe('AggregateRoot', function () {
     const id = ID.generate();
     const dummyAggregateRoot = new DummyAggregateRoot({ id });
 
-    when(domainEventBus.emit(anything(), anything())).thenResolve();
+    when(eventBus.emit(anything(), anything())).thenResolve();
 
     dummyAggregateRoot.doSomething();
 
-    await dummyAggregateRoot.publishEvents(instance(domainEventBus));
+    await dummyAggregateRoot.publishEvents(instance(eventBus));
 
     expect(dummyAggregateRoot.domainEvents).to.be.lengthOf(0);
 
-    verify(domainEventBus.emit('DummyDomainEvent', deepEqual(new DummyDomainEvent({ aggregateId: id })))).once();
+    verify(eventBus.emit('DummyDomainEvent', deepEqual(new DummyDomainEvent({ aggregateId: id })))).once();
   });
 
   it('should be able to clear domain events', function () {

@@ -1,19 +1,31 @@
 import { Device } from '@agnoc/domain';
 import { ArgumentInvalidException, DomainException, ID } from '@agnoc/toolkit';
 import { PacketSocket } from '@agnoc/transport-tcp';
-import { TypedEmitter } from 'tiny-typed-emitter';
-import type { Packet, PacketFactory, PayloadObjectName, PayloadObjectFrom } from '@agnoc/transport-tcp';
+import Emittery from 'emittery';
+import type { PacketEventBus } from './packet.event-bus';
+import type { PacketMessage } from './packet.message';
+import type {
+  Packet,
+  PacketFactory,
+  PayloadObjectName,
+  PayloadObjectFrom,
+  CreatePacketProps,
+} from '@agnoc/transport-tcp';
 
 export interface DeviceConnectionEvents {
-  data: (packet: Packet) => void | Promise<void>;
-  close: () => void;
-  error: (err: Error) => void;
+  data: Packet;
+  close: undefined;
+  error: Error;
 }
 
-export class DeviceConnection extends TypedEmitter<DeviceConnectionEvents> {
+export class DeviceConnection extends Emittery<DeviceConnectionEvents> {
   #device?: Device;
 
-  constructor(private readonly packetFactory: PacketFactory, private readonly socket: PacketSocket) {
+  constructor(
+    private readonly packetFactory: PacketFactory,
+    private readonly eventBus: PacketEventBus,
+    private readonly socket: PacketSocket,
+  ) {
     super();
     this.validateSocket();
     this.addListeners();
@@ -34,18 +46,50 @@ export class DeviceConnection extends TypedEmitter<DeviceConnectionEvents> {
   }
 
   send<Name extends PayloadObjectName>(name: Name, object: PayloadObjectFrom<Name>): Promise<void> {
-    const props = { deviceId: this.#device?.id ?? new ID(0), userId: this.#device?.userId ?? new ID(0) };
-    const packet = this.packetFactory.create(name, object, props);
+    const packet = this.packetFactory.create(name, object, this.getPacketProps());
 
-    return this.socket.write(packet);
+    return this.write(packet);
   }
 
   respond<Name extends PayloadObjectName>(name: Name, object: PayloadObjectFrom<Name>, packet: Packet): Promise<void> {
-    return this.socket.write(this.packetFactory.create(name, object, packet));
+    return this.write(this.packetFactory.create(name, object, packet));
+  }
+
+  sendAndWait<Name extends PayloadObjectName>(name: Name, object: PayloadObjectFrom<Name>): Promise<PacketMessage> {
+    const packet = this.packetFactory.create(name, object, this.getPacketProps());
+
+    return this.writeAndWait(packet);
+  }
+
+  respondAndWait<Name extends PayloadObjectName>(
+    name: Name,
+    object: PayloadObjectFrom<Name>,
+    packet: Packet,
+  ): Promise<PacketMessage> {
+    return this.writeAndWait(this.packetFactory.create(name, object, packet));
   }
 
   close(): Promise<void> {
     return this.socket.end();
+  }
+
+  private getPacketProps(): CreatePacketProps {
+    return { deviceId: this.#device?.id ?? new ID(0), userId: this.#device?.userId ?? new ID(0) };
+  }
+
+  private writeAndWait(packet: Packet): Promise<PacketMessage> {
+    return new Promise((resolve, reject) => {
+      this.eventBus.once(packet.sequence.toString()).then(resolve, reject);
+      this.write(packet).catch(reject);
+    });
+  }
+
+  private async write(packet: Packet) {
+    if (!this.socket.connected) {
+      return;
+    }
+
+    return this.socket.write(packet);
   }
 
   private validateSocket() {
@@ -60,14 +104,13 @@ export class DeviceConnection extends TypedEmitter<DeviceConnectionEvents> {
 
   private addListeners() {
     this.socket.on('data', (packet) => {
-      this.emit('data', packet);
+      void this.emit('data', packet);
     });
     this.socket.on('error', (err) => {
-      this.emit('error', err);
+      void this.emit('error', err);
     });
     this.socket.on('close', () => {
-      this.socket.removeAllListeners();
-      this.emit('close');
+      void this.emit('close');
     });
   }
 }

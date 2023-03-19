@@ -1,7 +1,8 @@
-import type { EventBus, EventHandler } from '@agnoc/toolkit';
+import type { EventBus } from './base-classes/event-bus.base';
+import type { EventHandler } from './base-classes/event-handler.base';
 
 /** Manages event handlers. */
-export class EventHandlerManager {
+export class EventHandlerRegistry {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(private readonly eventBus: EventBus<any>) {}
 

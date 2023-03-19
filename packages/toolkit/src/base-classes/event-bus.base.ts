@@ -1,5 +1,4 @@
 import Emittery from 'emittery';
 
-export type EventBusEvents = { [key: string]: unknown };
-
-export abstract class EventBus<Events = EventBusEvents> extends Emittery<Events> {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export abstract class EventBus<Events = any> extends Emittery<Events> {}

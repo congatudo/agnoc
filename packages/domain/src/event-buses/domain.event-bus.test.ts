@@ -1,5 +1,5 @@
+import { EventBus } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { EventBus } from '../base-classes/event-bus.base';
 import { DomainEventBus } from './domain.event-bus';
 
 describe('DomainEventBus', function () {

@@ -1,6 +1,7 @@
 export * from './adapters/memory.adapter';
 export * from './base-classes/adapter.base';
 export * from './base-classes/aggregate-root.base';
+export * from './base-classes/command.base';
 export * from './base-classes/domain-event.base';
 export * from './base-classes/domain-primitive.base';
 export * from './base-classes/entity.base';
@@ -14,7 +15,7 @@ export * from './base-classes/validatable.base';
 export * from './base-classes/value-object.base';
 export * from './decorators/bind.decorator';
 export * from './domain-primitives/id.domain-primitive';
-export * from './event-buses/domain.event-bus';
+export * from './event-handler.registry';
 export * from './exceptions/argument-invalid.exception';
 export * from './exceptions/argument-not-provided.exception';
 export * from './exceptions/argument-out-of-range.exception';
