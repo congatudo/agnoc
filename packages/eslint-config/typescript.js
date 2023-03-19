@@ -36,6 +36,7 @@ module.exports = {
     'node/no-extraneous-import': 'off',
     'node/no-unsupported-features/es-syntax': 'off',
     'security/detect-object-injection': 'off',
+    '@typescript-eslint/require-await': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'error',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/consistent-type-exports': 'warn',

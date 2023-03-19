@@ -15,6 +15,8 @@ export class DeviceVersionUpdateEventHandler implements PacketEventHandler {
 
     message.device.updateVersion(new DeviceVersion({ software: data.softwareVersion, hardware: data.hardwareVersion }));
 
+    // TODO: save entity and publish domain event
+
     await message.respond('DEVICE_VERSION_INFO_UPDATE_RSP', { result: 0 });
   }
 }

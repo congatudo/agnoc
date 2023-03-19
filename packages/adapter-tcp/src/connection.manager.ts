@@ -40,11 +40,25 @@ export class ConnectionManager {
 
           const count = this.packetEventBus.listenerCount(event);
 
+          // Throw an error if there is no event handler for the packet event.
           if (count === 0) {
             throw new DomainException(`No event handler found for packet event '${event}'`);
           }
 
+          // Emit the packet event.
           await this.packetEventBus.emit(event, packetMessage);
+
+          // This is a hack to only mark the device as connected if there is more than one connection.
+          // Here we should check that the connections are from the same ip address.
+          if (connection.device && !connection.device.isConnected) {
+            const connections = this.findConnectionsByDeviceId(connection.device.id);
+
+            if (connections.length > 1) {
+              connection.device.setAsConnected();
+
+              await this.deviceRepository.saveOne(connection.device);
+            }
+          }
         });
 
         connection.on('close', () => {

@@ -9,7 +9,5 @@ export class DeviceOfflineEventHandler implements PacketEventHandler {
     if (!message.device) {
       throw new DomainException('Device not found');
     }
-
-    return message.connection.send('DEVICE_CONTROL_LOCK_REQ', {});
   }
 }

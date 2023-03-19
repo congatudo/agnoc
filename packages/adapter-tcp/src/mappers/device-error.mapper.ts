@@ -2,7 +2,7 @@ import { DeviceError, DeviceErrorValue } from '@agnoc/domain';
 import { DomainException, NotImplementedException } from '@agnoc/toolkit';
 import type { Mapper } from '@agnoc/toolkit';
 
-const ROBOT_TO_DOMAIN = {
+const ROBOT_TO_DOMAIN: Record<number, DeviceErrorValue> = {
   0: DeviceErrorValue.None,
   2003: DeviceErrorValue.LowPowerPlanDis,
   2100: DeviceErrorValue.BrokenGoHome,
@@ -53,10 +53,9 @@ export class DeviceErrorMapper implements Mapper<DeviceError, number> {
       throw new DomainException(`Unable to map error code '${error}' to domain value`);
     }
 
-    const value = ROBOT_TO_DOMAIN[error as keyof typeof ROBOT_TO_DOMAIN];
+    const value = ROBOT_TO_DOMAIN[error];
 
-    // @ts-expect-error unknown error
-    return new DeviceError({ value });
+    return new DeviceError(value);
   }
 
   fromDomain(): never {

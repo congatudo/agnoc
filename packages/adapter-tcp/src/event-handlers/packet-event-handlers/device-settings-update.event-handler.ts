@@ -34,6 +34,8 @@ export class DeviceSettingsUpdateEventHandler implements PacketEventHandler {
 
     message.device.updateConfig(deviceSettings);
 
+    // TODO: save entity and publish domain event
+
     await message.respond('PUSH_DEVICE_AGENT_SETTING_RSP', { result: 0 });
   }
 }

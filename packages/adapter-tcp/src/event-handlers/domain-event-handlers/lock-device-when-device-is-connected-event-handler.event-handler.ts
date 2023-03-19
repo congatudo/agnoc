@@ -7,13 +7,13 @@ export class LockDeviceWhenDeviceIsConnectedEventHandler implements DomainEventH
 
   constructor(private readonly connectionManager: ConnectionManager) {}
 
-  handle(event: DeviceConnectedDomainEvent): Promise<void> {
+  async handle(event: DeviceConnectedDomainEvent): Promise<void> {
     const [connection] = this.connectionManager.findConnectionsByDeviceId(event.aggregateId);
 
     if (!connection) {
       throw new DomainException(`Unable to find a connection for the device with id ${event.aggregateId.value}`);
     }
 
-    return connection.send('DEVICE_CONTROL_LOCK_REQ', {});
+    await connection.send('DEVICE_CONTROL_LOCK_REQ', {});
   }
 }

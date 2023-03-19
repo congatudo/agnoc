@@ -17,6 +17,8 @@ export class DeviceBatteryUpdateEventHandler implements PacketEventHandler {
 
     message.device.updateBattery(this.deviceBatteryMapper.toDomain(data.battery.level));
 
+    // TODO: save the entity and publish domain event
+
     await message.respond('PUSH_DEVICE_BATTERY_INFO_RSP', { result: 0 });
   }
 }

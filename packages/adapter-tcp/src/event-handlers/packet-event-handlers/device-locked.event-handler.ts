@@ -13,8 +13,10 @@ export class DeviceLockedEventHandler implements PacketEventHandler {
       throw new DomainException('Device not found');
     }
 
-    message.device.setAsLocked();
+    if (!message.device.isLocked) {
+      message.device.setAsLocked();
 
-    await this.deviceRepository.saveOne(message.device);
+      await this.deviceRepository.saveOne(message.device);
+    }
   }
 }
