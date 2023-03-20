@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "tsBuildInfoFile": ".build-cache/tsconfig.build.tsbuildinfo"
+  },
+  "include": ["src"],
+  "exclude": ["**/*.test.ts"],
+  "references": [
+    { "path": "../toolkit/tsconfig.build.json" },
+    { "path": "../domain/tsconfig.build.json" },
+    { "path": "../adapter-tcp/tsconfig.build.json" }
+  ]
+}

@@ -42,9 +42,10 @@ import { NTPServerConnectionHandler } from './ntp-server.connection-handler';
 import { PackerServerConnectionHandler } from './packet-server.connection-handler';
 import { PacketEventBus } from './packet.event-bus';
 import type { DeviceRepository } from '@agnoc/domain';
+import type { Server } from '@agnoc/toolkit';
 import type { AddressInfo } from 'net';
 
-export class TCPAdapter {
+export class TCPServer implements Server {
   private readonly cmdServer: PacketServer;
   private readonly mapServer: PacketServer;
   private readonly ntpServer: PacketServer;

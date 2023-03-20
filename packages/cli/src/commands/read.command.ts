@@ -20,6 +20,7 @@ export class ReadCommand implements Command {
     let pcap;
 
     try {
+      /* eslint import/no-extraneous-dependencies: ["error", {"optionalDependencies": true}] */
       pcap = await import('pcap');
     } catch (e) {
       /* istanbul ignore next */

@@ -57,6 +57,15 @@ module.exports = {
         forbid: ['packages/**/*', '@agnoc/*/src/**/*'],
       },
     ],
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: ['**/*.test.ts', '**/test/**/*.ts'],
+        optionalDependencies: false,
+        peerDependencies: true,
+      },
+    ],
+    'import/no-unresolved': 'off',
     'import/order': [
       'warn',
       {

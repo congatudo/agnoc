@@ -11,6 +11,7 @@ export * from './base-classes/exception.base';
 export * from './base-classes/factory.base';
 export * from './base-classes/mapper.base';
 export * from './base-classes/repository.base';
+export * from './base-classes/server.base';
 export * from './base-classes/validatable.base';
 export * from './base-classes/value-object.base';
 export * from './decorators/bind.decorator';

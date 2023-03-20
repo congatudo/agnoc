@@ -79,6 +79,7 @@
     "tslib": "^2.5.0"
   },
   "devDependencies": {
+    "@johanblumenberg/ts-mockito": "^1.0.35",
     "chai": "^4.3.7"
   },
   "engines": {

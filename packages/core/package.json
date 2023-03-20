@@ -1,10 +1,11 @@
 {
-  "name": "@agnoc/cli",
+  "name": "@agnoc/core",
   "version": "0.18.0-next.0",
-  "description": "Agnoc command line interface",
+  "description": "Agnoc adapter TCP library",
   "keywords": [
     "agnoc",
-    "cli",
+    "adapter",
+    "tcp",
     "conga",
     "cecotec",
     "driver",
@@ -19,21 +20,7 @@
   "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "bin": {
-    "agnoc": "./bin/agnoc"
-  },
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./test-support": {
-      "types": "./lib/test-support.d.ts",
-      "default": "./lib/test-support.js"
-    }
-  },
   "files": [
-    "bin",
     "lib"
   ],
   "publishConfig": {
@@ -42,7 +29,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/adrigzr/agnoc.git",
-    "directory": "packages/cli"
+    "directory": "packages/core"
   },
   "scripts": {
     "build": "npm-run-all build:lib",
@@ -56,6 +43,7 @@
       "build": {
         "inputs": [
           "{workspaceRoot}/package.json",
+          "{workspaceRoot}/tsconfig.*",
           "{projectRoot}/src/**/*",
           "{projectRoot}/package.json",
           "{projectRoot}/tsconfig.*"
@@ -71,8 +59,8 @@
         ],
         "inputs": [
           "{workspaceRoot}/.mocharc.yml",
-          "{projectRoot}/src/**/*",
-          "{projectRoot}/test/**/*"
+          "{workspaceRoot}/nyc.config.js",
+          "{projectRoot}/src/**/*"
         ],
         "outputs": [
           "{projectRoot}/coverage"
@@ -81,24 +69,16 @@
     }
   },
   "dependencies": {
+    "@agnoc/domain": "^0.18.0-next.0",
+    "@agnoc/adapter-tcp": "^0.18.0-next.0",
     "@agnoc/toolkit": "^0.18.0-next.0",
-    "@agnoc/transport-tcp": "^0.18.0-next.0",
-    "chalk": "^4.1.1",
-    "cli-ux": "^5.5.1",
-    "commander": "^10.0.0",
-    "node-wifi": "^2.0.16",
+    "debug": "^4.3.4",
+    "emittery": "^0.13.1",
     "tslib": "^2.5.0"
   },
-  "optionalDependencies": {
-    "pcap": "^3.1.0"
-  },
   "devDependencies": {
-    "@agnoc/test-support": "^0.18.0-next.0",
     "@johanblumenberg/ts-mockito": "^1.0.35",
-    "chai": "^4.3.7",
-    "execa": "^5.1.1",
-    "mock-fs": "^5.2.0",
-    "pcap": "^3.1.0"
+    "chai": "^4.3.7"
   },
   "engines": {
     "node": ">=18.12"
@@ -106,6 +86,6 @@
   "typedoc": {
     "entryPoint": "./src/index.ts",
     "readmeFile": "./README.md",
-    "displayName": "CLI"
+    "displayName": "Core"
   }
 }

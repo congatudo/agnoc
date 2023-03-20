@@ -12,7 +12,7 @@ import {
   PayloadObjectParserService,
 } from '@agnoc/transport-tcp';
 import { expect } from 'chai';
-import { TCPAdapter } from '@agnoc/adapter-tcp';
+import { TCPServer } from '@agnoc/adapter-tcp';
 import type { TCPAdapterListenOptions } from '@agnoc/adapter-tcp';
 import type { ICLIENT_ONLINE_REQ, IDEVICE_REGISTER_REQ } from '@agnoc/schemas-tcp';
 import type { CreatePacketProps, Packet } from '@agnoc/transport-tcp';
@@ -23,7 +23,7 @@ describe('TCPAdapter', function () {
   let domainEventHandlerRegistry: EventHandlerRegistry;
   let commandEventHandlerRegistry: EventHandlerRegistry;
   let deviceRepository: DeviceRepository;
-  let tcpAdapter: TCPAdapter;
+  let tcpAdapter: TCPServer;
   let packetSocket: PacketSocket;
   let secondPacketSocket: PacketSocket;
   let packetFactory: PacketFactory;
@@ -36,7 +36,7 @@ describe('TCPAdapter', function () {
     domainEventHandlerRegistry = new EventHandlerRegistry(domainEventBus);
     commandEventHandlerRegistry = new EventHandlerRegistry(commandEventBus);
     deviceRepository = new DeviceRepository(domainEventBus, new MemoryAdapter());
-    tcpAdapter = new TCPAdapter(deviceRepository, domainEventHandlerRegistry, commandEventHandlerRegistry);
+    tcpAdapter = new TCPServer(deviceRepository, domainEventHandlerRegistry, commandEventHandlerRegistry);
 
     // Client blocks
     const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));

@@ -14,6 +14,10 @@ export class LocateDeviceEventHandler implements CommandEventHandler {
       throw new DomainException(`Unable to find a connection for the device with id ${event.deviceId.value}`);
     }
 
-    await connection.sendAndWait('DEVICE_SEEK_LOCATION_REQ', {});
+    const response = await connection.sendAndWait('DEVICE_SEEK_LOCATION_REQ', {});
+
+    if (response.packet.payload.opcode.value !== 'DEVICE_SEEK_LOCATION_RSP') {
+      throw new DomainException(`Unexpected response from device: ${response.packet.payload.opcode.value}`);
+    }
   }
 }
