@@ -3,8 +3,7 @@ import type { EventHandler } from './base-classes/event-handler.base';
 
 /** Manages event handlers. */
 export class EventHandlerRegistry {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(private readonly eventBus: EventBus<any>) {}
+  constructor(private readonly eventBus: EventBus) {}
 
   register(...eventHandlers: EventHandler[]): void {
     eventHandlers.forEach((eventHandler) => this.addEventHandler(eventHandler));

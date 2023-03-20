@@ -280,6 +280,25 @@ describe('PacketSocket', function () {
 
       server.listen(0);
     });
+
+    it('should throw an error when the socket is already connected', function (done) {
+      server.once('listening', () => {
+        void packetSocket.connect((server.address() as AddressInfo).port);
+      });
+
+      packetSocket.once('connect', async () => {
+        await expect(packetSocket.connect((server.address() as AddressInfo).port)).to.be.rejectedWith(
+          DomainException,
+          'Socket is already connected',
+        );
+
+        await packetSocket.end();
+
+        done();
+      });
+
+      server.listen(0);
+    });
   });
 
   describe('#write()', function () {

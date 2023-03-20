@@ -6,7 +6,7 @@ import type { DeviceRepository, Device } from '@agnoc/domain';
 import type { ID } from '@agnoc/toolkit';
 import type { PacketServer, PacketFactory, Packet, PayloadObjectName } from '@agnoc/transport-tcp';
 
-export class ConnectionManager {
+export class PackerServerConnectionHandler {
   private readonly servers = new Map<PacketServer, Set<DeviceConnection>>();
 
   constructor(

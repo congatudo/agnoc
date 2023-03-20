@@ -8,7 +8,6 @@ import {
   PayloadObjectParserService,
   PacketFactory,
 } from '@agnoc/transport-tcp';
-import { ConnectionManager } from './connection.manager';
 import { LocateDeviceEventHandler } from './event-handlers/command-event-handlers/locate-device.event-handler';
 import { LockDeviceWhenDeviceIsConnectedEventHandler } from './event-handlers/domain-event-handlers/lock-device-when-device-is-connected-event-handler.event-handler';
 import { QueryDeviceInfoWhenDeviceIsLockedEventHandler } from './event-handlers/domain-event-handlers/query-device-info-when-device-is-locked-event-handler.event-handler';
@@ -39,14 +38,16 @@ import { DeviceModeMapper } from './mappers/device-mode.mapper';
 import { DeviceStateMapper } from './mappers/device-state.mapper';
 import { DeviceVoiceMapper } from './mappers/device-voice.mapper';
 import { DeviceWaterLevelMapper } from './mappers/device-water-level.mapper';
+import { NTPServerConnectionHandler } from './ntp-server.connection-handler';
+import { PackerServerConnectionHandler } from './packet-server.connection-handler';
 import { PacketEventBus } from './packet.event-bus';
-import { TimeSyncServer } from './time-sync.server';
 import type { DeviceRepository } from '@agnoc/domain';
+import type { AddressInfo } from 'net';
 
 export class TCPAdapter {
-  private readonly timeSyncServer: TimeSyncServer;
   private readonly cmdServer: PacketServer;
   private readonly mapServer: PacketServer;
+  private readonly ntpServer: PacketServer;
 
   constructor(
     private readonly deviceRepository: DeviceRepository,
@@ -59,7 +60,7 @@ export class TCPAdapter {
     const packetFactory = new PacketFactory();
 
     // Servers
-    this.timeSyncServer = new TimeSyncServer(new PacketServer(packetMapper), packetFactory);
+    this.ntpServer = new PacketServer(packetMapper);
     this.cmdServer = new PacketServer(packetMapper);
     this.mapServer = new PacketServer(packetMapper);
 
@@ -77,9 +78,14 @@ export class TCPAdapter {
     const packetEventHandlerRegistry = new EventHandlerRegistry(packetEventBus);
 
     // Connection managers
-    const connectionManager = new ConnectionManager(packetEventBus, packetFactory, this.deviceRepository);
+    const connectionManager = new PackerServerConnectionHandler(packetEventBus, packetFactory, this.deviceRepository);
 
     connectionManager.addServers(this.cmdServer, this.mapServer);
+
+    // Time Sync server controller
+    const ntpServerConnectionHandler = new NTPServerConnectionHandler(packetFactory);
+
+    ntpServerConnectionHandler.register(this.ntpServer);
 
     // Packet event handlers
     packetEventHandlerRegistry.register(
@@ -128,11 +134,39 @@ export class TCPAdapter {
     this.commandEventHandlerRegistry.register(new LocateDeviceEventHandler(connectionManager));
   }
 
-  async start(): Promise<void> {
-    await Promise.all([this.cmdServer.listen(4010), this.mapServer.listen(4030), this.timeSyncServer.listen()]);
+  async listen(options: TCPAdapterListenOptions = listenDefaultOptions): Promise<TCPAdapterListenReturn> {
+    await Promise.all([
+      this.cmdServer.listen(options.ports.cmd),
+      this.mapServer.listen(options.ports.map),
+      this.ntpServer.listen(options.ports.ntp),
+    ]);
+
+    return {
+      ports: {
+        cmd: (this.cmdServer.address as AddressInfo).port,
+        map: (this.mapServer.address as AddressInfo).port,
+        ntp: (this.ntpServer.address as AddressInfo).port,
+      },
+    };
   }
 
-  async stop(): Promise<void> {
-    await Promise.all([this.cmdServer.close(), this.mapServer.close(), this.timeSyncServer.close()]);
+  async close(): Promise<void> {
+    await Promise.all([this.cmdServer.close(), this.mapServer.close(), this.ntpServer.close()]);
   }
+}
+
+const listenDefaultOptions: TCPAdapterListenOptions = { ports: { cmd: 4010, map: 4030, ntp: 4050 } };
+
+export interface TCPAdapterListenOptions {
+  ports: ServerPorts;
+}
+
+interface TCPAdapterListenReturn {
+  ports: ServerPorts;
+}
+
+export interface ServerPorts {
+  cmd: number;
+  map: number;
+  ntp: number;
 }

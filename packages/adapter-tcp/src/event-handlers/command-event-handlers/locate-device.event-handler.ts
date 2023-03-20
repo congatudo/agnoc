@@ -1,11 +1,11 @@
 import { DomainException } from '@agnoc/toolkit';
-import type { ConnectionManager } from '../../connection.manager';
+import type { PackerServerConnectionHandler } from '../../packet-server.connection-handler';
 import type { CommandEventHandler, LocateDeviceCommand } from '@agnoc/domain';
 
 export class LocateDeviceEventHandler implements CommandEventHandler {
   readonly eventName = 'LocateDeviceCommand';
 
-  constructor(private readonly connectionManager: ConnectionManager) {}
+  constructor(private readonly connectionManager: PackerServerConnectionHandler) {}
 
   async handle(event: LocateDeviceCommand): Promise<void> {
     const [connection] = this.connectionManager.findConnectionsByDeviceId(event.deviceId);

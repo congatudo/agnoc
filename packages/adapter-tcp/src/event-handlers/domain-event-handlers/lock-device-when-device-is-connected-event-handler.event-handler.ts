@@ -1,11 +1,11 @@
 import { DomainException } from '@agnoc/toolkit';
-import type { ConnectionManager } from '../../connection.manager';
+import type { PackerServerConnectionHandler } from '../../packet-server.connection-handler';
 import type { DomainEventHandler, DeviceConnectedDomainEvent } from '@agnoc/domain';
 
 export class LockDeviceWhenDeviceIsConnectedEventHandler implements DomainEventHandler {
   readonly eventName = 'DeviceConnectedDomainEvent';
 
-  constructor(private readonly connectionManager: ConnectionManager) {}
+  constructor(private readonly connectionManager: PackerServerConnectionHandler) {}
 
   async handle(event: DeviceConnectedDomainEvent): Promise<void> {
     const [connection] = this.connectionManager.findConnectionsByDeviceId(event.aggregateId);

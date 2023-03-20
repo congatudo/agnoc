@@ -11,3 +11,4 @@ export * from './mappers/device-state.mapper';
 export * from './mappers/device-voice.mapper';
 export * from './mappers/device-water-level.mapper';
 export * from './value-objects/message.value-object';
+export * from './tcp.adapter';

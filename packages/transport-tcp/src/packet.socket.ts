@@ -41,6 +41,10 @@ export class PacketSocket extends Duplex {
   connect(path: string): Promise<void>;
   connect(options: SocketConnectOpts): Promise<void>;
   async connect(portOrPathOrOptions: number | string | SocketConnectOpts, host?: string): Promise<void> {
+    if (this.socket) {
+      throw new DomainException('Socket is already connected');
+    }
+
     const socket = new Socket();
 
     this.wrapSocket(socket);
@@ -156,18 +160,40 @@ export class PacketSocket extends Duplex {
   }
 
   private wrapSocket(socket: Socket): void {
+    const onConnect: PacketSocketEvents['connect'] = () => this.emit('connect');
+    const onEnd: PacketSocketEvents['end'] = () => this.emit('end');
+    const onError: PacketSocketEvents['error'] = (err) => this.emit('error', err);
+    const onLookup: PacketSocketEvents['lookup'] = (err, address, family, host) =>
+      this.emit('lookup', err, address, family, host);
+    const onReady: PacketSocketEvents['ready'] = () => this.emit('ready');
+    const onReadable: PacketSocketEvents['readable'] = () => setImmediate(this.onReadable.bind(this));
+    /* istanbul ignore next - unable to test */
+    const onDrain: PacketSocketEvents['drain'] = () => this.emit('drain');
+    /* istanbul ignore next - unable to test */
+    const onTimeout: PacketSocketEvents['timeout'] = () => this.emit('timeout');
+    const onClose: PacketSocketEvents['close'] = (hadError) => {
+      this.socket?.off('connect', onConnect);
+      this.socket?.off('end', onEnd);
+      this.socket?.off('error', onError);
+      this.socket?.off('lookup', onLookup);
+      this.socket?.off('ready', onReady);
+      this.socket?.off('readable', onReadable);
+      this.socket?.off('drain', onDrain);
+      this.socket?.off('timeout', onTimeout);
+      this.socket = undefined;
+      this.emit('close', hadError);
+    };
+
     this.socket = socket;
-    this.socket.on('close', (hadError) => this.emit('close', hadError));
-    this.socket.on('connect', () => this.emit('connect'));
-    this.socket.on('end', () => this.emit('end'));
-    this.socket.on('error', (err) => this.emit('error', err));
-    this.socket.on('lookup', (err, address, family, host) => this.emit('lookup', err, address, family, host)); // prettier-ignore
-    this.socket.on('ready', () => this.emit('ready'));
-    this.socket.on('readable', () => setImmediate(this.onReadable.bind(this)));
-    /* istanbul ignore next - unable to test */
-    this.socket.on('drain', () => this.emit('drain'));
-    /* istanbul ignore next - unable to test */
-    this.socket.on('timeout', () => this.emit('timeout'));
+    this.socket.on('connect', onConnect);
+    this.socket.on('end', onEnd);
+    this.socket.on('error', onError);
+    this.socket.on('lookup', onLookup);
+    this.socket.on('ready', onReady);
+    this.socket.on('readable', onReadable);
+    this.socket.on('drain', onDrain);
+    this.socket.on('timeout', onTimeout);
+    this.socket.once('close', onClose);
   }
 
   private onReadable(): void {
