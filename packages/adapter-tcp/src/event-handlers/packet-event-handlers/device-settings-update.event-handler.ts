@@ -5,7 +5,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class DeviceSettingsUpdateEventHandler implements PacketEventHandler {
-  readonly eventName = 'PUSH_DEVICE_AGENT_SETTING_REQ';
+  readonly forName = 'PUSH_DEVICE_AGENT_SETTING_REQ';
 
   constructor(private readonly deviceVoiceMapper: DeviceVoiceMapper) {}
 

@@ -1,9 +1,9 @@
 import { DomainException } from '@agnoc/toolkit';
 import type { PackerServerConnectionHandler } from '../../packet-server.connection-handler';
-import type { CommandEventHandler, LocateDeviceCommand } from '@agnoc/domain';
+import type { CommandHandler, LocateDeviceCommand } from '@agnoc/domain';
 
-export class LocateDeviceEventHandler implements CommandEventHandler {
-  readonly eventName = 'LocateDeviceCommand';
+export class LocateDeviceEventHandler implements CommandHandler {
+  readonly forName = 'LocateDeviceCommand';
 
   constructor(private readonly connectionManager: PackerServerConnectionHandler) {}
 

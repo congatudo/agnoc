@@ -4,7 +4,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class DeviceMapChargerPositionUpdateEventHandler implements PacketEventHandler {
-  readonly eventName = 'DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO';
+  readonly forName = 'DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO';
 
   async handle(message: PacketMessage<'DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO'>): Promise<void> {
     if (!message.device) {

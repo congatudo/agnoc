@@ -1,7 +1,7 @@
 import { once } from 'events';
-import { CommandEventBus, Device, DeviceRepository, DomainEventBus } from '@agnoc/domain';
+import { CommandBus, Device, DeviceRepository, DomainEventBus } from '@agnoc/domain';
 import { givenSomeDeviceProps } from '@agnoc/domain/test-support';
-import { EventHandlerRegistry, ID, MemoryAdapter } from '@agnoc/toolkit';
+import { EventHandlerRegistry, ID, MemoryAdapter, TaskHandlerRegistry } from '@agnoc/toolkit';
 import {
   getCustomDecoders,
   getProtobufRoot,
@@ -14,14 +14,15 @@ import {
 import { expect } from 'chai';
 import { TCPServer } from '@agnoc/adapter-tcp';
 import type { TCPAdapterListenOptions } from '@agnoc/adapter-tcp';
+import type { Commands } from '@agnoc/domain';
 import type { ICLIENT_ONLINE_REQ, IDEVICE_REGISTER_REQ } from '@agnoc/schemas-tcp';
 import type { CreatePacketProps, Packet } from '@agnoc/transport-tcp';
 
 describe('TCPAdapter', function () {
   let domainEventBus: DomainEventBus;
-  let commandEventBus: CommandEventBus;
+  let commandBus: CommandBus;
   let domainEventHandlerRegistry: EventHandlerRegistry;
-  let commandEventHandlerRegistry: EventHandlerRegistry;
+  let commandHandlerRegistry: TaskHandlerRegistry<Commands>;
   let deviceRepository: DeviceRepository;
   let tcpAdapter: TCPServer;
   let packetSocket: PacketSocket;
@@ -31,12 +32,12 @@ describe('TCPAdapter', function () {
   beforeEach(function () {
     // Server blocks
     domainEventBus = new DomainEventBus();
-    commandEventBus = new CommandEventBus();
+    commandBus = new CommandBus();
 
     domainEventHandlerRegistry = new EventHandlerRegistry(domainEventBus);
-    commandEventHandlerRegistry = new EventHandlerRegistry(commandEventBus);
+    commandHandlerRegistry = new TaskHandlerRegistry(commandBus);
     deviceRepository = new DeviceRepository(domainEventBus, new MemoryAdapter());
-    tcpAdapter = new TCPServer(deviceRepository, domainEventHandlerRegistry, commandEventHandlerRegistry);
+    tcpAdapter = new TCPServer(deviceRepository, domainEventHandlerRegistry, commandHandlerRegistry);
 
     // Client blocks
     const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));

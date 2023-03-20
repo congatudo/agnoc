@@ -40,12 +40,12 @@ export class PackerServerConnectionHandler {
         // Update the device on the connection if the device id has changed.
         await this.updateConnectionDevice(packet, connection);
 
+        // Send the packet message to the packet event bus.
+        await this.emitPacketEvent(packetMessage);
+
         // This is a hack to only mark the device as connected if there is more than one connection.
         // Here we should check that the connections are from the same ip address.
         await this.tryToSetDeviceAsConnected(connection);
-
-        // Send the packet message to the packet event bus.
-        await this.emitPacketEvent(packetMessage);
       });
 
       connection.on('close', () => {

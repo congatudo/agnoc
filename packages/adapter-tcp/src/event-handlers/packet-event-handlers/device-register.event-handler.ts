@@ -5,7 +5,7 @@ import type { PacketMessage } from '../../packet.message';
 import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceRegisterEventHandler implements PacketEventHandler {
-  readonly eventName = 'DEVICE_REGISTER_REQ';
+  readonly forName = 'DEVICE_REGISTER_REQ';
 
   constructor(private readonly deviceRepository: DeviceRepository) {}
 

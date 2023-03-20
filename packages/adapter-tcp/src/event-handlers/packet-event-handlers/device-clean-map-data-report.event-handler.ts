@@ -3,7 +3,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class DeviceCleanMapDataReportEventHandler implements PacketEventHandler {
-  readonly eventName = 'DEVICE_CLEANMAP_BINDATA_REPORT_REQ';
+  readonly forName = 'DEVICE_CLEANMAP_BINDATA_REPORT_REQ';
 
   async handle(message: PacketMessage<'DEVICE_CLEANMAP_BINDATA_REPORT_REQ'>): Promise<void> {
     if (!message.device) {

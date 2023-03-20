@@ -19,7 +19,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class DeviceMapUpdateEventHandler implements PacketEventHandler {
-  readonly eventName = 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP';
+  readonly forName = 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP';
 
   constructor(
     private readonly deviceBatteryMapper: DeviceBatteryMapper,

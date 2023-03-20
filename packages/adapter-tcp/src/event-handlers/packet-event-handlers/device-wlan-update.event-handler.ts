@@ -4,7 +4,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class DeviceWlanUpdateEventHandler implements PacketEventHandler {
-  readonly eventName = 'DEVICE_WLAN_INFO_GETTING_RSP';
+  readonly forName = 'DEVICE_WLAN_INFO_GETTING_RSP';
 
   async handle(message: PacketMessage<'DEVICE_WLAN_INFO_GETTING_RSP'>): Promise<void> {
     if (!message.device) {

@@ -1,7 +1,7 @@
 import type { LocateDeviceCommand } from './locate-device.command';
 
-export type CommandEvents = {
+export type Commands = {
   LocateDeviceCommand: LocateDeviceCommand;
 };
 
-export type CommandEventNames = keyof CommandEvents;
+export type CommandNames = keyof Commands;

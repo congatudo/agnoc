@@ -3,7 +3,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class DeviceTimeUpdateEventHandler implements PacketEventHandler {
-  readonly eventName = 'DEVICE_GETTIME_RSP';
+  readonly forName = 'DEVICE_GETTIME_RSP';
 
   async handle(message: PacketMessage<'DEVICE_GETTIME_RSP'>): Promise<void> {
     if (!message.device) {

@@ -3,7 +3,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class DeviceUpgradeInfoEventHandler implements PacketEventHandler {
-  readonly eventName = 'PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ';
+  readonly forName = 'PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ';
 
   async handle(message: PacketMessage<'PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ'>): Promise<void> {
     if (!message.device) {

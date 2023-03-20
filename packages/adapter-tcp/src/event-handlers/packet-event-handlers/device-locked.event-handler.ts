@@ -4,7 +4,7 @@ import type { PacketMessage } from '../../packet.message';
 import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceLockedEventHandler implements PacketEventHandler {
-  readonly eventName = 'DEVICE_CONTROL_LOCK_RSP';
+  readonly forName = 'DEVICE_CONTROL_LOCK_RSP';
 
   constructor(private readonly deviceRepository: DeviceRepository) {}
 

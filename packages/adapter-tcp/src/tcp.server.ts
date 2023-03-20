@@ -41,8 +41,8 @@ import { DeviceWaterLevelMapper } from './mappers/device-water-level.mapper';
 import { NTPServerConnectionHandler } from './ntp-server.connection-handler';
 import { PackerServerConnectionHandler } from './packet-server.connection-handler';
 import { PacketEventBus } from './packet.event-bus';
-import type { DeviceRepository } from '@agnoc/domain';
-import type { Server } from '@agnoc/toolkit';
+import type { Commands, DeviceRepository } from '@agnoc/domain';
+import type { Server, TaskHandlerRegistry } from '@agnoc/toolkit';
 import type { AddressInfo } from 'net';
 
 export class TCPServer implements Server {
@@ -53,7 +53,7 @@ export class TCPServer implements Server {
   constructor(
     private readonly deviceRepository: DeviceRepository,
     private readonly domainEventHandlerRegistry: EventHandlerRegistry,
-    private readonly commandEventHandlerRegistry: EventHandlerRegistry,
+    private readonly commandHandlerRegistry: TaskHandlerRegistry<Commands>,
   ) {
     // Packet foundation
     const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
@@ -132,7 +132,7 @@ export class TCPServer implements Server {
     );
 
     // Command event handlers
-    this.commandEventHandlerRegistry.register(new LocateDeviceEventHandler(connectionManager));
+    this.commandHandlerRegistry.register(new LocateDeviceEventHandler(connectionManager));
   }
 
   async listen(options: TCPAdapterListenOptions = listenDefaultOptions): Promise<TCPAdapterListenReturn> {

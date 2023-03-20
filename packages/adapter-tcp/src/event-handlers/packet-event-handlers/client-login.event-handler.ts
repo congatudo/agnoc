@@ -2,7 +2,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class ClientLoginEventHandler implements PacketEventHandler {
-  readonly eventName = 'CLIENT_ONLINE_REQ';
+  readonly forName = 'CLIENT_ONLINE_REQ';
 
   async handle(message: PacketMessage<'CLIENT_ONLINE_REQ'>): Promise<void> {
     if (!message.device) {

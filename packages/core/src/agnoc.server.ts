@@ -1,21 +1,21 @@
-import { CommandEventBus, DeviceRepository, DomainEventBus } from '@agnoc/domain';
-import { EventHandlerRegistry, MemoryAdapter } from '@agnoc/toolkit';
-import type { DomainEventNames, DomainEvents, CommandEventNames, CommandEvents } from '@agnoc/domain';
-import type { Server } from '@agnoc/toolkit';
+import { CommandBus, DeviceRepository, DomainEventBus } from '@agnoc/domain';
+import { EventHandlerRegistry, MemoryAdapter, TaskHandlerRegistry } from '@agnoc/toolkit';
+import type { DomainEventNames, DomainEvents, Commands } from '@agnoc/domain';
+import type { Server, TaskOutput } from '@agnoc/toolkit';
 
 export class AgnocServer implements Server {
   private readonly domainEventBus: DomainEventBus;
   private readonly domainEventHandlerRegistry: EventHandlerRegistry;
-  private readonly commandEventBus: CommandEventBus;
-  private readonly commandEventHandlerRegistry: EventHandlerRegistry;
+  private readonly commandBus: CommandBus;
+  private readonly commandHandlerRegistry: TaskHandlerRegistry<Commands>;
   private readonly deviceRepository: DeviceRepository;
   private readonly adapters = new Set<Server>();
 
   constructor() {
     this.domainEventBus = new DomainEventBus();
     this.domainEventHandlerRegistry = new EventHandlerRegistry(this.domainEventBus);
-    this.commandEventBus = new CommandEventBus();
-    this.commandEventHandlerRegistry = new EventHandlerRegistry(this.commandEventBus);
+    this.commandBus = new CommandBus();
+    this.commandHandlerRegistry = new TaskHandlerRegistry(this.commandBus);
     this.deviceRepository = new DeviceRepository(this.domainEventBus, new MemoryAdapter());
   }
 
@@ -23,14 +23,14 @@ export class AgnocServer implements Server {
     this.domainEventBus.on(eventName, handler);
   }
 
-  trigger<Name extends CommandEventNames>(eventName: Name, payload: CommandEvents[Name]): Promise<void> {
-    return this.commandEventBus.emit(eventName, payload);
+  trigger<Command extends Commands[keyof Commands]>(command: Command): Promise<TaskOutput<Command>> {
+    return this.commandBus.trigger(command);
   }
 
   buildAdapter(builder: AdapterFactory): void {
     const adapter = builder({
       domainEventHandlerRegistry: this.domainEventHandlerRegistry,
-      commandEventHandlerRegistry: this.commandEventHandlerRegistry,
+      commandHandlerRegistry: this.commandHandlerRegistry,
       deviceRepository: this.deviceRepository,
     });
 
@@ -50,7 +50,7 @@ type AdapterFactory = (container: Container) => Server;
 
 export type Container = {
   domainEventHandlerRegistry: EventHandlerRegistry;
-  commandEventHandlerRegistry: EventHandlerRegistry;
+  commandHandlerRegistry: TaskHandlerRegistry<Commands>;
   deviceRepository: DeviceRepository;
 };
 

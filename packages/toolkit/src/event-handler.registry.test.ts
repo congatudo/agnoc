@@ -15,7 +15,7 @@ describe('EventHandlerRegistry', function () {
   });
 
   it('should listen for events on the bus', function () {
-    when(eventHandler.eventName).thenReturn('event');
+    when(eventHandler.forName).thenReturn('event');
 
     eventHandlerManager.register(instance(eventHandler));
 
@@ -25,13 +25,13 @@ describe('EventHandlerRegistry', function () {
   it('should call handle when event is emitted', async function () {
     const data = { foo: 'bar' };
 
-    when(eventHandler.eventName).thenReturn('event');
+    when(eventHandler.forName).thenReturn('event');
 
     eventHandlerManager.register(instance(eventHandler));
 
-    const [eventName, callback] = capture(eventBus.on<'event'>).first();
+    const [forName, callback] = capture(eventBus.on<'event'>).first();
 
-    expect(eventName).to.equal('event');
+    expect(forName).to.equal('event');
 
     await callback(data);
 

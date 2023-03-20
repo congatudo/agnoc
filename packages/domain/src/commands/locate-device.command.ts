@@ -1,16 +1,16 @@
 import { Command } from '@agnoc/toolkit';
 import type { ID } from '@agnoc/toolkit';
 
-export interface LocateDeviceCommandProps {
+export interface LocateDeviceCommandInput {
   deviceId: ID;
 }
 
-export class LocateDeviceCommand extends Command<LocateDeviceCommandProps> {
+export class LocateDeviceCommand extends Command<LocateDeviceCommandInput, void> {
   get deviceId(): ID {
     return this.props.deviceId;
   }
 
-  protected validate(_: LocateDeviceCommandProps): void {
-    // noop
+  protected validate(): void {
+    // TODO: validate input
   }
 }

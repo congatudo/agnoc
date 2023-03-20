@@ -4,7 +4,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class DeviceBatteryUpdateEventHandler implements PacketEventHandler {
-  readonly eventName = 'PUSH_DEVICE_BATTERY_INFO_REQ';
+  readonly forName = 'PUSH_DEVICE_BATTERY_INFO_REQ';
 
   constructor(private readonly deviceBatteryMapper: DeviceBatteryMapper) {}
 

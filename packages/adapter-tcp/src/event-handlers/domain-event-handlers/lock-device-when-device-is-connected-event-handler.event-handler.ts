@@ -3,7 +3,7 @@ import type { PackerServerConnectionHandler } from '../../packet-server.connecti
 import type { DomainEventHandler, DeviceConnectedDomainEvent } from '@agnoc/domain';
 
 export class LockDeviceWhenDeviceIsConnectedEventHandler implements DomainEventHandler {
-  readonly eventName = 'DeviceConnectedDomainEvent';
+  readonly forName = 'DeviceConnectedDomainEvent';
 
   constructor(private readonly connectionManager: PackerServerConnectionHandler) {}
 

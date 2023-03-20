@@ -10,6 +10,6 @@ export class EventHandlerRegistry {
   }
 
   private addEventHandler(eventHandler: EventHandler): void {
-    this.eventBus.on(eventHandler.eventName, eventHandler.handle.bind(eventHandler));
+    this.eventBus.on(eventHandler.forName, eventHandler.handle.bind(eventHandler));
   }
 }

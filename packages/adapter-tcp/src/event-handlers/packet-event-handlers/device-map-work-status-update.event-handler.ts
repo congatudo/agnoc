@@ -10,7 +10,7 @@ import type { PacketEventHandler } from '../../packet.event-handler';
 import type { PacketMessage } from '../../packet.message';
 
 export class DeviceMapWorkStatusUpdateEventHandler implements PacketEventHandler {
-  readonly eventName = 'DEVICE_MAPID_WORK_STATUS_PUSH_REQ';
+  readonly forName = 'DEVICE_MAPID_WORK_STATUS_PUSH_REQ';
 
   constructor(
     private readonly deviceStateMapper: DeviceStateMapper,
