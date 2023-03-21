@@ -7,14 +7,14 @@ import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-pri
 import { DeviceMode } from '../domain-primitives/device-mode.domain-primitive';
 import { DeviceState } from '../domain-primitives/device-state.domain-primitive';
 import { DeviceWaterLevel } from '../domain-primitives/device-water-level.domain-primitive';
+import { DeviceMap } from '../entities/device-map.entity';
+import { DeviceOrder } from '../entities/device-order.entity';
 import { DeviceCleanWork } from '../value-objects/device-clean-work.value-object';
 import { DeviceConsumable } from '../value-objects/device-consumable.value-object';
 import { DeviceSettings } from '../value-objects/device-settings.value-object';
 import { DeviceSystem } from '../value-objects/device-system.value-object';
 import { DeviceVersion } from '../value-objects/device-version.value-object';
 import { DeviceWlan } from '../value-objects/device-wlan.value-object';
-import { DeviceMap } from './device-map.entity';
-import { DeviceOrder } from './device-order.entity';
 import type { EntityProps } from '@agnoc/toolkit';
 
 /** Describes the properties of a device. */
@@ -276,6 +276,8 @@ export class Device extends AggregateRoot<DeviceProps> {
     this.validateInstanceProp(props, 'userId', ID);
     this.validateInstanceProp(props, 'system', DeviceSystem);
     this.validateInstanceProp(props, 'version', DeviceVersion);
+    this.validateTypeProp(props, 'isConnected', 'boolean');
+    this.validateTypeProp(props, 'isLocked', 'boolean');
     this.validateInstanceProp(props, 'config', DeviceSettings);
     this.validateInstanceProp(props, 'currentClean', DeviceCleanWork);
     this.validateArrayProp(props, 'orders', DeviceOrder);

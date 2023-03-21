@@ -14,7 +14,7 @@ export * from './domain-primitives/device-water-level.domain-primitive';
 export * from './domain-primitives/week-day.domain-primitive';
 export * from './entities/device-map.entity';
 export * from './entities/device-order.entity';
-export * from './entities/device.entity';
+export * from './aggregate-roots/device.aggregate-root';
 export * from './entities/room.entity';
 export * from './entities/zone.entity';
 export * from './event-buses/command.event-bus';

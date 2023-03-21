@@ -1,4 +1,4 @@
 import { Repository } from '@agnoc/toolkit';
-import type { Device } from '../entities/device.entity';
+import type { Device } from '../aggregate-roots/device.aggregate-root';
 
 export class DeviceRepository extends Repository<Device> {}

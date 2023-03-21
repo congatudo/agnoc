@@ -60,7 +60,8 @@
         "inputs": [
           "{workspaceRoot}/.mocharc.yml",
           "{workspaceRoot}/nyc.config.js",
-          "{projectRoot}/src/**/*"
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/test/**/*"
         ],
         "outputs": [
           "{projectRoot}/coverage"

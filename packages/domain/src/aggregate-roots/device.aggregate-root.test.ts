@@ -1,11 +1,15 @@
 import { AggregateRoot, ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
 import { expect } from 'chai';
+import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
+import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError, DeviceErrorValue } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed, DeviceFanSpeedValue } from '../domain-primitives/device-fan-speed.domain-primitive';
 import { DeviceMode, DeviceModeValue } from '../domain-primitives/device-mode.domain-primitive';
 import { DeviceState, DeviceStateValue } from '../domain-primitives/device-state.domain-primitive';
 import { DeviceWaterLevel, DeviceWaterLevelValue } from '../domain-primitives/device-water-level.domain-primitive';
+import { DeviceMap } from '../entities/device-map.entity';
+import { DeviceOrder } from '../entities/device-order.entity';
 import {
   givenSomeDeviceCleanWorkProps,
   givenSomeDeviceConsumableProps,
@@ -23,9 +27,7 @@ import { DeviceSettings } from '../value-objects/device-settings.value-object';
 import { DeviceSystem } from '../value-objects/device-system.value-object';
 import { DeviceVersion } from '../value-objects/device-version.value-object';
 import { DeviceWlan } from '../value-objects/device-wlan.value-object';
-import { DeviceMap } from './device-map.entity';
-import { DeviceOrder } from './device-order.entity';
-import { Device } from './device.entity';
+import { Device } from './device.aggregate-root';
 
 describe('Device', function () {
   it('should be created', function () {
@@ -41,6 +43,8 @@ describe('Device', function () {
     expect(device.userId).to.be.equal(deviceProps.userId);
     expect(device.system).to.be.equal(deviceProps.system);
     expect(device.version).to.be.equal(deviceProps.version);
+    expect(device.isConnected).to.be.false;
+    expect(device.isLocked).to.be.false;
   });
 
   it("should throw an error when 'userId' is not provided", function () {
@@ -88,6 +92,22 @@ describe('Device', function () {
     expect(() => new Device({ ...givenSomeDeviceProps(), version: 'foo' })).to.throw(
       ArgumentInvalidException,
       `Value 'foo' for property 'version' of Device is not an instance of DeviceVersion`,
+    );
+  });
+
+  it("should throw an error when 'isConnected' is not a boolean", function () {
+    // @ts-expect-error - invalid property
+    expect(() => new Device({ ...givenSomeDeviceProps(), isConnected: 'foo' })).to.throw(
+      ArgumentInvalidException,
+      `Value 'foo' for property 'isConnected' of Device is not a boolean`,
+    );
+  });
+
+  it("should throw an error when 'isLocked' is not a boolean", function () {
+    // @ts-expect-error - invalid property
+    expect(() => new Device({ ...givenSomeDeviceProps(), isLocked: 'foo' })).to.throw(
+      ArgumentInvalidException,
+      `Value 'foo' for property 'isLocked' of Device is not a boolean`,
     );
   });
 
@@ -217,6 +237,28 @@ describe('Device', function () {
       ArgumentInvalidException,
       `Value 'foo' for property 'hasWaitingMap' of Device is not a boolean`,
     );
+  });
+
+  describe('#setAsConnected()', function () {
+    it('should update the device system', function () {
+      const device = new Device({ ...givenSomeDeviceProps(), isConnected: false });
+
+      device.setAsConnected();
+
+      expect(device.isConnected).to.be.true;
+      expect(device.domainEvents).to.deep.contain(new DeviceConnectedDomainEvent({ aggregateId: device.id }));
+    });
+  });
+
+  describe('#setAsLocked()', function () {
+    it('should update the device system', function () {
+      const device = new Device({ ...givenSomeDeviceProps(), isLocked: false });
+
+      device.setAsLocked();
+
+      expect(device.isLocked).to.be.true;
+      expect(device.domainEvents).to.deep.contain(new DeviceLockedDomainEvent({ aggregateId: device.id }));
+    });
   });
 
   describe('#updateSystem()', function () {

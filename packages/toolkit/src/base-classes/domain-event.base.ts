@@ -6,6 +6,8 @@ export interface DomainEventProps {
 }
 
 export abstract class DomainEvent<T extends DomainEventProps = DomainEventProps> extends Validatable<T> {
+  readonly eventName = this.constructor.name;
+
   constructor(protected readonly props: T) {
     super(props);
   }

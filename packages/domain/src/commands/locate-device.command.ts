@@ -1,5 +1,4 @@
-import { Command } from '@agnoc/toolkit';
-import type { ID } from '@agnoc/toolkit';
+import { Command, ID } from '@agnoc/toolkit';
 
 export interface LocateDeviceCommandInput {
   deviceId: ID;
@@ -10,7 +9,8 @@ export class LocateDeviceCommand extends Command<LocateDeviceCommandInput, void>
     return this.props.deviceId;
   }
 
-  protected validate(): void {
-    // TODO: validate input
+  protected validate(props: LocateDeviceCommandInput): void {
+    this.validateDefinedProp(props, 'deviceId');
+    this.validateInstanceProp(props, 'deviceId', ID);
   }
 }
