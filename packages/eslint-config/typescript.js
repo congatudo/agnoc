@@ -63,6 +63,7 @@ module.exports = {
         devDependencies: ['**/*.test.ts', '**/test/**/*.ts'],
         optionalDependencies: false,
         peerDependencies: true,
+        includeInternal: true,
       },
     ],
     'import/no-unresolved': 'off',

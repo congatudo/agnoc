@@ -1,17 +1,25 @@
 import { DomainException } from '@agnoc/toolkit';
-import type { PackerServerConnectionHandler } from '../../packet-server.connection-handler';
-import type { CommandHandler, LocateDeviceCommand } from '@agnoc/domain';
+import { PacketConnection } from '../../aggregate-roots/packet-connection.aggregate-root';
+import type { CommandHandler, Connection, ConnectionRepository, LocateDeviceCommand } from '@agnoc/domain';
 
 export class LocateDeviceEventHandler implements CommandHandler {
   readonly forName = 'LocateDeviceCommand';
 
-  constructor(private readonly connectionManager: PackerServerConnectionHandler) {}
+  constructor(private readonly connectionRepository: ConnectionRepository) {}
 
   async handle(event: LocateDeviceCommand): Promise<void> {
-    const [connection] = this.connectionManager.findConnectionsByDeviceId(event.deviceId);
+    const connections = await this.connectionRepository.findByDeviceId(event.deviceId);
 
-    if (!connection || !connection.device) {
+    if (connections.length === 0) {
       throw new DomainException(`Unable to find a connection for the device with id ${event.deviceId.value}`);
+    }
+
+    const connection = connections.find((connection: Connection): connection is PacketConnection =>
+      PacketConnection.isPacketConnection(connection),
+    );
+
+    if (!connection) {
+      return;
     }
 
     const response = await connection.sendAndWait('DEVICE_SEEK_LOCATION_REQ', {});

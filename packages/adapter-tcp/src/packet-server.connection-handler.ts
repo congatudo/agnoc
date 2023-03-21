@@ -1,25 +1,20 @@
-import { DomainException } from '@agnoc/toolkit';
-import { DeviceConnection } from './device.connection';
+import { DomainException, ID } from '@agnoc/toolkit';
 import { PacketMessage } from './packet.message';
+import type { PacketConnection } from './aggregate-roots/packet-connection.aggregate-root';
+import type { PacketConnectionFactory } from './factories/connection.factory';
 import type { PacketEventBus, PacketEventBusEvents } from './packet.event-bus';
-import type { DeviceRepository, Device } from '@agnoc/domain';
-import type { ID } from '@agnoc/toolkit';
-import type { PacketServer, PacketFactory, Packet, PayloadObjectName } from '@agnoc/transport-tcp';
+import type { DeviceRepository, Device, Connection, ConnectionRepository } from '@agnoc/domain';
+import type { PacketServer, Packet, PayloadObjectName } from '@agnoc/transport-tcp';
 
 export class PackerServerConnectionHandler {
-  private readonly servers = new Map<PacketServer, Set<DeviceConnection>>();
+  private readonly servers = new Map<PacketServer, Set<PacketConnection>>();
 
   constructor(
     private readonly packetEventBus: PacketEventBus,
-    private readonly packetFactory: PacketFactory,
     private readonly deviceRepository: DeviceRepository,
+    private readonly connectionRepository: ConnectionRepository,
+    private readonly packetConnectionFactory: PacketConnectionFactory,
   ) {}
-
-  findConnectionsByDeviceId(deviceId: ID): DeviceConnection[] {
-    const connections = [...this.servers.values()].flatMap((connections) => [...connections]);
-
-    return connections.filter((connection) => connection.device?.id.equals(deviceId));
-  }
 
   addServers(...servers: PacketServer[]): void {
     servers.forEach((server) => {
@@ -30,11 +25,11 @@ export class PackerServerConnectionHandler {
 
   private addListeners(server: PacketServer) {
     server.on('connection', (socket) => {
-      const connection = new DeviceConnection(this.packetFactory, this.packetEventBus, socket);
+      const connection = this.packetConnectionFactory.create({ id: ID.generate(), socket });
 
       this.servers.get(server)?.add(connection);
 
-      connection.on('data', async (packet: Packet) => {
+      connection.socket.on('data', async (packet: Packet) => {
         const packetMessage = new PacketMessage(connection, packet);
 
         // Update the device on the connection if the device id has changed.
@@ -42,13 +37,9 @@ export class PackerServerConnectionHandler {
 
         // Send the packet message to the packet event bus.
         await this.emitPacketEvent(packetMessage);
-
-        // This is a hack to only mark the device as connected if there is more than one connection.
-        // Here we should check that the connections are from the same ip address.
-        await this.tryToSetDeviceAsConnected(connection);
       });
 
-      connection.on('close', () => {
+      connection.socket.on('close', () => {
         this.servers.get(server)?.delete(connection);
       });
     });
@@ -62,18 +53,6 @@ export class PackerServerConnectionHandler {
         this.servers.delete(server);
       }
     });
-  }
-
-  private async tryToSetDeviceAsConnected(connection: DeviceConnection) {
-    if (connection.device && !connection.device.isConnected) {
-      const connections = this.findConnectionsByDeviceId(connection.device.id);
-
-      if (connections.length > 1) {
-        connection.device.setAsConnected();
-
-        await this.deviceRepository.saveOne(connection.device);
-      }
-    }
   }
 
   private async emitPacketEvent(message: PacketMessage<PayloadObjectName>) {
@@ -99,9 +78,13 @@ export class PackerServerConnectionHandler {
     }
   }
 
-  private async updateConnectionDevice(packet: Packet, connection: DeviceConnection) {
+  private async updateConnectionDevice(packet: Packet, connection: Connection) {
     if (!packet.deviceId.equals(connection.device?.id)) {
-      connection.device = await this.findDeviceById(packet.deviceId);
+      const device = await this.findDeviceById(packet.deviceId);
+
+      connection.setDevice(device);
+
+      await this.connectionRepository.saveOne(connection);
     }
   }
 

@@ -6,7 +6,7 @@ import type { EventBus } from './event-bus.base';
 import type { ID } from '../domain-primitives/id.domain-primitive';
 
 export abstract class Repository<T extends AggregateRoot<EntityProps>> {
-  constructor(private readonly eventBus: EventBus, private readonly adapter: Adapter) {}
+  constructor(private readonly eventBus: EventBus, protected readonly adapter: Adapter) {}
 
   async findOneById(id: ID): Promise<T | undefined> {
     return this.adapter.get(id) as T | undefined;

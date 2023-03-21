@@ -15,7 +15,9 @@ import { MapCoordinate } from './value-objects/map-coordinate.value-object';
 import { MapPixel } from './value-objects/map-pixel.value-object';
 import { QuietHoursSetting } from './value-objects/quiet-hours-setting.value-object';
 import { VoiceSetting } from './value-objects/voice-setting.value-object';
+import type { ConnectionProps } from './aggregate-roots/connection.aggregate-root';
 import type { DeviceProps } from './aggregate-roots/device.aggregate-root';
+import type { ConnectionDeviceChangedDomainEventProps } from './domain-events/connection-device-changed.domain-event';
 import type { DeviceMapProps } from './entities/device-map.entity';
 import type { DeviceOrderProps } from './entities/device-order.entity';
 import type { RoomProps } from './entities/room.entity';
@@ -187,5 +189,17 @@ export function givenSomeDeviceProps(): DeviceProps {
     userId: ID.generate(),
     system: new DeviceSystem(givenSomeDeviceSystemProps()),
     version: new DeviceVersion(givenSomeDeviceVersionProps()),
+  };
+}
+
+export function givenSomeConnectionProps(): ConnectionProps {
+  return {
+    id: ID.generate(),
+  };
+}
+
+export function givenSomeConnectionDeviceChangedDomainEventProps(): ConnectionDeviceChangedDomainEventProps {
+  return {
+    aggregateId: ID.generate(),
   };
 }

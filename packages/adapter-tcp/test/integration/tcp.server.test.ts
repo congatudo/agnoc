@@ -1,5 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { once } from 'events';
-import { CommandBus, Device, DeviceRepository, DomainEventBus } from '@agnoc/domain';
+import { CommandBus, ConnectionRepository, Device, DeviceRepository, DomainEventBus } from '@agnoc/domain';
 import { givenSomeDeviceProps } from '@agnoc/domain/test-support';
 import { EventHandlerRegistry, ID, MemoryAdapter, TaskHandlerRegistry } from '@agnoc/toolkit';
 import {
@@ -18,12 +19,13 @@ import type { Commands } from '@agnoc/domain';
 import type { ICLIENT_ONLINE_REQ, IDEVICE_REGISTER_REQ } from '@agnoc/schemas-tcp';
 import type { CreatePacketProps, Packet } from '@agnoc/transport-tcp';
 
-describe('TCPAdapter', function () {
+describe('Integration', function () {
   let domainEventBus: DomainEventBus;
   let commandBus: CommandBus;
   let domainEventHandlerRegistry: EventHandlerRegistry;
   let commandHandlerRegistry: TaskHandlerRegistry<Commands>;
   let deviceRepository: DeviceRepository;
+  let connectionRepository: ConnectionRepository;
   let tcpAdapter: TCPServer;
   let packetSocket: PacketSocket;
   let secondPacketSocket: PacketSocket;
@@ -37,7 +39,13 @@ describe('TCPAdapter', function () {
     domainEventHandlerRegistry = new EventHandlerRegistry(domainEventBus);
     commandHandlerRegistry = new TaskHandlerRegistry(commandBus);
     deviceRepository = new DeviceRepository(domainEventBus, new MemoryAdapter());
-    tcpAdapter = new TCPServer(deviceRepository, domainEventHandlerRegistry, commandHandlerRegistry);
+    connectionRepository = new ConnectionRepository(domainEventBus, new MemoryAdapter());
+    tcpAdapter = new TCPServer(
+      deviceRepository,
+      connectionRepository,
+      domainEventHandlerRegistry,
+      commandHandlerRegistry,
+    );
 
     // Client blocks
     const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
@@ -136,6 +144,7 @@ describe('TCPAdapter', function () {
     it('should handle a device connection', async function () {
       const device = new Device(givenSomeDeviceProps());
       let receivedPacket: Packet;
+      let secondReceivedPacket: Packet;
 
       await deviceRepository.saveOne(device);
 
@@ -159,21 +168,18 @@ describe('TCPAdapter', function () {
 
       // The device already has two identified connections and
       // the device should be marked as connected.
-      await domainEventBus.once('DeviceConnectedDomainEvent');
+      // eslint-disable-next-line prefer-const
+      [, [receivedPacket], [secondReceivedPacket]] = await Promise.all([
+        domainEventBus.once('DeviceConnectedDomainEvent'),
+        once(packetSocket, 'data') as Promise<Packet<'DEVICE_CONTROL_LOCK_REQ'>[]>,
+        once(secondPacketSocket, 'data') as Promise<Packet<'CLIENT_HEARTBEAT_RSP'>[]>,
+      ]);
 
       expect(device.isConnected).to.be.true;
-
-      [receivedPacket] = (await once(secondPacketSocket, 'data')) as Packet<'CLIENT_HEARTBEAT_RSP'>[];
-
-      expect(receivedPacket.payload.opcode.value).to.be.equal('CLIENT_HEARTBEAT_RSP');
-
-      expect(device.isConnected).to.be.true;
-
-      [receivedPacket] = (await once(packetSocket, 'data')) as Packet<'DEVICE_CONTROL_LOCK_REQ'>[];
-
       expect(receivedPacket.payload.opcode.value).to.be.equal('DEVICE_CONTROL_LOCK_REQ');
+      expect(secondReceivedPacket.payload.opcode.value).to.be.equal('CLIENT_HEARTBEAT_RSP');
 
-      void secondPacketSocket.write(
+      void packetSocket.write(
         packetFactory.create('DEVICE_CONTROL_LOCK_RSP', { result: 0 }, givenSomeCreatePacketProps(device)),
       );
 

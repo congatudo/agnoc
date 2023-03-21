@@ -11,6 +11,7 @@ import {
 import { LocateDeviceEventHandler } from './event-handlers/command-event-handlers/locate-device.event-handler';
 import { LockDeviceWhenDeviceIsConnectedEventHandler } from './event-handlers/domain-event-handlers/lock-device-when-device-is-connected-event-handler.event-handler';
 import { QueryDeviceInfoWhenDeviceIsLockedEventHandler } from './event-handlers/domain-event-handlers/query-device-info-when-device-is-locked-event-handler.event-handler';
+import { SetDeviceAsConnectedWhenConnectionDeviceAddedDomainEventHandler } from './event-handlers/domain-event-handlers/set-device-connected-when-connection-device-changed.domain-event';
 import { ClientHeartbeatEventHandler } from './event-handlers/packet-event-handlers/client-heartbeat.event-handler';
 import { ClientLoginEventHandler } from './event-handlers/packet-event-handlers/client-login.event-handler';
 import { DeviceBatteryUpdateEventHandler } from './event-handlers/packet-event-handlers/device-battery-update.event-handler';
@@ -31,6 +32,7 @@ import { DeviceTimeUpdateEventHandler } from './event-handlers/packet-event-hand
 import { DeviceUpgradeInfoEventHandler } from './event-handlers/packet-event-handlers/device-upgrade-info.event-handler';
 import { DeviceVersionUpdateEventHandler } from './event-handlers/packet-event-handlers/device-version-update.event-handler';
 import { DeviceWlanUpdateEventHandler } from './event-handlers/packet-event-handlers/device-wlan-update.event-handler';
+import { PacketConnectionFactory } from './factories/connection.factory';
 import { DeviceBatteryMapper } from './mappers/device-battery.mapper';
 import { DeviceErrorMapper } from './mappers/device-error.mapper';
 import { DeviceFanSpeedMapper } from './mappers/device-fan-speed.mapper';
@@ -41,7 +43,7 @@ import { DeviceWaterLevelMapper } from './mappers/device-water-level.mapper';
 import { NTPServerConnectionHandler } from './ntp-server.connection-handler';
 import { PackerServerConnectionHandler } from './packet-server.connection-handler';
 import { PacketEventBus } from './packet.event-bus';
-import type { Commands, DeviceRepository } from '@agnoc/domain';
+import type { Commands, ConnectionRepository, DeviceRepository } from '@agnoc/domain';
 import type { Server, TaskHandlerRegistry } from '@agnoc/toolkit';
 import type { AddressInfo } from 'net';
 
@@ -52,6 +54,7 @@ export class TCPServer implements Server {
 
   constructor(
     private readonly deviceRepository: DeviceRepository,
+    private readonly connectionRepository: ConnectionRepository,
     private readonly domainEventHandlerRegistry: EventHandlerRegistry,
     private readonly commandHandlerRegistry: TaskHandlerRegistry<Commands>,
   ) {
@@ -78,8 +81,14 @@ export class TCPServer implements Server {
     const packetEventBus = new PacketEventBus();
     const packetEventHandlerRegistry = new EventHandlerRegistry(packetEventBus);
 
-    // Connection managers
-    const connectionManager = new PackerServerConnectionHandler(packetEventBus, packetFactory, this.deviceRepository);
+    // Connection
+    const packetConnectionFactory = new PacketConnectionFactory(packetEventBus, packetFactory);
+    const connectionManager = new PackerServerConnectionHandler(
+      packetEventBus,
+      this.deviceRepository,
+      this.connectionRepository,
+      packetConnectionFactory,
+    );
 
     connectionManager.addServers(this.cmdServer, this.mapServer);
 
@@ -127,12 +136,13 @@ export class TCPServer implements Server {
 
     // Domain event handlers
     this.domainEventHandlerRegistry.register(
-      new LockDeviceWhenDeviceIsConnectedEventHandler(connectionManager),
-      new QueryDeviceInfoWhenDeviceIsLockedEventHandler(connectionManager),
+      new LockDeviceWhenDeviceIsConnectedEventHandler(connectionRepository),
+      new QueryDeviceInfoWhenDeviceIsLockedEventHandler(connectionRepository),
+      new SetDeviceAsConnectedWhenConnectionDeviceAddedDomainEventHandler(connectionRepository, deviceRepository),
     );
 
     // Command event handlers
-    this.commandHandlerRegistry.register(new LocateDeviceEventHandler(connectionManager));
+    this.commandHandlerRegistry.register(new LocateDeviceEventHandler(connectionRepository));
   }
 
   async listen(options: TCPAdapterListenOptions = listenDefaultOptions): Promise<TCPAdapterListenReturn> {

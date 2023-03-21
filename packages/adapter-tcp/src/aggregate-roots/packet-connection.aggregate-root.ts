@@ -1,9 +1,9 @@
-import { Device } from '@agnoc/domain';
-import { ArgumentInvalidException, DomainException, ID } from '@agnoc/toolkit';
+import { Connection } from '@agnoc/domain';
+import { ID } from '@agnoc/toolkit';
 import { PacketSocket } from '@agnoc/transport-tcp';
-import Emittery from 'emittery';
-import type { PacketEventBus } from './packet.event-bus';
-import type { PacketMessage } from './packet.message';
+import type { PacketEventBus } from '../packet.event-bus';
+import type { PacketMessage } from '../packet.message';
+import type { ConnectionProps } from '@agnoc/domain';
 import type {
   Packet,
   PacketFactory,
@@ -12,37 +12,23 @@ import type {
   CreatePacketProps,
 } from '@agnoc/transport-tcp';
 
-export interface DeviceConnectionEvents {
-  data: Packet;
-  close: undefined;
-  error: Error;
+export interface PacketConnectionProps extends ConnectionProps {
+  socket: PacketSocket;
 }
 
-export class DeviceConnection extends Emittery<DeviceConnectionEvents> {
-  #device?: Device;
+export class PacketConnection extends Connection<PacketConnectionProps> {
+  readonly connectionType = 'PACKET';
 
   constructor(
     private readonly packetFactory: PacketFactory,
     private readonly eventBus: PacketEventBus,
-    private readonly socket: PacketSocket,
+    props: PacketConnectionProps,
   ) {
-    super();
-    this.validateSocket();
-    this.addListeners();
+    super(props);
   }
 
-  get device(): Device | undefined {
-    return this.#device;
-  }
-
-  set device(device: Device | undefined) {
-    if (device && !(device instanceof Device)) {
-      throw new ArgumentInvalidException(
-        `Value '${device as string} for property 'device' of Connection is not an instance of Device`,
-      );
-    }
-
-    this.#device = device;
+  get socket(): PacketSocket {
+    return this.props.socket;
   }
 
   send<Name extends PayloadObjectName>(name: Name, object: PayloadObjectFrom<Name>): Promise<void> {
@@ -73,8 +59,15 @@ export class DeviceConnection extends Emittery<DeviceConnectionEvents> {
     return this.socket.end();
   }
 
+  protected override validate(props: PacketConnectionProps): void {
+    super.validate(props);
+
+    this.validateDefinedProp(props, 'socket');
+    this.validateInstanceProp(props, 'socket', PacketSocket);
+  }
+
   private getPacketProps(): CreatePacketProps {
-    return { deviceId: this.#device?.id ?? new ID(0), userId: this.#device?.userId ?? new ID(0) };
+    return { deviceId: this.device?.id ?? new ID(0), userId: this.device?.userId ?? new ID(0) };
   }
 
   private writeAndWait(packet: Packet): Promise<PacketMessage> {
@@ -92,25 +85,7 @@ export class DeviceConnection extends Emittery<DeviceConnectionEvents> {
     return this.socket.write(packet);
   }
 
-  private validateSocket() {
-    if (!(this.socket instanceof PacketSocket)) {
-      throw new DomainException('Socket for Connection is not an instance of PacketSocket');
-    }
-
-    if (!this.socket.connected) {
-      throw new DomainException('Socket for Connection is closed');
-    }
-  }
-
-  private addListeners() {
-    this.socket.on('data', (packet) => {
-      void this.emit('data', packet);
-    });
-    this.socket.on('error', (err) => {
-      void this.emit('error', err);
-    });
-    this.socket.on('close', () => {
-      void this.emit('close');
-    });
+  static isPacketConnection(connection: Connection): connection is PacketConnection {
+    return connection.connectionType === 'PACKET';
   }
 }

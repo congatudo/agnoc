@@ -1,4 +1,4 @@
-import { DeviceRepository, LocateDeviceCommand } from '@agnoc/domain';
+import { ConnectionRepository, DeviceRepository, LocateDeviceCommand } from '@agnoc/domain';
 import { EventHandlerRegistry, ID, TaskHandlerRegistry } from '@agnoc/toolkit';
 import { capture, fnmock, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
@@ -19,6 +19,7 @@ describe('AgnocServer', function () {
   it('should provide a container to build an adapter', function () {
     agnocServer.buildAdapter((container) => {
       expect(container.deviceRepository).to.be.instanceOf(DeviceRepository);
+      expect(container.connectionRepository).to.be.instanceOf(ConnectionRepository);
       expect(container.domainEventHandlerRegistry).to.be.instanceOf(EventHandlerRegistry);
       expect(container.commandHandlerRegistry).to.be.instanceOf(TaskHandlerRegistry);
 
