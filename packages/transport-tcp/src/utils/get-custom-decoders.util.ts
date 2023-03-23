@@ -2,7 +2,7 @@ import { decodeArea } from '../decoders/area.decoder';
 import { decodeChargePosition } from '../decoders/charge-position.decoder';
 import { decodeMap } from '../decoders/map.decoder';
 import { decodeRobotPosition } from '../decoders/robot-position.decoder';
-import type { DecoderMap } from '../services/payload-object-parser.service';
+import type { DecoderMap } from '../services/payload-data-parser.service';
 
 const decoders: Partial<DecoderMap> = {
   DEVICE_MAPID_GET_GLOBAL_INFO_RSP: decodeMap,

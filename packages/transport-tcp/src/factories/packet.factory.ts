@@ -2,7 +2,7 @@ import { OPCode } from '../domain-primitives/opcode.domain-primitive';
 import { PacketSequence } from '../domain-primitives/packet-sequence.domain-primitive';
 import { Packet } from '../value-objects/packet.value-object';
 import { Payload } from '../value-objects/payload.value-object';
-import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
+import type { PayloadDataFrom, PayloadDataName } from '../constants/payloads.constant';
 import type { Factory, ID } from '@agnoc/toolkit';
 
 /** The props to create a packet. */
@@ -19,15 +19,15 @@ export class PacketFactory implements Factory<Packet> {
    * To use this method you must provider a `deviceId` and `userId` in the `props` object,
    * or a `Packet` object in the `packet` argument to copy the packet props from.
    */
-  create<Name extends PayloadObjectName>(
+  create<Name extends PayloadDataName>(
     name: Name,
-    object: PayloadObjectFrom<Name>,
+    object: PayloadDataFrom<Name>,
     props: CreatePacketProps,
   ): Packet<Name>;
-  create<Name extends PayloadObjectName>(name: Name, object: PayloadObjectFrom<Name>, packet: Packet): Packet<Name>;
-  create<Name extends PayloadObjectName>(
+  create<Name extends PayloadDataName>(name: Name, object: PayloadDataFrom<Name>, packet: Packet): Packet<Name>;
+  create<Name extends PayloadDataName>(
     name: Name,
-    object: PayloadObjectFrom<Name>,
+    object: PayloadDataFrom<Name>,
     propsOrPacket: CreatePacketProps | Packet,
   ): Packet<Name> {
     if (propsOrPacket instanceof Packet) {
@@ -38,7 +38,7 @@ export class PacketFactory implements Factory<Packet> {
         userId: propsOrPacket.deviceId,
         deviceId: propsOrPacket.userId,
         sequence: propsOrPacket.sequence,
-        payload: new Payload({ opcode: OPCode.fromName(name), object }),
+        payload: new Payload({ opcode: OPCode.fromName(name), data: object }),
       });
     }
 
@@ -49,7 +49,7 @@ export class PacketFactory implements Factory<Packet> {
       userId: propsOrPacket.deviceId,
       deviceId: propsOrPacket.userId,
       sequence: PacketSequence.generate(),
-      payload: new Payload({ opcode: OPCode.fromName(name), object }),
+      payload: new Payload({ opcode: OPCode.fromName(name), data: object }),
     });
   }
 }

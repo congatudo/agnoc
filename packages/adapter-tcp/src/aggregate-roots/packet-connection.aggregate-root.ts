@@ -4,13 +4,7 @@ import { PacketSocket } from '@agnoc/transport-tcp';
 import type { PacketEventBus } from '../packet.event-bus';
 import type { PacketMessage } from '../packet.message';
 import type { ConnectionProps } from '@agnoc/domain';
-import type {
-  Packet,
-  PacketFactory,
-  PayloadObjectName,
-  PayloadObjectFrom,
-  CreatePacketProps,
-} from '@agnoc/transport-tcp';
+import type { Packet, PacketFactory, PayloadDataName, PayloadDataFrom, CreatePacketProps } from '@agnoc/transport-tcp';
 
 export interface PacketConnectionProps extends ConnectionProps {
   socket: PacketSocket;
@@ -31,25 +25,25 @@ export class PacketConnection extends Connection<PacketConnectionProps> {
     return this.props.socket;
   }
 
-  send<Name extends PayloadObjectName>(name: Name, object: PayloadObjectFrom<Name>): Promise<void> {
+  send<Name extends PayloadDataName>(name: Name, object: PayloadDataFrom<Name>): Promise<void> {
     const packet = this.packetFactory.create(name, object, this.getPacketProps());
 
     return this.write(packet);
   }
 
-  respond<Name extends PayloadObjectName>(name: Name, object: PayloadObjectFrom<Name>, packet: Packet): Promise<void> {
+  respond<Name extends PayloadDataName>(name: Name, object: PayloadDataFrom<Name>, packet: Packet): Promise<void> {
     return this.write(this.packetFactory.create(name, object, packet));
   }
 
-  sendAndWait<Name extends PayloadObjectName>(name: Name, object: PayloadObjectFrom<Name>): Promise<PacketMessage> {
+  sendAndWait<Name extends PayloadDataName>(name: Name, object: PayloadDataFrom<Name>): Promise<PacketMessage> {
     const packet = this.packetFactory.create(name, object, this.getPacketProps());
 
     return this.writeAndWait(packet);
   }
 
-  respondAndWait<Name extends PayloadObjectName>(
+  respondAndWait<Name extends PayloadDataName>(
     name: Name,
-    object: PayloadObjectFrom<Name>,
+    object: PayloadDataFrom<Name>,
     packet: Packet,
   ): Promise<PacketMessage> {
     return this.writeAndWait(this.packetFactory.create(name, object, packet));

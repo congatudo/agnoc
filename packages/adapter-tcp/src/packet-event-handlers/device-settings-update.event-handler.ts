@@ -14,7 +14,7 @@ export class DeviceSettingsUpdateEventHandler implements PacketEventHandler {
       throw new DomainException('Device not found');
     }
 
-    const data = message.packet.payload.object;
+    const data = message.packet.payload.data;
     const deviceSettings = new DeviceSettings({
       voice: this.deviceVoiceMapper.toDomain({
         isEnabled: data.voice.voiceMode,

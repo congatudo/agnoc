@@ -13,7 +13,7 @@ export class DeviceBatteryUpdateEventHandler implements PacketEventHandler {
       throw new DomainException('Device not found');
     }
 
-    const data = message.packet.payload.object;
+    const data = message.packet.payload.data;
 
     message.device.updateBattery(this.deviceBatteryMapper.toDomain(data.battery.level));
 

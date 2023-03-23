@@ -24,7 +24,7 @@ describe('PacketFactory', function () {
     expect(packet.deviceId).to.equal(props.userId);
     expect(packet.sequence).to.be.instanceOf(PacketSequence);
     expect(packet.payload.opcode.name).to.equal('DEVICE_GETTIME_RSP');
-    expect(packet.payload.object).to.equal(object);
+    expect(packet.payload.data).to.equal(object);
   });
 
   it('should create a packet from another packet', function () {
@@ -40,6 +40,6 @@ describe('PacketFactory', function () {
     expect(packet.deviceId).to.equal(sourcePacketProps.userId);
     expect(packet.sequence).to.be.equal(sourcePacketProps.sequence);
     expect(packet.payload.opcode.name).to.equal('DEVICE_GETTIME_RSP');
-    expect(packet.payload.object).to.equal(object);
+    expect(packet.payload.data).to.equal(object);
   });
 });

@@ -10,7 +10,7 @@ export class DeviceRegisterEventHandler implements PacketEventHandler {
   constructor(private readonly deviceRepository: DeviceRepository) {}
 
   async handle(message: PacketMessage<'DEVICE_REGISTER_REQ'>): Promise<void> {
-    const data = message.packet.payload.object;
+    const data = message.packet.payload.data;
     const device = new Device({
       id: ID.generate(),
       userId: ID.generate(),

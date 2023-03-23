@@ -1,15 +1,15 @@
 import { ArgumentInvalidException } from '@agnoc/toolkit';
-import type { PayloadObjectFrom, PayloadObjectName } from '../constants/payloads.constant';
+import type { PayloadDataFrom, PayloadDataName } from '../constants/payloads.constant';
 import type { Root, Type } from 'protobufjs/light';
 
-export type Decoder<Name extends PayloadObjectName = PayloadObjectName> = (buffer: Buffer) => PayloadObjectFrom<Name>;
-export type Encoder<Name extends PayloadObjectName = PayloadObjectName> = (object: PayloadObjectFrom<Name>) => Buffer;
+export type Decoder<Name extends PayloadDataName = PayloadDataName> = (buffer: Buffer) => PayloadDataFrom<Name>;
+export type Encoder<Name extends PayloadDataName = PayloadDataName> = (object: PayloadDataFrom<Name>) => Buffer;
 
-export type EncoderMap<Name extends PayloadObjectName = PayloadObjectName> = Record<Name, Encoder<Name>>;
-export type DecoderMap<Name extends PayloadObjectName = PayloadObjectName> = Record<Name, Decoder<Name>>;
+export type EncoderMap<Name extends PayloadDataName = PayloadDataName> = Record<Name, Encoder<Name>>;
+export type DecoderMap<Name extends PayloadDataName = PayloadDataName> = Record<Name, Decoder<Name>>;
 
 /** Service to encde and decode payload objects. */
-export class PayloadObjectParserService {
+export class PayloadDataParserService {
   constructor(
     private readonly protoRoot: Root,
     private readonly decoders?: Partial<DecoderMap>,
@@ -17,7 +17,7 @@ export class PayloadObjectParserService {
   ) {}
 
   /** Returns a decoder for a payload object. */
-  getDecoder<Name extends PayloadObjectName>(name: Name): Decoder<Name> | undefined {
+  getDecoder<Name extends PayloadDataName>(name: Name): Decoder<Name> | undefined {
     const schema = this.protoRoot.get(name) as Type | null;
 
     if (schema) {
@@ -28,7 +28,7 @@ export class PayloadObjectParserService {
   }
 
   /** Returns an encoder for a payload object. */
-  getEncoder<Name extends PayloadObjectName>(name: Name): Encoder<Name> | undefined {
+  getEncoder<Name extends PayloadDataName>(name: Name): Encoder<Name> | undefined {
     const schema = this.protoRoot.get(name) as Type | null;
 
     if (schema) {
@@ -38,7 +38,7 @@ export class PayloadObjectParserService {
     return this.encoders?.[name] as Encoder<Name> | undefined;
   }
 
-  private buildSchemaDecoder(name: PayloadObjectName, schema: Type): Decoder {
+  private buildSchemaDecoder(name: PayloadDataName, schema: Type): Decoder {
     const decoder = (buffer: Buffer) => {
       const message = schema.decode(buffer);
 
@@ -50,7 +50,7 @@ export class PayloadObjectParserService {
     return decoder as Decoder;
   }
 
-  private buildSchemaEncoder(name: PayloadObjectName, schema: Type): Encoder {
+  private buildSchemaEncoder(name: PayloadDataName, schema: Type): Encoder {
     const encoder = (object: Buffer) => {
       const err = schema.verify(object);
 

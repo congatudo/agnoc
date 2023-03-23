@@ -47,7 +47,7 @@ describe('DecodeCommand', function () {
     const [ret] = await readStream(stdio.stdout, 'utf8');
 
     expect(ret).to.equal(
-      '[fb3dd1ebc0e6c58f] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","object":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
+      '[fb3dd1ebc0e6c58f] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","data":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
     );
 
     verify(packetMapper.toDomain(deepEqual(buffer))).once();
@@ -73,7 +73,7 @@ describe('DecodeCommand', function () {
         sequence: 'fb3dd1ebc0e6c58f',
         payload: {
           opcode: 'DEVICE_GETTIME_RSP',
-          object: { result: +0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
+          data: { result: +0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
         },
       },
     ]);
@@ -91,7 +91,7 @@ describe('DecodeCommand', function () {
     const [ret] = await readStream(stdio.stdout, 'utf8');
 
     expect(ret).to.equal(
-      '[fb3dd1ebc0e6c58f] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","object":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
+      '[fb3dd1ebc0e6c58f] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","data":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
     );
 
     verify(packetMapper.toDomain(deepEqual(buffer))).once();
@@ -115,7 +115,7 @@ describe('DecodeCommand', function () {
         sequence: 'fb3dd1ebc0e6c58f',
         payload: {
           opcode: 'DEVICE_GETTIME_RSP',
-          object: { result: +0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
+          data: { result: +0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
         },
       },
     ]);

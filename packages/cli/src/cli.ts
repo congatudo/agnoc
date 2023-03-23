@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import {
-  PayloadObjectParserService,
+  PayloadDataParserService,
   getProtobufRoot,
   PacketMapper,
   getCustomDecoders,
@@ -33,7 +33,7 @@ export function main(): void {
     stderr: process.stderr,
   };
 
-  const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
+  const payloadMapper = new PayloadMapper(new PayloadDataParserService(getProtobufRoot(), getCustomDecoders()));
   const packetMapper = new PacketMapper(payloadMapper);
   const decodeCommand = new DecodeCommand(stdio, packetMapper);
   const readCommand = new ReadCommand(stdio, packetMapper);

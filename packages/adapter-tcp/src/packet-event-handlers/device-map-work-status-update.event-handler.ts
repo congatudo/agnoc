@@ -37,7 +37,7 @@ export class DeviceMapWorkStatusUpdateEventHandler implements PacketEventHandler
       mopType,
       cleanSize,
       cleanTime,
-    } = message.packet.payload.object;
+    } = message.packet.payload.data;
 
     message.device.updateCurrentClean(
       new DeviceCleanWork({

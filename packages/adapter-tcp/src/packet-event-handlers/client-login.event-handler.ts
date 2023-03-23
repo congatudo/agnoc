@@ -8,7 +8,7 @@ export class ClientLoginEventHandler implements PacketEventHandler {
     if (!message.device) {
       const data = {
         result: 12002,
-        reason: `Device not registered(devsn: ${message.packet.payload.object.deviceSerialNumber})`,
+        reason: `Device not registered(devsn: ${message.packet.payload.data.deviceSerialNumber})`,
       };
 
       return message.respond('CLIENT_ONLINE_RSP', data);

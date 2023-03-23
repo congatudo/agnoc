@@ -10,7 +10,7 @@ export class DeviceCleanMapReportEventHandler implements PacketEventHandler {
       throw new DomainException('Device not found');
     }
 
-    const data = message.packet.payload.object;
+    const data = message.packet.payload.data;
 
     // TODO: save device clean map data
 

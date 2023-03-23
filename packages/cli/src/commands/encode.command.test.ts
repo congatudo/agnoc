@@ -61,7 +61,7 @@ describe('EncodeCommand', function () {
             sequence: PacketSequence.fromString(jsonPacket.sequence),
             payload: new Payload({
               opcode: OPCode.fromName(jsonPacket.payload.opcode),
-              object: jsonPacket.payload.object,
+              data: jsonPacket.payload.data,
             }),
           }),
         ),
@@ -91,7 +91,7 @@ describe('EncodeCommand', function () {
             sequence: PacketSequence.fromString(jsonPacket.sequence),
             payload: new Payload({
               opcode: OPCode.fromName(jsonPacket.payload.opcode),
-              object: jsonPacket.payload.object,
+              data: jsonPacket.payload.data,
             }),
           }),
         ),

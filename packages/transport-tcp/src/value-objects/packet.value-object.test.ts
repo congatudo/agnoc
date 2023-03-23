@@ -126,12 +126,12 @@ describe('Packet', function () {
         sequence: new PacketSequence(5n),
         payload: new Payload({
           opcode: OPCode.fromName('DEVICE_GETTIME_RSP'),
-          object: { result: 0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
+          data: { result: 0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
         }),
       });
 
       expect(packet.toString()).to.be.equal(
-        '[5] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","object":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}',
+        '[5] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","data":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}',
       );
     });
   });

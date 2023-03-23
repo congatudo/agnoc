@@ -11,7 +11,7 @@ export class DeviceVersionUpdateEventHandler implements PacketEventHandler {
       throw new DomainException('Device not found');
     }
 
-    const data = message.packet.payload.object;
+    const data = message.packet.payload.data;
 
     message.device.updateVersion(new DeviceVersion({ software: data.softwareVersion, hardware: data.hardwareVersion }));
 

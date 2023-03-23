@@ -4,7 +4,7 @@ import type { PacketConnection } from './aggregate-roots/packet-connection.aggre
 import type { PacketConnectionFactory } from './factories/connection.factory';
 import type { PacketEventBus, PacketEventBusEvents } from './packet.event-bus';
 import type { DeviceRepository, Device, Connection, ConnectionRepository } from '@agnoc/domain';
-import type { PacketServer, Packet, PayloadObjectName } from '@agnoc/transport-tcp';
+import type { PacketServer, Packet, PayloadDataName } from '@agnoc/transport-tcp';
 
 export class PackerServerConnectionHandler {
   private readonly servers = new Map<PacketServer, Set<PacketConnection>>();
@@ -55,21 +55,21 @@ export class PackerServerConnectionHandler {
     });
   }
 
-  private async emitPacketEvent(message: PacketMessage<PayloadObjectName>) {
-    const name = message.packet.payload.opcode.name as PayloadObjectName;
+  private async emitPacketEvent(message: PacketMessage<PayloadDataName>) {
+    const name = message.packet.payload.opcode.name as PayloadDataName;
     const sequence = message.packet.sequence.toString();
 
     this.checkForPacketEventHandler(name);
 
     // Emit the packet event by the sequence string.
     // This is used to wait for a response from a packet.
-    await this.packetEventBus.emit(sequence, message as PacketEventBusEvents[PayloadObjectName]);
+    await this.packetEventBus.emit(sequence, message as PacketEventBusEvents[PayloadDataName]);
 
     // Emit the packet event by the opcode name.
-    await this.packetEventBus.emit(name, message as PacketEventBusEvents[PayloadObjectName]);
+    await this.packetEventBus.emit(name, message as PacketEventBusEvents[PayloadDataName]);
   }
 
-  private checkForPacketEventHandler(event: PayloadObjectName) {
+  private checkForPacketEventHandler(event: PayloadDataName) {
     const count = this.packetEventBus.listenerCount(event);
 
     // Throw an error if there is no event handler for the packet event.

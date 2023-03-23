@@ -11,7 +11,7 @@ export class DeviceMapChargerPositionUpdateEventHandler implements PacketEventHa
       throw new DomainException('Device not found');
     }
 
-    const data = message.packet.payload.object;
+    const data = message.packet.payload.data;
 
     message.device.map?.updateCharger(
       new MapPosition({

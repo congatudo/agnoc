@@ -1,10 +1,10 @@
 import { EventBus } from '@agnoc/toolkit';
 import type { PacketMessage } from './packet.message';
-import type { PayloadObjectName } from '@agnoc/transport-tcp';
+import type { PayloadDataName } from '@agnoc/transport-tcp';
 
 /** Events for the packet event bus. */
 export type PacketEventBusEvents = {
-  [Name in PayloadObjectName]: PacketMessage<Name>;
+  [Name in PayloadDataName]: PacketMessage<Name>;
 } & {
   [key: string]: PacketMessage;
 };

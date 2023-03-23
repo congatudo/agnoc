@@ -4,19 +4,19 @@ import { expect } from 'chai';
 import { OPCode } from '../domain-primitives/opcode.domain-primitive';
 import { Payload } from '../value-objects/payload.value-object';
 import { PayloadMapper } from './payload.mapper';
-import type { Decoder, Encoder, PayloadObjectParserService } from '../services/payload-object-parser.service';
+import type { Decoder, Encoder, PayloadDataParserService } from '../services/payload-data-parser.service';
 
 describe('PayloadMapper', function () {
   let decoder: Decoder;
   let encoder: Encoder;
-  let payloadObjectParserService: PayloadObjectParserService;
+  let payloadDataParserService: PayloadDataParserService;
   let payloadMapper: PayloadMapper;
 
   beforeEach(function () {
     decoder = fnmock();
     encoder = fnmock();
-    payloadObjectParserService = imock();
-    payloadMapper = new PayloadMapper(instance(payloadObjectParserService));
+    payloadDataParserService = imock();
+    payloadMapper = new PayloadMapper(instance(payloadDataParserService));
   });
 
   describe('#toDomain()', function () {
@@ -25,14 +25,14 @@ describe('PayloadMapper', function () {
       const opcode = OPCode.fromName('CLIENT_HEARTBEAT_REQ');
       const object = { foo: 'bar' };
 
-      when(payloadObjectParserService.getDecoder(anything())).thenReturn(instance(decoder));
+      when(payloadDataParserService.getDecoder(anything())).thenReturn(instance(decoder));
       when(decoder(anything())).thenReturn(object);
 
       const payload = payloadMapper.toDomain(buffer, opcode);
 
       expect(payload).to.be.instanceOf(Payload);
       expect(payload.opcode).to.equal(opcode);
-      expect(payload.object).to.equal(object);
+      expect(payload.data).to.equal(object);
 
       verify(decoder(buffer)).once();
     });
@@ -41,7 +41,7 @@ describe('PayloadMapper', function () {
       const buffer = Buffer.from('test');
       const opcode = OPCode.fromName('CLIENT_HEARTBEAT_REQ');
 
-      when(payloadObjectParserService.getDecoder(anything())).thenReturn(undefined);
+      when(payloadDataParserService.getDecoder(anything())).thenReturn(undefined);
 
       expect(() => payloadMapper.toDomain(buffer, opcode)).to.throw(
         ArgumentInvalidException,
@@ -54,10 +54,10 @@ describe('PayloadMapper', function () {
     it('should create a buffer from a payload', function () {
       const opcode = OPCode.fromName('CLIENT_HEARTBEAT_REQ');
       const object = { foo: 'bar' };
-      const payload = new Payload({ opcode, object });
+      const payload = new Payload({ opcode, data: object });
       const buffer = Buffer.from('test');
 
-      when(payloadObjectParserService.getEncoder(anything())).thenReturn(instance(encoder));
+      when(payloadDataParserService.getEncoder(anything())).thenReturn(instance(encoder));
       when(encoder(anything())).thenReturn(buffer);
 
       const ret = payloadMapper.fromDomain(payload);
@@ -70,13 +70,13 @@ describe('PayloadMapper', function () {
     it('should throw an error when the encoder does not exist', function () {
       const opcode = OPCode.fromName('CLIENT_HEARTBEAT_REQ');
       const object = { foo: 'bar' };
-      const payload = new Payload({ opcode, object });
+      const payload = new Payload({ opcode, data: object });
 
-      when(payloadObjectParserService.getEncoder(anything())).thenReturn(undefined);
+      when(payloadDataParserService.getEncoder(anything())).thenReturn(undefined);
 
       expect(() => payloadMapper.fromDomain(payload)).to.throw(
         ArgumentInvalidException,
-        `Encoder not found for opcode 'CLIENT_HEARTBEAT_REQ' while creating payload from object: {"foo":"bar"}`,
+        `Encoder not found for opcode 'CLIENT_HEARTBEAT_REQ' while creating payload from data: {"foo":"bar"}`,
       );
     });
   });

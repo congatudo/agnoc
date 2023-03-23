@@ -5,7 +5,7 @@ import {
   PacketMapper,
   PacketServer,
   PayloadMapper,
-  PayloadObjectParserService,
+  PayloadDataParserService,
   PacketFactory,
 } from '@agnoc/transport-tcp';
 import { LocateDeviceEventHandler } from './command-handlers/locate-device.event-handler';
@@ -59,7 +59,7 @@ export class TCPServer implements Server {
     private readonly commandQueryHandlerRegistry: TaskHandlerRegistry<CommandsOrQueries>,
   ) {
     // Packet foundation
-    const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
+    const payloadMapper = new PayloadMapper(new PayloadDataParserService(getProtobufRoot(), getCustomDecoders()));
     const packetMapper = new PacketMapper(payloadMapper);
     const packetFactory = new PacketFactory();
 

@@ -39,7 +39,7 @@ describe('PacketEncodeTransform', function () {
             sequence: PacketSequence.fromString(jsonPacket.sequence),
             payload: new Payload({
               opcode: OPCode.fromName(jsonPacket.payload.opcode),
-              object: jsonPacket.payload.object,
+              data: jsonPacket.payload.data,
             }),
           }),
         ),

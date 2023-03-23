@@ -99,7 +99,7 @@ import type {
   IUSER_SET_DEVICE_QUIETHOURS_RSP,
 } from '@agnoc/schemas-tcp';
 
-interface PayloadObjectMap {
+interface PayloadDataMap {
   CLIENT_HEARTBEAT_REQ: ICLIENT_HEARTBEAT_REQ;
   CLIENT_HEARTBEAT_RSP: ICLIENT_HEARTBEAT_RSP;
   CLIENT_IDLE_TIMEOUT: ICLIENT_IDLE_TIMEOUT;
@@ -202,6 +202,6 @@ interface PayloadObjectMap {
   USER_SET_DEVICE_QUIETHOURS_RSP: IUSER_SET_DEVICE_QUIETHOURS_RSP;
 }
 
-export type PayloadObject = PayloadObjectMap[PayloadObjectName];
-export type PayloadObjectName = keyof PayloadObjectMap & OPNameLiteral;
-export type PayloadObjectFrom<Name extends PayloadObjectName> = PayloadObjectMap[Name];
+export type PayloadData = PayloadDataMap[PayloadDataName];
+export type PayloadDataName = keyof PayloadDataMap & OPNameLiteral;
+export type PayloadDataFrom<Name extends PayloadDataName> = PayloadDataMap[Name];

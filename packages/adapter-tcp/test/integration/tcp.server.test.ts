@@ -10,7 +10,7 @@ import {
   PacketMapper,
   PacketSocket,
   PayloadMapper,
-  PayloadObjectParserService,
+  PayloadDataParserService,
 } from '@agnoc/transport-tcp';
 import { expect } from 'chai';
 import { TCPServer } from '@agnoc/adapter-tcp';
@@ -48,7 +48,7 @@ describe('Integration', function () {
     );
 
     // Client blocks
-    const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
+    const payloadMapper = new PayloadMapper(new PayloadDataParserService(getProtobufRoot(), getCustomDecoders()));
     const packetMapper = new PacketMapper(payloadMapper);
 
     packetSocket = new PacketSocket(packetMapper);
@@ -79,7 +79,7 @@ describe('Integration', function () {
       expect(receivedPacket.deviceId.equals(sentPacket.deviceId)).to.be.true;
       expect(receivedPacket.userId.equals(sentPacket.userId)).to.be.true;
       expect(receivedPacket.payload.opcode.value).to.be.equal('CLIENT_HEARTBEAT_RSP');
-      expect(receivedPacket.payload.object).to.be.deep.equal({});
+      expect(receivedPacket.payload.data).to.be.deep.equal({});
     });
 
     it('should handle heartbeat packets on map server', async function () {
@@ -100,7 +100,7 @@ describe('Integration', function () {
       expect(receivedPacket.deviceId.equals(sentPacket.deviceId)).to.be.true;
       expect(receivedPacket.userId.equals(sentPacket.userId)).to.be.true;
       expect(receivedPacket.payload.opcode.value).to.be.equal('CLIENT_HEARTBEAT_RSP');
-      expect(receivedPacket.payload.object).to.be.deep.equal({});
+      expect(receivedPacket.payload.data).to.be.deep.equal({});
     });
 
     it('should handle ntp connections', async function () {
@@ -117,8 +117,8 @@ describe('Integration', function () {
       expect(receivedPacket.deviceId.value).to.be.equal(0);
       expect(receivedPacket.userId.value).to.be.equal(0);
       expect(receivedPacket.payload.opcode.value).to.be.equal('DEVICE_TIME_SYNC_RSP');
-      expect(receivedPacket.payload.object.result).to.be.equal(0);
-      expect(receivedPacket.payload.object.body.time).to.be.greaterThanOrEqual(now);
+      expect(receivedPacket.payload.data.result).to.be.equal(0);
+      expect(receivedPacket.payload.data.body.time).to.be.greaterThanOrEqual(now);
     });
   });
 
@@ -136,7 +136,7 @@ describe('Integration', function () {
 
       expect(receivedPacket.payload.opcode.value).to.be.equal('DEVICE_REGISTER_RSP');
 
-      const device = await deviceRepository.findOneById(new ID(receivedPacket.payload.object.device.id));
+      const device = await deviceRepository.findOneById(new ID(receivedPacket.payload.data.device.id));
 
       expect(device).to.exist;
     });

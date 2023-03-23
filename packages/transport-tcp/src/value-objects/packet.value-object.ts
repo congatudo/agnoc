@@ -1,10 +1,10 @@
 import { ValueObject, ID } from '@agnoc/toolkit';
 import { PacketSequence } from '../domain-primitives/packet-sequence.domain-primitive';
 import { Payload } from './payload.value-object';
-import type { PayloadObjectName } from '../constants/payloads.constant';
+import type { PayloadDataName } from '../constants/payloads.constant';
 
 /** Describes the properties of a packet. */
-export interface PacketProps<Name extends PayloadObjectName> {
+export interface PacketProps<Name extends PayloadDataName> {
   /** The packet type. */
   ctype: number;
   /** The packet flow. */
@@ -20,7 +20,7 @@ export interface PacketProps<Name extends PayloadObjectName> {
 }
 
 /** Describes a packet. */
-export class Packet<Name extends PayloadObjectName = PayloadObjectName> extends ValueObject<PacketProps<Name>> {
+export class Packet<Name extends PayloadDataName = PayloadDataName> extends ValueObject<PacketProps<Name>> {
   /** Returns the packet type. */
   get ctype(): number {
     return this.props.ctype;

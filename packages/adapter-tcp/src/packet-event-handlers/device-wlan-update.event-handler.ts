@@ -11,7 +11,7 @@ export class DeviceWlanUpdateEventHandler implements PacketEventHandler {
       throw new DomainException('Device not found');
     }
 
-    const data = message.packet.payload.object.body;
+    const data = message.packet.payload.data.body;
 
     message.device.updateWlan(
       new DeviceWlan({

@@ -47,7 +47,7 @@ export class DeviceMapUpdateEventHandler implements PacketEventHandler {
       spotInfo,
       cleanPlanList,
       currentPlanId,
-    } = message.packet.payload.object;
+    } = message.packet.payload.data;
 
     if (statusInfo) {
       const {
