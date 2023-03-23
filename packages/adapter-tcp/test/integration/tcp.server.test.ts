@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { once } from 'events';
-import { CommandBus, ConnectionRepository, Device, DeviceRepository, DomainEventBus } from '@agnoc/domain';
+import { CommandQueryBus, ConnectionRepository, Device, DeviceRepository, DomainEventBus } from '@agnoc/domain';
 import { givenSomeDeviceProps } from '@agnoc/domain/test-support';
 import { EventHandlerRegistry, ID, MemoryAdapter, TaskHandlerRegistry } from '@agnoc/toolkit';
 import {
@@ -15,15 +15,15 @@ import {
 import { expect } from 'chai';
 import { TCPServer } from '@agnoc/adapter-tcp';
 import type { TCPAdapterListenOptions } from '@agnoc/adapter-tcp';
-import type { Commands } from '@agnoc/domain';
+import type { CommandsOrQueries } from '@agnoc/domain';
 import type { ICLIENT_ONLINE_REQ, IDEVICE_REGISTER_REQ } from '@agnoc/schemas-tcp';
 import type { CreatePacketProps, Packet } from '@agnoc/transport-tcp';
 
 describe('Integration', function () {
   let domainEventBus: DomainEventBus;
-  let commandBus: CommandBus;
+  let commandBus: CommandQueryBus;
   let domainEventHandlerRegistry: EventHandlerRegistry;
-  let commandHandlerRegistry: TaskHandlerRegistry<Commands>;
+  let commandHandlerRegistry: TaskHandlerRegistry<CommandsOrQueries>;
   let deviceRepository: DeviceRepository;
   let connectionRepository: ConnectionRepository;
   let tcpAdapter: TCPServer;
@@ -34,7 +34,7 @@ describe('Integration', function () {
   beforeEach(function () {
     // Server blocks
     domainEventBus = new DomainEventBus();
-    commandBus = new CommandBus();
+    commandBus = new CommandQueryBus();
 
     domainEventHandlerRegistry = new EventHandlerRegistry(domainEventBus);
     commandHandlerRegistry = new TaskHandlerRegistry(commandBus);

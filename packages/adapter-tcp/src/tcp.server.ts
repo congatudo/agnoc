@@ -43,7 +43,7 @@ import { DeviceVersionUpdateEventHandler } from './packet-event-handlers/device-
 import { DeviceWlanUpdateEventHandler } from './packet-event-handlers/device-wlan-update.event-handler';
 import { PackerServerConnectionHandler } from './packet-server.connection-handler';
 import { PacketEventBus } from './packet.event-bus';
-import type { Commands, ConnectionRepository, DeviceRepository } from '@agnoc/domain';
+import type { CommandsOrQueries, ConnectionRepository, DeviceRepository } from '@agnoc/domain';
 import type { Server, TaskHandlerRegistry } from '@agnoc/toolkit';
 import type { AddressInfo } from 'net';
 
@@ -56,7 +56,7 @@ export class TCPServer implements Server {
     private readonly deviceRepository: DeviceRepository,
     private readonly connectionRepository: ConnectionRepository,
     private readonly domainEventHandlerRegistry: EventHandlerRegistry,
-    private readonly commandHandlerRegistry: TaskHandlerRegistry<Commands>,
+    private readonly commandQueryHandlerRegistry: TaskHandlerRegistry<CommandsOrQueries>,
   ) {
     // Packet foundation
     const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
@@ -142,7 +142,7 @@ export class TCPServer implements Server {
     );
 
     // Command event handlers
-    this.commandHandlerRegistry.register(new LocateDeviceEventHandler(connectionRepository));
+    this.commandQueryHandlerRegistry.register(new LocateDeviceEventHandler(connectionRepository));
   }
 
   async listen(options: TCPAdapterListenOptions = listenDefaultOptions): Promise<TCPAdapterListenReturn> {

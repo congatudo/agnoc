@@ -21,7 +21,7 @@ describe('AgnocServer', function () {
       expect(container.deviceRepository).to.be.instanceOf(DeviceRepository);
       expect(container.connectionRepository).to.be.instanceOf(ConnectionRepository);
       expect(container.domainEventHandlerRegistry).to.be.instanceOf(EventHandlerRegistry);
-      expect(container.commandHandlerRegistry).to.be.instanceOf(TaskHandlerRegistry);
+      expect(container.commandQueryHandlerRegistry).to.be.instanceOf(TaskHandlerRegistry);
 
       return instance(server);
     });
@@ -78,7 +78,7 @@ describe('AgnocServer', function () {
 
     when(taskHandler.forName).thenReturn('LocateDeviceCommand');
 
-    agnocServer.buildAdapter(({ commandHandlerRegistry }) => {
+    agnocServer.buildAdapter(({ commandQueryHandlerRegistry: commandHandlerRegistry }) => {
       commandHandlerRegistry.register(instance(taskHandler));
 
       return instance(server);

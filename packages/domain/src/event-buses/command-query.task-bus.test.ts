@@ -1,12 +1,12 @@
 import { TaskBus } from '@agnoc/toolkit';
 import { expect } from 'chai';
-import { CommandBus } from './command.event-bus';
+import { CommandQueryBus } from './command-query.task-bus';
 
 describe('CommandBus', function () {
-  let commandBus: CommandBus;
+  let commandBus: CommandQueryBus;
 
   beforeEach(function () {
-    commandBus = new CommandBus();
+    commandBus = new CommandQueryBus();
   });
 
   it('should be created', function () {

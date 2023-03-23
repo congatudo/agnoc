@@ -1,11 +1,11 @@
 import { imock, instance } from '@johanblumenberg/ts-mockito';
 import { TCPServer } from './tcp.server';
-import type { Commands, ConnectionRepository, DeviceRepository } from '@agnoc/domain';
+import type { CommandsOrQueries, ConnectionRepository, DeviceRepository } from '@agnoc/domain';
 import type { EventHandlerRegistry, TaskHandlerRegistry } from '@agnoc/toolkit';
 
 describe('TCPServer', function () {
   let domainEventHandlerRegistry: EventHandlerRegistry;
-  let commandHandlerRegistry: TaskHandlerRegistry<Commands>;
+  let commandHandlerRegistry: TaskHandlerRegistry<CommandsOrQueries>;
   let deviceRepository: DeviceRepository;
   let connectionRepository: ConnectionRepository;
   let tcpAdapter: TCPServer;
