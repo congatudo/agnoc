@@ -28,13 +28,15 @@ describe('AgnocServer', function () {
   });
 
   it('should listen adapters', async function () {
+    const options = { host: '127.0.0.1' };
+
     agnocServer.buildAdapter(() => {
       return instance(server);
     });
 
-    await agnocServer.listen();
+    await agnocServer.listen(options);
 
-    verify(server.listen()).once();
+    verify(server.listen(options)).once();
   });
 
   it('should close adapters', async function () {

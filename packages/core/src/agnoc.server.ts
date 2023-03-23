@@ -40,13 +40,17 @@ export class AgnocServer implements Server {
     this.adapters.add(adapter);
   }
 
-  async listen(): Promise<void> {
-    await Promise.all([...this.adapters].map((adapter) => adapter.listen()));
+  async listen(options?: AgnocServerListenOptions): Promise<void> {
+    await Promise.all([...this.adapters].map((adapter) => adapter.listen(options)));
   }
 
   async close(): Promise<void> {
     await Promise.all([...this.adapters].map((adapter) => adapter.close()));
   }
+}
+
+export interface AgnocServerListenOptions {
+  host?: string;
 }
 
 type AdapterFactory = (container: Container) => Server;

@@ -146,10 +146,13 @@ export class TCPServer implements Server {
   }
 
   async listen(options: TCPAdapterListenOptions = listenDefaultOptions): Promise<TCPAdapterListenReturn> {
+    const host = options.host;
+    const ports = options.ports ?? listenDefaultOptions.ports;
+
     await Promise.all([
-      this.cmdServer.listen(options.ports.cmd),
-      this.mapServer.listen(options.ports.map),
-      this.ntpServer.listen(options.ports.ntp),
+      this.cmdServer.listen({ host, port: ports.cmd }),
+      this.mapServer.listen({ host, port: ports.map }),
+      this.ntpServer.listen({ host, port: ports.ntp }),
     ]);
 
     return {
@@ -166,10 +169,11 @@ export class TCPServer implements Server {
   }
 }
 
-const listenDefaultOptions: TCPAdapterListenOptions = { ports: { cmd: 4010, map: 4030, ntp: 4050 } };
+const listenDefaultOptions = { ports: { cmd: 4010, map: 4030, ntp: 4050 } } satisfies TCPAdapterListenOptions;
 
 export interface TCPAdapterListenOptions {
-  ports: ServerPorts;
+  host?: string;
+  ports?: ServerPorts;
 }
 
 interface TCPAdapterListenReturn {
