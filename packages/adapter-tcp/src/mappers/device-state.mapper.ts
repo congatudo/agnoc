@@ -81,6 +81,6 @@ export class DeviceStateMapper implements Mapper<DeviceState, RobotState> {
   }
 
   fromDomain(): RobotState {
-    throw new NotImplementedException('DeviceStateMapper.toRobot');
+    throw new NotImplementedException(`${this.constructor.name}.fromDomain`);
   }
 }

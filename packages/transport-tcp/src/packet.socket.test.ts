@@ -1,4 +1,4 @@
-import { Server } from 'net';
+import { Server, Socket } from 'net';
 import { Duplex } from 'stream';
 import { setTimeout } from 'timers/promises';
 import { DomainException } from '@agnoc/toolkit';
@@ -209,7 +209,7 @@ describe('PacketSocket', function () {
     server.listen(0);
   });
 
-  it('should wrap an existing socket', function (done) {
+  it('should wrap an existing connected socket', function (done) {
     const buffer = givenAPacketBuffer();
     const packet = new Packet(givenSomePacketProps());
 
@@ -223,6 +223,14 @@ describe('PacketSocket', function () {
     server.once('connection', (socket) => {
       const packetSocketServer = new PacketSocket(instance(packetMapper), socket);
 
+      expect(packetSocketServer.localAddress).to.be.a('string');
+      expect(packetSocketServer.localPort).to.be.a('number');
+      expect(packetSocketServer.remoteAddress).to.be.a('string');
+      expect(packetSocketServer.remotePort).to.be.a('number');
+      expect(packetSocketServer.toString()).to.be.not.equal('unknown:0::unknown:0');
+      expect(packetSocketServer.connecting).to.be.false;
+      expect(packetSocketServer.connected).to.be.true;
+
       void packetSocketServer.end(packet);
     });
 
@@ -232,6 +240,18 @@ describe('PacketSocket', function () {
     });
 
     server.listen(0);
+  });
+
+  it('should wrap an existing socket', function () {
+    packetSocket = new PacketSocket(instance(packetMapper), new Socket());
+
+    expect(packetSocket.localAddress).to.be.undefined;
+    expect(packetSocket.localPort).to.be.undefined;
+    expect(packetSocket.remoteAddress).to.be.undefined;
+    expect(packetSocket.remotePort).to.be.undefined;
+    expect(packetSocket.toString()).to.be.equal('unknown:0::unknown:0');
+    expect(packetSocket.connecting).to.be.false;
+    expect(packetSocket.connected).to.be.false;
   });
 
   describe('#connect()', function () {

@@ -148,7 +148,7 @@ export class PacketSocket extends Duplex {
 
   /** Returns whether the socket is connected. */
   get connected(): boolean {
-    return this.socket?.readyState === 'open';
+    return !this.socket?.pending && this.socket?.readyState === 'open';
   }
 
   /** Returns an string representation of the socket addresses. */
@@ -279,6 +279,7 @@ export declare interface PacketSocket extends Duplex {
   emit<U extends keyof PacketSocketEvents>(event: U, ...args: Parameters<PacketSocketEvents[U]>): boolean;
   on<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
   once<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
+  off<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
   write(packet: Packet, encoding: BufferEncoding, cb: WriteCallback): boolean;
   write(packet: Packet, cb: WriteCallback): boolean;
   write(packet: Packet): Promise<void>;

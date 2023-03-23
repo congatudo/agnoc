@@ -1,19 +1,20 @@
-import { DomainException, ID } from '@agnoc/toolkit';
+import { ID } from '@agnoc/toolkit';
 import { PacketMessage } from './packet.message';
 import type { PacketConnection } from './aggregate-roots/packet-connection.aggregate-root';
+import type { ConnectionDeviceUpdaterService } from './connection-device-updater.service';
 import type { PacketConnectionFactory } from './factories/connection.factory';
-import type { PacketEventBus, PacketEventBusEvents } from './packet.event-bus';
-import type { DeviceRepository, Device, Connection, ConnectionRepository } from '@agnoc/domain';
-import type { PacketServer, Packet, PayloadDataName } from '@agnoc/transport-tcp';
+import type { PacketEventPublisherService } from './packet-event-publisher.service';
+import type { ConnectionRepository } from '@agnoc/domain';
+import type { PacketServer, Packet, PacketSocket } from '@agnoc/transport-tcp';
 
 export class PackerServerConnectionHandler {
   private readonly servers = new Map<PacketServer, Set<PacketConnection>>();
 
   constructor(
-    private readonly packetEventBus: PacketEventBus,
-    private readonly deviceRepository: DeviceRepository,
     private readonly connectionRepository: ConnectionRepository,
     private readonly packetConnectionFactory: PacketConnectionFactory,
+    private readonly updateConnectionDeviceService: ConnectionDeviceUpdaterService,
+    private readonly packetEventPublisherService: PacketEventPublisherService,
   ) {}
 
   addServers(...servers: PacketServer[]): void {
@@ -24,75 +25,51 @@ export class PackerServerConnectionHandler {
   }
 
   private addListeners(server: PacketServer) {
-    server.on('connection', (socket) => {
-      const connection = this.packetConnectionFactory.create({ id: ID.generate(), socket });
+    const onConnection = (socket: PacketSocket) => this.handleServerConnection(server, socket);
 
-      this.servers.get(server)?.add(connection);
+    server.on('connection', onConnection);
 
-      connection.socket.on('data', async (packet: Packet) => {
-        const packetMessage = new PacketMessage(connection, packet);
+    void server.once('close').then(() => {
+      server.off('connection', onConnection);
 
-        // Update the device on the connection if the device id has changed.
-        await this.updateConnectionDevice(packet, connection);
-
-        // Send the packet message to the packet event bus.
-        await this.emitPacketEvent(packetMessage);
-      });
-
-      connection.socket.on('close', () => {
-        this.servers.get(server)?.delete(connection);
-      });
-    });
-
-    server.on('close', async () => {
-      const connections = this.servers.get(server);
-
-      if (connections) {
-        await Promise.all([...connections].map((connection) => connection.close()));
-
-        this.servers.delete(server);
-      }
+      return this.handleServerClose(server);
     });
   }
 
-  private async emitPacketEvent(message: PacketMessage<PayloadDataName>) {
-    const name = message.packet.payload.opcode.name as PayloadDataName;
-    const sequence = message.packet.sequence.toString();
+  private async handleServerClose(server: PacketServer) {
+    const connections = this.servers.get(server) as Set<PacketConnection>;
 
-    this.checkForPacketEventHandler(name);
+    this.servers.delete(server);
 
-    // Emit the packet event by the sequence string.
-    // This is used to wait for a response from a packet.
-    await this.packetEventBus.emit(sequence, message as PacketEventBusEvents[PayloadDataName]);
-
-    // Emit the packet event by the opcode name.
-    await this.packetEventBus.emit(name, message as PacketEventBusEvents[PayloadDataName]);
+    await Promise.all([...connections].map((connection) => connection.close()));
   }
 
-  private checkForPacketEventHandler(event: PayloadDataName) {
-    const count = this.packetEventBus.listenerCount(event);
+  private async handleServerConnection(server: PacketServer, socket: PacketSocket) {
+    const connection = this.packetConnectionFactory.create({ id: ID.generate(), socket });
 
-    // Throw an error if there is no event handler for the packet event.
-    if (count === 0) {
-      throw new DomainException(`No event handler found for packet event '${event}'`);
-    }
+    this.servers.get(server)?.add(connection);
+
+    // Should this be done before or after registering the listeners?
+    await this.connectionRepository.saveOne(connection);
+
+    const onData = (packet: Packet) => this.handleConnectionData(connection, packet);
+    const onClose = () => {
+      connection.socket.off('data', onData);
+      this.servers.get(server)?.delete(connection);
+      return this.connectionRepository.deleteOne(connection);
+    };
+
+    connection.socket.on('data', onData);
+    connection.socket.once('close', onClose);
   }
 
-  private async updateConnectionDevice(packet: Packet, connection: Connection) {
-    if (!packet.deviceId.equals(connection.device?.id)) {
-      const device = await this.findDeviceById(packet.deviceId);
+  private async handleConnectionData(connection: PacketConnection, packet: Packet) {
+    const packetMessage = new PacketMessage(connection, packet);
 
-      connection.setDevice(device);
+    // Update the device on the connection if the device id has changed.
+    await this.updateConnectionDeviceService.updateFromPacket(packet, connection);
 
-      await this.connectionRepository.saveOne(connection);
-    }
-  }
-
-  private async findDeviceById(id: ID): Promise<Device | undefined> {
-    if (id.value === 0) {
-      return undefined;
-    }
-
-    return this.deviceRepository.findOneById(id);
+    // Send the packet message to the packet event bus.
+    await this.packetEventPublisherService.publishPacketMessage(packetMessage);
   }
 }

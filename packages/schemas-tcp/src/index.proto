@@ -295,7 +295,7 @@ message DEVICE_ORDERLIST_SETTING_REQ {
     required uint32 planId = 2;
     required uint32 cleanMode = 3;
     required uint32 windPower = 4;
-    required uint32 waterLevel = 5;
+    optional uint32 waterLevel = 5;
     required bool twiceClean = 6;
   }
 

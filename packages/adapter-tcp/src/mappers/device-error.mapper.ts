@@ -59,6 +59,6 @@ export class DeviceErrorMapper implements Mapper<DeviceError, number> {
   }
 
   fromDomain(): never {
-    throw new NotImplementedException('DeviceErrorMapper.toRobot');
+    throw new NotImplementedException('DeviceErrorMapper.fromDomain');
   }
 }

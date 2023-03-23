@@ -29,7 +29,12 @@ describe('TCPServer', function () {
   });
 
   it('should listen and close servers with custom ports', async function () {
-    await tcpAdapter.listen({ host: '127.0.0.1', ports: { cmd: 0, map: 0, ntp: 0 } });
+    await tcpAdapter.listen({ ports: { cmd: 0, map: 0, ntp: 0 } });
+    await tcpAdapter.close();
+  });
+
+  it('should listen and close servers with custom host', async function () {
+    await tcpAdapter.listen({ host: '127.0.0.1' });
     await tcpAdapter.close();
   });
 });

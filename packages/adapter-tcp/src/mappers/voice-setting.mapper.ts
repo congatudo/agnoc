@@ -19,7 +19,7 @@ export interface RobotVoice {
   volume: number | null | undefined;
 }
 
-export class DeviceVoiceMapper implements Mapper<VoiceSetting, RobotVoice> {
+export class VoiceSettingMapper implements Mapper<VoiceSetting, RobotVoice> {
   toDomain({ isEnabled, volume }: RobotVoice): VoiceSetting {
     return new VoiceSetting({
       isEnabled: isEnabled ?? false,

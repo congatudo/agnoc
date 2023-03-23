@@ -1,5 +1,5 @@
 import { Connection } from '@agnoc/domain';
-import { ID } from '@agnoc/toolkit';
+import { DomainException, ID } from '@agnoc/toolkit';
 import { PacketSocket } from '@agnoc/transport-tcp';
 import type { PacketEventBus } from '../packet.event-bus';
 import type { PacketMessage } from '../packet.message';
@@ -25,37 +25,48 @@ export class PacketConnection extends Connection<PacketConnectionProps> {
     return this.props.socket;
   }
 
-  send<Name extends PayloadDataName>(name: Name, object: PayloadDataFrom<Name>): Promise<void> {
-    const packet = this.packetFactory.create(name, object, this.getPacketProps());
+  async send<Name extends PayloadDataName>(name: Name, data: PayloadDataFrom<Name>): Promise<void> {
+    this.validateConnectedSocket();
 
-    return this.write(packet);
+    const packet = this.packetFactory.create(name, data, this.getPacketProps());
+
+    return this.socket.write(packet);
   }
 
-  respond<Name extends PayloadDataName>(name: Name, object: PayloadDataFrom<Name>, packet: Packet): Promise<void> {
-    return this.write(this.packetFactory.create(name, object, packet));
+  async respond<Name extends PayloadDataName>(name: Name, data: PayloadDataFrom<Name>, packet: Packet): Promise<void> {
+    this.validateConnectedSocket();
+
+    return this.socket.write(this.packetFactory.create(name, data, packet));
   }
 
-  sendAndWait<Name extends PayloadDataName>(name: Name, object: PayloadDataFrom<Name>): Promise<PacketMessage> {
-    const packet = this.packetFactory.create(name, object, this.getPacketProps());
+  async sendAndWait<Name extends PayloadDataName>(name: Name, data: PayloadDataFrom<Name>): Promise<PacketMessage> {
+    this.validateConnectedSocket();
+
+    const packet = this.packetFactory.create(name, data, this.getPacketProps());
 
     return this.writeAndWait(packet);
   }
 
-  respondAndWait<Name extends PayloadDataName>(
+  async respondAndWait<Name extends PayloadDataName>(
     name: Name,
-    object: PayloadDataFrom<Name>,
+    data: PayloadDataFrom<Name>,
     packet: Packet,
   ): Promise<PacketMessage> {
-    return this.writeAndWait(this.packetFactory.create(name, object, packet));
+    this.validateConnectedSocket();
+
+    return this.writeAndWait(this.packetFactory.create(name, data, packet));
   }
 
-  close(): Promise<void> {
+  async close(): Promise<void> {
+    if (!this.socket.connected) {
+      return;
+    }
+
     return this.socket.end();
   }
 
   protected override validate(props: PacketConnectionProps): void {
     super.validate(props);
-
     this.validateDefinedProp(props, 'socket');
     this.validateInstanceProp(props, 'socket', PacketSocket);
   }
@@ -67,16 +78,14 @@ export class PacketConnection extends Connection<PacketConnectionProps> {
   private writeAndWait(packet: Packet): Promise<PacketMessage> {
     return new Promise((resolve, reject) => {
       this.eventBus.once(packet.sequence.toString()).then(resolve, reject);
-      this.write(packet).catch(reject);
+      this.socket.write(packet).catch(reject);
     });
   }
 
-  private async write(packet: Packet) {
+  private validateConnectedSocket(): void {
     if (!this.socket.connected) {
-      return;
+      throw new DomainException('Unable to send packet through a closed connection');
     }
-
-    return this.socket.write(packet);
   }
 
   static isPacketConnection(connection: Connection): connection is PacketConnection {

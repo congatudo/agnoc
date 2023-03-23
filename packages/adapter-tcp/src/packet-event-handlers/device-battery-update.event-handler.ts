@@ -1,4 +1,3 @@
-import { DomainException } from '@agnoc/toolkit';
 import type { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
 import type { PacketEventHandler } from '../packet.event-handler';
 import type { PacketMessage } from '../packet.message';
@@ -9,9 +8,7 @@ export class DeviceBatteryUpdateEventHandler implements PacketEventHandler {
   constructor(private readonly deviceBatteryMapper: DeviceBatteryMapper) {}
 
   async handle(message: PacketMessage<'PUSH_DEVICE_BATTERY_INFO_REQ'>): Promise<void> {
-    if (!message.device) {
-      throw new DomainException('Device not found');
-    }
+    message.assertDevice();
 
     const data = message.packet.payload.data;
 

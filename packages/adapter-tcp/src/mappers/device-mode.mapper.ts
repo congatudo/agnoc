@@ -28,6 +28,6 @@ export class DeviceModeMapper implements Mapper<DeviceMode, number> {
   }
 
   fromDomain(): number {
-    throw new NotImplementedException('DeviceModeMapper.toRobot');
+    throw new NotImplementedException(`${this.constructor.name}.fromDomain`);
   }
 }
