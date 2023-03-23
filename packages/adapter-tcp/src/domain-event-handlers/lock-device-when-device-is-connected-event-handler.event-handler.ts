@@ -1,5 +1,5 @@
 import { DomainException } from '@agnoc/toolkit';
-import { PacketConnection } from '../../aggregate-roots/packet-connection.aggregate-root';
+import { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
 import type { DomainEventHandler, DeviceConnectedDomainEvent, ConnectionRepository, Connection } from '@agnoc/domain';
 
 export class LockDeviceWhenDeviceIsConnectedEventHandler implements DomainEventHandler {

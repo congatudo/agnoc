@@ -1,6 +1,6 @@
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceLocatedEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_SEEK_LOCATION_RSP';

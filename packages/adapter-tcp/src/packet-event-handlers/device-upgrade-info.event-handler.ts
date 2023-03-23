@@ -1,6 +1,6 @@
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceUpgradeInfoEventHandler implements PacketEventHandler {
   readonly forName = 'PUSH_DEVICE_PACKAGE_UPGRADE_INFO_REQ';

@@ -1,7 +1,7 @@
 import { DomainException } from '@agnoc/toolkit';
-import type { DeviceBatteryMapper } from '../../mappers/device-battery.mapper';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceBatteryUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'PUSH_DEVICE_BATTERY_INFO_REQ';

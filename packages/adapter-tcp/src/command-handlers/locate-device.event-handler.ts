@@ -1,5 +1,5 @@
 import { DomainException } from '@agnoc/toolkit';
-import { PacketConnection } from '../../aggregate-roots/packet-connection.aggregate-root';
+import { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
 import type { CommandHandler, Connection, ConnectionRepository, LocateDeviceCommand } from '@agnoc/domain';
 
 export class LocateDeviceEventHandler implements CommandHandler {

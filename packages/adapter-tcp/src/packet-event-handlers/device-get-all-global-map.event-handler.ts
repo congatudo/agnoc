@@ -1,6 +1,6 @@
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceGetAllGlobalMapEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_GET_ALL_GLOBAL_MAP_INFO_RSP';

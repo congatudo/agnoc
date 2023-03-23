@@ -1,7 +1,7 @@
 import { DeviceVersion } from '@agnoc/domain';
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceVersionUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_VERSION_INFO_UPDATE_REQ';

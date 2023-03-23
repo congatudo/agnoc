@@ -1,6 +1,6 @@
 import { DeviceCapability } from '@agnoc/domain';
 import { DomainException } from '@agnoc/toolkit';
-import { PacketConnection } from '../../aggregate-roots/packet-connection.aggregate-root';
+import { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
 import type { DeviceLockedDomainEvent, DomainEventHandler, Connection, ConnectionRepository } from '@agnoc/domain';
 
 export class QueryDeviceInfoWhenDeviceIsLockedEventHandler implements DomainEventHandler {

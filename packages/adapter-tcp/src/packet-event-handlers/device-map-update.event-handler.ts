@@ -10,13 +10,13 @@ import {
   Zone,
 } from '@agnoc/domain';
 import { DomainException, ID, isPresent } from '@agnoc/toolkit';
-import type { DeviceBatteryMapper } from '../../mappers/device-battery.mapper';
-import type { DeviceErrorMapper } from '../../mappers/device-error.mapper';
-import type { DeviceFanSpeedMapper } from '../../mappers/device-fan-speed.mapper';
-import type { DeviceModeMapper } from '../../mappers/device-mode.mapper';
-import type { DeviceStateMapper } from '../../mappers/device-state.mapper';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
+import type { DeviceErrorMapper } from '../mappers/device-error.mapper';
+import type { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
+import type { DeviceModeMapper } from '../mappers/device-mode.mapper';
+import type { DeviceStateMapper } from '../mappers/device-state.mapper';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceMapUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP';

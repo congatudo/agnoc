@@ -1,6 +1,6 @@
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceLockedEventHandler implements PacketEventHandler {

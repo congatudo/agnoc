@@ -1,13 +1,13 @@
 import { CleanSize, DeviceCleanWork, DeviceTime } from '@agnoc/domain';
 import { DomainException, isPresent } from '@agnoc/toolkit';
-import type { DeviceBatteryMapper } from '../../mappers/device-battery.mapper';
-import type { DeviceErrorMapper } from '../../mappers/device-error.mapper';
-import type { DeviceFanSpeedMapper } from '../../mappers/device-fan-speed.mapper';
-import type { DeviceModeMapper } from '../../mappers/device-mode.mapper';
-import type { DeviceStateMapper } from '../../mappers/device-state.mapper';
-import type { DeviceWaterLevelMapper } from '../../mappers/device-water-level.mapper';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
+import type { DeviceErrorMapper } from '../mappers/device-error.mapper';
+import type { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
+import type { DeviceModeMapper } from '../mappers/device-mode.mapper';
+import type { DeviceStateMapper } from '../mappers/device-state.mapper';
+import type { DeviceWaterLevelMapper } from '../mappers/device-water-level.mapper';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceMapWorkStatusUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_MAPID_WORK_STATUS_PUSH_REQ';

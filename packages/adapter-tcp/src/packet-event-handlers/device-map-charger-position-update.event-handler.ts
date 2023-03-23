@@ -1,7 +1,7 @@
 import { MapPosition } from '@agnoc/domain';
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceMapChargerPositionUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_MAPID_PUSH_CHARGE_POSITION_INFO';

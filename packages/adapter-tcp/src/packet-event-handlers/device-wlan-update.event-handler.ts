@@ -1,7 +1,7 @@
 import { DeviceWlan } from '@agnoc/domain';
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceWlanUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_WLAN_INFO_GETTING_RSP';

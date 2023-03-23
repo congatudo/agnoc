@@ -1,8 +1,8 @@
 import { DeviceSetting, DeviceSettings, DeviceTime, QuietHoursSetting } from '@agnoc/domain';
 import { DomainException } from '@agnoc/toolkit';
-import type { DeviceVoiceMapper } from '../../mappers/device-voice.mapper';
-import type { PacketEventHandler } from '../../packet.event-handler';
-import type { PacketMessage } from '../../packet.message';
+import type { DeviceVoiceMapper } from '../mappers/device-voice.mapper';
+import type { PacketEventHandler } from '../packet.event-handler';
+import type { PacketMessage } from '../packet.message';
 
 export class DeviceSettingsUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'PUSH_DEVICE_AGENT_SETTING_REQ';
