@@ -70,10 +70,7 @@
   },
   "dependencies": {
     "@agnoc/domain": "^0.18.0-next.0",
-    "@agnoc/adapter-tcp": "^0.18.0-next.0",
     "@agnoc/toolkit": "^0.18.0-next.0",
-    "debug": "^4.3.4",
-    "emittery": "^0.13.1",
     "tslib": "^2.5.0"
   },
   "devDependencies": {
