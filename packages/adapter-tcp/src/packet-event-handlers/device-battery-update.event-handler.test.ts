@@ -6,17 +6,19 @@ import { expect } from 'chai';
 import { DeviceBatteryUpdateEventHandler } from './device-battery-update.event-handler';
 import type { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
 import type { PacketMessage } from '../packet.message';
-import type { Device } from '@agnoc/domain';
+import type { Device, DeviceRepository } from '@agnoc/domain';
 
 describe('DeviceBatteryUpdateEventHandler', function () {
   let deviceBatteryMapper: DeviceBatteryMapper;
+  let deviceRepository: DeviceRepository;
   let eventHandler: DeviceBatteryUpdateEventHandler;
   let packetMessage: PacketMessage<'PUSH_DEVICE_BATTERY_INFO_REQ'>;
   let device: Device;
 
   beforeEach(function () {
     deviceBatteryMapper = imock();
-    eventHandler = new DeviceBatteryUpdateEventHandler(instance(deviceBatteryMapper));
+    deviceRepository = imock();
+    eventHandler = new DeviceBatteryUpdateEventHandler(instance(deviceBatteryMapper), instance(deviceRepository));
     packetMessage = imock();
     device = imock();
   });
@@ -43,6 +45,7 @@ describe('DeviceBatteryUpdateEventHandler', function () {
       verify(packetMessage.assertDevice()).once();
       verify(deviceBatteryMapper.toDomain(1)).once();
       verify(device.updateBattery(deviceBattery)).once();
+      verify(deviceRepository.saveOne(instance(device))).once();
       verify(packetMessage.respond('PUSH_DEVICE_BATTERY_INFO_RSP', deepEqual({ result: 0 }))).once();
     });
   });

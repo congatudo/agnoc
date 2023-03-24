@@ -1,4 +1,4 @@
-import { Device, DeviceSystem, DeviceVersion } from '@agnoc/domain';
+import { Device, DeviceBattery, DeviceBatteryMaxValue, DeviceSystem, DeviceVersion } from '@agnoc/domain';
 import { ID } from '@agnoc/toolkit';
 import type { PacketEventHandler } from '../packet.event-handler';
 import type { PacketMessage } from '../packet.message';
@@ -16,6 +16,9 @@ export class DeviceRegisterEventHandler implements PacketEventHandler {
       userId: ID.generate(),
       system: new DeviceSystem({ type: data.deviceType, serialNumber: data.deviceSerialNumber }),
       version: new DeviceVersion({ software: data.softwareVersion, hardware: data.hardwareVersion }),
+      battery: new DeviceBattery(DeviceBatteryMaxValue),
+      isConnected: false,
+      isLocked: false,
     });
 
     // TODO: publish device created domain event

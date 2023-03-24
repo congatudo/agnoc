@@ -19,7 +19,7 @@
     "posttest": "sh ./scripts/merge-coverage.sh",
     "prepare": "husky install",
     "test": "npm-run-all 'test:*'",
-    "test:packages": "lerna run test --stream --concurrency=1",
+    "test:packages": "lerna run test",
     "version": "npm run lint:code:fix && npm run lint:style:fix"
   },
   "config": {

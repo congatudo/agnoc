@@ -1,5 +1,6 @@
 import { AggregateRoot, ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
 import { expect } from 'chai';
+import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
@@ -43,8 +44,9 @@ describe('Device', function () {
     expect(device.userId).to.be.equal(deviceProps.userId);
     expect(device.system).to.be.equal(deviceProps.system);
     expect(device.version).to.be.equal(deviceProps.version);
-    expect(device.isConnected).to.be.false;
-    expect(device.isLocked).to.be.false;
+    expect(device.battery).to.be.equal(deviceProps.battery);
+    expect(device.isConnected).to.be.equal(deviceProps.isConnected);
+    expect(device.isLocked).to.be.equal(deviceProps.isLocked);
   });
 
   it("should throw an error when 'userId' is not provided", function () {
@@ -68,6 +70,30 @@ describe('Device', function () {
     expect(() => new Device({ ...givenSomeDeviceProps(), version: undefined })).to.throw(
       ArgumentNotProvidedException,
       `Property 'version' for Device not provided`,
+    );
+  });
+
+  it("should throw an error when 'battery' is not provided", function () {
+    // @ts-expect-error - missing property
+    expect(() => new Device({ ...givenSomeDeviceProps(), battery: undefined })).to.throw(
+      ArgumentNotProvidedException,
+      `Property 'battery' for Device not provided`,
+    );
+  });
+
+  it("should throw an error when 'isConnected' is not provided", function () {
+    // @ts-expect-error - missing property
+    expect(() => new Device({ ...givenSomeDeviceProps(), isConnected: undefined })).to.throw(
+      ArgumentNotProvidedException,
+      `Property 'isConnected' for Device not provided`,
+    );
+  });
+
+  it("should throw an error when 'isLocked' is not provided", function () {
+    // @ts-expect-error - missing property
+    expect(() => new Device({ ...givenSomeDeviceProps(), isLocked: undefined })).to.throw(
+      ArgumentNotProvidedException,
+      `Property 'isLocked' for Device not provided`,
     );
   });
 
@@ -351,12 +377,29 @@ describe('Device', function () {
 
   describe('#updateBattery()', function () {
     it('should update the device battery', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const battery = new DeviceBattery(50);
+      const previousBattery = new DeviceBattery(60);
+      const device = new Device({ ...givenSomeDeviceProps(), battery: previousBattery });
+      const currentBattery = new DeviceBattery(50);
 
-      device.updateBattery(battery);
+      device.updateBattery(currentBattery);
 
-      expect(device.battery).to.be.equal(battery);
+      expect(device.battery).to.be.equal(currentBattery);
+      expect(device.domainEvents).to.deep.contain(
+        new DeviceBatteryChangedDomainEvent({ aggregateId: device.id, previousBattery, currentBattery }),
+      );
+    });
+
+    it('should not update the device battery when value is equal', function () {
+      const previousBattery = new DeviceBattery(50);
+      const device = new Device({ ...givenSomeDeviceProps(), battery: previousBattery });
+      const currentBattery = new DeviceBattery(50);
+
+      device.updateBattery(currentBattery);
+
+      expect(device.battery).to.be.equal(previousBattery);
+      expect(device.domainEvents).to.not.deep.contain(
+        new DeviceBatteryChangedDomainEvent({ aggregateId: device.id, previousBattery, currentBattery }),
+      );
     });
   });
 

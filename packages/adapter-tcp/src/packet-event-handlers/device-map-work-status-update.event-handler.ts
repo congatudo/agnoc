@@ -8,6 +8,7 @@ import type { DeviceStateMapper } from '../mappers/device-state.mapper';
 import type { DeviceWaterLevelMapper } from '../mappers/device-water-level.mapper';
 import type { PacketEventHandler } from '../packet.event-handler';
 import type { PacketMessage } from '../packet.message';
+import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceMapWorkStatusUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_MAPID_WORK_STATUS_PUSH_REQ';
@@ -19,6 +20,7 @@ export class DeviceMapWorkStatusUpdateEventHandler implements PacketEventHandler
     private readonly deviceBatteryMapper: DeviceBatteryMapper,
     private readonly deviceFanSpeedMapper: DeviceFanSpeedMapper,
     private readonly deviceWaterLevelMapper: DeviceWaterLevelMapper,
+    private readonly deviceRepository: DeviceRepository,
   ) {}
 
   async handle(message: PacketMessage<'DEVICE_MAPID_WORK_STATUS_PUSH_REQ'>): Promise<void> {
@@ -59,6 +61,6 @@ export class DeviceMapWorkStatusUpdateEventHandler implements PacketEventHandler
       message.device.updateWaterLevel(this.deviceWaterLevelMapper.toDomain(waterLevel));
     }
 
-    // TODO: save entity and publish domain events
+    await this.deviceRepository.saveOne(message.device);
   }
 }

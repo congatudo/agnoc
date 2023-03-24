@@ -107,7 +107,7 @@ export class TCPServer implements Server {
     packetEventHandlerRegistry.register(
       new ClientHeartbeatEventHandler(),
       new ClientLoginEventHandler(),
-      new DeviceBatteryUpdateEventHandler(deviceBatteryMapper),
+      new DeviceBatteryUpdateEventHandler(deviceBatteryMapper, deviceRepository),
       new DeviceCleanMapDataReportEventHandler(),
       new DeviceCleanMapReportEventHandler(),
       new DeviceCleanTaskReportEventHandler(),
@@ -122,6 +122,7 @@ export class TCPServer implements Server {
         deviceBatteryMapper,
         deviceFanSpeedMapper,
         deviceWaterLevelMapper,
+        deviceRepository,
       ),
       new DeviceMemoryMapInfoEventHandler(),
       new DeviceOfflineEventHandler(),
@@ -137,6 +138,7 @@ export class TCPServer implements Server {
         deviceStateMapper,
         deviceErrorMapper,
         deviceFanSpeedMapper,
+        deviceRepository,
       ),
     );
 

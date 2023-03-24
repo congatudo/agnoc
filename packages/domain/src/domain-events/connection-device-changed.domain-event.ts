@@ -1,5 +1,5 @@
-import { DomainEvent } from '@agnoc/toolkit';
-import type { DomainEventProps, ID } from '@agnoc/toolkit';
+import { DomainEvent, ID } from '@agnoc/toolkit';
+import type { DomainEventProps } from '@agnoc/toolkit';
 
 export interface ConnectionDeviceChangedDomainEventProps extends DomainEventProps {
   previousDeviceId?: ID;
@@ -15,7 +15,13 @@ export class ConnectionDeviceChangedDomainEvent extends DomainEvent<ConnectionDe
     return this.props.currentDeviceId;
   }
 
-  protected validate(): void {
-    // noop
+  protected validate(props: ConnectionDeviceChangedDomainEventProps): void {
+    if (props.previousDeviceId) {
+      this.validateInstanceProp(props, 'previousDeviceId', ID);
+    }
+
+    if (props.currentDeviceId) {
+      this.validateInstanceProp(props, 'currentDeviceId', ID);
+    }
   }
 }

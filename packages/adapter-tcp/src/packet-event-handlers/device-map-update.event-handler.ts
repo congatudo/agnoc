@@ -17,6 +17,7 @@ import type { DeviceModeMapper } from '../mappers/device-mode.mapper';
 import type { DeviceStateMapper } from '../mappers/device-state.mapper';
 import type { PacketEventHandler } from '../packet.event-handler';
 import type { PacketMessage } from '../packet.message';
+import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceMapUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_MAPID_GET_GLOBAL_INFO_RSP';
@@ -27,6 +28,7 @@ export class DeviceMapUpdateEventHandler implements PacketEventHandler {
     private readonly deviceStateMapper: DeviceStateMapper,
     private readonly deviceErrorMapper: DeviceErrorMapper,
     private readonly deviceFanSpeedMapper: DeviceFanSpeedMapper,
+    private readonly deviceRepository: DeviceRepository,
   ) {}
 
   async handle(message: PacketMessage<'DEVICE_MAPID_GET_GLOBAL_INFO_RSP'>): Promise<void> {
@@ -192,6 +194,6 @@ export class DeviceMapUpdateEventHandler implements PacketEventHandler {
       }
     }
 
-    // TODO: save entities and publish domain events
+    await this.deviceRepository.saveOne(message.device);
   }
 }

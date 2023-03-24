@@ -22,6 +22,10 @@ describe('PacketSocket', function () {
   });
 
   afterEach(function (done) {
+    if (packetSocket.connected) {
+      void packetSocket.end();
+    }
+
     if (server.listening) {
       server.close(done);
     } else {

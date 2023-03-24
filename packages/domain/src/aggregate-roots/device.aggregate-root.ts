@@ -1,4 +1,5 @@
 import { AggregateRoot, ID } from '@agnoc/toolkit';
+import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
@@ -25,10 +26,12 @@ export interface DeviceProps extends EntityProps {
   system: DeviceSystem;
   /** The device version. */
   version: DeviceVersion;
+  /** The device battery. */
+  battery: DeviceBattery;
   /** Whether the device is connected. */
-  isConnected?: boolean;
+  isConnected: boolean;
   /** Whether the device is locked. */
-  isLocked?: boolean;
+  isLocked: boolean;
   /** The device settings. */
   config?: DeviceSettings;
   /** The device current clean. */
@@ -41,8 +44,6 @@ export interface DeviceProps extends EntityProps {
   map?: DeviceMap;
   /** The device wlan. */
   wlan?: DeviceWlan;
-  /** The device battery. */
-  battery?: DeviceBattery;
   /** The device state. */
   state?: DeviceState;
   /** The device mode. */
@@ -69,6 +70,11 @@ export class Device extends AggregateRoot<DeviceProps> {
   /** Returns the device system. */
   get system(): DeviceSystem {
     return this.props.system;
+  }
+
+  /** Returns the device battery. */
+  get battery(): DeviceBattery {
+    return this.props.battery;
   }
 
   /** Returns whether the device is connected. */
@@ -116,11 +122,6 @@ export class Device extends AggregateRoot<DeviceProps> {
     return this.props.wlan;
   }
 
-  /** Returns the device battery. */
-  get battery(): DeviceBattery | undefined {
-    return this.props.battery;
-  }
-
   /** Returns the device state. */
   get state(): DeviceState | undefined {
     return this.props.state;
@@ -158,14 +159,14 @@ export class Device extends AggregateRoot<DeviceProps> {
 
   /** Sets the device as connected. */
   setAsConnected(): void {
-    this.props.isConnected = true;
     this.addEvent(new DeviceConnectedDomainEvent({ aggregateId: this.id }));
+    this.props.isConnected = true;
   }
 
   /** Sets the device as connected. */
   setAsLocked(): void {
-    this.props.isLocked = true;
     this.addEvent(new DeviceLockedDomainEvent({ aggregateId: this.id }));
+    this.props.isLocked = true;
   }
 
   /** Updates the device system. */
@@ -219,8 +220,19 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   /** Updates the device battery. */
-  updateBattery(battery?: DeviceBattery): void {
+  updateBattery(battery: DeviceBattery): void {
+    if (this.battery.equals(battery)) {
+      return;
+    }
+
     this.validateInstanceProp({ battery }, 'battery', DeviceBattery);
+    this.addEvent(
+      new DeviceBatteryChangedDomainEvent({
+        aggregateId: this.id,
+        previousBattery: this.props.battery,
+        currentBattery: battery,
+      }),
+    );
     this.props.battery = battery;
   }
 
@@ -267,7 +279,7 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   protected validate(props: DeviceProps): void {
-    const keys: (keyof DeviceProps)[] = ['userId', 'system', 'version'];
+    const keys: (keyof DeviceProps)[] = ['userId', 'system', 'version', 'battery', 'isConnected', 'isLocked'];
 
     keys.forEach((prop) => {
       this.validateDefinedProp(props, prop);

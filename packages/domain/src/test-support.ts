@@ -1,6 +1,7 @@
 import { ID } from '@agnoc/toolkit';
 import { CleanMode, CleanModeValue } from './domain-primitives/clean-mode.domain-primitive';
 import { CleanSize } from './domain-primitives/clean-size.domain-primitive';
+import { DeviceBattery } from './domain-primitives/device-battery.domain-primitive';
 import { DeviceFanSpeed, DeviceFanSpeedValue } from './domain-primitives/device-fan-speed.domain-primitive';
 import { DeviceWaterLevel, DeviceWaterLevelValue } from './domain-primitives/device-water-level.domain-primitive';
 import { WeekDay, WeekDayValue } from './domain-primitives/week-day.domain-primitive';
@@ -17,7 +18,6 @@ import { QuietHoursSetting } from './value-objects/quiet-hours-setting.value-obj
 import { VoiceSetting } from './value-objects/voice-setting.value-object';
 import type { ConnectionProps } from './aggregate-roots/connection.aggregate-root';
 import type { DeviceProps } from './aggregate-roots/device.aggregate-root';
-import type { ConnectionDeviceChangedDomainEventProps } from './domain-events/connection-device-changed.domain-event';
 import type { DeviceMapProps } from './entities/device-map.entity';
 import type { DeviceOrderProps } from './entities/device-order.entity';
 import type { RoomProps } from './entities/room.entity';
@@ -189,17 +189,14 @@ export function givenSomeDeviceProps(): DeviceProps {
     userId: ID.generate(),
     system: new DeviceSystem(givenSomeDeviceSystemProps()),
     version: new DeviceVersion(givenSomeDeviceVersionProps()),
+    battery: new DeviceBattery(100),
+    isConnected: false,
+    isLocked: false,
   };
 }
 
 export function givenSomeConnectionProps(): ConnectionProps {
   return {
     id: ID.generate(),
-  };
-}
-
-export function givenSomeConnectionDeviceChangedDomainEventProps(): ConnectionDeviceChangedDomainEventProps {
-  return {
-    aggregateId: ID.generate(),
   };
 }
