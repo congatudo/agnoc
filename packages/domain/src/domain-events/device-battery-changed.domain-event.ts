@@ -8,11 +8,11 @@ export interface DeviceBatteryChangedDomainEventProps extends DomainEventProps {
 }
 
 export class DeviceBatteryChangedDomainEvent extends DomainEvent<DeviceBatteryChangedDomainEventProps> {
-  get previousBattery(): DeviceBattery | undefined {
+  get previousBattery(): DeviceBattery {
     return this.props.previousBattery;
   }
 
-  get currentBattery(): DeviceBattery | undefined {
+  get currentBattery(): DeviceBattery {
     return this.props.currentBattery;
   }
 

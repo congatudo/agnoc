@@ -1,15 +1,15 @@
 import { DeviceWlan } from '@agnoc/domain';
-import { DomainException } from '@agnoc/toolkit';
 import type { PacketEventHandler } from '../packet.event-handler';
 import type { PacketMessage } from '../packet.message';
+import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceWlanUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_WLAN_INFO_GETTING_RSP';
 
+  constructor(private readonly deviceRepository: DeviceRepository) {}
+
   async handle(message: PacketMessage<'DEVICE_WLAN_INFO_GETTING_RSP'>): Promise<void> {
-    if (!message.device) {
-      throw new DomainException('Device not found');
-    }
+    message.assertDevice();
 
     const data = message.packet.payload.data.body;
 
@@ -23,6 +23,6 @@ export class DeviceWlanUpdateEventHandler implements PacketEventHandler {
       }),
     );
 
-    // TODO: save entity and publish domain event
+    await this.deviceRepository.saveOne(message.device);
   }
 }

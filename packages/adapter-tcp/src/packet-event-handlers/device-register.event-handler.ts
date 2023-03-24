@@ -21,8 +21,6 @@ export class DeviceRegisterEventHandler implements PacketEventHandler {
       isLocked: false,
     });
 
-    // TODO: publish device created domain event
-
     await this.deviceRepository.saveOne(device);
 
     const response = { result: 0, device: { id: device.id.value } };

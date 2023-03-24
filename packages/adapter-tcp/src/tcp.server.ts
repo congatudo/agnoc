@@ -131,7 +131,7 @@ export class TCPServer implements Server {
       new DeviceTimeUpdateEventHandler(),
       new DeviceUpgradeInfoEventHandler(),
       new DeviceVersionUpdateEventHandler(),
-      new DeviceWlanUpdateEventHandler(),
+      new DeviceWlanUpdateEventHandler(deviceRepository),
       new DeviceMapUpdateEventHandler(
         deviceBatteryMapper,
         deviceModeMapper,

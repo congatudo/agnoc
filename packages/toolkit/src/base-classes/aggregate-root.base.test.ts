@@ -1,4 +1,4 @@
-import { anything, deepEqual, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
+import { anything, capture, imock, instance, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { ID } from '../domain-primitives/id.domain-primitive';
 import { AggregateRoot } from './aggregate-root.base';
@@ -42,7 +42,10 @@ describe('AggregateRoot', function () {
 
     expect(dummyAggregateRoot.domainEvents).to.be.lengthOf(0);
 
-    verify(eventBus.emit('DummyDomainEvent', deepEqual(new DummyDomainEvent({ aggregateId: id })))).once();
+    const [, event] = capture<string, DummyDomainEvent>(eventBus.emit).first();
+
+    expect(event).to.be.instanceOf(DummyDomainEvent);
+    expect(event.aggregateId).to.be.equal(id);
   });
 
   it('should be able to clear domain events', function () {

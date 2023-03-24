@@ -38,13 +38,13 @@ describe('Connection', function () {
       connection.setDevice(device);
 
       expect(connection.device).to.be.equal(device);
-      expect(connection.domainEvents).to.deep.contain(
-        new ConnectionDeviceChangedDomainEvent({
-          aggregateId: connection.id,
-          previousDeviceId: undefined,
-          currentDeviceId: device.id,
-        }),
-      );
+
+      const event = connection.domainEvents[0] as ConnectionDeviceChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(ConnectionDeviceChangedDomainEvent);
+      expect(event.aggregateId).to.be.equal(connection.id);
+      expect(event.previousDeviceId).to.be.equal(undefined);
+      expect(event.currentDeviceId).to.be.equal(device.id);
     });
 
     it('should override a device', function () {
@@ -55,13 +55,13 @@ describe('Connection', function () {
       connection.setDevice(deviceB);
 
       expect(connection.device).to.be.equal(deviceB);
-      expect(connection.domainEvents).to.deep.contain(
-        new ConnectionDeviceChangedDomainEvent({
-          aggregateId: connection.id,
-          previousDeviceId: deviceA.id,
-          currentDeviceId: deviceB.id,
-        }),
-      );
+
+      const event = connection.domainEvents[0] as ConnectionDeviceChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(ConnectionDeviceChangedDomainEvent);
+      expect(event.aggregateId).to.be.equal(connection.id);
+      expect(event.previousDeviceId).to.be.equal(deviceA.id);
+      expect(event.currentDeviceId).to.be.equal(deviceB.id);
     });
 
     it('should unset a device', function () {
@@ -71,13 +71,13 @@ describe('Connection', function () {
       connection.setDevice(undefined);
 
       expect(connection.device).to.be.equal(undefined);
-      expect(connection.domainEvents).to.deep.contain(
-        new ConnectionDeviceChangedDomainEvent({
-          aggregateId: connection.id,
-          previousDeviceId: device.id,
-          currentDeviceId: undefined,
-        }),
-      );
+
+      const event = connection.domainEvents[0] as ConnectionDeviceChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(ConnectionDeviceChangedDomainEvent);
+      expect(event.aggregateId).to.be.equal(connection.id);
+      expect(event.previousDeviceId).to.be.equal(device.id);
+      expect(event.currentDeviceId).to.be.equal(undefined);
     });
 
     it('should do nothing when setting the same device', function () {

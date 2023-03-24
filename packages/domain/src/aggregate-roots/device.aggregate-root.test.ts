@@ -2,7 +2,9 @@ import { AggregateRoot, ArgumentInvalidException, ArgumentNotProvidedException }
 import { expect } from 'chai';
 import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
+import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
+import { DeviceWlanChangedDomainEvent } from '../domain-events/device-wlan-changed.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError, DeviceErrorValue } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed, DeviceFanSpeedValue } from '../domain-primitives/device-fan-speed.domain-primitive';
@@ -47,6 +49,11 @@ describe('Device', function () {
     expect(device.battery).to.be.equal(deviceProps.battery);
     expect(device.isConnected).to.be.equal(deviceProps.isConnected);
     expect(device.isLocked).to.be.equal(deviceProps.isLocked);
+
+    const event = device.domainEvents[0] as DeviceCreatedDomainEvent;
+
+    expect(event).to.be.instanceOf(DeviceCreatedDomainEvent);
+    expect(event.aggregateId).to.be.equal(device.id);
   });
 
   it("should throw an error when 'userId' is not provided", function () {
@@ -266,24 +273,51 @@ describe('Device', function () {
   });
 
   describe('#setAsConnected()', function () {
-    it('should update the device system', function () {
+    it('should set the device as connected', function () {
       const device = new Device({ ...givenSomeDeviceProps(), isConnected: false });
 
       device.setAsConnected();
 
       expect(device.isConnected).to.be.true;
-      expect(device.domainEvents).to.deep.contain(new DeviceConnectedDomainEvent({ aggregateId: device.id }));
+
+      const event = device.domainEvents[1] as DeviceConnectedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceConnectedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+    });
+
+    it('should not set the device as connected when is connected', function () {
+      const device = new Device({ ...givenSomeDeviceProps(), isConnected: true });
+
+      device.setAsConnected();
+
+      expect(device.isConnected).to.be.true;
+
+      expect(device.domainEvents[1]).to.not.be.instanceOf(DeviceConnectedDomainEvent);
     });
   });
 
   describe('#setAsLocked()', function () {
-    it('should update the device system', function () {
+    it('should set the device as locked', function () {
       const device = new Device({ ...givenSomeDeviceProps(), isLocked: false });
 
       device.setAsLocked();
 
       expect(device.isLocked).to.be.true;
-      expect(device.domainEvents).to.deep.contain(new DeviceLockedDomainEvent({ aggregateId: device.id }));
+
+      const event = device.domainEvents[1] as DeviceLockedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceLockedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+    });
+
+    it('should not set the device as locked', function () {
+      const device = new Device({ ...givenSomeDeviceProps(), isLocked: true });
+
+      device.setAsLocked();
+
+      expect(device.isLocked).to.be.true;
+      expect(device.domainEvents[1]).to.not.be.instanceOf(DeviceLockedDomainEvent);
     });
   });
 
@@ -366,40 +400,61 @@ describe('Device', function () {
 
   describe('#updateWlan()', function () {
     it('should update the device wlan', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const wlan = new DeviceWlan(givenSomeDeviceWlanProps());
+      const previousWlan = new DeviceWlan({ ...givenSomeDeviceWlanProps(), port: 1 });
+      const currentWlan = new DeviceWlan({ ...givenSomeDeviceWlanProps(), port: 2 });
+      const device = new Device({ ...givenSomeDeviceProps(), wlan: previousWlan });
 
-      device.updateWlan(wlan);
+      device.updateWlan(currentWlan);
 
-      expect(device.wlan).to.be.equal(wlan);
+      expect(device.wlan).to.be.equal(currentWlan);
+
+      const event = device.domainEvents[1] as DeviceWlanChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceWlanChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousWlan).to.be.equal(previousWlan);
+      expect(event.currentWlan).to.be.equal(currentWlan);
+    });
+
+    it('should not update the device wlan when value is equal', function () {
+      const previousWlan = new DeviceWlan(givenSomeDeviceWlanProps());
+      const currentWlan = new DeviceWlan(givenSomeDeviceWlanProps());
+      const device = new Device({ ...givenSomeDeviceProps(), wlan: previousWlan });
+
+      device.updateWlan(currentWlan);
+
+      expect(device.wlan).to.be.equal(previousWlan);
+      expect(device.domainEvents[1]).to.not.be.instanceOf(DeviceWlanChangedDomainEvent);
     });
   });
 
   describe('#updateBattery()', function () {
     it('should update the device battery', function () {
       const previousBattery = new DeviceBattery(60);
-      const device = new Device({ ...givenSomeDeviceProps(), battery: previousBattery });
       const currentBattery = new DeviceBattery(50);
+      const device = new Device({ ...givenSomeDeviceProps(), battery: previousBattery });
 
       device.updateBattery(currentBattery);
 
       expect(device.battery).to.be.equal(currentBattery);
-      expect(device.domainEvents).to.deep.contain(
-        new DeviceBatteryChangedDomainEvent({ aggregateId: device.id, previousBattery, currentBattery }),
-      );
+
+      const event = device.domainEvents[1] as DeviceBatteryChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceBatteryChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousBattery).to.be.equal(previousBattery);
+      expect(event.currentBattery).to.be.equal(currentBattery);
     });
 
     it('should not update the device battery when value is equal', function () {
       const previousBattery = new DeviceBattery(50);
-      const device = new Device({ ...givenSomeDeviceProps(), battery: previousBattery });
       const currentBattery = new DeviceBattery(50);
+      const device = new Device({ ...givenSomeDeviceProps(), battery: previousBattery });
 
       device.updateBattery(currentBattery);
 
       expect(device.battery).to.be.equal(previousBattery);
-      expect(device.domainEvents).to.not.deep.contain(
-        new DeviceBatteryChangedDomainEvent({ aggregateId: device.id, previousBattery, currentBattery }),
-      );
+      expect(device.domainEvents[1]).to.not.be.instanceOf(DeviceBatteryChangedDomainEvent);
     });
   });
 
