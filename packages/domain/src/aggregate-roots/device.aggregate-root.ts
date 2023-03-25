@@ -3,7 +3,7 @@ import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
-import { DeviceWlanChangedDomainEvent } from '../domain-events/device-wlan-changed.domain-event';
+import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
@@ -14,10 +14,10 @@ import { DeviceMap } from '../entities/device-map.entity';
 import { DeviceOrder } from '../entities/device-order.entity';
 import { DeviceCleanWork } from '../value-objects/device-clean-work.value-object';
 import { DeviceConsumable } from '../value-objects/device-consumable.value-object';
+import { DeviceNetwork } from '../value-objects/device-network.value-object';
 import { DeviceSettings } from '../value-objects/device-settings.value-object';
 import { DeviceSystem } from '../value-objects/device-system.value-object';
 import { DeviceVersion } from '../value-objects/device-version.value-object';
-import { DeviceWlan } from '../value-objects/device-wlan.value-object';
 import type { EntityProps } from '@agnoc/toolkit';
 
 /** Describes the properties of a device. */
@@ -44,8 +44,8 @@ export interface DeviceProps extends EntityProps {
   consumables?: DeviceConsumable[];
   /** The device map. */
   map?: DeviceMap;
-  /** The device wlan. */
-  wlan?: DeviceWlan;
+  /** The device network. */
+  network?: DeviceNetwork;
   /** The device state. */
   state?: DeviceState;
   /** The device mode. */
@@ -124,9 +124,9 @@ export class Device extends AggregateRoot<DeviceProps> {
     return this.props.map;
   }
 
-  /** Returns the device wlan. */
-  get wlan(): DeviceWlan | undefined {
-    return this.props.wlan;
+  /** Returns the device network. */
+  get network(): DeviceNetwork | undefined {
+    return this.props.network;
   }
 
   /** Returns the device state. */
@@ -228,21 +228,21 @@ export class Device extends AggregateRoot<DeviceProps> {
     this.props.map = map;
   }
 
-  /** Updates the device wlan. */
-  updateWlan(wlan: DeviceWlan): void {
-    if (wlan.equals(this.wlan)) {
+  /** Updates the device network. */
+  updateNetwork(network: DeviceNetwork): void {
+    if (network.equals(this.network)) {
       return;
     }
 
-    this.validateInstanceProp({ wlan }, 'wlan', DeviceWlan);
+    this.validateInstanceProp({ network }, 'network', DeviceNetwork);
     this.addEvent(
-      new DeviceWlanChangedDomainEvent({
+      new DeviceNetworkChangedDomainEvent({
         aggregateId: this.id,
-        previousWlan: this.props.wlan,
-        currentWlan: wlan,
+        previousNetwork: this.props.network,
+        currentNetwork: network,
       }),
     );
-    this.props.wlan = wlan;
+    this.props.network = network;
   }
 
   /** Updates the device battery. */
@@ -321,7 +321,7 @@ export class Device extends AggregateRoot<DeviceProps> {
     this.validateArrayProp(props, 'orders', DeviceOrder);
     this.validateArrayProp(props, 'consumables', DeviceConsumable);
     this.validateInstanceProp(props, 'map', DeviceMap);
-    this.validateInstanceProp(props, 'wlan', DeviceWlan);
+    this.validateInstanceProp(props, 'network', DeviceNetwork);
     this.validateInstanceProp(props, 'battery', DeviceBattery);
     this.validateInstanceProp(props, 'state', DeviceState);
     this.validateInstanceProp(props, 'mode', DeviceMode);

@@ -36,13 +36,13 @@ import { DeviceMapChargerPositionUpdateEventHandler } from './packet-event-handl
 import { DeviceMapUpdateEventHandler } from './packet-event-handlers/device-map-update.event-handler';
 import { DeviceMapWorkStatusUpdateEventHandler } from './packet-event-handlers/device-map-work-status-update.event-handler';
 import { DeviceMemoryMapInfoEventHandler } from './packet-event-handlers/device-memory-map-info.event-handler';
+import { DeviceNetworkUpdateEventHandler } from './packet-event-handlers/device-network-update.event-handler';
 import { DeviceOfflineEventHandler } from './packet-event-handlers/device-offline.event-handler';
 import { DeviceRegisterEventHandler } from './packet-event-handlers/device-register.event-handler';
 import { DeviceSettingsUpdateEventHandler } from './packet-event-handlers/device-settings-update.event-handler';
 import { DeviceTimeUpdateEventHandler } from './packet-event-handlers/device-time-update.event-handler';
 import { DeviceUpgradeInfoEventHandler } from './packet-event-handlers/device-upgrade-info.event-handler';
 import { DeviceVersionUpdateEventHandler } from './packet-event-handlers/device-version-update.event-handler';
-import { DeviceWlanUpdateEventHandler } from './packet-event-handlers/device-wlan-update.event-handler';
 import { PacketEventPublisherService } from './packet-event-publisher.service';
 import { PackerServerConnectionHandler } from './packet-server.connection-handler';
 import { PacketEventBus } from './packet.event-bus';
@@ -131,7 +131,7 @@ export class TCPServer implements Server {
       new DeviceTimeUpdateEventHandler(),
       new DeviceUpgradeInfoEventHandler(),
       new DeviceVersionUpdateEventHandler(),
-      new DeviceWlanUpdateEventHandler(deviceRepository),
+      new DeviceNetworkUpdateEventHandler(deviceRepository),
       new DeviceMapUpdateEventHandler(
         deviceBatteryMapper,
         deviceModeMapper,

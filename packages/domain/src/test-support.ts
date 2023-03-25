@@ -24,12 +24,12 @@ import type { RoomProps } from './entities/room.entity';
 import type { ZoneProps } from './entities/zone.entity';
 import type { DeviceCleanWorkProps } from './value-objects/device-clean-work.value-object';
 import type { DeviceConsumableProps } from './value-objects/device-consumable.value-object';
+import type { DeviceNetworkProps } from './value-objects/device-network.value-object';
 import type { DeviceSettingProps } from './value-objects/device-setting.value-object';
 import type { DeviceSettingsProps } from './value-objects/device-settings.value-object';
 import type { DeviceSystemProps } from './value-objects/device-system.value-object';
 import type { DeviceTimeProps } from './value-objects/device-time.value-object';
 import type { DeviceVersionProps } from './value-objects/device-version.value-object';
-import type { DeviceWlanProps } from './value-objects/device-wlan.value-object';
 import type { MapCoordinateProps } from './value-objects/map-coordinate.value-object';
 import type { MapPixelProps } from './value-objects/map-pixel.value-object';
 import type { MapPositionProps } from './value-objects/map-position.value-object';
@@ -119,7 +119,7 @@ export function givenSomeDeviceVersionProps(): DeviceVersionProps {
   };
 }
 
-export function givenSomeDeviceWlanProps(): DeviceWlanProps {
+export function givenSomeDeviceNetworkProps(): DeviceNetworkProps {
   return {
     ipv4: '127.0.0.1',
     ssid: 'ssid',

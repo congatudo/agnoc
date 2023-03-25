@@ -25,7 +25,7 @@ export class QueryDeviceInfoWhenDeviceIsLockedEventHandler implements DomainEven
       mask: connection.device?.system.supports(DeviceCapability.MAP_PLANS) ? 0x78ff : 0xff,
     });
 
-    // TODO: move this to a get wlan service.
+    // TODO: move this to a get network service.
     await connection.send('DEVICE_WLAN_INFO_GETTING_REQ', {});
   }
 }

@@ -4,7 +4,7 @@ import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
-import { DeviceWlanChangedDomainEvent } from '../domain-events/device-wlan-changed.domain-event';
+import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError, DeviceErrorValue } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed, DeviceFanSpeedValue } from '../domain-primitives/device-fan-speed.domain-primitive';
@@ -22,14 +22,14 @@ import {
   givenSomeDeviceSettingsProps,
   givenSomeDeviceSystemProps,
   givenSomeDeviceVersionProps,
-  givenSomeDeviceWlanProps,
+  givenSomeDeviceNetworkProps,
 } from '../test-support';
 import { DeviceCleanWork } from '../value-objects/device-clean-work.value-object';
 import { DeviceConsumable } from '../value-objects/device-consumable.value-object';
+import { DeviceNetwork } from '../value-objects/device-network.value-object';
 import { DeviceSettings } from '../value-objects/device-settings.value-object';
 import { DeviceSystem } from '../value-objects/device-system.value-object';
 import { DeviceVersion } from '../value-objects/device-version.value-object';
-import { DeviceWlan } from '../value-objects/device-wlan.value-object';
 import { Device } from './device.aggregate-root';
 
 describe('Device', function () {
@@ -200,11 +200,11 @@ describe('Device', function () {
     );
   });
 
-  it("should throw an error when 'wlan' is not a DeviceWlan", function () {
+  it("should throw an error when 'network' is not a DeviceNetwork", function () {
     // @ts-expect-error - invalid property
-    expect(() => new Device({ ...givenSomeDeviceProps(), wlan: 'foo' })).to.throw(
+    expect(() => new Device({ ...givenSomeDeviceProps(), network: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'wlan' of Device is not an instance of DeviceWlan`,
+      `Value 'foo' for property 'network' of Device is not an instance of DeviceNetwork`,
     );
   });
 
@@ -398,33 +398,33 @@ describe('Device', function () {
     });
   });
 
-  describe('#updateWlan()', function () {
-    it('should update the device wlan', function () {
-      const previousWlan = new DeviceWlan({ ...givenSomeDeviceWlanProps(), port: 1 });
-      const currentWlan = new DeviceWlan({ ...givenSomeDeviceWlanProps(), port: 2 });
-      const device = new Device({ ...givenSomeDeviceProps(), wlan: previousWlan });
+  describe('#updateNetwork()', function () {
+    it('should update the device network', function () {
+      const previousNetwork = new DeviceNetwork({ ...givenSomeDeviceNetworkProps(), port: 1 });
+      const currentNetwork = new DeviceNetwork({ ...givenSomeDeviceNetworkProps(), port: 2 });
+      const device = new Device({ ...givenSomeDeviceProps(), network: previousNetwork });
 
-      device.updateWlan(currentWlan);
+      device.updateNetwork(currentNetwork);
 
-      expect(device.wlan).to.be.equal(currentWlan);
+      expect(device.network).to.be.equal(currentNetwork);
 
-      const event = device.domainEvents[1] as DeviceWlanChangedDomainEvent;
+      const event = device.domainEvents[1] as DeviceNetworkChangedDomainEvent;
 
-      expect(event).to.be.instanceOf(DeviceWlanChangedDomainEvent);
+      expect(event).to.be.instanceOf(DeviceNetworkChangedDomainEvent);
       expect(event.aggregateId).to.equal(device.id);
-      expect(event.previousWlan).to.be.equal(previousWlan);
-      expect(event.currentWlan).to.be.equal(currentWlan);
+      expect(event.previousNetwork).to.be.equal(previousNetwork);
+      expect(event.currentNetwork).to.be.equal(currentNetwork);
     });
 
-    it('should not update the device wlan when value is equal', function () {
-      const previousWlan = new DeviceWlan(givenSomeDeviceWlanProps());
-      const currentWlan = new DeviceWlan(givenSomeDeviceWlanProps());
-      const device = new Device({ ...givenSomeDeviceProps(), wlan: previousWlan });
+    it('should not update the device network when value is equal', function () {
+      const previousNetwork = new DeviceNetwork(givenSomeDeviceNetworkProps());
+      const currentNetwork = new DeviceNetwork(givenSomeDeviceNetworkProps());
+      const device = new Device({ ...givenSomeDeviceProps(), network: previousNetwork });
 
-      device.updateWlan(currentWlan);
+      device.updateNetwork(currentNetwork);
 
-      expect(device.wlan).to.be.equal(previousWlan);
-      expect(device.domainEvents[1]).to.not.be.instanceOf(DeviceWlanChangedDomainEvent);
+      expect(device.network).to.be.equal(previousNetwork);
+      expect(device.domainEvents[1]).to.not.be.instanceOf(DeviceNetworkChangedDomainEvent);
     });
   });
 

@@ -1,9 +1,9 @@
-import { DeviceWlan } from '@agnoc/domain';
+import { DeviceNetwork } from '@agnoc/domain';
 import type { PacketEventHandler } from '../packet.event-handler';
 import type { PacketMessage } from '../packet.message';
 import type { DeviceRepository } from '@agnoc/domain';
 
-export class DeviceWlanUpdateEventHandler implements PacketEventHandler {
+export class DeviceNetworkUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_WLAN_INFO_GETTING_RSP';
 
   constructor(private readonly deviceRepository: DeviceRepository) {}
@@ -13,8 +13,8 @@ export class DeviceWlanUpdateEventHandler implements PacketEventHandler {
 
     const data = message.packet.payload.data.body;
 
-    message.device.updateWlan(
-      new DeviceWlan({
+    message.device.updateNetwork(
+      new DeviceNetwork({
         ipv4: data.ipv4,
         ssid: data.ssid,
         port: data.port,

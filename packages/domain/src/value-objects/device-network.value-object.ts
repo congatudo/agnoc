@@ -1,7 +1,7 @@
 import { ValueObject } from '@agnoc/toolkit';
 
-/** The properties of the device wlan. */
-export interface DeviceWlanProps {
+/** The properties of the device network. */
+export interface DeviceNetworkProps {
   /** The ipv4 address. */
   ipv4: string;
   /** The ssid. */
@@ -14,8 +14,8 @@ export interface DeviceWlanProps {
   mac: string;
 }
 
-/** Describe the wlan of a device. */
-export class DeviceWlan extends ValueObject<DeviceWlanProps> {
+/** Describe the network of a device. */
+export class DeviceNetwork extends ValueObject<DeviceNetworkProps> {
   /** Returns the ipv4 address. */
   get ipv4(): string {
     return this.props.ipv4;
@@ -41,8 +41,8 @@ export class DeviceWlan extends ValueObject<DeviceWlanProps> {
     return this.props.mac;
   }
 
-  protected validate(props: DeviceWlanProps): void {
-    const keys: (keyof DeviceWlanProps)[] = ['ipv4', 'ssid', 'port', 'mask', 'mac'];
+  protected validate(props: DeviceNetworkProps): void {
+    const keys: (keyof DeviceNetworkProps)[] = ['ipv4', 'ssid', 'port', 'mask', 'mac'];
 
     keys.forEach((prop) => {
       this.validateDefinedProp(props, prop);

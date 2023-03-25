@@ -1,21 +1,21 @@
-import { DeviceWlan } from '@agnoc/domain';
+import { DeviceNetwork } from '@agnoc/domain';
 import { OPCode, Packet, Payload } from '@agnoc/transport-tcp';
 import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { capture, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { DeviceWlanUpdateEventHandler } from './device-wlan-update.event-handler';
+import { DeviceNetworkUpdateEventHandler } from './device-network-update.event-handler';
 import type { PacketMessage } from '../packet.message';
 import type { Device, DeviceRepository } from '@agnoc/domain';
 
-describe('DeviceWlanUpdateEventHandler', function () {
+describe('DeviceNetworkUpdateEventHandler', function () {
   let deviceRepository: DeviceRepository;
-  let eventHandler: DeviceWlanUpdateEventHandler;
+  let eventHandler: DeviceNetworkUpdateEventHandler;
   let packetMessage: PacketMessage<'DEVICE_WLAN_INFO_GETTING_RSP'>;
   let device: Device;
 
   beforeEach(function () {
     deviceRepository = imock();
-    eventHandler = new DeviceWlanUpdateEventHandler(instance(deviceRepository));
+    eventHandler = new DeviceNetworkUpdateEventHandler(instance(deviceRepository));
     packetMessage = imock();
     device = imock();
   });
@@ -25,7 +25,7 @@ describe('DeviceWlanUpdateEventHandler', function () {
   });
 
   describe('#handle()', function () {
-    it('should update the device wlan', async function () {
+    it('should update the device network', async function () {
       const payload = new Payload({
         opcode: OPCode.fromName('DEVICE_WLAN_INFO_GETTING_RSP'),
         data: {
@@ -46,17 +46,17 @@ describe('DeviceWlanUpdateEventHandler', function () {
 
       await eventHandler.handle(instance(packetMessage));
 
-      const [deviceWlan] = capture(device.updateWlan).first();
+      const [deviceNetwork] = capture(device.updateNetwork).first();
 
-      expect(deviceWlan).to.be.instanceOf(DeviceWlan);
-      expect(deviceWlan.ipv4).to.be.equal('127.0.0.1');
-      expect(deviceWlan.ssid).to.be.equal('ssid');
-      expect(deviceWlan.port).to.be.equal(1234);
-      expect(deviceWlan.mask).to.be.equal('255.255.255.255');
-      expect(deviceWlan.mac).to.be.equal('00:00:00:00:00:00');
+      expect(deviceNetwork).to.be.instanceOf(DeviceNetwork);
+      expect(deviceNetwork.ipv4).to.be.equal('127.0.0.1');
+      expect(deviceNetwork.ssid).to.be.equal('ssid');
+      expect(deviceNetwork.port).to.be.equal(1234);
+      expect(deviceNetwork.mask).to.be.equal('255.255.255.255');
+      expect(deviceNetwork.mac).to.be.equal('00:00:00:00:00:00');
 
       verify(packetMessage.assertDevice()).once();
-      verify(device.updateWlan(deviceWlan)).once();
+      verify(device.updateNetwork(deviceNetwork)).once();
       verify(deviceRepository.saveOne(instance(device))).once();
     });
   });
