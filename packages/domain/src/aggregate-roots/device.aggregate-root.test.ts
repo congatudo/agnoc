@@ -1,12 +1,14 @@
 import { AggregateRoot, ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
 import { expect } from 'chai';
 import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery-changed.domain-event';
+import { DeviceCleanWorkChangedDomainEvent } from '../domain-events/device-clean-work-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
 import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
 import { DeviceSettingsChangedDomainEvent } from '../domain-events/device-settings-changed.domain-event';
 import { DeviceVersionChangedDomainEvent } from '../domain-events/device-version-changed.domain-event';
+import { CleanSize } from '../domain-primitives/clean-size.domain-primitive';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError, DeviceErrorValue } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed, DeviceFanSpeedValue } from '../domain-primitives/device-fan-speed.domain-primitive';
@@ -153,11 +155,11 @@ describe('Device', function () {
     );
   });
 
-  it("should throw an error when 'currentClean' is not a DeviceCleanWork", function () {
+  it("should throw an error when 'currentCleanWork' is not a DeviceCleanWork", function () {
     // @ts-expect-error - invalid property
-    expect(() => new Device({ ...givenSomeDeviceProps(), currentClean: 'foo' })).to.throw(
+    expect(() => new Device({ ...givenSomeDeviceProps(), currentCleanWork: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'currentClean' of Device is not an instance of DeviceCleanWork`,
+      `Value 'foo' for property 'currentCleanWork' of Device is not an instance of DeviceCleanWork`,
     );
   });
 
@@ -388,14 +390,33 @@ describe('Device', function () {
     });
   });
 
-  describe('#updateCurrentClean()', function () {
-    it('should update the device current clean', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const currentClean = new DeviceCleanWork(givenSomeDeviceCleanWorkProps());
+  describe('#updateCurrentCleanWork()', function () {
+    it('should update the device cleanWork', function () {
+      const previousCleanWork = new DeviceCleanWork({ ...givenSomeDeviceCleanWorkProps(), size: new CleanSize(1) });
+      const currentCleanWork = new DeviceCleanWork({ ...givenSomeDeviceCleanWorkProps(), size: new CleanSize(2) });
+      const device = new Device({ ...givenSomeDeviceProps(), currentCleanWork: previousCleanWork });
 
-      device.updateCurrentClean(currentClean);
+      device.updateCurrentCleanWork(currentCleanWork);
 
-      expect(device.currentClean).to.be.equal(currentClean);
+      expect(device.currentCleanWork).to.be.equal(currentCleanWork);
+
+      const event = device.domainEvents[1] as DeviceCleanWorkChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceCleanWorkChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousCleanWork).to.be.equal(previousCleanWork);
+      expect(event.currentCleanWork).to.be.equal(currentCleanWork);
+    });
+
+    it('should not update the device cleanWork when value is equal', function () {
+      const previousCleanWork = new DeviceCleanWork(givenSomeDeviceCleanWorkProps());
+      const currentCleanWork = new DeviceCleanWork(givenSomeDeviceCleanWorkProps());
+      const device = new Device({ ...givenSomeDeviceProps(), currentCleanWork: previousCleanWork });
+
+      device.updateCurrentCleanWork(currentCleanWork);
+
+      expect(device.currentCleanWork).to.be.equal(previousCleanWork);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 

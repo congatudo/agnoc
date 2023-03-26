@@ -1,5 +1,6 @@
 import { AggregateRoot, ID } from '@agnoc/toolkit';
 import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery-changed.domain-event';
+import { DeviceCleanWorkChangedDomainEvent } from '../domain-events/device-clean-work-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
@@ -39,7 +40,7 @@ export interface DeviceProps extends EntityProps {
   /** The device settings. */
   settings?: DeviceSettings;
   /** The device current clean. */
-  currentClean?: DeviceCleanWork;
+  currentCleanWork?: DeviceCleanWork;
   /** The device orders. */
   orders?: DeviceOrder[];
   /** The device consumables. */
@@ -107,8 +108,8 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   /** Returns the device current clean. */
-  get currentClean(): DeviceCleanWork | undefined {
-    return this.props.currentClean;
+  get currentCleanWork(): DeviceCleanWork | undefined {
+    return this.props.currentCleanWork;
   }
 
   /** Returns the device orders. */
@@ -223,9 +224,21 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   /** Updates the device current clean. */
-  updateCurrentClean(currentClean?: DeviceCleanWork): void {
-    this.validateInstanceProp({ currentClean }, 'currentClean', DeviceCleanWork);
-    this.props.currentClean = currentClean;
+  updateCurrentCleanWork(currentCleanWork: DeviceCleanWork): void {
+    if (currentCleanWork.equals(this.currentCleanWork)) {
+      return;
+    }
+
+    this.validateDefinedProp({ currentCleanWork }, 'currentCleanWork');
+    this.validateInstanceProp({ currentCleanWork }, 'currentCleanWork', DeviceCleanWork);
+    this.addEvent(
+      new DeviceCleanWorkChangedDomainEvent({
+        aggregateId: this.id,
+        previousCleanWork: this.currentCleanWork,
+        currentCleanWork,
+      }),
+    );
+    this.props.currentCleanWork = currentCleanWork;
   }
 
   /** Updates the device orders. */
@@ -337,7 +350,7 @@ export class Device extends AggregateRoot<DeviceProps> {
     this.validateTypeProp(props, 'isConnected', 'boolean');
     this.validateTypeProp(props, 'isLocked', 'boolean');
     this.validateInstanceProp(props, 'settings', DeviceSettings);
-    this.validateInstanceProp(props, 'currentClean', DeviceCleanWork);
+    this.validateInstanceProp(props, 'currentCleanWork', DeviceCleanWork);
     this.validateArrayProp(props, 'orders', DeviceOrder);
     this.validateArrayProp(props, 'consumables', DeviceConsumable);
     this.validateInstanceProp(props, 'map', DeviceMap);

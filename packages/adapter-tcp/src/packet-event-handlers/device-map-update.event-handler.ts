@@ -61,7 +61,7 @@ export class DeviceMapUpdateEventHandler implements PacketEventHandler {
         faultCode,
       } = statusInfo;
 
-      message.device.updateCurrentClean(
+      message.device.updateCurrentCleanWork(
         new DeviceCleanWork({
           size: new CleanSize(statusInfo.cleanSize),
           time: DeviceTime.fromMinutes(statusInfo.cleanTime),

@@ -41,7 +41,7 @@ export class DeviceMapWorkStatusUpdateEventHandler implements PacketEventHandler
       cleanTime,
     } = message.packet.payload.data;
 
-    message.device.updateCurrentClean(
+    message.device.updateCurrentCleanWork(
       new DeviceCleanWork({
         size: new CleanSize(cleanSize),
         time: DeviceTime.fromMinutes(cleanTime),
