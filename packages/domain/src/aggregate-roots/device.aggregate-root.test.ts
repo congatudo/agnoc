@@ -5,6 +5,7 @@ import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.do
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
 import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
+import { DeviceVersionChangedDomainEvent } from '../domain-events/device-version-changed.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError, DeviceErrorValue } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed, DeviceFanSpeedValue } from '../domain-primitives/device-fan-speed.domain-primitive';
@@ -20,7 +21,6 @@ import {
   givenSomeDeviceOrderProps,
   givenSomeDeviceProps,
   givenSomeDeviceSettingsProps,
-  givenSomeDeviceSystemProps,
   givenSomeDeviceVersionProps,
   givenSomeDeviceNetworkProps,
 } from '../test-support';
@@ -28,7 +28,6 @@ import { DeviceCleanWork } from '../value-objects/device-clean-work.value-object
 import { DeviceConsumable } from '../value-objects/device-consumable.value-object';
 import { DeviceNetwork } from '../value-objects/device-network.value-object';
 import { DeviceSettings } from '../value-objects/device-settings.value-object';
-import { DeviceSystem } from '../value-objects/device-system.value-object';
 import { DeviceVersion } from '../value-objects/device-version.value-object';
 import { Device } from './device.aggregate-root';
 
@@ -321,25 +320,33 @@ describe('Device', function () {
     });
   });
 
-  describe('#updateSystem()', function () {
-    it('should update the device system', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const system = new DeviceSystem(givenSomeDeviceSystemProps());
-
-      device.updateSystem(system);
-
-      expect(device.system).to.be.equal(system);
-    });
-  });
-
   describe('#updateVersion()', function () {
     it('should update the device version', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const version = new DeviceVersion(givenSomeDeviceVersionProps());
+      const previousVersion = new DeviceVersion({ ...givenSomeDeviceVersionProps(), software: '1.0.0' });
+      const currentVersion = new DeviceVersion({ ...givenSomeDeviceVersionProps(), software: '1.0.1' });
+      const device = new Device({ ...givenSomeDeviceProps(), version: previousVersion });
 
-      device.updateVersion(version);
+      device.updateVersion(currentVersion);
 
-      expect(device.version).to.be.equal(version);
+      expect(device.version).to.be.equal(currentVersion);
+
+      const event = device.domainEvents[1] as DeviceVersionChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceVersionChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousVersion).to.be.equal(previousVersion);
+      expect(event.currentVersion).to.be.equal(currentVersion);
+    });
+
+    it('should not update the device version when value is equal', function () {
+      const previousVersion = new DeviceVersion(givenSomeDeviceVersionProps());
+      const currentVersion = new DeviceVersion(givenSomeDeviceVersionProps());
+      const device = new Device({ ...givenSomeDeviceProps(), version: previousVersion });
+
+      device.updateVersion(currentVersion);
+
+      expect(device.version).to.be.equal(previousVersion);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 
@@ -424,7 +431,7 @@ describe('Device', function () {
       device.updateNetwork(currentNetwork);
 
       expect(device.network).to.be.equal(previousNetwork);
-      expect(device.domainEvents[1]).to.not.be.instanceOf(DeviceNetworkChangedDomainEvent);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 
@@ -454,7 +461,7 @@ describe('Device', function () {
       device.updateBattery(currentBattery);
 
       expect(device.battery).to.be.equal(previousBattery);
-      expect(device.domainEvents[1]).to.not.be.instanceOf(DeviceBatteryChangedDomainEvent);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 

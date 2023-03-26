@@ -4,6 +4,7 @@ import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.do
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
 import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
+import { DeviceVersionChangedDomainEvent } from '../domain-events/device-version-changed.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
@@ -184,17 +185,21 @@ export class Device extends AggregateRoot<DeviceProps> {
     this.props.isLocked = true;
   }
 
-  /** Updates the device system. */
-  updateSystem(system: DeviceSystem): void {
-    this.validateDefinedProp({ system }, 'system');
-    this.validateInstanceProp({ system }, 'system', DeviceSystem);
-    this.props.system = system;
-  }
-
   /** Updates the device version. */
   updateVersion(version: DeviceVersion): void {
+    if (version.equals(this.version)) {
+      return;
+    }
+
     this.validateDefinedProp({ version }, 'version');
     this.validateInstanceProp({ version }, 'version', DeviceVersion);
+    this.addEvent(
+      new DeviceVersionChangedDomainEvent({
+        aggregateId: this.id,
+        previousVersion: this.version,
+        currentVersion: version,
+      }),
+    );
     this.props.version = version;
   }
 
@@ -234,6 +239,7 @@ export class Device extends AggregateRoot<DeviceProps> {
       return;
     }
 
+    this.validateDefinedProp({ network }, 'network');
     this.validateInstanceProp({ network }, 'network', DeviceNetwork);
     this.addEvent(
       new DeviceNetworkChangedDomainEvent({
@@ -251,6 +257,7 @@ export class Device extends AggregateRoot<DeviceProps> {
       return;
     }
 
+    this.validateDefinedProp({ battery }, 'battery');
     this.validateInstanceProp({ battery }, 'battery', DeviceBattery);
     this.addEvent(
       new DeviceBatteryChangedDomainEvent({

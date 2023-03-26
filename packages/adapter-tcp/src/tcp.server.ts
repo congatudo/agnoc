@@ -130,7 +130,7 @@ export class TCPServer implements Server {
       new DeviceSettingsUpdateEventHandler(deviceVoiceMapper),
       new DeviceTimeUpdateEventHandler(),
       new DeviceUpgradeInfoEventHandler(),
-      new DeviceVersionUpdateEventHandler(),
+      new DeviceVersionUpdateEventHandler(deviceRepository),
       new DeviceNetworkUpdateEventHandler(deviceRepository),
       new DeviceMapUpdateEventHandler(
         deviceBatteryMapper,
