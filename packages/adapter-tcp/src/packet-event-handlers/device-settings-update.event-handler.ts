@@ -1,18 +1,19 @@
 import { DeviceSetting, DeviceSettings, DeviceTime, QuietHoursSetting } from '@agnoc/domain';
-import { DomainException } from '@agnoc/toolkit';
 import type { VoiceSettingMapper } from '../mappers/voice-setting.mapper';
 import type { PacketEventHandler } from '../packet.event-handler';
 import type { PacketMessage } from '../packet.message';
+import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceSettingsUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'PUSH_DEVICE_AGENT_SETTING_REQ';
 
-  constructor(private readonly deviceVoiceMapper: VoiceSettingMapper) {}
+  constructor(
+    private readonly deviceVoiceMapper: VoiceSettingMapper,
+    private readonly deviceRepository: DeviceRepository,
+  ) {}
 
   async handle(message: PacketMessage<'PUSH_DEVICE_AGENT_SETTING_REQ'>): Promise<void> {
-    if (!message.device) {
-      throw new DomainException('Device not found');
-    }
+    message.assertDevice();
 
     const data = message.packet.payload.data;
     const deviceSettings = new DeviceSettings({
@@ -32,9 +33,14 @@ export class DeviceSettingsUpdateEventHandler implements PacketEventHandler {
       historyMap: new DeviceSetting({ isEnabled: data.cleanPreference.historyMap ?? false }),
     });
 
-    message.device.updateConfig(deviceSettings);
+    // TODO: Fields below are unused
+    //   - data.deviceId
+    //   - data.ota
+    //   - data.taskList
 
-    // TODO: save entity and publish domain event
+    message.device.updateSettings(deviceSettings);
+
+    await this.deviceRepository.saveOne(message.device);
 
     await message.respond('PUSH_DEVICE_AGENT_SETTING_RSP', { result: 0 });
   }

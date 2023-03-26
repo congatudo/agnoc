@@ -5,6 +5,7 @@ import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.do
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
 import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
+import { DeviceSettingsChangedDomainEvent } from '../domain-events/device-settings-changed.domain-event';
 import { DeviceVersionChangedDomainEvent } from '../domain-events/device-version-changed.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError, DeviceErrorValue } from '../domain-primitives/device-error.domain-primitive';
@@ -27,6 +28,7 @@ import {
 import { DeviceCleanWork } from '../value-objects/device-clean-work.value-object';
 import { DeviceConsumable } from '../value-objects/device-consumable.value-object';
 import { DeviceNetwork } from '../value-objects/device-network.value-object';
+import { DeviceSetting } from '../value-objects/device-setting.value-object';
 import { DeviceSettings } from '../value-objects/device-settings.value-object';
 import { DeviceVersion } from '../value-objects/device-version.value-object';
 import { Device } from './device.aggregate-root';
@@ -143,11 +145,11 @@ describe('Device', function () {
     );
   });
 
-  it("should throw an error when 'config' is not a DeviceSettings", function () {
+  it("should throw an error when 'settings' is not a DeviceSettings", function () {
     // @ts-expect-error - invalid property
-    expect(() => new Device({ ...givenSomeDeviceProps(), config: 'foo' })).to.throw(
+    expect(() => new Device({ ...givenSomeDeviceProps(), settings: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'config' of Device is not an instance of DeviceSettings`,
+      `Value 'foo' for property 'settings' of Device is not an instance of DeviceSettings`,
     );
   });
 
@@ -350,14 +352,39 @@ describe('Device', function () {
     });
   });
 
-  describe('#updateConfig()', function () {
-    it('should update the device config', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const config = new DeviceSettings(givenSomeDeviceSettingsProps());
+  describe('#updateSettings()', function () {
+    it('should update the device settings', function () {
+      const previousSettings = new DeviceSettings({
+        ...givenSomeDeviceSettingsProps(),
+        ecoMode: new DeviceSetting({ isEnabled: false }),
+      });
+      const currentSettings = new DeviceSettings({
+        ...givenSomeDeviceSettingsProps(),
+        ecoMode: new DeviceSetting({ isEnabled: true }),
+      });
+      const device = new Device({ ...givenSomeDeviceProps(), settings: previousSettings });
 
-      device.updateConfig(config);
+      device.updateSettings(currentSettings);
 
-      expect(device.config).to.be.equal(config);
+      expect(device.settings).to.be.equal(currentSettings);
+
+      const event = device.domainEvents[1] as DeviceSettingsChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceSettingsChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousSettings).to.be.equal(previousSettings);
+      expect(event.currentSettings).to.be.equal(currentSettings);
+    });
+
+    it('should not update the device settings when value is equal', function () {
+      const previousSettings = new DeviceSettings(givenSomeDeviceSettingsProps());
+      const currentSettings = new DeviceSettings(givenSomeDeviceSettingsProps());
+      const device = new Device({ ...givenSomeDeviceProps(), settings: previousSettings });
+
+      device.updateSettings(currentSettings);
+
+      expect(device.settings).to.be.equal(previousSettings);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 

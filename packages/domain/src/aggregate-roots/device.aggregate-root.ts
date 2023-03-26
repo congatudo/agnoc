@@ -4,6 +4,7 @@ import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.do
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
 import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
+import { DeviceSettingsChangedDomainEvent } from '../domain-events/device-settings-changed.domain-event';
 import { DeviceVersionChangedDomainEvent } from '../domain-events/device-version-changed.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError } from '../domain-primitives/device-error.domain-primitive';
@@ -36,7 +37,7 @@ export interface DeviceProps extends EntityProps {
   /** Whether the device is locked. */
   isLocked: boolean;
   /** The device settings. */
-  config?: DeviceSettings;
+  settings?: DeviceSettings;
   /** The device current clean. */
   currentClean?: DeviceCleanWork;
   /** The device orders. */
@@ -101,8 +102,8 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   /** Returns the device settings. */
-  get config(): DeviceSettings | undefined {
-    return this.props.config;
+  get settings(): DeviceSettings | undefined {
+    return this.props.settings;
   }
 
   /** Returns the device current clean. */
@@ -204,9 +205,21 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   /** Updates the device settings. */
-  updateConfig(config?: DeviceSettings): void {
-    this.validateInstanceProp({ config }, 'config', DeviceSettings);
-    this.props.config = config;
+  updateSettings(settings: DeviceSettings): void {
+    if (settings.equals(this.settings)) {
+      return;
+    }
+
+    this.validateDefinedProp({ settings }, 'settings');
+    this.validateInstanceProp({ settings }, 'settings', DeviceSettings);
+    this.addEvent(
+      new DeviceSettingsChangedDomainEvent({
+        aggregateId: this.id,
+        previousSettings: this.settings,
+        currentSettings: settings,
+      }),
+    );
+    this.props.settings = settings;
   }
 
   /** Updates the device current clean. */
@@ -323,7 +336,7 @@ export class Device extends AggregateRoot<DeviceProps> {
     this.validateInstanceProp(props, 'version', DeviceVersion);
     this.validateTypeProp(props, 'isConnected', 'boolean');
     this.validateTypeProp(props, 'isLocked', 'boolean');
-    this.validateInstanceProp(props, 'config', DeviceSettings);
+    this.validateInstanceProp(props, 'settings', DeviceSettings);
     this.validateInstanceProp(props, 'currentClean', DeviceCleanWork);
     this.validateArrayProp(props, 'orders', DeviceOrder);
     this.validateArrayProp(props, 'consumables', DeviceConsumable);

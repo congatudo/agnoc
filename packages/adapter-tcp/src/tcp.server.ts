@@ -86,9 +86,12 @@ export class TCPServer implements Server {
 
     // Connection
     const packetConnectionFactory = new PacketConnectionFactory(packetEventBus, packetFactory);
-    const connectionDeviceUpdaterService = new ConnectionDeviceUpdaterService(connectionRepository, deviceRepository);
+    const connectionDeviceUpdaterService = new ConnectionDeviceUpdaterService(
+      this.connectionRepository,
+      deviceRepository,
+    );
     const packetEventPublisherService = new PacketEventPublisherService(packetEventBus);
-    const packetConnectionFinderService = new PacketConnectionFinderService(connectionRepository);
+    const packetConnectionFinderService = new PacketConnectionFinderService(this.connectionRepository);
     const connectionManager = new PackerServerConnectionHandler(
       this.connectionRepository,
       packetConnectionFactory,
@@ -107,7 +110,7 @@ export class TCPServer implements Server {
     packetEventHandlerRegistry.register(
       new ClientHeartbeatEventHandler(),
       new ClientLoginEventHandler(),
-      new DeviceBatteryUpdateEventHandler(deviceBatteryMapper, deviceRepository),
+      new DeviceBatteryUpdateEventHandler(deviceBatteryMapper, this.deviceRepository),
       new DeviceCleanMapDataReportEventHandler(),
       new DeviceCleanMapReportEventHandler(),
       new DeviceCleanTaskReportEventHandler(),
@@ -122,23 +125,23 @@ export class TCPServer implements Server {
         deviceBatteryMapper,
         deviceFanSpeedMapper,
         deviceWaterLevelMapper,
-        deviceRepository,
+        this.deviceRepository,
       ),
       new DeviceMemoryMapInfoEventHandler(),
       new DeviceOfflineEventHandler(),
       new DeviceRegisterEventHandler(this.deviceRepository),
-      new DeviceSettingsUpdateEventHandler(deviceVoiceMapper),
+      new DeviceSettingsUpdateEventHandler(deviceVoiceMapper, this.deviceRepository),
       new DeviceTimeUpdateEventHandler(),
       new DeviceUpgradeInfoEventHandler(),
-      new DeviceVersionUpdateEventHandler(deviceRepository),
-      new DeviceNetworkUpdateEventHandler(deviceRepository),
+      new DeviceVersionUpdateEventHandler(this.deviceRepository),
+      new DeviceNetworkUpdateEventHandler(this.deviceRepository),
       new DeviceMapUpdateEventHandler(
         deviceBatteryMapper,
         deviceModeMapper,
         deviceStateMapper,
         deviceErrorMapper,
         deviceFanSpeedMapper,
-        deviceRepository,
+        this.deviceRepository,
       ),
     );
 
@@ -146,7 +149,7 @@ export class TCPServer implements Server {
     this.domainEventHandlerRegistry.register(
       new LockDeviceWhenDeviceIsConnectedEventHandler(packetConnectionFinderService),
       new QueryDeviceInfoWhenDeviceIsLockedEventHandler(packetConnectionFinderService),
-      new SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler(connectionRepository, deviceRepository),
+      new SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler(this.connectionRepository, this.deviceRepository),
     );
 
     // Command event handlers
