@@ -3,10 +3,17 @@ import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery
 import { DeviceCleanWorkChangedDomainEvent } from '../domain-events/device-clean-work-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
+import { DeviceErrorChangedDomainEvent } from '../domain-events/device-error-changed.domain-event';
+import { DeviceFanSpeedChangedDomainEvent } from '../domain-events/device-fan-speed-changed.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
+import { DeviceMapPendingDomainEvent } from '../domain-events/device-map-pending.domain-event';
+import { DeviceModeChangedDomainEvent } from '../domain-events/device-mode-changed.domain-event';
+import { DeviceMopAttachedDomainEvent } from '../domain-events/device-mop-attached.domain-event';
 import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
 import { DeviceSettingsChangedDomainEvent } from '../domain-events/device-settings-changed.domain-event';
+import { DeviceStateChangedDomainEvent } from '../domain-events/device-state-changed.domain-event';
 import { DeviceVersionChangedDomainEvent } from '../domain-events/device-version-changed.domain-event';
+import { DeviceWaterLevelChangedDomainEvent } from '../domain-events/device-water-level-changed.domain-event';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError } from '../domain-primitives/device-error.domain-primitive';
 import { DeviceFanSpeed } from '../domain-primitives/device-fan-speed.domain-primitive';
@@ -296,45 +303,127 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   /** Updates the device state. */
-  updateState(state?: DeviceState): void {
+  updateState(state: DeviceState): void {
+    if (state.equals(this.state)) {
+      return;
+    }
+
+    this.validateDefinedProp({ state }, 'state');
     this.validateInstanceProp({ state }, 'state', DeviceState);
+    this.addEvent(
+      new DeviceStateChangedDomainEvent({
+        aggregateId: this.id,
+        previousState: this.state,
+        currentState: state,
+      }),
+    );
     this.props.state = state;
   }
 
   /** Updates the device mode. */
-  updateMode(mode?: DeviceMode): void {
+  updateMode(mode: DeviceMode): void {
+    if (mode.equals(this.mode)) {
+      return;
+    }
+
+    this.validateDefinedProp({ mode }, 'mode');
     this.validateInstanceProp({ mode }, 'mode', DeviceMode);
+    this.addEvent(
+      new DeviceModeChangedDomainEvent({
+        aggregateId: this.id,
+        previousMode: this.mode,
+        currentMode: mode,
+      }),
+    );
     this.props.mode = mode;
   }
 
   /** Updates the device error. */
-  updateError(error?: DeviceError): void {
+  updateError(error: DeviceError): void {
+    if (error.equals(this.error)) {
+      return;
+    }
+
+    this.validateDefinedProp({ error }, 'error');
     this.validateInstanceProp({ error }, 'error', DeviceError);
+    this.addEvent(
+      new DeviceErrorChangedDomainEvent({
+        aggregateId: this.id,
+        previousError: this.error,
+        currentError: error,
+      }),
+    );
     this.props.error = error;
   }
 
   /** Updates the device fan speed. */
-  updateFanSpeed(fanSpeed?: DeviceFanSpeed): void {
+  updateFanSpeed(fanSpeed: DeviceFanSpeed): void {
+    if (fanSpeed.equals(this.fanSpeed)) {
+      return;
+    }
+
+    this.validateDefinedProp({ fanSpeed }, 'fanSpeed');
     this.validateInstanceProp({ fanSpeed }, 'fanSpeed', DeviceFanSpeed);
+    this.addEvent(
+      new DeviceFanSpeedChangedDomainEvent({
+        aggregateId: this.id,
+        previousFanSpeed: this.fanSpeed,
+        currentFanSpeed: fanSpeed,
+      }),
+    );
     this.props.fanSpeed = fanSpeed;
   }
 
   /** Updates the device water level. */
-  updateWaterLevel(waterLevel?: DeviceWaterLevel): void {
+  updateWaterLevel(waterLevel: DeviceWaterLevel): void {
+    if (waterLevel.equals(this.waterLevel)) {
+      return;
+    }
+
+    this.validateDefinedProp({ waterLevel }, 'waterLevel');
     this.validateInstanceProp({ waterLevel }, 'waterLevel', DeviceWaterLevel);
+    this.addEvent(
+      new DeviceWaterLevelChangedDomainEvent({
+        aggregateId: this.id,
+        previousWaterLevel: this.waterLevel,
+        currentWaterLevel: waterLevel,
+      }),
+    );
     this.props.waterLevel = waterLevel;
   }
 
   /** Updates whether the device has a mop attached. */
-  updateHasMopAttached(value: boolean): void {
-    this.validateTypeProp({ hasMopAttached: value }, 'hasMopAttached', 'boolean');
-    this.props.hasMopAttached = value;
+  updateHasMopAttached(hasMopAttached: boolean): void {
+    if (hasMopAttached === this.hasMopAttached) {
+      return;
+    }
+
+    this.validateDefinedProp({ hasMopAttached }, 'hasMopAttached');
+    this.validateTypeProp({ hasMopAttached }, 'hasMopAttached', 'boolean');
+    this.addEvent(
+      new DeviceMopAttachedDomainEvent({
+        aggregateId: this.id,
+        isAttached: hasMopAttached,
+      }),
+    );
+    this.props.hasMopAttached = hasMopAttached;
   }
 
   /** Updates whether the device has a waiting map. */
-  updateHasWaitingMap(value: boolean): void {
-    this.validateTypeProp({ hasWaitingMap: value }, 'hasWaitingMap', 'boolean');
-    this.props.hasWaitingMap = value;
+  updateHasWaitingMap(hasWaitingMap: boolean): void {
+    if (hasWaitingMap === this.hasWaitingMap) {
+      return;
+    }
+
+    this.validateDefinedProp({ hasWaitingMap }, 'hasWaitingMap');
+    this.validateTypeProp({ hasWaitingMap }, 'hasWaitingMap', 'boolean');
+    this.addEvent(
+      new DeviceMapPendingDomainEvent({
+        aggregateId: this.id,
+        isPending: hasWaitingMap,
+      }),
+    );
+    this.props.hasWaitingMap = hasWaitingMap;
   }
 
   protected validate(props: DeviceProps): void {

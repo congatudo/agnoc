@@ -4,10 +4,17 @@ import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery
 import { DeviceCleanWorkChangedDomainEvent } from '../domain-events/device-clean-work-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
+import { DeviceErrorChangedDomainEvent } from '../domain-events/device-error-changed.domain-event';
+import { DeviceFanSpeedChangedDomainEvent } from '../domain-events/device-fan-speed-changed.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
+import { DeviceMapPendingDomainEvent } from '../domain-events/device-map-pending.domain-event';
+import { DeviceModeChangedDomainEvent } from '../domain-events/device-mode-changed.domain-event';
+import { DeviceMopAttachedDomainEvent } from '../domain-events/device-mop-attached.domain-event';
 import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
 import { DeviceSettingsChangedDomainEvent } from '../domain-events/device-settings-changed.domain-event';
+import { DeviceStateChangedDomainEvent } from '../domain-events/device-state-changed.domain-event';
 import { DeviceVersionChangedDomainEvent } from '../domain-events/device-version-changed.domain-event';
+import { DeviceWaterLevelChangedDomainEvent } from '../domain-events/device-water-level-changed.domain-event';
 import { CleanSize } from '../domain-primitives/clean-size.domain-primitive';
 import { DeviceBattery } from '../domain-primitives/device-battery.domain-primitive';
 import { DeviceError, DeviceErrorValue } from '../domain-primitives/device-error.domain-primitive';
@@ -515,76 +522,201 @@ describe('Device', function () {
 
   describe('#updateState()', function () {
     it('should update the device state', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const state = new DeviceState(DeviceStateValue.Idle);
+      const previousState = new DeviceState(DeviceStateValue.Idle);
+      const currentState = new DeviceState(DeviceStateValue.Docked);
+      const device = new Device({ ...givenSomeDeviceProps(), state: previousState });
 
-      device.updateState(state);
+      device.updateState(currentState);
 
-      expect(device.state).to.be.equal(state);
+      expect(device.state).to.be.equal(currentState);
+
+      const event = device.domainEvents[1] as DeviceStateChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceStateChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousState).to.be.equal(previousState);
+      expect(event.currentState).to.be.equal(currentState);
+    });
+
+    it('should not update the device state when value is equal', function () {
+      const previousState = new DeviceState(DeviceStateValue.Idle);
+      const currentState = new DeviceState(DeviceStateValue.Idle);
+      const device = new Device({ ...givenSomeDeviceProps(), state: previousState });
+
+      device.updateState(currentState);
+
+      expect(device.state).to.be.equal(previousState);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 
   describe('#updateMode()', function () {
     it('should update the device mode', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const mode = new DeviceMode(DeviceModeValue.Spot);
+      const previousMode = new DeviceMode(DeviceModeValue.None);
+      const currentMode = new DeviceMode(DeviceModeValue.Mop);
+      const device = new Device({ ...givenSomeDeviceProps(), mode: previousMode });
 
-      device.updateMode(mode);
+      device.updateMode(currentMode);
 
-      expect(device.mode).to.be.equal(mode);
+      expect(device.mode).to.be.equal(currentMode);
+
+      const event = device.domainEvents[1] as DeviceModeChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceModeChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousMode).to.be.equal(previousMode);
+      expect(event.currentMode).to.be.equal(currentMode);
+    });
+
+    it('should not update the device mode when value is equal', function () {
+      const previousMode = new DeviceMode(DeviceModeValue.None);
+      const currentMode = new DeviceMode(DeviceModeValue.None);
+      const device = new Device({ ...givenSomeDeviceProps(), mode: previousMode });
+
+      device.updateMode(currentMode);
+
+      expect(device.mode).to.be.equal(previousMode);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 
   describe('#updateError()', function () {
     it('should update the device error', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const error = new DeviceError(DeviceErrorValue.None);
+      const previousError = new DeviceError(DeviceErrorValue.None);
+      const currentError = new DeviceError(DeviceErrorValue.WheelUp);
+      const device = new Device({ ...givenSomeDeviceProps(), error: previousError });
 
-      device.updateError(error);
+      device.updateError(currentError);
 
-      expect(device.error).to.be.equal(error);
+      expect(device.error).to.be.equal(currentError);
+
+      const event = device.domainEvents[1] as DeviceErrorChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceErrorChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousError).to.be.equal(previousError);
+      expect(event.currentError).to.be.equal(currentError);
+    });
+
+    it('should not update the device error when value is equal', function () {
+      const previousError = new DeviceError(DeviceErrorValue.None);
+      const currentError = new DeviceError(DeviceErrorValue.None);
+      const device = new Device({ ...givenSomeDeviceProps(), error: previousError });
+
+      device.updateError(currentError);
+
+      expect(device.error).to.be.equal(previousError);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 
   describe('#updateFanSpeed()', function () {
-    it('should update the device fan speed', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const fanSpeed = new DeviceFanSpeed(DeviceFanSpeedValue.Low);
+    it('should update the device fanSpeed', function () {
+      const previousFanSpeed = new DeviceFanSpeed(DeviceFanSpeedValue.Off);
+      const currentFanSpeed = new DeviceFanSpeed(DeviceFanSpeedValue.Low);
+      const device = new Device({ ...givenSomeDeviceProps(), fanSpeed: previousFanSpeed });
 
-      device.updateFanSpeed(fanSpeed);
+      device.updateFanSpeed(currentFanSpeed);
 
-      expect(device.fanSpeed).to.be.equal(fanSpeed);
+      expect(device.fanSpeed).to.be.equal(currentFanSpeed);
+
+      const event = device.domainEvents[1] as DeviceFanSpeedChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceFanSpeedChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousFanSpeed).to.be.equal(previousFanSpeed);
+      expect(event.currentFanSpeed).to.be.equal(currentFanSpeed);
+    });
+
+    it('should not update the device fanSpeed when value is equal', function () {
+      const previousFanSpeed = new DeviceFanSpeed(DeviceFanSpeedValue.Off);
+      const currentFanSpeed = new DeviceFanSpeed(DeviceFanSpeedValue.Off);
+      const device = new Device({ ...givenSomeDeviceProps(), fanSpeed: previousFanSpeed });
+
+      device.updateFanSpeed(currentFanSpeed);
+
+      expect(device.fanSpeed).to.be.equal(previousFanSpeed);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 
   describe('#updateWaterLevel()', function () {
-    it('should update the device water level', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const waterLevel = new DeviceWaterLevel(DeviceWaterLevelValue.Low);
+    it('should update the device waterLevel', function () {
+      const previousWaterLevel = new DeviceWaterLevel(DeviceWaterLevelValue.Off);
+      const currentWaterLevel = new DeviceWaterLevel(DeviceWaterLevelValue.Low);
+      const device = new Device({ ...givenSomeDeviceProps(), waterLevel: previousWaterLevel });
 
-      device.updateWaterLevel(waterLevel);
+      device.updateWaterLevel(currentWaterLevel);
 
-      expect(device.waterLevel).to.be.equal(waterLevel);
+      expect(device.waterLevel).to.be.equal(currentWaterLevel);
+
+      const event = device.domainEvents[1] as DeviceWaterLevelChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceWaterLevelChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousWaterLevel).to.be.equal(previousWaterLevel);
+      expect(event.currentWaterLevel).to.be.equal(currentWaterLevel);
+    });
+
+    it('should not update the device waterLevel when value is equal', function () {
+      const previousWaterLevel = new DeviceWaterLevel(DeviceWaterLevelValue.Off);
+      const currentWaterLevel = new DeviceWaterLevel(DeviceWaterLevelValue.Off);
+      const device = new Device({ ...givenSomeDeviceProps(), waterLevel: previousWaterLevel });
+
+      device.updateWaterLevel(currentWaterLevel);
+
+      expect(device.waterLevel).to.be.equal(previousWaterLevel);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 
   describe('#updateHasMopAttached()', function () {
-    it('should update the device has mop attached', function () {
+    it('should update the device hasMopAttached', function () {
+      const device = new Device({ ...givenSomeDeviceProps(), hasMopAttached: false });
+
+      device.updateHasMopAttached(true);
+
+      expect(device.hasMopAttached).to.be.equal(true);
+
+      const event = device.domainEvents[1] as DeviceMopAttachedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceMopAttachedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.isAttached).to.be.equal(true);
+    });
+
+    it('should not update the device hasMopAttached when value is equal', function () {
       const device = new Device({ ...givenSomeDeviceProps(), hasMopAttached: true });
 
-      device.updateHasMopAttached(false);
+      device.updateHasMopAttached(true);
 
-      expect(device.hasMopAttached).to.be.equal(false);
+      expect(device.hasMopAttached).to.be.equal(true);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 
   describe('#updateHasWaitingMap()', function () {
-    it('should update the device has waiting map', function () {
+    it('should update the device hasWaitingMap', function () {
+      const device = new Device({ ...givenSomeDeviceProps(), hasWaitingMap: false });
+
+      device.updateHasWaitingMap(true);
+
+      expect(device.hasWaitingMap).to.be.equal(true);
+
+      const event = device.domainEvents[1] as DeviceMapPendingDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceMapPendingDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.isPending).to.be.equal(true);
+    });
+
+    it('should not update the device hasWaitingMap when value is equal', function () {
       const device = new Device({ ...givenSomeDeviceProps(), hasWaitingMap: true });
 
-      device.updateHasWaitingMap(false);
+      device.updateHasWaitingMap(true);
 
-      expect(device.hasWaitingMap).to.be.equal(false);
+      expect(device.hasWaitingMap).to.be.equal(true);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 });
