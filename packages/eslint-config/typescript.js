@@ -18,7 +18,7 @@ module.exports = {
     'plugin:chai-friendly/recommended',
     'plugin:prettier/recommended',
   ],
-  plugins: ['eslint-plugin-tsdoc'],
+  plugins: ['eslint-plugin-tsdoc', '@guardian/eslint-plugin-tsdoc-required'],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts'],
@@ -77,6 +77,7 @@ module.exports = {
         groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
       },
     ],
+    '@guardian/tsdoc-required/tsdoc-required': 'warn',
   },
   overrides: [
     {

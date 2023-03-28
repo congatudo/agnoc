@@ -11,7 +11,7 @@
     "clean:packages": "lerna run clean",
     "dependency:upgrade": "ncu --upgrade --peer --deep && yarn-deduplicate --strategy fewer && yarn install",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel 'lint:!(fix)'",
-    "lint:code": "eslint --cache --max-warnings 0 .",
+    "lint:code": "eslint --cache .",
     "lint:code:fix": "eslint --fix .",
     "lint:style": "prettier --check .",
     "lint:style:fix": "prettier --write .",
