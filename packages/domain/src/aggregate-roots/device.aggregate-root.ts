@@ -1,4 +1,4 @@
-import { AggregateRoot, ID } from '@agnoc/toolkit';
+import { AggregateRoot, ID, symmetricDifference } from '@agnoc/toolkit';
 import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery-changed.domain-event';
 import { DeviceCleanWorkChangedDomainEvent } from '../domain-events/device-clean-work-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
@@ -6,10 +6,12 @@ import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain
 import { DeviceErrorChangedDomainEvent } from '../domain-events/device-error-changed.domain-event';
 import { DeviceFanSpeedChangedDomainEvent } from '../domain-events/device-fan-speed-changed.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
+import { DeviceMapChangedDomainEvent } from '../domain-events/device-map-changed.domain-event';
 import { DeviceMapPendingDomainEvent } from '../domain-events/device-map-pending.domain-event';
 import { DeviceModeChangedDomainEvent } from '../domain-events/device-mode-changed.domain-event';
 import { DeviceMopAttachedDomainEvent } from '../domain-events/device-mop-attached.domain-event';
 import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
+import { DeviceOrdersChangedDomainEvent } from '../domain-events/device-orders-changed.domain-event';
 import { DeviceSettingsChangedDomainEvent } from '../domain-events/device-settings-changed.domain-event';
 import { DeviceStateChangedDomainEvent } from '../domain-events/device-state-changed.domain-event';
 import { DeviceVersionChangedDomainEvent } from '../domain-events/device-version-changed.domain-event';
@@ -249,8 +251,24 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   /** Updates the device orders. */
-  updateOrders(orders?: DeviceOrder[]): void {
+  updateOrders(orders: DeviceOrder[]): void {
+    const previousOrderIds = this.orders?.map((order) => order.id.value) ?? [];
+    const currentOrderIds = orders.map((order) => order.id.value);
+    const diff = symmetricDifference(previousOrderIds, currentOrderIds);
+
+    if (diff.length === 0) {
+      return;
+    }
+
+    this.validateDefinedProp({ orders }, 'orders');
     this.validateArrayProp({ orders }, 'orders', DeviceOrder);
+    this.addEvent(
+      new DeviceOrdersChangedDomainEvent({
+        aggregateId: this.id,
+        previousOrders: this.orders,
+        currentOrders: orders,
+      }),
+    );
     this.props.orders = orders;
   }
 
@@ -261,8 +279,17 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   /** Updates the device map. */
-  updateMap(map?: DeviceMap): void {
+  updateMap(map: DeviceMap): void {
+    // TODO: prevent map changed event if the map is not changed
+    this.validateDefinedProp({ map }, 'map');
     this.validateInstanceProp({ map }, 'map', DeviceMap);
+    this.addEvent(
+      new DeviceMapChangedDomainEvent({
+        aggregateId: this.id,
+        previousMap: this.map,
+        currentMap: map,
+      }),
+    );
     this.props.map = map;
   }
 

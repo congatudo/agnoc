@@ -44,6 +44,66 @@ describe('DeviceSettingsUpdateEventHandler', function () {
             beginTime: 0,
             endTime: 180,
           },
+          cleanPreference: {},
+          ota: {
+            forceupgrade: false,
+            newVersion: false,
+            otaPackageVersion: '1.0.0',
+            packageSize: '0',
+            remoteUrl: '',
+            systemVersion: '1.0.0',
+          },
+        },
+      });
+      const packet = new Packet({ ...givenSomePacketProps(), payload });
+
+      when(voiceSettingMapper.toDomain(anything())).thenReturn(voiceSetting);
+      when(packetMessage.packet).thenReturn(packet);
+      when(packetMessage.device).thenReturn(instance(device));
+
+      await eventHandler.handle(instance(packetMessage));
+
+      const [deviceSettings] = capture(device.updateSettings).first();
+
+      expect(deviceSettings).to.be.instanceOf(DeviceSettings);
+      expect(deviceSettings.voice).to.equal(voiceSetting);
+      expect(
+        deviceSettings.quietHours.equals(
+          new QuietHoursSetting({
+            isEnabled: true,
+            beginTime: new DeviceTime({ hours: 0, minutes: 0 }),
+            endTime: new DeviceTime({ hours: 3, minutes: 0 }),
+          }),
+        ),
+      ).to.be.true;
+      expect(deviceSettings.ecoMode.equals(new DeviceSetting({ isEnabled: false }))).to.be.true;
+      expect(deviceSettings.repeatClean.equals(new DeviceSetting({ isEnabled: false }))).to.be.true;
+      expect(deviceSettings.brokenClean.equals(new DeviceSetting({ isEnabled: false }))).to.be.true;
+      expect(deviceSettings.carpetMode.equals(new DeviceSetting({ isEnabled: false }))).to.be.true;
+      expect(deviceSettings.historyMap.equals(new DeviceSetting({ isEnabled: false }))).to.be.true;
+
+      verify(packetMessage.assertDevice()).once();
+      verify(voiceSettingMapper.toDomain(deepEqual({ isEnabled: true, volume: 2 }))).once();
+      verify(device.updateSettings(deviceSettings)).once();
+      verify(deviceRepository.saveOne(instance(device))).once();
+      verify(packetMessage.respond('PUSH_DEVICE_AGENT_SETTING_RSP', deepEqual({ result: 0 }))).once();
+    });
+
+    it('should update the optional values of device settings', async function () {
+      const voiceSetting = new VoiceSetting(givenSomeVoiceSettingProps());
+      const payload = new Payload({
+        opcode: OPCode.fromName('PUSH_DEVICE_AGENT_SETTING_REQ'),
+        data: {
+          deviceId: 1,
+          voice: {
+            voiceMode: true,
+            volume: 2,
+          },
+          quietHours: {
+            isOpen: true,
+            beginTime: 0,
+            endTime: 180,
+          },
           cleanPreference: {
             ecoMode: true,
             repeatClean: true,
@@ -87,16 +147,6 @@ describe('DeviceSettingsUpdateEventHandler', function () {
       const [deviceSettings] = capture(device.updateSettings).first();
 
       expect(deviceSettings).to.be.instanceOf(DeviceSettings);
-      expect(deviceSettings.voice).to.equal(voiceSetting);
-      expect(
-        deviceSettings.quietHours.equals(
-          new QuietHoursSetting({
-            isEnabled: true,
-            beginTime: new DeviceTime({ hours: 0, minutes: 0 }),
-            endTime: new DeviceTime({ hours: 3, minutes: 0 }),
-          }),
-        ),
-      ).to.be.true;
       expect(deviceSettings.ecoMode.equals(new DeviceSetting({ isEnabled: true }))).to.be.true;
       expect(deviceSettings.repeatClean.equals(new DeviceSetting({ isEnabled: true }))).to.be.true;
       expect(deviceSettings.brokenClean.equals(new DeviceSetting({ isEnabled: true }))).to.be.true;
@@ -104,10 +154,8 @@ describe('DeviceSettingsUpdateEventHandler', function () {
       expect(deviceSettings.historyMap.equals(new DeviceSetting({ isEnabled: true }))).to.be.true;
 
       verify(packetMessage.assertDevice()).once();
-      verify(voiceSettingMapper.toDomain(deepEqual({ isEnabled: true, volume: 2 }))).once();
       verify(device.updateSettings(deviceSettings)).once();
       verify(deviceRepository.saveOne(instance(device))).once();
-      verify(packetMessage.respond('PUSH_DEVICE_AGENT_SETTING_RSP', deepEqual({ result: 0 }))).once();
     });
   });
 });

@@ -57,5 +57,9 @@ function filterProperties(_: string, value: unknown) {
     return '[Buffer]';
   }
 
+  if (Array.isArray(value) && value.length > 10) {
+    return value.slice(0, 10).concat(`[${value.length} more items...]`) as unknown[];
+  }
+
   return value;
 }

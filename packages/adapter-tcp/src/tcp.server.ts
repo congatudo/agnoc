@@ -14,13 +14,16 @@ import { LockDeviceWhenDeviceIsConnectedEventHandler } from './domain-event-hand
 import { QueryDeviceInfoWhenDeviceIsLockedEventHandler } from './domain-event-handlers/query-device-info-when-device-is-locked-event-handler.event-handler';
 import { SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler } from './domain-event-handlers/set-device-connected-when-connection-device-changed.event-handler';
 import { PacketConnectionFactory } from './factories/connection.factory';
+import { CleanModeMapper } from './mappers/clean-mode.mapper';
 import { DeviceBatteryMapper } from './mappers/device-battery.mapper';
 import { DeviceErrorMapper } from './mappers/device-error.mapper';
 import { DeviceFanSpeedMapper } from './mappers/device-fan-speed.mapper';
 import { DeviceModeMapper } from './mappers/device-mode.mapper';
+import { DeviceOrderMapper } from './mappers/device-order.mapper';
 import { DeviceStateMapper } from './mappers/device-state.mapper';
 import { DeviceWaterLevelMapper } from './mappers/device-water-level.mapper';
 import { VoiceSettingMapper } from './mappers/voice-setting.mapper';
+import { WeekDayListMapper } from './mappers/week-day-list.mapper';
 import { NTPServerConnectionHandler } from './ntp-server.connection-handler';
 import { PacketConnectionFinderService } from './packet-connection-finder.service';
 import { ClientHeartbeatEventHandler } from './packet-event-handlers/client-heartbeat.event-handler';
@@ -38,6 +41,7 @@ import { DeviceMapWorkStatusUpdateEventHandler } from './packet-event-handlers/d
 import { DeviceMemoryMapInfoEventHandler } from './packet-event-handlers/device-memory-map-info.event-handler';
 import { DeviceNetworkUpdateEventHandler } from './packet-event-handlers/device-network-update.event-handler';
 import { DeviceOfflineEventHandler } from './packet-event-handlers/device-offline.event-handler';
+import { DeviceOrderListUpdateEventHandler } from './packet-event-handlers/device-order-list-update.event-handler';
 import { DeviceRegisterEventHandler } from './packet-event-handlers/device-register.event-handler';
 import { DeviceSettingsUpdateEventHandler } from './packet-event-handlers/device-settings-update.event-handler';
 import { DeviceTimeUpdateEventHandler } from './packet-event-handlers/device-time-update.event-handler';
@@ -79,6 +83,14 @@ export class TCPServer implements Server {
     const deviceModeMapper = new DeviceModeMapper();
     const deviceErrorMapper = new DeviceErrorMapper();
     const deviceBatteryMapper = new DeviceBatteryMapper();
+    const cleanModeMapper = new CleanModeMapper();
+    const weekDayListMapper = new WeekDayListMapper();
+    const deviceOrderMapper = new DeviceOrderMapper(
+      deviceFanSpeedMapper,
+      deviceWaterLevelMapper,
+      cleanModeMapper,
+      weekDayListMapper,
+    );
 
     // Packet event bus
     const packetEventBus = new PacketEventBus();
@@ -117,7 +129,7 @@ export class TCPServer implements Server {
       new DeviceGetAllGlobalMapEventHandler(),
       new DeviceLocatedEventHandler(),
       new DeviceLockedEventHandler(this.deviceRepository),
-      new DeviceMapChargerPositionUpdateEventHandler(),
+      new DeviceMapChargerPositionUpdateEventHandler(this.deviceRepository),
       new DeviceMapWorkStatusUpdateEventHandler(
         deviceStateMapper,
         deviceModeMapper,
@@ -129,6 +141,7 @@ export class TCPServer implements Server {
       ),
       new DeviceMemoryMapInfoEventHandler(),
       new DeviceOfflineEventHandler(),
+      new DeviceOrderListUpdateEventHandler(deviceOrderMapper, this.deviceRepository),
       new DeviceRegisterEventHandler(this.deviceRepository),
       new DeviceSettingsUpdateEventHandler(deviceVoiceMapper, this.deviceRepository),
       new DeviceTimeUpdateEventHandler(),

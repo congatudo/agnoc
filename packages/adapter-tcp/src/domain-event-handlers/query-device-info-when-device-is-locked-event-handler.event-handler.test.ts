@@ -33,6 +33,7 @@ describe('QueryDeviceInfoWhenDeviceIsLockedEventHandler', function () {
 
       await eventHandler.handle(event);
 
+      verify(packetConnection.send('DEVICE_ORDERLIST_GETTING_REQ', deepEqual({}))).once();
       verify(packetConnection.send('DEVICE_STATUS_GETTING_REQ', deepEqual({}))).once();
       verify(packetConnection.send('DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ', deepEqual({ unk1: 0, unk2: '' }))).once();
       verify(packetConnection.send('DEVICE_GETTIME_REQ', deepEqual({}))).once();
@@ -50,6 +51,7 @@ describe('QueryDeviceInfoWhenDeviceIsLockedEventHandler', function () {
 
       await eventHandler.handle(event);
 
+      verify(packetConnection.send('DEVICE_ORDERLIST_GETTING_REQ', deepEqual({}))).once();
       verify(packetConnection.send('DEVICE_STATUS_GETTING_REQ', deepEqual({}))).once();
       verify(packetConnection.send('DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ', deepEqual({ unk1: 0, unk2: '' }))).once();
       verify(packetConnection.send('DEVICE_GETTIME_REQ', deepEqual({}))).once();

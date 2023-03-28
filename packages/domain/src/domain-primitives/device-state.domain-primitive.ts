@@ -2,14 +2,14 @@ import { DomainPrimitive } from '@agnoc/toolkit';
 
 /** The possible values of a device state. */
 export enum DeviceStateValue {
-  Error = 'error',
-  Docked = 'docked',
-  Idle = 'idle',
-  Returning = 'returning',
-  Cleaning = 'cleaning',
-  Paused = 'paused',
-  ManualControl = 'manual_control',
-  Moving = 'moving',
+  Error = 'Error',
+  Docked = 'Docked',
+  Idle = 'Idle',
+  Returning = 'Returning',
+  Cleaning = 'Cleaning',
+  Paused = 'Paused',
+  ManualControl = 'ManualControl',
+  Moving = 'Moving',
 }
 
 /** Describe the state of a device. */

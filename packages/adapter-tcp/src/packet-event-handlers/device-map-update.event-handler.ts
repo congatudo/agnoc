@@ -9,7 +9,7 @@ import {
   Room,
   Zone,
 } from '@agnoc/domain';
-import { DomainException, ID, isPresent } from '@agnoc/toolkit';
+import { ID, isPresent } from '@agnoc/toolkit';
 import type { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
 import type { DeviceErrorMapper } from '../mappers/device-error.mapper';
 import type { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
@@ -32,9 +32,7 @@ export class DeviceMapUpdateEventHandler implements PacketEventHandler {
   ) {}
 
   async handle(message: PacketMessage<'DEVICE_MAPID_GET_GLOBAL_INFO_RSP'>): Promise<void> {
-    if (!message.device) {
-      throw new DomainException('Device not found');
-    }
+    message.assertDevice();
 
     const {
       statusInfo,
@@ -99,8 +97,6 @@ export class DeviceMapUpdateEventHandler implements PacketEventHandler {
       };
 
       map = map ? map.clone(props) : new DeviceMap(props);
-
-      message.device.updateMap(map);
     }
 
     if (map) {
@@ -192,6 +188,10 @@ export class DeviceMapUpdateEventHandler implements PacketEventHandler {
             .filter(isPresent),
         );
       }
+    }
+
+    if (map) {
+      message.device.updateMap(map);
     }
 
     await this.deviceRepository.saveOne(message.device);

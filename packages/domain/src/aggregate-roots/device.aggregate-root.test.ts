@@ -1,4 +1,4 @@
-import { AggregateRoot, ArgumentInvalidException, ArgumentNotProvidedException } from '@agnoc/toolkit';
+import { AggregateRoot, ArgumentInvalidException, ArgumentNotProvidedException, ID } from '@agnoc/toolkit';
 import { expect } from 'chai';
 import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery-changed.domain-event';
 import { DeviceCleanWorkChangedDomainEvent } from '../domain-events/device-clean-work-changed.domain-event';
@@ -7,10 +7,12 @@ import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain
 import { DeviceErrorChangedDomainEvent } from '../domain-events/device-error-changed.domain-event';
 import { DeviceFanSpeedChangedDomainEvent } from '../domain-events/device-fan-speed-changed.domain-event';
 import { DeviceLockedDomainEvent } from '../domain-events/device-locked.domain-event';
+import { DeviceMapChangedDomainEvent } from '../domain-events/device-map-changed.domain-event';
 import { DeviceMapPendingDomainEvent } from '../domain-events/device-map-pending.domain-event';
 import { DeviceModeChangedDomainEvent } from '../domain-events/device-mode-changed.domain-event';
 import { DeviceMopAttachedDomainEvent } from '../domain-events/device-mop-attached.domain-event';
 import { DeviceNetworkChangedDomainEvent } from '../domain-events/device-network-changed.domain-event';
+import { DeviceOrdersChangedDomainEvent } from '../domain-events/device-orders-changed.domain-event';
 import { DeviceSettingsChangedDomainEvent } from '../domain-events/device-settings-changed.domain-event';
 import { DeviceStateChangedDomainEvent } from '../domain-events/device-state-changed.domain-event';
 import { DeviceVersionChangedDomainEvent } from '../domain-events/device-version-changed.domain-event';
@@ -428,13 +430,31 @@ describe('Device', function () {
   });
 
   describe('#updateOrders()', function () {
-    it('should update the device orders', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const orders = [new DeviceOrder(givenSomeDeviceOrderProps())];
+    it('should update the device order', function () {
+      const currentOrders = [new DeviceOrder({ ...givenSomeDeviceOrderProps(), id: new ID(2) })];
+      const device = new Device({ ...givenSomeDeviceProps(), orders: undefined });
 
-      device.updateOrders(orders);
+      device.updateOrders(currentOrders);
 
-      expect(device.orders).to.be.equal(orders);
+      expect(device.orders).to.be.equal(currentOrders);
+
+      const event = device.domainEvents[1] as DeviceOrdersChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceOrdersChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousOrders).to.be.equal(undefined);
+      expect(event.currentOrders).to.be.equal(currentOrders);
+    });
+
+    it('should not update the device order when value is equal', function () {
+      const previousOrders = [new DeviceOrder({ ...givenSomeDeviceOrderProps(), id: new ID(1) })];
+      const currentOrders = [new DeviceOrder({ ...givenSomeDeviceOrderProps(), id: new ID(1) })];
+      const device = new Device({ ...givenSomeDeviceProps(), orders: previousOrders });
+
+      device.updateOrders(currentOrders);
+
+      expect(device.orders).to.be.equal(previousOrders);
+      expect(device.domainEvents[1]).to.not.exist;
     });
   });
 
@@ -451,12 +471,20 @@ describe('Device', function () {
 
   describe('#updateMap()', function () {
     it('should update the device map', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const map = new DeviceMap(givenSomeDeviceMapProps());
+      const previousMap = new DeviceMap({ ...givenSomeDeviceMapProps(), id: new ID(1) });
+      const currentMap = new DeviceMap({ ...givenSomeDeviceMapProps(), id: new ID(2) });
+      const device = new Device({ ...givenSomeDeviceProps(), map: previousMap });
 
-      device.updateMap(map);
+      device.updateMap(currentMap);
 
-      expect(device.map).to.be.equal(map);
+      expect(device.map).to.be.equal(currentMap);
+
+      const event = device.domainEvents[1] as DeviceMapChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceMapChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousMap).to.be.equal(previousMap);
+      expect(event.currentMap).to.be.equal(currentMap);
     });
   });
 

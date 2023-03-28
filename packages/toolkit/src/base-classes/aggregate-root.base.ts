@@ -18,16 +18,18 @@ export abstract class AggregateRoot<T extends EntityProps = EntityProps> extends
   }
 
   async publishEvents(eventBus: EventBus): Promise<void> {
+    const domainEvents = this.domainEvents;
+
+    this.clearEvents();
+
     await Promise.all(
-      this.domainEvents.map(async (domainEvent) => {
+      domainEvents.map(async (domainEvent) => {
         this.debug(
           `publishing domain event '${domainEvent.constructor.name}' with data: ${JSON.stringify(domainEvent)}`,
         );
         return eventBus.emit(domainEvent.constructor.name, domainEvent);
       }),
     );
-
-    this.clearEvents();
   }
 
   protected addEvent(domainEvent: DomainEvent): void {

@@ -14,6 +14,7 @@ export class QueryDeviceInfoWhenDeviceIsLockedEventHandler implements DomainEven
       return;
     }
 
+    await connection.send('DEVICE_ORDERLIST_GETTING_REQ', {});
     await connection.send('DEVICE_STATUS_GETTING_REQ', {});
     await connection.send('DEVICE_GET_ALL_GLOBAL_MAP_INFO_REQ', { unk1: 0, unk2: '' });
 

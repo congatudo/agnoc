@@ -341,8 +341,8 @@ message DEVICE_EVENT_REPORT_CLEANTASK {
   required uint32 cleanId = 1;
   required uint32 startTime = 2;
   required uint32 endTime = 3;
-  required uint32 unk4 = 4;
-  required uint32 unk5 = 5;
+  required uint32 cleanSize = 4;
+  required uint32 cleanTime = 5;
   required uint32 unk6 = 6;
   required uint32 unk7 = 7;
   required Unk1 unk8 = 8;
@@ -357,7 +357,7 @@ message DEVICE_CLEANMAP_BINDATA_REPORT_REQ {
 
 message DEVICE_CLEANMAP_BINDATA_REPORT_RSP {
   required int32 result = 1;
-  required uint32 cleanId = 3;
+  optional uint32 cleanId = 3;
 }
 
 message DEVICE_OFFLINE_CMD {
@@ -568,4 +568,25 @@ message DEVICE_MOP_FLOOR_CLEAN_REQ {
 
 message DEVICE_MOP_FLOOR_CLEAN_RSP {
   required int32 result = 1;
+}
+
+message USER_DELETE_DEVICE_ORDER_REQ {
+  required string unk1 = 1;
+  required uint32 deviceId = 2;
+  required uint32 orderId = 3;
+}
+
+message USER_DELETE_DEVICE_ORDER_RSP {
+  required int32 result = 1;
+  required uint32 unk1 = 3;
+}
+
+message DEVICE_MAPID_SET_NAME_PARAMS_REQ {
+  required uint32 mapHeadId = 1;
+  required string name = 3;
+}
+
+message DEVICE_MAPID_SET_NAME_PARAMS_RSP {
+  required int32 result = 1;
+  required uint32 unk1 = 3;
 }

@@ -8,7 +8,7 @@ export class DeviceSettingsUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'PUSH_DEVICE_AGENT_SETTING_REQ';
 
   constructor(
-    private readonly deviceVoiceMapper: VoiceSettingMapper,
+    private readonly voiceSettingMapper: VoiceSettingMapper,
     private readonly deviceRepository: DeviceRepository,
   ) {}
 
@@ -17,7 +17,7 @@ export class DeviceSettingsUpdateEventHandler implements PacketEventHandler {
 
     const data = message.packet.payload.data;
     const deviceSettings = new DeviceSettings({
-      voice: this.deviceVoiceMapper.toDomain({
+      voice: this.voiceSettingMapper.toDomain({
         isEnabled: data.voice.voiceMode,
         volume: data.voice.volume,
       }),

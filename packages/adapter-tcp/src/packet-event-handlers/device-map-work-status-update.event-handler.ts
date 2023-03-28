@@ -1,5 +1,5 @@
 import { CleanSize, DeviceCleanWork, DeviceTime } from '@agnoc/domain';
-import { DomainException, isPresent } from '@agnoc/toolkit';
+import { isPresent } from '@agnoc/toolkit';
 import type { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
 import type { DeviceErrorMapper } from '../mappers/device-error.mapper';
 import type { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
@@ -24,9 +24,7 @@ export class DeviceMapWorkStatusUpdateEventHandler implements PacketEventHandler
   ) {}
 
   async handle(message: PacketMessage<'DEVICE_MAPID_WORK_STATUS_PUSH_REQ'>): Promise<void> {
-    if (!message.device) {
-      throw new DomainException('Device not found');
-    }
+    message.assertDevice();
 
     const {
       battery,

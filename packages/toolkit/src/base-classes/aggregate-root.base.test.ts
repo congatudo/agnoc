@@ -1,4 +1,4 @@
-import { anything, capture, imock, instance, when } from '@johanblumenberg/ts-mockito';
+import { anything, capture, defer, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { ID } from '../domain-primitives/id.domain-primitive';
 import { AggregateRoot } from './aggregate-root.base';
@@ -46,6 +46,28 @@ describe('AggregateRoot', function () {
 
     expect(event).to.be.instanceOf(DummyDomainEvent);
     expect(event.aggregateId).to.be.equal(id);
+  });
+
+  it('should publish domain events only once', async function () {
+    const id = ID.generate();
+    const dummyAggregateRoot = new DummyAggregateRoot({ id });
+    const deferEmit = defer();
+
+    when(eventBus.emit(anything(), anything())).thenReturn(deferEmit);
+
+    dummyAggregateRoot.doSomething();
+
+    const promises = Promise.all([
+      dummyAggregateRoot.publishEvents(instance(eventBus)),
+      dummyAggregateRoot.publishEvents(instance(eventBus)),
+    ]);
+
+    await deferEmit.resolve(undefined);
+    await promises;
+
+    expect(dummyAggregateRoot.domainEvents).to.be.lengthOf(0);
+
+    verify(eventBus.emit(anything(), anything())).once();
   });
 
   it('should be able to clear domain events', function () {

@@ -43,6 +43,7 @@ export * from './utils/is-empty.util';
 export * from './utils/is-object.util';
 export * from './utils/is-present.util';
 export * from './utils/stream.util';
+export * from './utils/symmetric-difference.util';
 export * from './utils/to-dash-case.util';
 export * from './utils/to-stream.util';
 export * from './utils/wait-for.util';
