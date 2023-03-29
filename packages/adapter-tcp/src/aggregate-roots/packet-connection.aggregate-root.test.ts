@@ -7,8 +7,8 @@ import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { anything, deepEqual, defer, imock, instance, spy, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { PacketConnection } from './packet-connection.aggregate-root';
-import type { PacketEventBus } from '../packet.event-bus';
-import type { PacketMessage } from '../packet.message';
+import type { PacketEventBus } from '../event-buses/packet.event-bus';
+import type { PacketMessage } from '../objects/packet.message';
 import type { PacketFactory, PacketMapper } from '@agnoc/transport-tcp';
 import type { AddressInfo } from 'net';
 

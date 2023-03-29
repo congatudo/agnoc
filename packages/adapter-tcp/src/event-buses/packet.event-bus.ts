@@ -1,5 +1,5 @@
 import { EventBus } from '@agnoc/toolkit';
-import type { PacketMessage } from './packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { PayloadDataName } from '@agnoc/transport-tcp';
 
 /** Events for the packet event bus. */

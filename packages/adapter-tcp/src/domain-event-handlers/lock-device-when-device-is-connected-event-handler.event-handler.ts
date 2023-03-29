@@ -1,4 +1,4 @@
-import type { PacketConnectionFinderService } from '../packet-connection-finder.service';
+import type { PacketConnectionFinderService } from '../services/packet-connection-finder.service';
 import type { DomainEventHandler, DeviceConnectedDomainEvent } from '@agnoc/domain';
 
 export class LockDeviceWhenDeviceIsConnectedEventHandler implements DomainEventHandler {

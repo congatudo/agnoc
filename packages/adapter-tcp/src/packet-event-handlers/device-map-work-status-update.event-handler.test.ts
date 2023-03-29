@@ -25,7 +25,7 @@ import type { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
 import type { DeviceModeMapper } from '../mappers/device-mode.mapper';
 import type { DeviceStateMapper } from '../mappers/device-state.mapper';
 import type { DeviceWaterLevelMapper } from '../mappers/device-water-level.mapper';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { Device, DeviceRepository } from '@agnoc/domain';
 
 describe('DeviceMapWorkStatusUpdateEventHandler', function () {

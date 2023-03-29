@@ -4,7 +4,7 @@ import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { capture, deepEqual, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { DeviceVersionUpdateEventHandler } from './device-version-update.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { Device, DeviceRepository } from '@agnoc/domain';
 
 describe('DeviceVersionUpdateEventHandler', function () {

@@ -1,4 +1,4 @@
-import { AggregateRoot, ArgumentInvalidException } from '@agnoc/toolkit';
+import { AggregateRoot, ArgumentInvalidException, DomainException } from '@agnoc/toolkit';
 import { expect } from 'chai';
 import { ConnectionDeviceChangedDomainEvent } from '../domain-events/connection-device-changed.domain-event';
 import { givenSomeDeviceProps, givenSomeConnectionProps } from '../test-support';
@@ -107,6 +107,24 @@ describe('Connection', function () {
         ArgumentInvalidException,
         `Value 'foo' for property 'device' of DummyConnection is not an instance of Device`,
       );
+    });
+  });
+
+  describe('#assertDevice()', function () {
+    it('should throw an error when the connection does not has a device set', function () {
+      const connection = new DummyConnection({ ...givenSomeConnectionProps(), device: undefined });
+
+      expect(() => connection.assertDevice()).to.throw(
+        DomainException,
+        'Connection does not have a reference to a device',
+      );
+    });
+
+    it('should not throw an error when the connection has a device set', function () {
+      const device = new Device(givenSomeDeviceProps());
+      const connection = new DummyConnection({ ...givenSomeConnectionProps(), device });
+
+      expect(() => connection.assertDevice()).to.not.throw(DomainException);
     });
   });
 });

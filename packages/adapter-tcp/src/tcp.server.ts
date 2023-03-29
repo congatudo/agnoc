@@ -1,4 +1,4 @@
-import { EventHandlerRegistry } from '@agnoc/toolkit';
+import { EventHandlerRegistry, WaiterService } from '@agnoc/toolkit';
 import {
   getCustomDecoders,
   getProtobufRoot,
@@ -9,10 +9,13 @@ import {
   PacketFactory,
 } from '@agnoc/transport-tcp';
 import { LocateDeviceCommandHandler } from './command-handlers/locate-device.command-handler';
-import { ConnectionDeviceUpdaterService } from './connection-device-updater.service';
+import { StartCleaningCommandHandler } from './command-handlers/start-cleaning.command-handler';
+import { NTPServerConnectionHandler } from './connection-handlers/ntp-server.connection-handler';
+import { PackerServerConnectionHandler } from './connection-handlers/packet-server.connection-handler';
 import { LockDeviceWhenDeviceIsConnectedEventHandler } from './domain-event-handlers/lock-device-when-device-is-connected-event-handler.event-handler';
 import { QueryDeviceInfoWhenDeviceIsLockedEventHandler } from './domain-event-handlers/query-device-info-when-device-is-locked-event-handler.event-handler';
 import { SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler } from './domain-event-handlers/set-device-connected-when-connection-device-changed.event-handler';
+import { PacketEventBus } from './event-buses/packet.event-bus';
 import { PacketConnectionFactory } from './factories/connection.factory';
 import { CleanModeMapper } from './mappers/clean-mode.mapper';
 import { DeviceBatteryMapper } from './mappers/device-battery.mapper';
@@ -24,8 +27,6 @@ import { DeviceStateMapper } from './mappers/device-state.mapper';
 import { DeviceWaterLevelMapper } from './mappers/device-water-level.mapper';
 import { VoiceSettingMapper } from './mappers/voice-setting.mapper';
 import { WeekDayListMapper } from './mappers/week-day-list.mapper';
-import { NTPServerConnectionHandler } from './ntp-server.connection-handler';
-import { PacketConnectionFinderService } from './packet-connection-finder.service';
 import { ClientHeartbeatEventHandler } from './packet-event-handlers/client-heartbeat.event-handler';
 import { ClientLoginEventHandler } from './packet-event-handlers/client-login.event-handler';
 import { DeviceBatteryUpdateEventHandler } from './packet-event-handlers/device-battery-update.event-handler';
@@ -47,9 +48,10 @@ import { DeviceSettingsUpdateEventHandler } from './packet-event-handlers/device
 import { DeviceTimeUpdateEventHandler } from './packet-event-handlers/device-time-update.event-handler';
 import { DeviceUpgradeInfoEventHandler } from './packet-event-handlers/device-upgrade-info.event-handler';
 import { DeviceVersionUpdateEventHandler } from './packet-event-handlers/device-version-update.event-handler';
-import { PacketEventPublisherService } from './packet-event-publisher.service';
-import { PackerServerConnectionHandler } from './packet-server.connection-handler';
-import { PacketEventBus } from './packet.event-bus';
+import { ConnectionDeviceUpdaterService } from './services/connection-device-updater.service';
+import { DeviceModeChangerService } from './services/device-mode-changer.service';
+import { PacketConnectionFinderService } from './services/packet-connection-finder.service';
+import { PacketEventPublisherService } from './services/packet-event-publisher.service';
 import type { CommandsOrQueries, ConnectionRepository, DeviceRepository } from '@agnoc/domain';
 import type { Server, TaskHandlerRegistry } from '@agnoc/toolkit';
 import type { AddressInfo } from 'net';
@@ -96,14 +98,18 @@ export class TCPServer implements Server {
     const packetEventBus = new PacketEventBus();
     const packetEventHandlerRegistry = new EventHandlerRegistry(packetEventBus);
 
-    // Connection
-    const packetConnectionFactory = new PacketConnectionFactory(packetEventBus, packetFactory);
+    // Services
+    const waiterService = new WaiterService();
     const connectionDeviceUpdaterService = new ConnectionDeviceUpdaterService(
       this.connectionRepository,
       deviceRepository,
     );
     const packetEventPublisherService = new PacketEventPublisherService(packetEventBus);
     const packetConnectionFinderService = new PacketConnectionFinderService(this.connectionRepository);
+    const deviceModeChangerService = new DeviceModeChangerService(waiterService);
+
+    // Connection
+    const packetConnectionFactory = new PacketConnectionFactory(packetEventBus, packetFactory);
     const connectionManager = new PackerServerConnectionHandler(
       this.connectionRepository,
       packetConnectionFactory,
@@ -111,7 +117,7 @@ export class TCPServer implements Server {
       packetEventPublisherService,
     );
 
-    connectionManager.addServers(this.cmdServer, this.mapServer);
+    connectionManager.register(this.cmdServer, this.mapServer);
 
     // Time Sync server controller
     const ntpServerConnectionHandler = new NTPServerConnectionHandler(packetFactory);
@@ -166,7 +172,10 @@ export class TCPServer implements Server {
     );
 
     // Command event handlers
-    this.commandQueryHandlerRegistry.register(new LocateDeviceCommandHandler(packetConnectionFinderService));
+    this.commandQueryHandlerRegistry.register(
+      new LocateDeviceCommandHandler(packetConnectionFinderService),
+      new StartCleaningCommandHandler(packetConnectionFinderService, deviceModeChangerService),
+    );
   }
 
   async listen(options: TCPAdapterListenOptions = listenDefaultOptions): Promise<TCPAdapterListenReturn> {

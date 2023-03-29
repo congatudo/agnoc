@@ -1,8 +1,8 @@
 import { Connection } from '@agnoc/domain';
 import { DomainException, ID } from '@agnoc/toolkit';
 import { PacketSocket } from '@agnoc/transport-tcp';
-import type { PacketEventBus } from '../packet.event-bus';
-import type { PacketMessage } from '../packet.message';
+import type { PacketEventBus } from '../event-buses/packet.event-bus';
+import type { PacketMessage } from '../objects/packet.message';
 import type { ConnectionProps } from '@agnoc/domain';
 import type { Packet, PacketFactory, PayloadDataName, PayloadDataFrom, CreatePacketProps } from '@agnoc/transport-tcp';
 

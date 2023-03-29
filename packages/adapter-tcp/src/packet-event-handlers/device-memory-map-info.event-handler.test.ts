@@ -1,7 +1,7 @@
 import { imock, instance } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { DeviceMemoryMapInfoEventHandler } from './device-memory-map-info.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 
 describe('DeviceMemoryMapInfoEventHandler', function () {
   let eventHandler: DeviceMemoryMapInfoEventHandler;

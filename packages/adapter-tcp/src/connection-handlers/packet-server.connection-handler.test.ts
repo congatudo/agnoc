@@ -1,11 +1,11 @@
 import { anything, capture, defer, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
+import { PacketMessage } from '../objects/packet.message';
 import { PackerServerConnectionHandler } from './packet-server.connection-handler';
-import { PacketMessage } from './packet.message';
-import type { PacketConnection } from './aggregate-roots/packet-connection.aggregate-root';
-import type { ConnectionDeviceUpdaterService } from './connection-device-updater.service';
-import type { PacketConnectionFactory } from './factories/connection.factory';
-import type { PacketEventPublisherService } from './packet-event-publisher.service';
+import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
+import type { PacketConnectionFactory } from '../factories/connection.factory';
+import type { ConnectionDeviceUpdaterService } from '../services/connection-device-updater.service';
+import type { PacketEventPublisherService } from '../services/packet-event-publisher.service';
 import type { ConnectionRepository } from '@agnoc/domain';
 import type { Packet, PacketServer, PacketSocket } from '@agnoc/transport-tcp';
 
@@ -43,7 +43,7 @@ describe('PackerServerConnectionHandler', function () {
 
       when(packetServer.once(anything())).thenResolve(onClose);
 
-      handler.addServers(instance(packetServer));
+      handler.register(instance(packetServer));
 
       verify(packetServer.on('connection', anything())).once();
       verify(packetServer.once('close')).once();
@@ -54,7 +54,7 @@ describe('PackerServerConnectionHandler', function () {
 
       when(packetServer.once(anything())).thenResolve(onClose);
 
-      handler.addServers(instance(packetServer));
+      handler.register(instance(packetServer));
 
       when(packetConnectionFactory.create(anything())).thenReturn(instance(packetConnection));
       when(packetConnection.socket).thenReturn(instance(packetSocket));
@@ -73,7 +73,7 @@ describe('PackerServerConnectionHandler', function () {
 
       when(packetServer.once(anything())).thenResolve(onClose);
 
-      handler.addServers(instance(packetServer));
+      handler.register(instance(packetServer));
 
       when(packetConnectionFactory.create(anything())).thenReturn(instance(packetConnection));
       when(packetConnection.socket).thenReturn(instance(packetSocket));
@@ -92,7 +92,7 @@ describe('PackerServerConnectionHandler', function () {
 
       when(packetServer.once(anything())).thenResolve(onClose);
 
-      handler.addServers(instance(packetServer));
+      handler.register(instance(packetServer));
 
       await onClose.resolve(undefined);
 
@@ -104,7 +104,7 @@ describe('PackerServerConnectionHandler', function () {
 
       when(packetServer.once(anything())).thenResolve(onClose);
 
-      handler.addServers(instance(packetServer));
+      handler.register(instance(packetServer));
 
       when(packetConnectionFactory.create(anything())).thenReturn(instance(packetConnection));
       when(packetConnection.socket).thenReturn(instance(packetSocket));
@@ -131,7 +131,7 @@ describe('PackerServerConnectionHandler', function () {
 
       when(packetServer.once(anything())).thenResolve(onClose);
 
-      handler.addServers(instance(packetServer));
+      handler.register(instance(packetServer));
 
       when(packetConnectionFactory.create(anything())).thenReturn(instance(packetConnection));
       when(packetConnection.socket).thenReturn(instance(packetSocket));

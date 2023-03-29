@@ -3,14 +3,13 @@ import { ID } from '@agnoc/toolkit';
 import { anything, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler } from './set-device-connected-when-connection-device-changed.event-handler';
-import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
-import type { ConnectionRepository, DeviceRepository, Device } from '@agnoc/domain';
+import type { ConnectionRepository, DeviceRepository, Device, ConnectionWithDevice } from '@agnoc/domain';
 
 describe('SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler', function () {
   let connectionRepository: ConnectionRepository;
   let deviceRepository: DeviceRepository;
   let eventHandler: SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler;
-  let packetConnection: PacketConnection;
+  let connection: ConnectionWithDevice;
   let device: Device;
 
   beforeEach(function () {
@@ -20,7 +19,7 @@ describe('SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler', function (
       instance(connectionRepository),
       instance(deviceRepository),
     );
-    packetConnection = imock();
+    connection = imock();
     device = imock();
   });
 
@@ -33,12 +32,9 @@ describe('SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler', function (
       const currentDeviceId = new ID(2);
       const event = new ConnectionDeviceChangedDomainEvent({ aggregateId: new ID(1), currentDeviceId });
 
-      when(connectionRepository.findByDeviceId(anything())).thenResolve([
-        instance(packetConnection),
-        instance(packetConnection),
-      ]);
+      when(connectionRepository.findByDeviceId(anything())).thenResolve([instance(connection), instance(connection)]);
       when(deviceRepository.findOneById(anything())).thenResolve(instance(device));
-      when(packetConnection.connectionType).thenReturn('PACKET');
+      when(connection.connectionType).thenReturn('PACKET');
       when(device.isConnected).thenReturn(false);
 
       await eventHandler.handle(event);
@@ -64,9 +60,9 @@ describe('SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler', function (
       const currentDeviceId = new ID(2);
       const event = new ConnectionDeviceChangedDomainEvent({ aggregateId: new ID(1), currentDeviceId });
 
-      when(connectionRepository.findByDeviceId(anything())).thenResolve([instance(packetConnection)]);
+      when(connectionRepository.findByDeviceId(anything())).thenResolve([instance(connection)]);
       when(deviceRepository.findOneById(anything())).thenResolve(instance(device));
-      when(packetConnection.connectionType).thenReturn('PACKET');
+      when(connection.connectionType).thenReturn('PACKET');
       when(device.isConnected).thenReturn(false);
 
       await eventHandler.handle(event);
@@ -81,12 +77,9 @@ describe('SetDeviceAsConnectedWhenConnectionDeviceAddedEventHandler', function (
       const currentDeviceId = new ID(2);
       const event = new ConnectionDeviceChangedDomainEvent({ aggregateId: new ID(1), currentDeviceId });
 
-      when(connectionRepository.findByDeviceId(anything())).thenResolve([
-        instance(packetConnection),
-        instance(packetConnection),
-      ]);
+      when(connectionRepository.findByDeviceId(anything())).thenResolve([instance(connection), instance(connection)]);
       when(deviceRepository.findOneById(anything())).thenResolve(instance(device));
-      when(packetConnection.connectionType).thenReturn('OTHER');
+      when(connection.connectionType).thenReturn('OTHER');
       when(device.isConnected).thenReturn(false);
 
       await eventHandler.handle(event);

@@ -1,7 +1,7 @@
 import { Device, DeviceBattery, DeviceBatteryMaxValue, DeviceSystem, DeviceVersion } from '@agnoc/domain';
 import { ID } from '@agnoc/toolkit';
-import type { PacketEventHandler } from '../packet.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketEventHandler } from '../base-classes/packet.event-handler';
+import type { PacketMessage } from '../objects/packet.message';
 import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceRegisterEventHandler implements PacketEventHandler {

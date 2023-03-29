@@ -5,7 +5,7 @@ import { Packet } from '@agnoc/transport-tcp';
 import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { anything, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { ConnectionDeviceUpdaterService } from './connection-device-updater.service';
-import type { PacketConnection } from './aggregate-roots/packet-connection.aggregate-root';
+import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
 import type { ConnectionRepository, DeviceRepository } from '@agnoc/domain';
 
 describe('ConnectionDeviceUpdaterService', function () {

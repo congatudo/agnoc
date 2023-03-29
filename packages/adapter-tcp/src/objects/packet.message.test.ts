@@ -6,7 +6,7 @@ import { givenSomePacketProps, givenSomePayloadProps } from '@agnoc/transport-tc
 import { anything, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { PacketMessage } from './packet.message';
-import type { PacketConnection } from './aggregate-roots/packet-connection.aggregate-root';
+import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
 
 describe('PacketMessage', function () {
   let packetConnection: PacketConnection;
@@ -99,21 +99,10 @@ describe('PacketMessage', function () {
   });
 
   describe('#assertDevice()', function () {
-    it('should throw an error when the connection does not has a device set', function () {
-      when(packetConnection.device).thenReturn(undefined);
+    it('should invoke connection device assertion', function () {
+      packetMessage.assertDevice();
 
-      expect(() => packetMessage.assertDevice()).to.throw(
-        DomainException,
-        'Connection does not have a reference to a device',
-      );
-    });
-
-    it('should not throw an error when the connection has a device set', function () {
-      const device = new Device(givenSomeDeviceProps());
-
-      when(packetConnection.device).thenReturn(device);
-
-      expect(() => packetMessage.assertDevice()).to.not.throw(DomainException);
+      verify(packetConnection.assertDevice()).once();
     });
   });
 });

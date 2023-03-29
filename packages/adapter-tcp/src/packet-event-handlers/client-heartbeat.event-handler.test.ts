@@ -1,7 +1,7 @@
 import { deepEqual, imock, instance, verify } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { ClientHeartbeatEventHandler } from './client-heartbeat.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 
 describe('ClientHeartbeatEventHandler', function () {
   let eventHandler: ClientHeartbeatEventHandler;

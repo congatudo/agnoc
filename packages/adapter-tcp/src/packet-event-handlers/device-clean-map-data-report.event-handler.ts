@@ -1,5 +1,5 @@
-import type { PacketEventHandler } from '../packet.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketEventHandler } from '../base-classes/packet.event-handler';
+import type { PacketMessage } from '../objects/packet.message';
 
 export class DeviceCleanMapDataReportEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_CLEANMAP_BINDATA_REPORT_REQ';

@@ -4,7 +4,7 @@ import { PacketSocket } from '@agnoc/transport-tcp';
 import { imock, instance } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { PacketConnectionFactory } from './connection.factory';
-import type { PacketEventBus } from '../packet.event-bus';
+import type { PacketEventBus } from '../event-buses/packet.event-bus';
 import type { PacketFactory, PacketMapper } from '@agnoc/transport-tcp';
 
 describe('PacketConnectionFactory', function () {

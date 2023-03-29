@@ -1,5 +1,5 @@
-import type { PacketConnectionFinderService } from '../packet-connection-finder.service';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
+import type { PacketConnectionFinderService } from '../services/packet-connection-finder.service';
 import type { CommandHandler, SetDeviceQuietHoursCommand } from '@agnoc/domain';
 
 export class SetDeviceQuietHoursCommandHandler implements CommandHandler {

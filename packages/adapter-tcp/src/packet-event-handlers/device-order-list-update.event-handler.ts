@@ -1,6 +1,6 @@
+import type { PacketEventHandler } from '../base-classes/packet.event-handler';
 import type { DeviceOrderMapper } from '../mappers/device-order.mapper';
-import type { PacketEventHandler } from '../packet.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceOrderListUpdateEventHandler implements PacketEventHandler {

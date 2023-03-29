@@ -1,6 +1,6 @@
 import { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
 import type { PacketConnectionProps } from '../aggregate-roots/packet-connection.aggregate-root';
-import type { PacketEventBus } from '../packet.event-bus';
+import type { PacketEventBus } from '../event-buses/packet.event-bus';
 import type { Factory } from '@agnoc/toolkit';
 import type { PacketFactory } from '@agnoc/transport-tcp';
 

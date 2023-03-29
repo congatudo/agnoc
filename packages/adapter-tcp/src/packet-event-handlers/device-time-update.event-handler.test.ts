@@ -1,7 +1,7 @@
 import { imock, instance } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { DeviceTimeUpdateEventHandler } from './device-time-update.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 
 describe('DeviceTimeUpdateEventHandler', function () {
   let eventHandler: DeviceTimeUpdateEventHandler;

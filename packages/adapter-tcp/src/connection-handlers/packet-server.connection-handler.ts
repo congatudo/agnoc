@@ -1,9 +1,9 @@
 import { ID } from '@agnoc/toolkit';
-import { PacketMessage } from './packet.message';
-import type { PacketConnection } from './aggregate-roots/packet-connection.aggregate-root';
-import type { ConnectionDeviceUpdaterService } from './connection-device-updater.service';
-import type { PacketConnectionFactory } from './factories/connection.factory';
-import type { PacketEventPublisherService } from './packet-event-publisher.service';
+import { PacketMessage } from '../objects/packet.message';
+import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
+import type { PacketConnectionFactory } from '../factories/connection.factory';
+import type { ConnectionDeviceUpdaterService } from '../services/connection-device-updater.service';
+import type { PacketEventPublisherService } from '../services/packet-event-publisher.service';
 import type { ConnectionRepository } from '@agnoc/domain';
 import type { PacketServer, Packet, PacketSocket } from '@agnoc/transport-tcp';
 
@@ -17,7 +17,7 @@ export class PackerServerConnectionHandler {
     private readonly packetEventPublisherService: PacketEventPublisherService,
   ) {}
 
-  addServers(...servers: PacketServer[]): void {
+  register(...servers: PacketServer[]): void {
     servers.forEach((server) => {
       this.servers.set(server, new Set());
       this.addListeners(server);

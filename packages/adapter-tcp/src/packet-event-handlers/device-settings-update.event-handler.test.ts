@@ -6,7 +6,7 @@ import { anything, capture, deepEqual, imock, instance, verify, when } from '@jo
 import { expect } from 'chai';
 import { DeviceSettingsUpdateEventHandler } from './device-settings-update.event-handler';
 import type { VoiceSettingMapper } from '../mappers/voice-setting.mapper';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { Device, DeviceRepository } from '@agnoc/domain';
 
 describe('DeviceSettingsUpdateEventHandler', function () {

@@ -6,7 +6,7 @@ import { anything, deepEqual, imock, instance, verify, when } from '@johanblumen
 import { expect } from 'chai';
 import { DeviceOrderListUpdateEventHandler } from './device-order-list-update.event-handler';
 import type { DeviceOrderMapper } from '../mappers/device-order.mapper';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { Device, DeviceRepository } from '@agnoc/domain';
 
 describe('DeviceOrderListUpdateEventHandler', function () {

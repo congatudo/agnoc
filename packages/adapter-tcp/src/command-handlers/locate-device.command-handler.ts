@@ -1,5 +1,5 @@
-import type { PacketConnectionFinderService } from '../packet-connection-finder.service';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
+import type { PacketConnectionFinderService } from '../services/packet-connection-finder.service';
 import type { CommandHandler, LocateDeviceCommand } from '@agnoc/domain';
 
 export class LocateDeviceCommandHandler implements CommandHandler {

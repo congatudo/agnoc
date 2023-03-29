@@ -1,5 +1,5 @@
-import type { PacketEventHandler } from '../packet.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketEventHandler } from '../base-classes/packet.event-handler';
+import type { PacketMessage } from '../objects/packet.message';
 
 export class DeviceTimeUpdateEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_GETTIME_RSP';

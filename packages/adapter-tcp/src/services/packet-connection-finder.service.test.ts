@@ -2,37 +2,36 @@ import { DomainException, ID } from '@agnoc/toolkit';
 import { imock, instance, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { PacketConnectionFinderService } from './packet-connection-finder.service';
-import type { PacketConnection } from './aggregate-roots/packet-connection.aggregate-root';
-import type { ConnectionRepository } from '@agnoc/domain';
+import type { ConnectionRepository, ConnectionWithDevice } from '@agnoc/domain';
 
 describe('PacketConnectionFinderService', function () {
   let connectionRepository: ConnectionRepository;
   let service: PacketConnectionFinderService;
-  let packetConnection: PacketConnection;
+  let connection: ConnectionWithDevice;
 
   beforeEach(function () {
     connectionRepository = imock();
     service = new PacketConnectionFinderService(instance(connectionRepository));
-    packetConnection = imock();
+    connection = imock();
   });
 
   describe('#findByDeviceId()', function () {
     it('should find a connection by device id when it is a packet connection', async function () {
       const deviceId = new ID(1);
 
-      when(connectionRepository.findByDeviceId(deviceId)).thenResolve([instance(packetConnection)]);
-      when(packetConnection.connectionType).thenReturn('PACKET');
+      when(connectionRepository.findByDeviceId(deviceId)).thenResolve([instance(connection)]);
+      when(connection.connectionType).thenReturn('PACKET');
 
       const ret = await service.findByDeviceId(deviceId);
 
-      expect(ret).to.equal(instance(packetConnection));
+      expect(ret).to.equal(instance(connection));
     });
 
     it('should not find anything when is it not a packet connection', async function () {
       const deviceId = new ID(1);
 
-      when(connectionRepository.findByDeviceId(deviceId)).thenResolve([instance(packetConnection)]);
-      when(packetConnection.connectionType).thenReturn('OTHER');
+      when(connectionRepository.findByDeviceId(deviceId)).thenResolve([instance(connection)]);
+      when(connection.connectionType).thenReturn('OTHER');
 
       const ret = await service.findByDeviceId(deviceId);
 

@@ -1,4 +1,4 @@
-import type { PacketConnection } from './aggregate-roots/packet-connection.aggregate-root';
+import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
 import type { ConnectionRepository, DeviceRepository, Device } from '@agnoc/domain';
 import type { ID } from '@agnoc/toolkit';
 import type { Packet } from '@agnoc/transport-tcp';

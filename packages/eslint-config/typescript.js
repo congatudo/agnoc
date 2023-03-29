@@ -77,7 +77,6 @@ module.exports = {
         groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
       },
     ],
-    '@guardian/tsdoc-required/tsdoc-required': 'warn',
   },
   overrides: [
     {
@@ -87,6 +86,12 @@ module.exports = {
         '@typescript-eslint/unbound-method': 'off',
         '@typescript-eslint/no-misused-promises': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
+      },
+    },
+    {
+      files: ['packages/toolkit/src/**/*.ts'],
+      rules: {
+        '@guardian/tsdoc-required/tsdoc-required': 'warn',
       },
     },
   ],

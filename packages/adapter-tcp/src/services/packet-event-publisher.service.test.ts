@@ -3,10 +3,10 @@ import { Packet } from '@agnoc/transport-tcp';
 import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { imock, instance, anything, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
+import { PacketMessage } from '../objects/packet.message';
 import { PacketEventPublisherService } from './packet-event-publisher.service';
-import { PacketMessage } from './packet.message';
-import type { PacketConnection } from './aggregate-roots/packet-connection.aggregate-root';
-import type { PacketEventBus } from './packet.event-bus';
+import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
+import type { PacketEventBus } from '../event-buses/packet.event-bus';
 
 describe('PacketEventPublisherService', function () {
   let packetEventBus: PacketEventBus;

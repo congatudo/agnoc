@@ -1,5 +1,5 @@
 import { DeviceCapability } from '@agnoc/domain';
-import type { PacketConnectionFinderService } from '../packet-connection-finder.service';
+import type { PacketConnectionFinderService } from '../services/packet-connection-finder.service';
 import type { DeviceLockedDomainEvent, DomainEventHandler } from '@agnoc/domain';
 
 export class QueryDeviceInfoWhenDeviceIsLockedEventHandler implements DomainEventHandler {

@@ -1,4 +1,4 @@
-import type { PacketMessage } from './packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { EventHandler } from '@agnoc/toolkit';
 import type { PayloadDataName } from '@agnoc/transport-tcp';
 

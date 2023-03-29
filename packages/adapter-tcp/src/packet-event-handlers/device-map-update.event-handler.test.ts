@@ -29,7 +29,7 @@ import type { DeviceErrorMapper } from '../mappers/device-error.mapper';
 import type { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
 import type { DeviceModeMapper } from '../mappers/device-mode.mapper';
 import type { DeviceStateMapper } from '../mappers/device-state.mapper';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { Device, DeviceRepository } from '@agnoc/domain';
 
 describe('DeviceMapUpdateEventHandler', function () {

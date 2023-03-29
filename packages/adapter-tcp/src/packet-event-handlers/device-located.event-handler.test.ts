@@ -1,7 +1,7 @@
 import { imock, instance } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { DeviceLocatedEventHandler } from './device-located.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 
 describe('DeviceLocatedEventHandler', function () {
   let eventHandler: DeviceLocatedEventHandler;

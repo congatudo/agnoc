@@ -1,5 +1,5 @@
-import type { PacketEventHandler } from '../packet.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketEventHandler } from '../base-classes/packet.event-handler';
+import type { PacketMessage } from '../objects/packet.message';
 
 export class DeviceGetAllGlobalMapEventHandler implements PacketEventHandler {
   readonly forName = 'DEVICE_GET_ALL_GLOBAL_MAP_INFO_RSP';

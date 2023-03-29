@@ -5,7 +5,7 @@ import { anything, deepEqual, imock, instance, verify, when } from '@johanblumen
 import { expect } from 'chai';
 import { DeviceBatteryUpdateEventHandler } from './device-battery-update.event-handler';
 import type { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { Device, DeviceRepository } from '@agnoc/domain';
 
 describe('DeviceBatteryUpdateEventHandler', function () {

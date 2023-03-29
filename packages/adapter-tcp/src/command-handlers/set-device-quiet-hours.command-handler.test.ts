@@ -5,13 +5,14 @@ import { imock, instance, when, verify, anything, deepEqual } from '@johanblumen
 import { expect } from 'chai';
 import { SetDeviceQuietHoursCommandHandler } from './set-device-quiet-hours.command-handler';
 import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
-import type { PacketConnectionFinderService } from '../packet-connection-finder.service';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
+import type { PacketConnectionFinderService } from '../services/packet-connection-finder.service';
+import type { ConnectionWithDevice } from '@agnoc/domain';
 
 describe('SetDeviceQuietHoursCommandHandler', function () {
   let packetConnectionFinderService: PacketConnectionFinderService;
   let commandHandler: SetDeviceQuietHoursCommandHandler;
-  let packetConnection: PacketConnection;
+  let packetConnection: PacketConnection & ConnectionWithDevice;
   let packetMessage: PacketMessage;
 
   beforeEach(function () {

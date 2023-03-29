@@ -4,7 +4,7 @@ import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { anything, deepEqual, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { DeviceMapChargerPositionUpdateEventHandler } from './device-map-charger-position-update.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { Device, DeviceRepository, DeviceMap } from '@agnoc/domain';
 
 describe('DeviceMapChargerPositionUpdateEventHandler', function () {

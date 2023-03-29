@@ -3,7 +3,7 @@ import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { deepEqual, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { DeviceCleanMapDataReportEventHandler } from './device-clean-map-data-report.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 
 describe('DeviceCleanMapDataReportEventHandler', function () {
   let eventHandler: DeviceCleanMapDataReportEventHandler;

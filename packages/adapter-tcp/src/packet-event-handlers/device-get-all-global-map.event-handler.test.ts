@@ -1,7 +1,7 @@
 import { imock, instance } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { DeviceGetAllGlobalMapEventHandler } from './device-get-all-global-map.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 
 describe('DeviceGetAllGlobalMapEventHandler', function () {
   let eventHandler: DeviceGetAllGlobalMapEventHandler;

@@ -4,13 +4,14 @@ import { imock, instance, when, verify, anything, deepEqual } from '@johanblumen
 import { expect } from 'chai';
 import { LocateDeviceCommandHandler } from './locate-device.command-handler';
 import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
-import type { PacketConnectionFinderService } from '../packet-connection-finder.service';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
+import type { PacketConnectionFinderService } from '../services/packet-connection-finder.service';
+import type { ConnectionWithDevice } from '@agnoc/domain';
 
 describe('LocateDeviceCommandHandler', function () {
   let packetConnectionFinderService: PacketConnectionFinderService;
   let commandHandler: LocateDeviceCommandHandler;
-  let packetConnection: PacketConnection;
+  let packetConnection: PacketConnection & ConnectionWithDevice;
   let packetMessage: PacketMessage;
 
   beforeEach(function () {

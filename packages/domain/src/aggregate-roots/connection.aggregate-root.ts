@@ -1,10 +1,14 @@
-import { AggregateRoot } from '@agnoc/toolkit';
+import { AggregateRoot, DomainException } from '@agnoc/toolkit';
 import { ConnectionDeviceChangedDomainEvent } from '../domain-events/connection-device-changed.domain-event';
 import { Device } from './device.aggregate-root';
 import type { EntityProps } from '@agnoc/toolkit';
 
 export interface ConnectionProps extends EntityProps {
   device?: Device;
+}
+
+export interface ConnectionWithDevice<T extends Device = Device> extends Connection {
+  device: T;
 }
 
 export abstract class Connection<Props extends ConnectionProps = ConnectionProps> extends AggregateRoot<Props> {
@@ -32,6 +36,12 @@ export abstract class Connection<Props extends ConnectionProps = ConnectionProps
 
     this.props.device = device;
     this.addEvent(new ConnectionDeviceChangedDomainEvent({ aggregateId: this.id, previousDeviceId, currentDeviceId }));
+  }
+
+  assertDevice(): asserts this is Connection & ConnectionWithDevice {
+    if (!this.device) {
+      throw new DomainException('Connection does not have a reference to a device');
+    }
   }
 
   protected validate(props: Props): void {

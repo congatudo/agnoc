@@ -1,7 +1,7 @@
 import { imock, instance } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { DeviceOfflineEventHandler } from './device-offline.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 
 describe('DeviceOfflineEventHandler', function () {
   let eventHandler: DeviceOfflineEventHandler;

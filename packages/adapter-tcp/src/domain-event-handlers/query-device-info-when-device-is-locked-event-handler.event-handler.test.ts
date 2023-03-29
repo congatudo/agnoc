@@ -5,12 +5,13 @@ import { imock, instance, when, anything, verify, deepEqual } from '@johanblumen
 import { expect } from 'chai';
 import { QueryDeviceInfoWhenDeviceIsLockedEventHandler } from './query-device-info-when-device-is-locked-event-handler.event-handler';
 import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
-import type { PacketConnectionFinderService } from '../packet-connection-finder.service';
+import type { PacketConnectionFinderService } from '../services/packet-connection-finder.service';
+import type { ConnectionWithDevice } from '@agnoc/domain';
 
 describe('QueryDeviceInfoWhenDeviceIsLockedEventHandler', function () {
   let packetConnectionFinderService: PacketConnectionFinderService;
   let eventHandler: QueryDeviceInfoWhenDeviceIsLockedEventHandler;
-  let packetConnection: PacketConnection;
+  let packetConnection: PacketConnection & ConnectionWithDevice;
 
   beforeEach(function () {
     packetConnectionFinderService = imock();

@@ -10,13 +10,13 @@ import {
   Zone,
 } from '@agnoc/domain';
 import { ID, isPresent } from '@agnoc/toolkit';
+import type { PacketEventHandler } from '../base-classes/packet.event-handler';
 import type { DeviceBatteryMapper } from '../mappers/device-battery.mapper';
 import type { DeviceErrorMapper } from '../mappers/device-error.mapper';
 import type { DeviceFanSpeedMapper } from '../mappers/device-fan-speed.mapper';
 import type { DeviceModeMapper } from '../mappers/device-mode.mapper';
 import type { DeviceStateMapper } from '../mappers/device-state.mapper';
-import type { PacketEventHandler } from '../packet.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { DeviceRepository } from '@agnoc/domain';
 
 export class DeviceMapUpdateEventHandler implements PacketEventHandler {

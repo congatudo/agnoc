@@ -3,7 +3,7 @@ import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { deepEqual, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { ClientLoginEventHandler } from './client-login.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 import type { Device } from '@agnoc/domain';
 
 describe('ClientLoginEventHandler', function () {

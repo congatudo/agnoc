@@ -3,7 +3,7 @@ import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { deepEqual, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import { DeviceUpgradeInfoEventHandler } from './device-upgrade-info.event-handler';
-import type { PacketMessage } from '../packet.message';
+import type { PacketMessage } from '../objects/packet.message';
 
 describe('DeviceUpgradeInfoEventHandler', function () {
   let eventHandler: DeviceUpgradeInfoEventHandler;

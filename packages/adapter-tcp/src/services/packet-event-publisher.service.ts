@@ -1,6 +1,6 @@
 import { DomainException } from '@agnoc/toolkit';
-import type { PacketEventBus, PacketEventBusEvents } from './packet.event-bus';
-import type { PacketMessage } from './packet.message';
+import type { PacketEventBus, PacketEventBusEvents } from '../event-buses/packet.event-bus';
+import type { PacketMessage } from '../objects/packet.message';
 import type { PayloadDataName } from '@agnoc/transport-tcp';
 
 export class PacketEventPublisherService {
