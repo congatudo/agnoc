@@ -4,6 +4,7 @@ export * from './commands/commands';
 export * from './commands/locate-device.command';
 export * from './commands/pause-cleaning.command';
 export * from './commands/return-home.command';
+export * from './commands/set-carpet-mode.command';
 export * from './commands/set-device-quiet-hours.command';
 export * from './commands/set-device-voice.command';
 export * from './commands/start-cleaning.command';
