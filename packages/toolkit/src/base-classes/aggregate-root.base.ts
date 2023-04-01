@@ -5,18 +5,22 @@ import type { DomainEvent } from './domain-event.base';
 import type { EntityProps } from './entity.base';
 import type { EventBus } from './event-bus.base';
 
+/** Base class for aggregate roots. */
 export abstract class AggregateRoot<T extends EntityProps = EntityProps> extends Entity<T> {
   private readonly debug = debug(__filename).extend(toDashCase(this.constructor.name)).extend(this.id.toString());
   readonly #domainEvents = new Set<DomainEvent>();
 
+  /** Returns the domain events that have been added to the aggregate root. */
   get domainEvents(): DomainEvent[] {
     return [...this.#domainEvents.values()];
   }
 
+  /** Clears the domain events that have been added to the aggregate root. */
   clearEvents(): void {
     this.#domainEvents.clear();
   }
 
+  /** Publishes the domain events that have been added to the aggregate root and clears them. */
   async publishEvents(eventBus: EventBus): Promise<void> {
     const domainEvents = this.domainEvents;
 
@@ -33,7 +37,6 @@ export abstract class AggregateRoot<T extends EntityProps = EntityProps> extends
   }
 
   protected addEvent(domainEvent: DomainEvent): void {
-    this.debug(`adding domain event '${domainEvent.constructor.name}' with data: ${JSON.stringify(domainEvent)}`);
     this.#domainEvents.add(domainEvent);
   }
 }

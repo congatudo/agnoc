@@ -1,5 +1,6 @@
 import type { LocateDeviceCommand } from './locate-device.command';
 import type { PauseCleaningCommand } from './pause-cleaning.command';
+import type { ResetConsumableCommand } from './reset-consumable.command';
 import type { ReturnHomeCommand } from './return-home.command';
 import type { SetCarpetModeCommand } from './set-carpet-mode.command';
 import type { SetDeviceQuietHoursCommand } from './set-device-quiet-hours.command';
@@ -11,6 +12,7 @@ import type { StopCleaningCommand } from './stop-cleaning.command';
 export type Commands = {
   LocateDeviceCommand: LocateDeviceCommand;
   PauseCleaningCommand: PauseCleaningCommand;
+  ResetConsumableCommand: ResetConsumableCommand;
   ReturnHomeCommand: ReturnHomeCommand;
   SetCarpetModeCommand: SetCarpetModeCommand;
   SetDeviceQuietHoursCommand: SetDeviceQuietHoursCommand;

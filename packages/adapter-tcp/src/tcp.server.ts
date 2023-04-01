@@ -9,7 +9,14 @@ import {
   PacketFactory,
 } from '@agnoc/transport-tcp';
 import { LocateDeviceCommandHandler } from './command-handlers/locate-device.command-handler';
+import { PauseCleaningCommandHandler } from './command-handlers/pause-cleaning.command-handler';
+import { ResetConsumableCommandHandler } from './command-handlers/reset-consumable.command-handler';
+import { ReturnHomeCommandHandler } from './command-handlers/return-home.command-handler';
+import { SetCarpetModeCommandHandler } from './command-handlers/set-carpet-mode.command-handler';
+import { SetDeviceQuietHoursCommandHandler } from './command-handlers/set-device-quiet-hours.command-handler';
+import { SetDeviceVoiceCommandHandler } from './command-handlers/set-device-voice.command-handler';
 import { StartCleaningCommandHandler } from './command-handlers/start-cleaning.command-handler';
+import { StopCleaningCommandHandler } from './command-handlers/stop-cleaning.command-handler';
 import { NTPServerConnectionHandler } from './connection-handlers/ntp-server.connection-handler';
 import { PackerServerConnectionHandler } from './connection-handlers/packet-server.connection-handler';
 import { LockDeviceWhenDeviceIsConnectedEventHandler } from './domain-event-handlers/lock-device-when-device-is-connected-event-handler.event-handler';
@@ -48,6 +55,7 @@ import { DeviceSettingsUpdateEventHandler } from './packet-event-handlers/device
 import { DeviceTimeUpdateEventHandler } from './packet-event-handlers/device-time-update.event-handler';
 import { DeviceUpgradeInfoEventHandler } from './packet-event-handlers/device-upgrade-info.event-handler';
 import { DeviceVersionUpdateEventHandler } from './packet-event-handlers/device-version-update.event-handler';
+import { GetDeviceConsumablesQueryHandler } from './query-handlers/get-device-consumables.query-handler';
 import { ConnectionDeviceUpdaterService } from './services/connection-device-updater.service';
 import { DeviceModeChangerService } from './services/device-mode-changer.service';
 import { PacketConnectionFinderService } from './services/packet-connection-finder.service';
@@ -80,7 +88,7 @@ export class TCPServer implements Server {
     // Mappers
     const deviceFanSpeedMapper = new DeviceFanSpeedMapper();
     const deviceWaterLevelMapper = new DeviceWaterLevelMapper();
-    const deviceVoiceMapper = new VoiceSettingMapper();
+    const voiceSettingMapper = new VoiceSettingMapper();
     const deviceStateMapper = new DeviceStateMapper();
     const deviceModeMapper = new DeviceModeMapper();
     const deviceErrorMapper = new DeviceErrorMapper();
@@ -149,7 +157,7 @@ export class TCPServer implements Server {
       new DeviceOfflineEventHandler(),
       new DeviceOrderListUpdateEventHandler(deviceOrderMapper, this.deviceRepository),
       new DeviceRegisterEventHandler(this.deviceRepository),
-      new DeviceSettingsUpdateEventHandler(deviceVoiceMapper, this.deviceRepository),
+      new DeviceSettingsUpdateEventHandler(voiceSettingMapper, this.deviceRepository),
       new DeviceTimeUpdateEventHandler(),
       new DeviceUpgradeInfoEventHandler(),
       new DeviceVersionUpdateEventHandler(this.deviceRepository),
@@ -173,8 +181,16 @@ export class TCPServer implements Server {
 
     // Command event handlers
     this.commandQueryHandlerRegistry.register(
+      new GetDeviceConsumablesQueryHandler(packetConnectionFinderService, this.deviceRepository),
       new LocateDeviceCommandHandler(packetConnectionFinderService),
+      new PauseCleaningCommandHandler(packetConnectionFinderService),
+      new ResetConsumableCommandHandler(packetConnectionFinderService, this.deviceRepository),
+      new ReturnHomeCommandHandler(packetConnectionFinderService),
+      new SetCarpetModeCommandHandler(packetConnectionFinderService, this.deviceRepository),
+      new SetDeviceQuietHoursCommandHandler(packetConnectionFinderService),
+      new SetDeviceVoiceCommandHandler(packetConnectionFinderService, voiceSettingMapper, this.deviceRepository),
       new StartCleaningCommandHandler(packetConnectionFinderService, deviceModeChangerService),
+      new StopCleaningCommandHandler(packetConnectionFinderService),
     );
   }
 

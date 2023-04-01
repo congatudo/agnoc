@@ -2,6 +2,7 @@ import { AggregateRoot, ID, symmetricDifference } from '@agnoc/toolkit';
 import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery-changed.domain-event';
 import { DeviceCleanWorkChangedDomainEvent } from '../domain-events/device-clean-work-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
+import { DeviceConsumablesChangedDomainEvent } from '../domain-events/device-consumables-changed.domain-event';
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceErrorChangedDomainEvent } from '../domain-events/device-error-changed.domain-event';
 import { DeviceFanSpeedChangedDomainEvent } from '../domain-events/device-fan-speed-changed.domain-event';
@@ -273,8 +274,17 @@ export class Device extends AggregateRoot<DeviceProps> {
   }
 
   /** Updates the device consumables. */
-  updateConsumables(consumables?: DeviceConsumable[]): void {
+  updateConsumables(consumables: DeviceConsumable[]): void {
+    // TODO: should we check if the consumables are changed?
+    this.validateDefinedProp({ consumables }, 'consumables');
     this.validateArrayProp({ consumables }, 'consumables', DeviceConsumable);
+    this.addEvent(
+      new DeviceConsumablesChangedDomainEvent({
+        aggregateId: this.id,
+        previousConsumables: this.consumables,
+        currentConsumables: consumables,
+      }),
+    );
     this.props.consumables = consumables;
   }
 

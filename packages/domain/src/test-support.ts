@@ -75,7 +75,7 @@ export function givenSomeDeviceCleanWorkProps(): DeviceCleanWorkProps {
 export function givenSomeDeviceConsumableProps(): DeviceConsumableProps {
   return {
     type: DeviceConsumableType.MainBrush,
-    minutesUsed: 1,
+    hoursUsed: 1,
   };
 }
 

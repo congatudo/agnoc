@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { DeviceBatteryChangedDomainEvent } from '../domain-events/device-battery-changed.domain-event';
 import { DeviceCleanWorkChangedDomainEvent } from '../domain-events/device-clean-work-changed.domain-event';
 import { DeviceConnectedDomainEvent } from '../domain-events/device-connected.domain-event';
+import { DeviceConsumablesChangedDomainEvent } from '../domain-events/device-consumables-changed.domain-event';
 import { DeviceCreatedDomainEvent } from '../domain-events/device-created.domain-event';
 import { DeviceErrorChangedDomainEvent } from '../domain-events/device-error-changed.domain-event';
 import { DeviceFanSpeedChangedDomainEvent } from '../domain-events/device-fan-speed-changed.domain-event';
@@ -460,12 +461,20 @@ describe('Device', function () {
 
   describe('#updateConsumables()', function () {
     it('should update the device consumables', function () {
-      const device = new Device(givenSomeDeviceProps());
-      const consumables = [new DeviceConsumable(givenSomeDeviceConsumableProps())];
+      const previousConsumables = [new DeviceConsumable(givenSomeDeviceConsumableProps())];
+      const currentConsumables = [new DeviceConsumable(givenSomeDeviceConsumableProps())];
+      const device = new Device({ ...givenSomeDeviceProps(), consumables: previousConsumables });
 
-      device.updateConsumables(consumables);
+      device.updateConsumables(currentConsumables);
 
-      expect(device.consumables).to.be.equal(consumables);
+      expect(device.consumables).to.be.equal(currentConsumables);
+
+      const event = device.domainEvents[1] as DeviceConsumablesChangedDomainEvent;
+
+      expect(event).to.be.instanceOf(DeviceConsumablesChangedDomainEvent);
+      expect(event.aggregateId).to.equal(device.id);
+      expect(event.previousConsumables).to.be.equal(previousConsumables);
+      expect(event.currentConsumables).to.be.equal(currentConsumables);
     });
   });
 
