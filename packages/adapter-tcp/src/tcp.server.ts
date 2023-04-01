@@ -15,6 +15,7 @@ import { ReturnHomeCommandHandler } from './command-handlers/return-home.command
 import { SetCarpetModeCommandHandler } from './command-handlers/set-carpet-mode.command-handler';
 import { SetDeviceQuietHoursCommandHandler } from './command-handlers/set-device-quiet-hours.command-handler';
 import { SetDeviceVoiceCommandHandler } from './command-handlers/set-device-voice.command-handler';
+import { SetFanSpeedCommandHandler } from './command-handlers/set-fan-speed.command-handler';
 import { StartCleaningCommandHandler } from './command-handlers/start-cleaning.command-handler';
 import { StopCleaningCommandHandler } from './command-handlers/stop-cleaning.command-handler';
 import { NTPServerConnectionHandler } from './connection-handlers/ntp-server.connection-handler';
@@ -189,6 +190,7 @@ export class TCPServer implements Server {
       new SetCarpetModeCommandHandler(packetConnectionFinderService, this.deviceRepository),
       new SetDeviceQuietHoursCommandHandler(packetConnectionFinderService),
       new SetDeviceVoiceCommandHandler(packetConnectionFinderService, voiceSettingMapper, this.deviceRepository),
+      new SetFanSpeedCommandHandler(packetConnectionFinderService, deviceFanSpeedMapper, this.deviceRepository),
       new StartCleaningCommandHandler(packetConnectionFinderService, deviceModeChangerService),
       new StopCleaningCommandHandler(packetConnectionFinderService),
     );
