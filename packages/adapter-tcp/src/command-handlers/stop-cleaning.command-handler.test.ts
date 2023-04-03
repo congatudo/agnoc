@@ -1,24 +1,28 @@
 import { StopCleaningCommand } from '@agnoc/domain';
 import { ID } from '@agnoc/toolkit';
-import { imock, instance, when, verify, anything, deepEqual } from '@johanblumenberg/ts-mockito';
+import { imock, instance, when, verify, anything } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
+import { ModeCtrlValue } from '../services/device-mode-changer.service';
 import { StopCleaningCommandHandler } from './stop-cleaning.command-handler';
 import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
-import type { PacketMessage } from '../objects/packet.message';
+import type { DeviceCleaningService } from '../services/device-cleaning.service';
 import type { PacketConnectionFinderService } from '../services/packet-connection-finder.service';
 import type { ConnectionWithDevice } from '@agnoc/domain';
 
 describe('StopCleaningCommandHandler', function () {
+  let deviceCleaningService: DeviceCleaningService;
   let packetConnectionFinderService: PacketConnectionFinderService;
   let commandHandler: StopCleaningCommandHandler;
   let packetConnection: PacketConnection & ConnectionWithDevice;
-  let packetMessage: PacketMessage;
 
   beforeEach(function () {
+    deviceCleaningService = imock();
     packetConnectionFinderService = imock();
-    commandHandler = new StopCleaningCommandHandler(instance(packetConnectionFinderService));
+    commandHandler = new StopCleaningCommandHandler(
+      instance(packetConnectionFinderService),
+      instance(deviceCleaningService),
+    );
     packetConnection = imock();
-    packetMessage = imock();
   });
 
   it('should define the name', function () {
@@ -33,20 +37,17 @@ describe('StopCleaningCommandHandler', function () {
 
       await commandHandler.handle(command);
 
-      verify(packetConnection.sendAndWait(anything(), anything())).never();
-      verify(packetMessage.assertPayloadName(anything())).never();
+      verify(deviceCleaningService.autoCleaning(anything(), anything())).never();
     });
 
     it('should stop cleaning', async function () {
       const command = new StopCleaningCommand({ deviceId: new ID(1) });
 
       when(packetConnectionFinderService.findByDeviceId(anything())).thenResolve(instance(packetConnection));
-      when(packetConnection.sendAndWait(anything(), anything())).thenResolve(instance(packetMessage));
 
       await commandHandler.handle(command);
 
-      verify(packetConnection.sendAndWait('DEVICE_AUTO_CLEAN_REQ', deepEqual({ ctrlValue: 0, cleanType: 2 }))).once();
-      verify(packetMessage.assertPayloadName('DEVICE_AUTO_CLEAN_RSP')).once();
+      verify(deviceCleaningService.autoCleaning(instance(packetConnection), ModeCtrlValue.Stop)).once();
     });
   });
 });

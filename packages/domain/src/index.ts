@@ -9,6 +9,7 @@ export * from './commands/set-carpet-mode.command';
 export * from './commands/set-device-quiet-hours.command';
 export * from './commands/set-device-voice.command';
 export * from './commands/set-fan-speed.command';
+export * from './commands/set-water-level.command';
 export * from './commands/start-cleaning.command';
 export * from './commands/stop-cleaning.command';
 export * from './domain-events/connection-device-changed.domain-event';

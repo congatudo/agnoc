@@ -2,10 +2,11 @@ import { DeviceCapability, DeviceMode, DeviceModeValue, DeviceStateValue } from 
 import { DomainException } from '@agnoc/toolkit';
 import { ModeCtrlValue } from '../services/device-mode-changer.service';
 import type { PacketConnection } from '../aggregate-roots/packet-connection.aggregate-root';
-import type { PacketMessage } from '../objects/packet.message';
+import type { DeviceCleaningService } from '../services/device-cleaning.service';
+import type { DeviceMapService } from '../services/device-map.service';
 import type { DeviceModeChangerService } from '../services/device-mode-changer.service';
 import type { PacketConnectionFinderService } from '../services/packet-connection-finder.service';
-import type { CommandHandler, StartCleaningCommand, ConnectionWithDevice } from '@agnoc/domain';
+import type { CommandHandler, StartCleaningCommand, ConnectionWithDevice, Device, DeviceMap } from '@agnoc/domain';
 
 export class StartCleaningCommandHandler implements CommandHandler {
   readonly forName = 'StartCleaningCommand';
@@ -13,6 +14,8 @@ export class StartCleaningCommandHandler implements CommandHandler {
   constructor(
     private readonly packetConnectionFinderService: PacketConnectionFinderService,
     private readonly deviceModeChangerService: DeviceModeChangerService,
+    private readonly deviceCleaningService: DeviceCleaningService,
+    private readonly deviceMapService: DeviceMapService,
   ) {}
 
   async handle(event: StartCleaningCommand): Promise<void> {
@@ -28,22 +31,22 @@ export class StartCleaningCommandHandler implements CommandHandler {
     const deviceModeValue = device.mode?.value;
 
     if (deviceModeValue === DeviceModeValue.Zone) {
-      return this.startZoneCleaning(connection);
+      return this.deviceCleaningService.zoneCleaning(connection, ModeCtrlValue.Start);
     }
 
     if (deviceModeValue === DeviceModeValue.Mop) {
-      return this.startMopCleaning(connection);
+      return this.deviceCleaningService.mopCleaning(connection, ModeCtrlValue.Start);
     }
 
     if (deviceModeValue === DeviceModeValue.Spot) {
       return this.startSpotCleaning(connection);
     }
 
-    if (this.isDockedAndSupportsMapPlans(connection)) {
-      await this.enableWholeClean(connection);
+    if (this.isDockedAndSupportsMapPlansAndHasMap(connection)) {
+      await this.deviceMapService.enableWholeClean(connection);
     }
 
-    return this.startAutoCleaning(connection);
+    return this.deviceCleaningService.autoCleaning(connection, ModeCtrlValue.Start);
   }
 
   private async changeDeviceMode(connection: PacketConnection & ConnectionWithDevice) {
@@ -51,14 +54,6 @@ export class StartCleaningCommandHandler implements CommandHandler {
     const deviceMode = new DeviceMode(deviceModeValue);
 
     await this.deviceModeChangerService.changeMode(connection, deviceMode);
-  }
-
-  private async startZoneCleaning(connection: PacketConnection & ConnectionWithDevice) {
-    const response: PacketMessage = await connection.sendAndWait('DEVICE_AREA_CLEAN_REQ', {
-      ctrlValue: ModeCtrlValue.Start,
-    });
-
-    response.assertPayloadName('DEVICE_AREA_CLEAN_RSP');
   }
 
   private async startSpotCleaning(connection: PacketConnection & ConnectionWithDevice) {
@@ -70,72 +65,20 @@ export class StartCleaningCommandHandler implements CommandHandler {
       throw new DomainException('Unable to start spot cleaning, no spot selected');
     }
 
-    const response: PacketMessage = await connection.sendAndWait('DEVICE_MAPID_SET_NAVIGATION_REQ', {
-      mapHeadId: connection.device.map.id.value,
-      poseX: connection.device.map.currentSpot.x,
-      poseY: connection.device.map.currentSpot.y,
-      posePhi: connection.device.map.currentSpot.phi,
-      ctrlValue: ModeCtrlValue.Start,
-    });
-
-    response.assertPayloadName('DEVICE_MAPID_SET_NAVIGATION_RSP');
+    return this.deviceCleaningService.spotCleaning(connection, connection.device.map.currentSpot, ModeCtrlValue.Start);
   }
 
-  private async startMopCleaning(connection: PacketConnection & ConnectionWithDevice) {
-    const response: PacketMessage = await connection.sendAndWait('DEVICE_MOP_FLOOR_CLEAN_REQ', {
-      ctrlValue: ModeCtrlValue.Start,
-    });
-
-    response.assertPayloadName('DEVICE_MOP_FLOOR_CLEAN_RSP');
-  }
-
-  private async startAutoCleaning(connection: PacketConnection & ConnectionWithDevice) {
-    const response: PacketMessage = await connection.sendAndWait('DEVICE_AUTO_CLEAN_REQ', {
-      ctrlValue: ModeCtrlValue.Start,
-      cleanType: 2,
-    });
-
-    response.assertPayloadName('DEVICE_AUTO_CLEAN_RSP');
-  }
-
-  private isDockedAndSupportsMapPlans(connection: PacketConnection & ConnectionWithDevice) {
+  private isDockedAndSupportsMapPlansAndHasMap(
+    connection: PacketConnection & ConnectionWithDevice,
+  ): connection is PacketConnection & ConnectionWithDevice<DeviceWithMap> {
     const supportsMapPlans = connection.device.system.supports(DeviceCapability.MAP_PLANS);
     const deviceStateValue = connection.device.state?.value;
+    const hasMap = connection.device.map;
 
-    return supportsMapPlans && deviceStateValue === DeviceStateValue.Docked;
+    return Boolean(supportsMapPlans && deviceStateValue === DeviceStateValue.Docked && hasMap);
   }
+}
 
-  private async enableWholeClean(connection: PacketConnection & ConnectionWithDevice) {
-    if (!connection.device.map) {
-      return;
-    }
-
-    const { id, restrictedZones, rooms } = connection.device.map;
-    const response: PacketMessage = await connection.sendAndWait('DEVICE_MAPID_SET_PLAN_PARAMS_REQ', {
-      mapHeadId: id.value,
-      // FIXME: this will change user map name.
-      mapName: 'Default',
-      planId: 2,
-      // FIXME: this will change user plan name.
-      planName: 'Default',
-      roomList: rooms.map((room) => ({
-        roomId: room.id.value,
-        roomName: room.name,
-        enable: true,
-      })),
-      areaInfo: {
-        mapHeadId: id.value,
-        planId: 2,
-        cleanAreaLength: restrictedZones.length,
-        cleanAreaList: restrictedZones.map((zone) => ({
-          cleanAreaId: zone.id.value,
-          type: 0,
-          coordinateLength: zone.coordinates.length,
-          coordinateList: zone.coordinates.map(({ x, y }) => ({ x, y })),
-        })),
-      },
-    });
-
-    response.assertPayloadName('DEVICE_MAPID_SET_PLAN_PARAMS_RSP');
-  }
+interface DeviceWithMap extends Device {
+  map: DeviceMap;
 }

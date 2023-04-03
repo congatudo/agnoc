@@ -6,6 +6,7 @@ import type { SetCarpetModeCommand } from './set-carpet-mode.command';
 import type { SetDeviceQuietHoursCommand } from './set-device-quiet-hours.command';
 import type { SetDeviceVoiceCommand } from './set-device-voice.command';
 import type { SetFanSpeedCommand } from './set-fan-speed.command';
+import type { SetWaterLevelCommand } from './set-water-level.command';
 import type { StartCleaningCommand } from './start-cleaning.command';
 import type { StopCleaningCommand } from './stop-cleaning.command';
 
@@ -19,6 +20,7 @@ export type Commands = {
   SetDeviceQuietHoursCommand: SetDeviceQuietHoursCommand;
   SetDeviceVoiceCommand: SetDeviceVoiceCommand;
   SetFanSpeedCommand: SetFanSpeedCommand;
+  SetWaterLevelCommand: SetWaterLevelCommand;
   StartCleaningCommand: StartCleaningCommand;
   StopCleaningCommand: StopCleaningCommand;
 };

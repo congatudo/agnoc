@@ -16,6 +16,7 @@ import { SetCarpetModeCommandHandler } from './command-handlers/set-carpet-mode.
 import { SetDeviceQuietHoursCommandHandler } from './command-handlers/set-device-quiet-hours.command-handler';
 import { SetDeviceVoiceCommandHandler } from './command-handlers/set-device-voice.command-handler';
 import { SetFanSpeedCommandHandler } from './command-handlers/set-fan-speed.command-handler';
+import { SetWaterLevelCommandHandler } from './command-handlers/set-water-level.command-handler';
 import { StartCleaningCommandHandler } from './command-handlers/start-cleaning.command-handler';
 import { StopCleaningCommandHandler } from './command-handlers/stop-cleaning.command-handler';
 import { NTPServerConnectionHandler } from './connection-handlers/ntp-server.connection-handler';
@@ -58,6 +59,8 @@ import { DeviceUpgradeInfoEventHandler } from './packet-event-handlers/device-up
 import { DeviceVersionUpdateEventHandler } from './packet-event-handlers/device-version-update.event-handler';
 import { GetDeviceConsumablesQueryHandler } from './query-handlers/get-device-consumables.query-handler';
 import { ConnectionDeviceUpdaterService } from './services/connection-device-updater.service';
+import { DeviceCleaningService } from './services/device-cleaning.service';
+import { DeviceMapService } from './services/device-map.service';
 import { DeviceModeChangerService } from './services/device-mode-changer.service';
 import { PacketConnectionFinderService } from './services/packet-connection-finder.service';
 import { PacketEventPublisherService } from './services/packet-event-publisher.service';
@@ -116,6 +119,8 @@ export class TCPServer implements Server {
     const packetEventPublisherService = new PacketEventPublisherService(packetEventBus);
     const packetConnectionFinderService = new PacketConnectionFinderService(this.connectionRepository);
     const deviceModeChangerService = new DeviceModeChangerService(waiterService);
+    const deviceCleaningService = new DeviceCleaningService();
+    const deviceMapService = new DeviceMapService();
 
     // Connection
     const packetConnectionFactory = new PacketConnectionFactory(packetEventBus, packetFactory);
@@ -184,15 +189,21 @@ export class TCPServer implements Server {
     this.commandQueryHandlerRegistry.register(
       new GetDeviceConsumablesQueryHandler(packetConnectionFinderService, this.deviceRepository),
       new LocateDeviceCommandHandler(packetConnectionFinderService),
-      new PauseCleaningCommandHandler(packetConnectionFinderService),
+      new PauseCleaningCommandHandler(packetConnectionFinderService, deviceCleaningService),
       new ResetConsumableCommandHandler(packetConnectionFinderService, this.deviceRepository),
       new ReturnHomeCommandHandler(packetConnectionFinderService),
       new SetCarpetModeCommandHandler(packetConnectionFinderService, this.deviceRepository),
       new SetDeviceQuietHoursCommandHandler(packetConnectionFinderService),
       new SetDeviceVoiceCommandHandler(packetConnectionFinderService, voiceSettingMapper, this.deviceRepository),
       new SetFanSpeedCommandHandler(packetConnectionFinderService, deviceFanSpeedMapper, this.deviceRepository),
-      new StartCleaningCommandHandler(packetConnectionFinderService, deviceModeChangerService),
-      new StopCleaningCommandHandler(packetConnectionFinderService),
+      new SetWaterLevelCommandHandler(packetConnectionFinderService, deviceWaterLevelMapper, this.deviceRepository),
+      new StartCleaningCommandHandler(
+        packetConnectionFinderService,
+        deviceModeChangerService,
+        deviceCleaningService,
+        deviceMapService,
+      ),
+      new StopCleaningCommandHandler(packetConnectionFinderService, deviceCleaningService),
     );
   }
 

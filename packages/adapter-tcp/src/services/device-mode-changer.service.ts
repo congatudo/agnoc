@@ -7,11 +7,11 @@ import type { WaiterService } from '@agnoc/toolkit';
 
 const MODE_CHANGE_TIMEOUT = 5000;
 
-export const ModeCtrlValue = {
-  Stop: 0,
-  Start: 1,
-  Pause: 2,
-} as const;
+export enum ModeCtrlValue {
+  Stop = 0,
+  Start = 1,
+  Pause = 2,
+}
 
 export class DeviceModeChangerService {
   constructor(private readonly waiterService: WaiterService) {}
