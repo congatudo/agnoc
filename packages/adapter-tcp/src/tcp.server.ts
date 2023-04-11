@@ -15,6 +15,7 @@ import { PauseCleaningCommandHandler } from './command-handlers/pause-cleaning.c
 import { ResetConsumableCommandHandler } from './command-handlers/reset-consumable.command-handler';
 import { ReturnHomeCommandHandler } from './command-handlers/return-home.command-handler';
 import { SetCarpetModeCommandHandler } from './command-handlers/set-carpet-mode.command-handler';
+import { SetDeviceModeCommandHandler } from './command-handlers/set-device-mode.command-handler';
 import { SetDeviceQuietHoursCommandHandler } from './command-handlers/set-device-quiet-hours.command-handler';
 import { SetDeviceVoiceCommandHandler } from './command-handlers/set-device-voice.command-handler';
 import { SetFanSpeedCommandHandler } from './command-handlers/set-fan-speed.command-handler';
@@ -202,6 +203,7 @@ export class TCPServer implements Server {
       new ResetConsumableCommandHandler(packetConnectionFinderService, this.deviceRepository),
       new ReturnHomeCommandHandler(packetConnectionFinderService),
       new SetCarpetModeCommandHandler(packetConnectionFinderService, this.deviceRepository),
+      new SetDeviceModeCommandHandler(packetConnectionFinderService, deviceModeChangerService),
       new SetDeviceQuietHoursCommandHandler(packetConnectionFinderService),
       new SetDeviceVoiceCommandHandler(packetConnectionFinderService, voiceSettingMapper, this.deviceRepository),
       new SetFanSpeedCommandHandler(packetConnectionFinderService, deviceFanSpeedMapper, this.deviceRepository),

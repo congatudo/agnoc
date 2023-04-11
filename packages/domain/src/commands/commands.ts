@@ -5,6 +5,7 @@ import type { PauseCleaningCommand } from './pause-cleaning.command';
 import type { ResetConsumableCommand } from './reset-consumable.command';
 import type { ReturnHomeCommand } from './return-home.command';
 import type { SetCarpetModeCommand } from './set-carpet-mode.command';
+import type { SetDeviceModeCommand } from './set-device-mode.command';
 import type { SetDeviceQuietHoursCommand } from './set-device-quiet-hours.command';
 import type { SetDeviceVoiceCommand } from './set-device-voice.command';
 import type { SetFanSpeedCommand } from './set-fan-speed.command';
@@ -21,6 +22,7 @@ export type Commands = {
   ResetConsumableCommand: ResetConsumableCommand;
   ReturnHomeCommand: ReturnHomeCommand;
   SetCarpetModeCommand: SetCarpetModeCommand;
+  SetDeviceModeCommand: SetDeviceModeCommand;
   SetDeviceQuietHoursCommand: SetDeviceQuietHoursCommand;
   SetDeviceVoiceCommand: SetDeviceVoiceCommand;
   SetFanSpeedCommand: SetFanSpeedCommand;
