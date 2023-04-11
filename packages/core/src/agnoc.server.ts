@@ -1,6 +1,7 @@
 import { CommandQueryBus, ConnectionRepository, DeviceRepository, DomainEventBus } from '@agnoc/domain';
 import { EventHandlerRegistry, MemoryAdapter, TaskHandlerRegistry } from '@agnoc/toolkit';
 import { FindDeviceQueryHandler } from './query-handlers/find-device.query-handler';
+import { FindDevicesQueryHandler } from './query-handlers/find-devices.query-handler';
 import type { DomainEventNames, DomainEvents, CommandsOrQueries } from '@agnoc/domain';
 import type { Server, TaskOutput } from '@agnoc/toolkit';
 
@@ -53,7 +54,10 @@ export class AgnocServer implements Server {
   }
 
   private registerHandlers(): void {
-    this.commandQueryHandlerRegistry.register(new FindDeviceQueryHandler(this.deviceRepository));
+    this.commandQueryHandlerRegistry.register(
+      new FindDeviceQueryHandler(this.deviceRepository),
+      new FindDevicesQueryHandler(this.deviceRepository),
+    );
   }
 }
 

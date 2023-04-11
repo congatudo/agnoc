@@ -53,6 +53,7 @@ export * from './event-handlers/command.task-handler';
 export * from './event-handlers/domain.event-handler';
 export * from './event-handlers/query.task-handler';
 export * from './queries/find-device.query';
+export * from './queries/find-devices.query';
 export * from './queries/get-device-consumables.query';
 export * from './queries/queries';
 export * from './repositories/connection.repository';

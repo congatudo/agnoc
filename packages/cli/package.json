@@ -81,6 +81,9 @@
     }
   },
   "dependencies": {
+    "@agnoc/adapter-tcp": "^0.18.0-next.0",
+    "@agnoc/core": "^0.18.0-next.0",
+    "@agnoc/domain": "^0.18.0-next.0",
     "@agnoc/toolkit": "^0.18.0-next.0",
     "@agnoc/transport-tcp": "^0.18.0-next.0",
     "chalk": "^4.1.1",
