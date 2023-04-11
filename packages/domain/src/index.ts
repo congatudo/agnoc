@@ -1,5 +1,7 @@
 export * from './aggregate-roots/connection.aggregate-root';
 export * from './aggregate-roots/device.aggregate-root';
+export * from './commands/clean-spot.command';
+export * from './commands/clean-zones.command';
 export * from './commands/commands';
 export * from './commands/locate-device.command';
 export * from './commands/pause-cleaning.command';

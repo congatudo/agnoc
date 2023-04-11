@@ -8,6 +8,8 @@ import {
   PayloadDataParserService,
   PacketFactory,
 } from '@agnoc/transport-tcp';
+import { CleanSpotCommandHandler } from './command-handlers/clean-spot.command-handler';
+import { CleanZonesCommandHandler } from './command-handlers/clean-zones.command-handler';
 import { LocateDeviceCommandHandler } from './command-handlers/locate-device.command-handler';
 import { PauseCleaningCommandHandler } from './command-handlers/pause-cleaning.command-handler';
 import { ResetConsumableCommandHandler } from './command-handlers/reset-consumable.command-handler';
@@ -187,6 +189,13 @@ export class TCPServer implements Server {
 
     // Command event handlers
     this.commandQueryHandlerRegistry.register(
+      new CleanSpotCommandHandler(packetConnectionFinderService, deviceModeChangerService, deviceCleaningService),
+      new CleanZonesCommandHandler(
+        packetConnectionFinderService,
+        deviceModeChangerService,
+        deviceMapService,
+        deviceCleaningService,
+      ),
       new GetDeviceConsumablesQueryHandler(packetConnectionFinderService, this.deviceRepository),
       new LocateDeviceCommandHandler(packetConnectionFinderService),
       new PauseCleaningCommandHandler(packetConnectionFinderService, deviceCleaningService),

@@ -1,3 +1,5 @@
+import type { CleanSpotCommand } from './clean-spot.command';
+import type { CleanZonesCommand } from './clean-zones.command';
 import type { LocateDeviceCommand } from './locate-device.command';
 import type { PauseCleaningCommand } from './pause-cleaning.command';
 import type { ResetConsumableCommand } from './reset-consumable.command';
@@ -12,6 +14,8 @@ import type { StopCleaningCommand } from './stop-cleaning.command';
 
 /** Commands that can be executed. */
 export type Commands = {
+  CleanSpotCommand: CleanSpotCommand;
+  CleanZonesCommand: CleanZonesCommand;
   LocateDeviceCommand: LocateDeviceCommand;
   PauseCleaningCommand: PauseCleaningCommand;
   ResetConsumableCommand: ResetConsumableCommand;
