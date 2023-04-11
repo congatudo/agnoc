@@ -1,41 +1,44 @@
-import type { ConnectionDeviceChangedDomainEvent } from './connection-device-changed.domain-event';
-import type { DeviceBatteryChangedDomainEvent } from './device-battery-changed.domain-event';
-import type { DeviceCleanWorkChangedDomainEvent } from './device-clean-work-changed.domain-event';
-import type { DeviceConnectedDomainEvent } from './device-connected.domain-event';
-import type { DeviceCreatedDomainEvent } from './device-created.domain-event';
-import type { DeviceErrorChangedDomainEvent } from './device-error-changed.domain-event';
-import type { DeviceFanSpeedChangedDomainEvent } from './device-fan-speed-changed.domain-event';
-import type { DeviceLockedDomainEvent } from './device-locked.domain-event';
-import type { DeviceMapChangedDomainEvent } from './device-map-changed.domain-event';
-import type { DeviceMapPendingDomainEvent } from './device-map-pending.domain-event';
-import type { DeviceModeChangedDomainEvent } from './device-mode-changed.domain-event';
-import type { DeviceMopAttachedDomainEvent } from './device-mop-attached.domain-event';
-import type { DeviceNetworkChangedDomainEvent } from './device-network-changed.domain-event';
-import type { DeviceOrdersChangedDomainEvent } from './device-orders-changed.domain-event';
-import type { DeviceSettingsChangedDomainEvent } from './device-settings-changed.domain-event';
-import type { DeviceStateChangedDomainEvent } from './device-state-changed.domain-event';
-import type { DeviceVersionChangedDomainEvent } from './device-version-changed.domain-event';
-import type { DeviceWaterLevelChangedDomainEvent } from './device-water-level-changed.domain-event';
+import { ConnectionDeviceChangedDomainEvent } from './connection-device-changed.domain-event';
+import { DeviceBatteryChangedDomainEvent } from './device-battery-changed.domain-event';
+import { DeviceCleanWorkChangedDomainEvent } from './device-clean-work-changed.domain-event';
+import { DeviceConnectedDomainEvent } from './device-connected.domain-event';
+import { DeviceCreatedDomainEvent } from './device-created.domain-event';
+import { DeviceErrorChangedDomainEvent } from './device-error-changed.domain-event';
+import { DeviceFanSpeedChangedDomainEvent } from './device-fan-speed-changed.domain-event';
+import { DeviceLockedDomainEvent } from './device-locked.domain-event';
+import { DeviceMapChangedDomainEvent } from './device-map-changed.domain-event';
+import { DeviceMapPendingDomainEvent } from './device-map-pending.domain-event';
+import { DeviceModeChangedDomainEvent } from './device-mode-changed.domain-event';
+import { DeviceMopAttachedDomainEvent } from './device-mop-attached.domain-event';
+import { DeviceNetworkChangedDomainEvent } from './device-network-changed.domain-event';
+import { DeviceOrdersChangedDomainEvent } from './device-orders-changed.domain-event';
+import { DeviceSettingsChangedDomainEvent } from './device-settings-changed.domain-event';
+import { DeviceStateChangedDomainEvent } from './device-state-changed.domain-event';
+import { DeviceVersionChangedDomainEvent } from './device-version-changed.domain-event';
+import { DeviceWaterLevelChangedDomainEvent } from './device-water-level-changed.domain-event';
+import type { InstanceTypeProps } from '@agnoc/toolkit';
 
-export type DomainEvents = {
-  ConnectionDeviceChangedDomainEvent: ConnectionDeviceChangedDomainEvent;
-  DeviceBatteryChangedDomainEvent: DeviceBatteryChangedDomainEvent;
-  DeviceCleanWorkChangedDomainEvent: DeviceCleanWorkChangedDomainEvent;
-  DeviceConnectedDomainEvent: DeviceConnectedDomainEvent;
-  DeviceCreatedDomainEvent: DeviceCreatedDomainEvent;
-  DeviceErrorChangedDomainEvent: DeviceErrorChangedDomainEvent;
-  DeviceFanSpeedChangedDomainEvent: DeviceFanSpeedChangedDomainEvent;
-  DeviceLockedDomainEvent: DeviceLockedDomainEvent;
-  DeviceMapChangedDomainEvent: DeviceMapChangedDomainEvent;
-  DeviceMapPendingDomainEvent: DeviceMapPendingDomainEvent;
-  DeviceModeChangedDomainEvent: DeviceModeChangedDomainEvent;
-  DeviceMopAttachedDomainEvent: DeviceMopAttachedDomainEvent;
-  DeviceNetworkChangedDomainEvent: DeviceNetworkChangedDomainEvent;
-  DeviceOrdersChangedDomainEvent: DeviceOrdersChangedDomainEvent;
-  DeviceSettingsChangedDomainEvent: DeviceSettingsChangedDomainEvent;
-  DeviceStateChangedDomainEvent: DeviceStateChangedDomainEvent;
-  DeviceVersionChangedDomainEvent: DeviceVersionChangedDomainEvent;
-  DeviceWaterLevelChangedDomainEvent: DeviceWaterLevelChangedDomainEvent;
+export const DomainEvents = {
+  ConnectionDeviceChangedDomainEvent,
+  DeviceBatteryChangedDomainEvent,
+  DeviceCleanWorkChangedDomainEvent,
+  DeviceConnectedDomainEvent,
+  DeviceCreatedDomainEvent,
+  DeviceErrorChangedDomainEvent,
+  DeviceFanSpeedChangedDomainEvent,
+  DeviceLockedDomainEvent,
+  DeviceMapChangedDomainEvent,
+  DeviceMapPendingDomainEvent,
+  DeviceModeChangedDomainEvent,
+  DeviceMopAttachedDomainEvent,
+  DeviceNetworkChangedDomainEvent,
+  DeviceOrdersChangedDomainEvent,
+  DeviceSettingsChangedDomainEvent,
+  DeviceStateChangedDomainEvent,
+  DeviceVersionChangedDomainEvent,
+  DeviceWaterLevelChangedDomainEvent,
 };
+
+export type DomainEvents = InstanceTypeProps<typeof DomainEvents>;
 
 export type DomainEventNames = keyof DomainEvents;

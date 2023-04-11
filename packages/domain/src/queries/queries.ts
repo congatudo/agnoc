@@ -1,9 +1,12 @@
-import type { FindDeviceQuery } from './find-device.query';
-import type { GetDeviceConsumablesQuery } from './get-device-consumables.query';
+import { FindDeviceQuery } from './find-device.query';
+import { GetDeviceConsumablesQuery } from './get-device-consumables.query';
+import type { InstanceTypeProps } from '@agnoc/toolkit';
 
-export type Queries = {
-  FindDeviceQuery: FindDeviceQuery;
-  GetDeviceConsumablesQuery: GetDeviceConsumablesQuery;
+export const Queries = {
+  FindDeviceQuery,
+  GetDeviceConsumablesQuery,
 };
+
+export type Queries = InstanceTypeProps<typeof Queries>;
 
 export type QueryNames = keyof Queries;
