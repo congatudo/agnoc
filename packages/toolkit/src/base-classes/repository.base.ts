@@ -5,6 +5,7 @@ import type { EntityProps } from './entity.base';
 import type { EventBus } from './event-bus.base';
 import type { ID } from '../domain-primitives/id.domain-primitive';
 
+/** Base class for repositories. */
 export abstract class Repository<T extends AggregateRoot<EntityProps>> {
   constructor(private readonly eventBus: EventBus, protected readonly adapter: Adapter) {}
 

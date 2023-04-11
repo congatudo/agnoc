@@ -1,10 +1,16 @@
 import type { ObjectLiteral } from '../types/object-literal.type';
 
+/** JSON representation of an exception. */
 export interface JSONException {
+  /** Name of the exception. */
   name: string;
+  /** Message of the exception. */
   message: string;
+  /** Stack trace of the exception. */
   stack?: string;
+  /** Metadata of the exception. */
   metadata?: ObjectLiteral;
+  /** Cause of the exception. */
   cause?: JSONException | unknown;
 }
 

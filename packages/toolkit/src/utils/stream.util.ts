@@ -72,18 +72,37 @@ function writeFn<M extends AllowedWriteMethods>(size: number, method: M) {
   };
 }
 
+/** Read a byte (uint8) from the stream. */
 export const readByte = readFn(1, 'readUInt8');
+
+/** Read a short (uint16) from the stream. */
 export const readShort = readFn(2, 'readUInt16LE');
+
+/** Read a word (uint32) from the stream. */
 export const readWord = readFn(4, 'readUInt32LE');
+
+/** Read a float (float32) from the stream. */
 export const readFloat = readFn(4, 'readFloatLE');
+
+/** Read a long (uint64) from the stream. */
 export const readLong = readFn(8, 'readBigUInt64LE');
 
+/** Write a byte (uint8) to the stream. */
 export const writeByte = writeFn(1, 'writeUInt8');
+
+/** Write a short (uint16) to the stream. */
 export const writeShort = writeFn(2, 'writeUInt16LE');
+
+/** Write a word (uint32) to the stream. */
 export const writeWord = writeFn(4, 'writeUInt32LE');
+
+/** Write a float (float32) to the stream. */
 export const writeFloat = writeFn(4, 'writeFloatLE');
+
+/** Write a long (uint64) to the stream. */
 export const writeLong = writeFn(8, 'writeBigUInt64LE');
 
+/** Read a string from the stream. */
 export function readString(stream: Readable): string {
   const length = readByte(stream);
 
@@ -98,6 +117,7 @@ export function readString(stream: Readable): string {
   return '';
 }
 
+/** Write a string to the stream. */
 export function writeString(stream: Writable, value: string): void {
   writeByte(stream, value.length);
 

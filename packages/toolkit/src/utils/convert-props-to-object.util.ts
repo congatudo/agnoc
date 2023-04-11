@@ -5,9 +5,11 @@ function convertToRaw(item: unknown): unknown {
   if (isObject(item) && typeof item.toJSON === 'function') {
     return item.toJSON();
   }
+
   return item;
 }
 
+/** Converts an object to an serializable json object. */
 export function convertPropsToObject(props: unknown): ObjectLiteral {
   if (!isObject(props)) {
     throw new TypeError(`Unable to convert props type <${typeof props}> to object`);

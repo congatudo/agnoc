@@ -1,3 +1,4 @@
+/** Converts a string to dash case. */
 export function toDashCase(str: string): string {
   return str
     .replace(/[_. ]/g, '-')

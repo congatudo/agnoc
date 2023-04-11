@@ -1,6 +1,7 @@
 import { Adapter } from '../base-classes/adapter.base';
 import type { ID } from '../domain-primitives/id.domain-primitive';
 
+/** Adapter for storing data in memory. */
 export class MemoryAdapter extends Adapter {
   private readonly data = new Map();
 

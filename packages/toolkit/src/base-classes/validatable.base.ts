@@ -39,7 +39,11 @@ export abstract class Validatable<T> {
   }
 
   /** Checks whether a prop is a number. Optionally check if the number is contained in a range. */
-  protected validateNumberProp<T, K extends keyof T & string>(props: T, propName: K, range?: NumberRange): void {
+  protected validateNumberProp<T, K extends keyof T & string>(
+    props: T,
+    propName: K,
+    range?: ValidateNumberRange,
+  ): void {
     const value = props[propName];
 
     if (!isPresent(value)) {
@@ -124,7 +128,10 @@ export abstract class Validatable<T> {
   }
 }
 
-export interface NumberRange {
+/** Defines a range of numbers. */
+export interface ValidateNumberRange {
+  /** The minimum value of the range. */
   min?: number;
+  /** The maximum value of the range. */
   max?: number;
 }

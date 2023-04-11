@@ -3,10 +3,13 @@ import { convertPropsToObject } from '../utils/convert-props-to-object.util';
 import { isPresent } from '../utils/is-present.util';
 import { Validatable } from './validatable.base';
 
+/** Props for all entities. */
 export interface EntityProps {
+  /** ID of the entity. */
   id: ID;
 }
 
+/** Base class for all entities. */
 export abstract class Entity<T extends EntityProps = EntityProps> extends Validatable<T> {
   constructor(props: T) {
     super(props);

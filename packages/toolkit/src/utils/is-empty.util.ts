@@ -1,3 +1,16 @@
+/**
+ * Checks if the value is an empty value.
+ *
+ * @example
+ * ```typescript
+ * isEmpty(null);      // true
+ * isEmpty(undefined); // true
+ * isEmpty('');        // true
+ * isEmpty([]);        // true
+ * isEmpty({});        // true
+ * isEmpty([null]);    // true
+ * ```
+ */
 export function isEmpty(value: unknown): boolean {
   if (typeof value === 'number' || typeof value === 'boolean') {
     return false;
