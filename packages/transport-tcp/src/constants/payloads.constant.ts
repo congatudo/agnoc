@@ -55,6 +55,7 @@ import type {
   IDEVICE_MAPID_WORK_STATUS_PUSH_REQ,
   IDEVICE_MOP_FLOOR_CLEAN_REQ,
   IDEVICE_MOP_FLOOR_CLEAN_RSP,
+  IDEVICE_OFFLINE_CMD,
   IDEVICE_ORDERLIST_DELETE_REQ,
   IDEVICE_ORDERLIST_DELETE_RSP,
   IDEVICE_ORDERLIST_GETTING_REQ,
@@ -98,7 +99,7 @@ import type {
   IUSER_SET_DEVICE_QUIETHOURS_RSP,
 } from '@agnoc/schemas-tcp';
 
-interface PayloadObjectMap {
+interface PayloadDataMap {
   CLIENT_HEARTBEAT_REQ: ICLIENT_HEARTBEAT_REQ;
   CLIENT_HEARTBEAT_RSP: ICLIENT_HEARTBEAT_RSP;
   CLIENT_IDLE_TIMEOUT: ICLIENT_IDLE_TIMEOUT;
@@ -157,6 +158,7 @@ interface PayloadObjectMap {
   DEVICE_MAPID_WORK_STATUS_PUSH_REQ: IDEVICE_MAPID_WORK_STATUS_PUSH_REQ;
   DEVICE_MOP_FLOOR_CLEAN_REQ: IDEVICE_MOP_FLOOR_CLEAN_REQ;
   DEVICE_MOP_FLOOR_CLEAN_RSP: IDEVICE_MOP_FLOOR_CLEAN_RSP;
+  DEVICE_OFFLINE_CMD: IDEVICE_OFFLINE_CMD;
   DEVICE_ORDERLIST_DELETE_REQ: IDEVICE_ORDERLIST_DELETE_REQ;
   DEVICE_ORDERLIST_DELETE_RSP: IDEVICE_ORDERLIST_DELETE_RSP;
   DEVICE_ORDERLIST_GETTING_REQ: IDEVICE_ORDERLIST_GETTING_REQ;
@@ -200,6 +202,6 @@ interface PayloadObjectMap {
   USER_SET_DEVICE_QUIETHOURS_RSP: IUSER_SET_DEVICE_QUIETHOURS_RSP;
 }
 
-export type PayloadObject = PayloadObjectMap[PayloadObjectName];
-export type PayloadObjectName = keyof PayloadObjectMap & OPNameLiteral;
-export type PayloadObjectFrom<Name extends PayloadObjectName> = PayloadObjectMap[Name];
+export type PayloadData = PayloadDataMap[PayloadDataName];
+export type PayloadDataName = keyof PayloadDataMap & OPNameLiteral;
+export type PayloadDataFrom<Name extends PayloadDataName> = PayloadDataMap[Name];

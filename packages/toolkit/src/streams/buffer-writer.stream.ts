@@ -1,7 +1,8 @@
 import { Writable } from 'stream';
 
-export type Callback = (error?: Error | null) => void;
+type Callback = (error?: Error | null) => void;
 
+/** A stream that writes to a buffer. */
 export class BufferWriter extends Writable {
   buffer: Buffer;
 

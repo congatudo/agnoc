@@ -3,11 +3,13 @@
   "include": ["packages/*/src", "packages/*/test", "packages/*/types"],
   "typedocOptions": {
     "entryPoints": [
+      "packages/core",
       "packages/cli",
       "packages/adapter-tcp",
       "packages/transport-tcp",
       "packages/domain",
-      "packages/toolkit"
+      "packages/toolkit",
+      "packages/test-support"
     ],
     "entryPointStrategy": "packages",
     "out": "public/typedoc",
@@ -18,5 +20,8 @@
     "includeVersion": true,
     "sort": ["kind", "instance-first", "static-first"],
     "hideGenerator": true
+  },
+  "ts-node": {
+    "files": true
   }
 }

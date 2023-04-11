@@ -66,10 +66,11 @@
   },
   "dependencies": {
     "debug": "^4.3.4",
-    "tiny-typed-emitter": "^2.1.0",
+    "emittery": "^0.13.1",
     "tslib": "^2.5.0"
   },
   "devDependencies": {
+    "@johanblumenberg/ts-mockito": "^1.0.35",
     "chai": "^4.3.7"
   },
   "engines": {

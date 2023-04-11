@@ -1,6 +1,7 @@
 import { ID } from '@agnoc/toolkit';
 import { CleanMode, CleanModeValue } from './domain-primitives/clean-mode.domain-primitive';
 import { CleanSize } from './domain-primitives/clean-size.domain-primitive';
+import { DeviceBattery } from './domain-primitives/device-battery.domain-primitive';
 import { DeviceFanSpeed, DeviceFanSpeedValue } from './domain-primitives/device-fan-speed.domain-primitive';
 import { DeviceWaterLevel, DeviceWaterLevelValue } from './domain-primitives/device-water-level.domain-primitive';
 import { WeekDay, WeekDayValue } from './domain-primitives/week-day.domain-primitive';
@@ -15,20 +16,20 @@ import { MapCoordinate } from './value-objects/map-coordinate.value-object';
 import { MapPixel } from './value-objects/map-pixel.value-object';
 import { QuietHoursSetting } from './value-objects/quiet-hours-setting.value-object';
 import { VoiceSetting } from './value-objects/voice-setting.value-object';
+import type { ConnectionProps } from './aggregate-roots/connection.aggregate-root';
+import type { DeviceProps } from './aggregate-roots/device.aggregate-root';
 import type { DeviceMapProps } from './entities/device-map.entity';
 import type { DeviceOrderProps } from './entities/device-order.entity';
-import type { DeviceProps } from './entities/device.entity';
 import type { RoomProps } from './entities/room.entity';
-import type { UserProps } from './entities/user.entity';
 import type { ZoneProps } from './entities/zone.entity';
 import type { DeviceCleanWorkProps } from './value-objects/device-clean-work.value-object';
 import type { DeviceConsumableProps } from './value-objects/device-consumable.value-object';
+import type { DeviceNetworkProps } from './value-objects/device-network.value-object';
 import type { DeviceSettingProps } from './value-objects/device-setting.value-object';
 import type { DeviceSettingsProps } from './value-objects/device-settings.value-object';
 import type { DeviceSystemProps } from './value-objects/device-system.value-object';
 import type { DeviceTimeProps } from './value-objects/device-time.value-object';
 import type { DeviceVersionProps } from './value-objects/device-version.value-object';
-import type { DeviceWlanProps } from './value-objects/device-wlan.value-object';
 import type { MapCoordinateProps } from './value-objects/map-coordinate.value-object';
 import type { MapPixelProps } from './value-objects/map-pixel.value-object';
 import type { MapPositionProps } from './value-objects/map-position.value-object';
@@ -74,7 +75,7 @@ export function givenSomeDeviceCleanWorkProps(): DeviceCleanWorkProps {
 export function givenSomeDeviceConsumableProps(): DeviceConsumableProps {
   return {
     type: DeviceConsumableType.MainBrush,
-    minutesUsed: 1,
+    hoursUsed: 1,
   };
 }
 
@@ -118,7 +119,7 @@ export function givenSomeDeviceVersionProps(): DeviceVersionProps {
   };
 }
 
-export function givenSomeDeviceWlanProps(): DeviceWlanProps {
+export function givenSomeDeviceNetworkProps(): DeviceNetworkProps {
   return {
     ipv4: '127.0.0.1',
     ssid: 'ssid',
@@ -159,12 +160,6 @@ export function givenSomeDeviceMapProps(): DeviceMapProps {
   };
 }
 
-export function givenSomeUserProps(): UserProps {
-  return {
-    id: ID.generate(),
-  };
-}
-
 export function givenSomeDeviceOrderProps(): DeviceOrderProps {
   return {
     id: ID.generate(),
@@ -184,13 +179,24 @@ export function givenSomeDeviceOrderProps(): DeviceOrderProps {
 export function givenSomeDeviceSystemProps(): DeviceSystemProps {
   return {
     type: 9,
+    serialNumber: 'serialNumber',
   };
 }
 
 export function givenSomeDeviceProps(): DeviceProps {
   return {
     id: ID.generate(),
+    userId: ID.generate(),
     system: new DeviceSystem(givenSomeDeviceSystemProps()),
     version: new DeviceVersion(givenSomeDeviceVersionProps()),
+    battery: new DeviceBattery(100),
+    isConnected: false,
+    isLocked: false,
+  };
+}
+
+export function givenSomeConnectionProps(): ConnectionProps {
+  return {
+    id: ID.generate(),
   };
 }

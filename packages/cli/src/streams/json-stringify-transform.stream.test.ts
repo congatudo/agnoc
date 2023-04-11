@@ -1,5 +1,5 @@
+import { readStream } from '@agnoc/test-support';
 import { expect } from 'chai';
-import { readStream } from '../test-support';
 import { JSONStringifyTransform } from './json-stringify-transform.stream';
 
 describe('JSONStringifystream', function () {

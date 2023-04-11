@@ -1,6 +1,6 @@
+import { readStream } from '@agnoc/test-support';
 import { imock, instance, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { readStream } from '../test-support';
 import { PCapTransform } from './pcap-transform.stream';
 import type { EthernetPacket, IPv4, PcapPacket, TCP } from 'pcap';
 

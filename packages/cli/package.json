@@ -81,6 +81,9 @@
     }
   },
   "dependencies": {
+    "@agnoc/adapter-tcp": "^0.18.0-next.0",
+    "@agnoc/core": "^0.18.0-next.0",
+    "@agnoc/domain": "^0.18.0-next.0",
     "@agnoc/toolkit": "^0.18.0-next.0",
     "@agnoc/transport-tcp": "^0.18.0-next.0",
     "chalk": "^4.1.1",
@@ -93,10 +96,12 @@
     "pcap": "^3.1.0"
   },
   "devDependencies": {
+    "@agnoc/test-support": "^0.18.0-next.0",
     "@johanblumenberg/ts-mockito": "^1.0.35",
     "chai": "^4.3.7",
     "execa": "^5.1.1",
-    "mock-fs": "^5.2.0"
+    "mock-fs": "^5.2.0",
+    "pcap": "^3.1.0"
   },
   "engines": {
     "node": ">=18.12"

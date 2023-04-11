@@ -1,6 +1,6 @@
 import { Socket } from 'net';
 import { Duplex } from 'stream';
-import { DomainException } from '@agnoc/toolkit';
+import { debug, DomainException } from '@agnoc/toolkit';
 import type { PacketMapper } from './mappers/packet.mapper';
 import type { Packet } from './value-objects/packet.value-object';
 import type { SocketConnectOpts } from 'net';
@@ -8,7 +8,7 @@ import type { SocketConnectOpts } from 'net';
 /** Events emitted by the {@link PacketSocket}. */
 export interface PacketSocketEvents {
   /** Emits a {@link Packet} when `data` is received. */
-  data: (packet: Packet) => void;
+  data: (packet: Packet) => void | Promise<void>;
   connect: () => void;
   close: (hasError: boolean) => void;
   drain: () => void;
@@ -22,6 +22,7 @@ export interface PacketSocketEvents {
 
 /** Socket that parses and serializes packets sent through a socket. */
 export class PacketSocket extends Duplex {
+  private readonly debug = (msg: string, ...args: string[]) => debug(__filename).extend(this.toString())(msg, ...args);
   private socket?: Socket;
   private readingPaused = false;
 
@@ -30,6 +31,7 @@ export class PacketSocket extends Duplex {
 
     if (socket) {
       this.wrapSocket(socket);
+      this.debug('new socket');
     }
   }
 
@@ -38,12 +40,16 @@ export class PacketSocket extends Duplex {
   connect(port: number, host: string): Promise<void>;
   connect(path: string): Promise<void>;
   connect(options: SocketConnectOpts): Promise<void>;
-  connect(portOrPathOrOptions: number | string | SocketConnectOpts, host?: string): Promise<void> {
+  async connect(portOrPathOrOptions: number | string | SocketConnectOpts, host?: string): Promise<void> {
+    if (this.socket) {
+      throw new DomainException('Socket is already connected');
+    }
+
     const socket = new Socket();
 
     this.wrapSocket(socket);
 
-    return new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
       if (typeof portOrPathOrOptions === 'number' && host) {
         return socket.connect(portOrPathOrOptions, host, resolve);
       }
@@ -58,6 +64,60 @@ export class PacketSocket extends Duplex {
       }
 
       return socket.connect(portOrPathOrOptions, resolve);
+    });
+
+    this.debug('connected');
+  }
+
+  /** Writes a packet to the socket. */
+  override write(packet: Packet, encoding: BufferEncoding, cb: (error: Error | null | undefined) => void): boolean;
+  override write(packet: Packet, cb: WriteCallback): boolean;
+  override write(packet: Packet): Promise<void>;
+  override write(
+    packet: Packet,
+    encodingOrCb?: BufferEncoding | WriteCallback,
+    cb?: WriteCallback,
+  ): boolean | Promise<void> {
+    if (cb) {
+      return super.write(packet, encodingOrCb as BufferEncoding, cb);
+    }
+
+    if (encodingOrCb) {
+      return super.write(packet, encodingOrCb as WriteCallback);
+    }
+
+    return new Promise((resolve, reject) => {
+      super.write(packet, (err) => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve();
+      });
+    });
+  }
+
+  /** Closes the socket. */
+  override end(packet: Packet, cb: EndCallback): this;
+  override end(packet: Packet): Promise<void>;
+  override end(cb: EndCallback): this;
+  override end(): Promise<void>;
+  override end(packetOrCb?: Packet | EndCallback, cb?: EndCallback): this | Promise<void> {
+    if (cb) {
+      return super.end(packetOrCb as Packet, cb);
+    }
+
+    if (typeof packetOrCb === 'function') {
+      return super.end(packetOrCb);
+    }
+
+    return new Promise((resolve) => {
+      if (packetOrCb) {
+        super.end(packetOrCb, resolve);
+        return;
+      }
+
+      super.end(resolve);
     });
   }
 
@@ -86,19 +146,54 @@ export class PacketSocket extends Duplex {
     return Boolean(this.socket?.connecting);
   }
 
+  /** Returns whether the socket is connected. */
+  get connected(): boolean {
+    return !this.socket?.pending && this.socket?.readyState === 'open';
+  }
+
+  /** Returns an string representation of the socket addresses. */
+  override toString(): string {
+    const remoteAddress = `${this.remoteAddress ?? 'unknown'}:${this.remotePort ?? 0}`;
+    const localAddress = `${this.localAddress ?? 'unknown'}:${this.localPort ?? 0}`;
+
+    return `${remoteAddress}::${localAddress}`;
+  }
+
   private wrapSocket(socket: Socket): void {
+    const onConnect: PacketSocketEvents['connect'] = () => this.emit('connect');
+    const onEnd: PacketSocketEvents['end'] = () => this.emit('end');
+    const onError: PacketSocketEvents['error'] = (err) => this.emit('error', err);
+    const onLookup: PacketSocketEvents['lookup'] = (err, address, family, host) =>
+      this.emit('lookup', err, address, family, host);
+    const onReady: PacketSocketEvents['ready'] = () => this.emit('ready');
+    const onReadable: PacketSocketEvents['readable'] = () => setImmediate(this.onReadable.bind(this));
+    /* istanbul ignore next - unable to test */
+    const onDrain: PacketSocketEvents['drain'] = () => this.emit('drain');
+    /* istanbul ignore next - unable to test */
+    const onTimeout: PacketSocketEvents['timeout'] = () => this.emit('timeout');
+    const onClose: PacketSocketEvents['close'] = (hadError) => {
+      this.socket?.off('connect', onConnect);
+      this.socket?.off('end', onEnd);
+      this.socket?.off('error', onError);
+      this.socket?.off('lookup', onLookup);
+      this.socket?.off('ready', onReady);
+      this.socket?.off('readable', onReadable);
+      this.socket?.off('drain', onDrain);
+      this.socket?.off('timeout', onTimeout);
+      this.socket = undefined;
+      this.emit('close', hadError);
+    };
+
     this.socket = socket;
-    this.socket.on('close', (hadError) => this.emit('close', hadError));
-    this.socket.on('connect', () => this.emit('connect'));
-    this.socket.on('end', () => this.emit('end'));
-    this.socket.on('error', (err) => this.emit('error', err));
-    this.socket.on('lookup', (err, address, family, host) => this.emit('lookup', err, address, family, host)); // prettier-ignore
-    this.socket.on('ready', () => this.emit('ready'));
-    this.socket.on('readable', () => setImmediate(this.onReadable.bind(this)));
-    /* istanbul ignore next - unable to test */
-    this.socket.on('drain', () => this.emit('drain'));
-    /* istanbul ignore next - unable to test */
-    this.socket.on('timeout', () => this.emit('timeout'));
+    this.socket.on('connect', onConnect);
+    this.socket.on('end', onEnd);
+    this.socket.on('error', onError);
+    this.socket.on('lookup', onLookup);
+    this.socket.on('ready', onReady);
+    this.socket.on('readable', onReadable);
+    this.socket.on('drain', onDrain);
+    this.socket.on('timeout', onTimeout);
+    this.socket.once('close', onClose);
   }
 
   private onReadable(): void {
@@ -137,6 +232,8 @@ export class PacketSocket extends Duplex {
         return;
       }
 
+      this.debug('received packet', packet.toString());
+
       const pushOk = this.push(packet);
 
       /* istanbul ignore if - unable to test */
@@ -151,7 +248,7 @@ export class PacketSocket extends Duplex {
     setImmediate(this.onReadable.bind(this));
   }
 
-  override _write(packet: Packet, _: BufferEncoding, done: Callback): void {
+  override _write(packet: Packet, _: BufferEncoding, done: InternalCallback): void {
     if (!this.socket) {
       done(new DomainException('Socket is not connected'));
       return;
@@ -159,27 +256,35 @@ export class PacketSocket extends Duplex {
 
     const buffer = this.packetMapper.fromDomain(packet);
 
+    this.debug('sending packet', packet.toString());
     this.socket.write(buffer, done);
   }
 
-  override _final(done: Callback): void {
+  override _final(done: InternalCallback): void {
     if (!this.socket) {
       done(new DomainException('Socket is not connected'));
       return;
     }
 
+    this.debug('closing socket');
     this.socket.end(done);
   }
 }
 
-export type Callback = (error?: Error | null) => void;
+export type InternalCallback = (error?: Error | null) => void;
+export type WriteCallback = (error: Error | null | undefined) => void;
+export type EndCallback = () => void;
 
 export declare interface PacketSocket extends Duplex {
   emit<U extends keyof PacketSocketEvents>(event: U, ...args: Parameters<PacketSocketEvents[U]>): boolean;
   on<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
   once<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
-  write(packet: Packet, encoding?: BufferEncoding, cb?: (error: Error | null | undefined) => void): boolean;
-  write(packet: Packet, cb?: (error: Error | null | undefined) => void): boolean;
-  end(cb?: () => void): this;
-  end(packet: Packet, cb?: () => void): this;
+  off<U extends keyof PacketSocketEvents>(event: U, listener: PacketSocketEvents[U]): this;
+  write(packet: Packet, encoding: BufferEncoding, cb: WriteCallback): boolean;
+  write(packet: Packet, cb: WriteCallback): boolean;
+  write(packet: Packet): Promise<void>;
+  end(packet: Packet, cb: EndCallback): this;
+  end(packet: Packet): Promise<void>;
+  end(cb: EndCallback): this;
+  end(): Promise<void>;
 }

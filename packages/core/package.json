@@ -1,0 +1,88 @@
+{
+  "name": "@agnoc/core",
+  "version": "0.18.0-next.0",
+  "description": "Agnoc adapter TCP library",
+  "keywords": [
+    "agnoc",
+    "adapter",
+    "tcp",
+    "conga",
+    "cecotec",
+    "driver",
+    "reverse",
+    "engineering"
+  ],
+  "homepage": "https://github.com/adrigzr/agnoc",
+  "bugs": {
+    "url": "https://github.com/adrigzr/agnoc/issues"
+  },
+  "license": "MIT",
+  "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrigzr/agnoc.git",
+    "directory": "packages/core"
+  },
+  "scripts": {
+    "build": "npm-run-all build:lib",
+    "build:lib": "tsc -b tsconfig.build.json",
+    "clean": "rm -rf .build-cache lib coverage",
+    "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
+    "test": "nyc mocha src test"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "inputs": [
+          "{workspaceRoot}/package.json",
+          "{workspaceRoot}/tsconfig.*",
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/package.json",
+          "{projectRoot}/tsconfig.*"
+        ],
+        "outputs": [
+          "{projectRoot}/lib",
+          "{projectRoot}/.build-cache"
+        ]
+      },
+      "test": {
+        "dependsOn": [
+          "build"
+        ],
+        "inputs": [
+          "{workspaceRoot}/.mocharc.yml",
+          "{workspaceRoot}/nyc.config.js",
+          "{projectRoot}/src/**/*"
+        ],
+        "outputs": [
+          "{projectRoot}/coverage"
+        ]
+      }
+    }
+  },
+  "dependencies": {
+    "@agnoc/domain": "^0.18.0-next.0",
+    "@agnoc/toolkit": "^0.18.0-next.0",
+    "tslib": "^2.5.0"
+  },
+  "devDependencies": {
+    "@johanblumenberg/ts-mockito": "^1.0.35",
+    "chai": "^4.3.7"
+  },
+  "engines": {
+    "node": ">=18.12"
+  },
+  "typedoc": {
+    "entryPoint": "./src/index.ts",
+    "readmeFile": "./README.md",
+    "displayName": "Core"
+  }
+}

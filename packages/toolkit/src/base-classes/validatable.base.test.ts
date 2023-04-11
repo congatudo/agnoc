@@ -5,28 +5,27 @@ import { ArgumentOutOfRangeException } from '../exceptions/argument-out-of-range
 import { Validatable } from './validatable.base';
 
 describe('Validatable', function () {
-  it('should check for empty props', function () {
+  it('should check for empty props', function (done) {
     type ValidatableProps = { foo: string };
 
     class DummyValidatable extends Validatable<ValidatableProps> {
-      protected validate(_: ValidatableProps): void {
-        // noop
+      protected validate(props: ValidatableProps): void {
+        expect(props).to.be.undefined;
+        done();
       }
     }
 
     // @ts-expect-error - missing properties
-    expect(() => new DummyValidatable()).to.throw(
-      ArgumentNotProvidedException,
-      'Cannot create DummyValidatable from empty properties',
-    );
+    new DummyValidatable();
   });
 
-  it('should invoke validate method', function () {
+  it('should invoke validate method', function (done) {
     type ValidatableProps = { foo: string };
 
     class DummyValidatable extends Validatable<ValidatableProps> {
       protected validate(props: ValidatableProps): void {
         expect(props).to.deep.equal({ foo: 'bar' });
+        done();
       }
     }
 

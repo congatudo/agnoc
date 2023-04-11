@@ -9,7 +9,7 @@ describe('DeviceConsumable', function () {
     const deviceConsumable = new DeviceConsumable(deviceConsumableProps);
 
     expect(deviceConsumable.type).to.be.equal(deviceConsumableProps.type);
-    expect(deviceConsumable.minutesUsed).to.be.equal(deviceConsumableProps.minutesUsed);
+    expect(deviceConsumable.hoursUsed).to.be.equal(deviceConsumableProps.hoursUsed);
   });
 
   it("should throw an error when 'type' property is not provided", function () {
@@ -28,19 +28,19 @@ describe('DeviceConsumable', function () {
     );
   });
 
-  it("should throw an error when 'minutesUsed' property is not provided", function () {
+  it("should throw an error when 'hoursUsed' property is not provided", function () {
     // @ts-expect-error - missing property
-    expect(() => new DeviceConsumable({ ...givenSomeDeviceConsumableProps(), minutesUsed: undefined })).to.throw(
+    expect(() => new DeviceConsumable({ ...givenSomeDeviceConsumableProps(), hoursUsed: undefined })).to.throw(
       ArgumentNotProvidedException,
-      `Property 'minutesUsed' for DeviceConsumable not provided`,
+      `Property 'hoursUsed' for DeviceConsumable not provided`,
     );
   });
 
-  it("should throw an error when 'minutesUsed' property is invalid", function () {
+  it("should throw an error when 'hoursUsed' property is invalid", function () {
     // @ts-expect-error - invalid property
-    expect(() => new DeviceConsumable({ ...givenSomeDeviceConsumableProps(), minutesUsed: 'foo' })).to.throw(
+    expect(() => new DeviceConsumable({ ...givenSomeDeviceConsumableProps(), hoursUsed: 'foo' })).to.throw(
       ArgumentInvalidException,
-      `Value 'foo' for property 'minutesUsed' of DeviceConsumable is not a number`,
+      `Value 'foo' for property 'hoursUsed' of DeviceConsumable is not a number`,
     );
   });
 });

@@ -1,10 +1,10 @@
 import path from 'path';
 import { PassThrough } from 'stream';
+import { readStream } from '@agnoc/test-support';
 import { Packet } from '@agnoc/transport-tcp';
 import { givenSomePacketProps } from '@agnoc/transport-tcp/test-support';
 import { anything, imock, instance, verify, when } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { readStream } from '../test-support';
 import { ReadCommand } from './read.command';
 import type { Stdio } from '../interfaces/stdio';
 import type { PacketMapper } from '@agnoc/transport-tcp';
@@ -35,10 +35,10 @@ describe('ReadCommand', function () {
     const [ret1, ret2] = await readStream(stdio.stdout, 'utf8');
 
     expect(ret1).to.equal(
-      '[fb3dd1ebc0e6c58f] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","object":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
+      '[fb3dd1ebc0e6c58f] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","data":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
     );
     expect(ret2).to.equal(
-      '[fb3dd1ebc0e6c58f] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","object":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
+      '[fb3dd1ebc0e6c58f] [ctype: 2] [flow: 1] [userId: 4] [deviceId: 3] {"opcode":"DEVICE_GETTIME_RSP","data":{"result":0,"body":{"deviceTime":1606129555,"deviceTimezone":3600}}}\n',
     );
 
     verify(packetMapper.toDomain(anything())).twice();
@@ -63,7 +63,7 @@ describe('ReadCommand', function () {
         sequence: 'fb3dd1ebc0e6c58f',
         payload: {
           opcode: 'DEVICE_GETTIME_RSP',
-          object: { result: +0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
+          data: { result: +0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
         },
       },
       {
@@ -74,7 +74,7 @@ describe('ReadCommand', function () {
         sequence: 'fb3dd1ebc0e6c58f',
         payload: {
           opcode: 'DEVICE_GETTIME_RSP',
-          object: { result: +0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
+          data: { result: +0, body: { deviceTime: 1606129555, deviceTimezone: 3600 } },
         },
       },
     ]);

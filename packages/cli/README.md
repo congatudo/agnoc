@@ -24,6 +24,16 @@ $ agnoc --help
 
 ## Commands
 
+### REPL
+
+Start a simplified REPL to control devices using queries and commands.
+
+```
+$ agnoc repl
+agnoc> { devices } = await server.trigger(new Queries.FindDevicesQuery())
+agnoc> await server.trigger(new Commands.LocateDeviceCommand({ deviceId: devices[0].id }))
+```
+
 ### Wlan
 
 This command configures the wifi connection of the robot to the given one.

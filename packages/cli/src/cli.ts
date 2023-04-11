@@ -1,6 +1,11 @@
 /* istanbul ignore file */
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { start as startREPL } from 'node:repl';
+import { TCPServer } from '@agnoc/adapter-tcp';
+import { AgnocServer } from '@agnoc/core';
 import {
-  PayloadObjectParserService,
+  PayloadDataParserService,
   getProtobufRoot,
   PacketMapper,
   getCustomDecoders,
@@ -13,6 +18,7 @@ import wifi from 'node-wifi';
 import { DecodeCommand } from './commands/decode.command';
 import { EncodeCommand } from './commands/encode.command';
 import { ReadCommand } from './commands/read.command';
+import { REPLCommand } from './commands/repl.command';
 import { WlanConfigCommand } from './commands/wlan-config.command';
 import { WlanCommand } from './commands/wlan.command';
 import type { Stdio } from './interfaces/stdio';
@@ -33,13 +39,24 @@ export function main(): void {
     stderr: process.stderr,
   };
 
-  const payloadMapper = new PayloadMapper(new PayloadObjectParserService(getProtobufRoot(), getCustomDecoders()));
+  const payloadMapper = new PayloadMapper(new PayloadDataParserService(getProtobufRoot(), getCustomDecoders()));
   const packetMapper = new PacketMapper(payloadMapper);
   const decodeCommand = new DecodeCommand(stdio, packetMapper);
   const readCommand = new ReadCommand(stdio, packetMapper);
   const encodeCommand = new EncodeCommand(stdio, packetMapper);
   const wlanConfigCommand = new WlanConfigCommand('192.168.5.1', 6008);
   const wlanCommand = new WlanCommand(cliUx, wifi, wlanConfigCommand);
+  const agnocServer = new AgnocServer();
+
+  agnocServer.buildAdapter(
+    (container) =>
+      new TCPServer(
+        container.deviceRepository,
+        container.connectionRepository,
+        container.domainEventHandlerRegistry,
+        container.commandQueryHandlerRegistry,
+      ),
+  );
 
   function handleError(e: Error): void {
     cliUx.action.stop(chalk.red('!'));
@@ -111,6 +128,19 @@ export function main(): void {
       cliUx.action.start('Configuring wifi settings in the robot');
       await wlanConfigCommand.action(ssid, password, { timeout: Number(timeout) }).catch(handleError);
       cliUx.action.stop();
+    });
+
+  program
+    .command('repl')
+    .description('start a REPL with a server listening for connections')
+    .option('-t, --history <history>', 'file to store the REPL history.', path.join(tmpdir(), 'agnoc-repl-history'))
+    .action(({ history }: { history: string }) => {
+      const repl = startREPL({ prompt: 'agnoc> ' });
+      const replCommand = new REPLCommand(agnocServer, repl);
+
+      return replCommand.action({
+        historyFilename: history,
+      });
     });
 
   program.addHelpCommand('help [command]', 'display help for command');

@@ -45,4 +45,10 @@ describe('cli', function () {
 
     expect(stdout).to.include('Usage: agnoc wlan:config');
   });
+
+  it('has a repl command', async function () {
+    const { stdout } = await execa('node', [filename, 'repl', '-h']);
+
+    expect(stdout).to.include('Usage: agnoc repl');
+  });
 });

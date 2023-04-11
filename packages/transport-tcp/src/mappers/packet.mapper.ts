@@ -16,7 +16,7 @@ import { OPCode } from '../domain-primitives/opcode.domain-primitive';
 import { PacketSequence } from '../domain-primitives/packet-sequence.domain-primitive';
 import { Packet } from '../value-objects/packet.value-object';
 import type { PayloadMapper } from './payload.mapper';
-import type { PayloadObjectName } from '../constants/payloads.constant';
+import type { PayloadDataName } from '../constants/payloads.constant';
 import type { Mapper } from '@agnoc/toolkit';
 
 /** Mapper for converting packets to and from buffers. */
@@ -24,7 +24,7 @@ export class PacketMapper implements Mapper<Packet, Buffer> {
   constructor(private readonly payloadMapper: PayloadMapper) {}
 
   /** Converts a buffer to a packet. */
-  toDomain<Name extends PayloadObjectName>(data: Buffer): Packet<Name> {
+  toDomain<Name extends PayloadDataName>(data: Buffer): Packet<Name> {
     const stream = toStream(data);
     const size = readWord(stream);
 

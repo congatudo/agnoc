@@ -1,0 +1,79 @@
+{
+  "name": "@agnoc/test-support",
+  "version": "0.18.0-next.0",
+  "description": "Agnoc test-support library",
+  "keywords": [
+    "agnoc",
+    "test-support",
+    "conga",
+    "cecotec",
+    "driver",
+    "reverse",
+    "engineering"
+  ],
+  "homepage": "https://github.com/adrigzr/agnoc",
+  "bugs": {
+    "url": "https://github.com/adrigzr/agnoc/issues"
+  },
+  "license": "MIT",
+  "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrigzr/agnoc.git",
+    "directory": "packages/test-support"
+  },
+  "scripts": {
+    "build": "npm-run-all build:lib",
+    "build:lib": "tsc -b tsconfig.build.json",
+    "clean": "rm -rf .build-cache lib coverage",
+    "posttest": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
+    "test": "nyc mocha src"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "inputs": [
+          "{workspaceRoot}/package.json",
+          "{workspaceRoot}/tsconfig.*",
+          "{projectRoot}/src/**/*",
+          "{projectRoot}/package.json",
+          "{projectRoot}/tsconfig.*"
+        ],
+        "outputs": [
+          "{projectRoot}/lib",
+          "{projectRoot}/.build-cache"
+        ]
+      },
+      "test": {
+        "inputs": [
+          "{workspaceRoot}/.mocharc.yml",
+          "{workspaceRoot}/nyc.config.js",
+          "{projectRoot}/src/**/*"
+        ],
+        "outputs": [
+          "{projectRoot}/coverage"
+        ]
+      }
+    }
+  },
+  "dependencies": {
+    "tslib": "^2.5.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7"
+  },
+  "engines": {
+    "node": ">=18.12"
+  },
+  "typedoc": {
+    "displayName": "Test Support"
+  }
+}

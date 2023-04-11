@@ -84,7 +84,7 @@ describe('PacketMapper', function () {
         sequence: PacketSequence.fromString('7a479a0fbb978c12'),
         payload: new Payload({
           opcode: OPCode.fromName('DEVICE_GETTIME_RSP'),
-          object: { result: 1, body: { deviceTime: 1 } },
+          data: { result: 1, body: { deviceTime: 1 } },
         }),
       });
 

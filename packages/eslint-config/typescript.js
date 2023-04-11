@@ -18,7 +18,7 @@ module.exports = {
     'plugin:chai-friendly/recommended',
     'plugin:prettier/recommended',
   ],
-  plugins: ['eslint-plugin-tsdoc'],
+  plugins: ['eslint-plugin-tsdoc', '@guardian/eslint-plugin-tsdoc-required'],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts'],
@@ -30,11 +30,13 @@ module.exports = {
     },
   },
   rules: {
+    'object-shorthand': ['error', 'always'],
     'tsdoc/syntax': 'warn',
     'node/no-missing-import': 'off',
     'node/no-extraneous-import': 'off',
     'node/no-unsupported-features/es-syntax': 'off',
     'security/detect-object-injection': 'off',
+    '@typescript-eslint/require-await': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'error',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/consistent-type-exports': 'warn',
@@ -55,6 +57,16 @@ module.exports = {
         forbid: ['packages/**/*', '@agnoc/*/src/**/*'],
       },
     ],
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: ['**/*.test.ts', '**/test/**/*.ts'],
+        optionalDependencies: false,
+        peerDependencies: true,
+        includeInternal: true,
+      },
+    ],
+    'import/no-unresolved': 'off',
     'import/order': [
       'warn',
       {
@@ -74,6 +86,12 @@ module.exports = {
         '@typescript-eslint/unbound-method': 'off',
         '@typescript-eslint/no-misused-promises': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
+      },
+    },
+    {
+      files: ['packages/toolkit/src/**/*.ts'],
+      rules: {
+        '@guardian/tsdoc-required/tsdoc-required': 'warn',
       },
     },
   ],

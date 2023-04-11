@@ -29,7 +29,7 @@ describe('PacketServer', function () {
   it('should receive connections', function (done) {
     const socket = new Socket();
 
-    packetServer.once('connection', (socket) => {
+    void packetServer.once('connection').then((socket) => {
       expect(socket).to.be.instanceof(PacketSocket);
       done();
     });
@@ -43,12 +43,12 @@ describe('PacketServer', function () {
   });
 
   it('should close the server', function (done) {
-    packetServer.once('close', () => {
+    void packetServer.once('close').then(() => {
       expect(packetServer.isListening).to.be.false;
       done();
     });
 
-    packetServer.once('listening', () => {
+    void packetServer.once('listening').then(() => {
       void packetServer.close();
     });
 
@@ -65,7 +65,7 @@ describe('PacketServer', function () {
 
   describe('#listen()', function () {
     it('should listen by port', function (done) {
-      packetServer.once('listening', () => {
+      void packetServer.once('listening').then(() => {
         expect(packetServer.isListening).to.be.true;
         expect(packetServer.address).to.be.an.instanceof(Object);
         done();
@@ -75,7 +75,7 @@ describe('PacketServer', function () {
     });
 
     it('should listen by host and port', function (done) {
-      packetServer.once('listening', () => {
+      void packetServer.once('listening').then(() => {
         expect(packetServer.isListening).to.be.true;
         expect(packetServer.address).to.be.an.instanceof(Object);
         done();
@@ -85,7 +85,7 @@ describe('PacketServer', function () {
     });
 
     it('should listen by options', function (done) {
-      packetServer.once('listening', () => {
+      void packetServer.once('listening').then(() => {
         expect(packetServer.isListening).to.be.true;
         expect(packetServer.address).to.be.an.instanceof(Object);
         done();

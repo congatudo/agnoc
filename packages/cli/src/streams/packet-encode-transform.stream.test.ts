@@ -1,8 +1,9 @@
+import { readStream } from '@agnoc/test-support';
 import { ID } from '@agnoc/toolkit';
 import { OPCode, Packet, PacketSequence, Payload } from '@agnoc/transport-tcp';
 import { anything, imock, instance, when, verify, deepEqual } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
-import { givenAJSONPacket, readStream } from '../test-support';
+import { givenAJSONPacket } from '../test-support';
 import { PacketEncodeTransform } from './packet-encode-transform.stream';
 import type { PacketMapper } from '@agnoc/transport-tcp';
 
@@ -38,7 +39,7 @@ describe('PacketEncodeTransform', function () {
             sequence: PacketSequence.fromString(jsonPacket.sequence),
             payload: new Payload({
               opcode: OPCode.fromName(jsonPacket.payload.opcode),
-              object: jsonPacket.payload.object,
+              data: jsonPacket.payload.data,
             }),
           }),
         ),

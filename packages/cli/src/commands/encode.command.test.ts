@@ -1,10 +1,11 @@
 import { PassThrough } from 'stream';
+import { readStream } from '@agnoc/test-support';
 import { ID } from '@agnoc/toolkit';
 import { OPCode, Packet, PacketSequence, Payload } from '@agnoc/transport-tcp';
 import { imock, when, anything, verify, instance, deepEqual } from '@johanblumenberg/ts-mockito';
 import { expect } from 'chai';
 import mockFS, { restore } from 'mock-fs';
-import { givenAJSONPacket, readStream } from '../test-support';
+import { givenAJSONPacket } from '../test-support';
 import { EncodeCommand } from './encode.command';
 import type { Stdio } from '../interfaces/stdio';
 import type { JSONPacket } from '../streams/packet-encode-transform.stream';
@@ -60,7 +61,7 @@ describe('EncodeCommand', function () {
             sequence: PacketSequence.fromString(jsonPacket.sequence),
             payload: new Payload({
               opcode: OPCode.fromName(jsonPacket.payload.opcode),
-              object: jsonPacket.payload.object,
+              data: jsonPacket.payload.data,
             }),
           }),
         ),
@@ -90,7 +91,7 @@ describe('EncodeCommand', function () {
             sequence: PacketSequence.fromString(jsonPacket.sequence),
             payload: new Payload({
               opcode: OPCode.fromName(jsonPacket.payload.opcode),
-              object: jsonPacket.payload.object,
+              data: jsonPacket.payload.data,
             }),
           }),
         ),

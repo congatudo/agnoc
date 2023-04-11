@@ -1,13 +1,17 @@
 import { ArgumentInvalidException } from '../exceptions/argument-invalid.exception';
 import { ValueObject } from './value-object.base';
 
-export type Primitives = string | number | boolean | bigint | Date;
-export interface DomainPrimitiveProps<T extends Primitives> {
+/** Possible domain primitive types. */
+export type DomainPrimitives = string | number | boolean | bigint | Date;
+
+/** Props for the DomainPrimitive class. */
+export interface DomainPrimitiveProps<T extends DomainPrimitives> {
+  /** The value of the primitive. */
   value: T;
 }
 
 /** Abstract base class that provides basic tools for building the domain primitives of the domain. */
-export abstract class DomainPrimitive<T extends Primitives> extends ValueObject<DomainPrimitiveProps<T>> {
+export abstract class DomainPrimitive<T extends DomainPrimitives> extends ValueObject<DomainPrimitiveProps<T>> {
   /** Checks if the provided value is a primitive value. */
   constructor(value: T) {
     checkIfPrimitiveValue(new.target.name, value);
@@ -38,7 +42,7 @@ export abstract class DomainPrimitive<T extends Primitives> extends ValueObject<
   protected abstract override validate(props: DomainPrimitiveProps<T>): void;
 }
 
-function isPrimitiveValue(value: unknown): value is Primitives {
+function isPrimitiveValue(value: unknown): value is DomainPrimitives {
   return (
     typeof value === 'string' ||
     typeof value === 'number' ||
