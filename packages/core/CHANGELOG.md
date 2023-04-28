@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.17.2](https://github.com/adrigzr/agnoc/compare/v0.17.1...v0.17.2) (2023-04-28)
+
+### Bug Fixes
+
+- add missing workMode ([05dbe77](https://github.com/adrigzr/agnoc/commit/05dbe770253335f172c43e5cb39a3684a573ce80)),
+  closes [#42](https://github.com/adrigzr/agnoc/issues/42)
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [0.17.1](https://github.com/adrigzr/agnoc/compare/v0.17.0...v0.17.1) (2023-02-20)
 
 **Note:** Version bump only for package @agnoc/core
