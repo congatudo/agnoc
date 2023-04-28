@@ -19,7 +19,7 @@ function getDomainValue(mode: number): ValueOf<typeof VALUE> {
     return VALUE.SPOT;
   }
 
-  if ([36, 37, 40].includes(mode)) {
+  if ([36, 37, 38, 40].includes(mode)) {
     return VALUE.MOP;
   }
 
