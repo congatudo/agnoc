@@ -75,7 +75,7 @@ export enum MANUAL_MODE {
 export type ManualMode = (typeof MANUAL_MODE)[keyof typeof MANUAL_MODE];
 
 const MODE_CHANGE_TIMEOUT = 5000;
-const RECV_TIMEOUT = 5000;
+const RECV_TIMEOUT = 30000;
 
 const CONSUMABLE_TYPE_RESET = {
   [CONSUMABLE_TYPE.MAIN_BRUSH]: 1,
@@ -218,10 +218,16 @@ export class Robot extends TypedEmitter<RobotEvents> {
   }
 
   async stop(): Promise<void> {
-    await this.sendRecv('DEVICE_AUTO_CLEAN_REQ', 'DEVICE_AUTO_CLEAN_RSP', {
-      ctrlValue: CTRL_VALUE.STOP,
-      cleanType: 2,
-    });
+    if (this.device.mode?.value === DeviceMode.VALUE.MOP) {
+      await this.sendRecv('DEVICE_MOP_FLOOR_CLEAN_REQ', 'DEVICE_MOP_FLOOR_CLEAN_RSP', {
+        ctrlValue: CTRL_VALUE.STOP,
+      });
+    } else {
+      await this.sendRecv('DEVICE_AUTO_CLEAN_REQ', 'DEVICE_AUTO_CLEAN_RSP', {
+        ctrlValue: CTRL_VALUE.STOP,
+        cleanType: 2,
+      });
+    }
 
     if (this.device.system.supports(DEVICE_CAPABILITY.MAP_PLANS) && this.device.map) {
       const { id, restrictedZones } = this.device.map;
