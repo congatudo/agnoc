@@ -254,6 +254,14 @@ message DEVICE_AREA_CLEAN_RSP {
   required int32 result = 1;
 }
 
+message DEVICE_BORDER_CLEAN_REQ {
+  required uint32 ctrlValue = 1;
+}
+
+message DEVICE_BORDER_CLEAN_RSP {
+  required int32 result = 1;
+}
+
 message DEVICE_MANUAL_CTRL_REQ {
   required uint32 command = 1;
 }

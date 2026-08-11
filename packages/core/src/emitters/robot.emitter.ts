@@ -494,6 +494,12 @@ export class Robot extends TypedEmitter<RobotEvents> {
     });
   }
 
+  async cleanEdgesDirect(): Promise<void> {
+    await this.sendRecv('DEVICE_BORDER_CLEAN_REQ', 'DEVICE_BORDER_CLEAN_RSP', {
+      ctrlValue: CTRL_VALUE.START,
+    });
+  }
+
   /**
    * A ┌───┐ D
    *   │   │
