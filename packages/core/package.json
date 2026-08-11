@@ -1,6 +1,6 @@
 {
   "name": "@agnoc/core",
-  "version": "0.17.2",
+  "version": "0.17.3",
   "description": "Agnoc core library",
   "keywords": [
     "agnoc",
@@ -11,9 +11,9 @@
     "reverse",
     "engineering"
   ],
-  "homepage": "https://github.com/adrigzr/agnoc",
+  "homepage": "https://github.com/congatudo/agnoc",
   "bugs": {
-    "url": "https://github.com/adrigzr/agnoc/issues"
+    "url": "https://github.com/congatudo/agnoc/issues"
   },
   "license": "MIT",
   "author": "Adrián González Rus <a.gonzalezrus@gmail.com> (https://github.com/adrigzr)",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/adrigzr/agnoc.git",
+    "url": "https://github.com/congatudo/agnoc.git",
     "directory": "packages/core"
   },
   "scripts": {
