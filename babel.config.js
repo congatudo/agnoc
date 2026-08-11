@@ -23,7 +23,7 @@ module.exports = function (api) {
       {
         extensions: ['.js', '.ts', '.json'],
         alias: {
-          '^(@agnoc/[^/]+)/(?!lib)(.+)$': '\\1/lib/\\2',
+          '^(@congatudo/[^/]+)/(?!lib)(.+)$': '\\1/lib/\\2',
         },
       },
     ],

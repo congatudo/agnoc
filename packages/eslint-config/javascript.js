@@ -11,7 +11,7 @@ module.exports = {
   ],
   settings: {
     node: {
-      allowModules: ['@agnoc/core', '@agnoc/cli'],
+      allowModules: ['@congatudo/core', '@congatudo/cli'],
       tryExtensions: ['.js', '.ts', '.json'],
     },
   },

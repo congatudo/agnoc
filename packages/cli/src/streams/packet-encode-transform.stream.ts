@@ -1,6 +1,6 @@
 import { Transform, TransformCallback } from 'stream';
-import { OPDecoderLiteral } from '@agnoc/core/constants/opcodes.constant';
-import { Packet, PacketSerialized } from '@agnoc/core/value-objects/packet.value-object';
+import { OPDecoderLiteral } from '@congatudo/core/constants/opcodes.constant';
+import { Packet, PacketSerialized } from '@congatudo/core/value-objects/packet.value-object';
 
 export class PacketEncodeTransform extends Transform {
   constructor() {

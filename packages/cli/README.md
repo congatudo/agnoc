@@ -1,19 +1,19 @@
-# @agnoc/cli
+# @congatudo/cli
 
-[Agnoc](https://github.com/adrigzr/agnoc) command line tool.
+[Agnoc](https://github.com/congatudo/agnoc) command line tool.
 
 ## Install
 
 Using npm:
 
 ```
-$ npm install -g @agnoc/cli
+$ npm install -g @congatudo/cli
 ```
 
 or using yarn:
 
 ```
-$ yarn add -g @agnoc/cli
+$ yarn add -g @congatudo/cli
 ```
 
 The tool is named `agnoc`:

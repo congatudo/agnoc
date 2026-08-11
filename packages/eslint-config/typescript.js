@@ -23,7 +23,7 @@ module.exports = {
       'babel-module': {
         extensions: ['.js', '.ts', '.json'],
         alias: {
-          '^(@agnoc/[^/]+)/(?!lib)(.+)$': '\\1/src/\\2',
+          '^(@congatudo/[^/]+)/(?!lib)(.+)$': '\\1/src/\\2',
         },
       },
     },

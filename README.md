@@ -2,10 +2,10 @@
 
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 [![CI](https://github.com/congatudo/agnoc/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/congatudo/agnoc/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/@agnoc/core.svg)](https://npmjs.org/package/@agnoc/core)
-[![npm downloads](https://img.shields.io/npm/dm/@agnoc/core.svg)](https://npmjs.org/package/@agnoc/core)
-[![codecov](https://codecov.io/gh/adrigzr/agnoc/branch/master/graph/badge.svg?token=8OLQ4HDMMZ)](https://codecov.io/gh/adrigzr/agnoc)
-<br/> [![nodei.co](https://nodei.co/npm/@agnoc/core.png)](https://www.npmjs.com/package/@agnoc/core)
+[![npm version](https://img.shields.io/npm/v/@congatudo/core.svg)](https://npmjs.org/package/@congatudo/core)
+[![npm downloads](https://img.shields.io/npm/dm/@congatudo/core.svg)](https://npmjs.org/package/@congatudo/core)
+[![codecov](https://codecov.io/gh/congatudo/agnoc/branch/master/graph/badge.svg?token=8OLQ4HDMMZ)](https://codecov.io/gh/congatudo/agnoc)
+<br/> [![nodei.co](https://nodei.co/npm/@congatudo/core.png)](https://www.npmjs.com/package/@congatudo/core)
 
 Agnoc (_Conga in reverse_) is an unofficial driver library for Conga Robots from Cecotec brand.
 

@@ -17,8 +17,8 @@
     "noUnusedParameters": true,
     "strict": true,
     "paths": {
-      "@agnoc/cli/*": ["packages/cli/src/*"],
-      "@agnoc/core/*": ["packages/core/src/*"]
+      "@congatudo/cli/*": ["packages/cli/src/*"],
+      "@congatudo/core/*": ["packages/core/src/*"]
     }
   },
   "exclude": ["node_modules", "packages/*/lib"],
