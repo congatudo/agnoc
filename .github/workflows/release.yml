@@ -27,5 +27,7 @@ jobs:
         run: yarn build
       - name: Version
         run: lerna version --conventional-graduate --yes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish
         run: npm publish --workspaces --provenance
