@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/congatudo/agnoc/compare/v0.17.2...v0.18.0) (2026-08-14)
+
+### Bug Fixes
+
+- **core:** stop() sends correct opcode in mop mode + raise RECV_TIMEOUT to 30s
+  ([74f36a9](https://github.com/congatudo/agnoc/commit/74f36a91c323389f9c7757e306b6bb49788eacfa))
+
+### Features
+
+- **core:** add Cecotec edge cleaning command
+  ([d7da10d](https://github.com/congatudo/agnoc/commit/d7da10d1be7abdbc22a324a37ed073c260f15acc))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [0.17.2](https://github.com/adrigzr/agnoc/compare/v0.17.1...v0.17.2) (2023-04-28)
 
 ### Bug Fixes

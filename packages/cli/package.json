@@ -1,6 +1,6 @@
 {
   "name": "@congatudo/cli",
-  "version": "0.17.3",
+  "version": "0.18.0",
   "description": "Agnoc command line",
   "keywords": [
     "agnoc",
@@ -63,7 +63,7 @@
     }
   },
   "dependencies": {
-    "@congatudo/core": "^0.17.3",
+    "@congatudo/core": "^0.18.0",
     "chalk": "^4.1.1",
     "cli-ux": "^5.5.1",
     "commander": "^10.0.0",

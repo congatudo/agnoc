@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/adrigzr/agnoc/compare/v0.17.2...v0.18.0) (2026-08-14)
+
+**Note:** Version bump only for package @congatudo/cli
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [0.17.2](https://github.com/adrigzr/agnoc/compare/v0.17.1...v0.17.2) (2023-04-28)
 
 **Note:** Version bump only for package @agnoc/cli
