@@ -1,6 +1,12 @@
 ---
 reporter: 'spec'
 recursive: true
+node-option:
+  # Node >=22.7 recognizes `.ts` natively and, since mocha's ESM/CJS loader
+  # tries `import()` before falling back to `require()`, this pre-empts the
+  # `require.extensions['.ts']` hook that babel-register relies on below —
+  # breaking on TS syntax (e.g. enums) that Node's strip-only mode rejects.
+  - 'no-strip-types'
 require:
   - '../../scripts/babel-register.js'
   - '../../scripts/setup.js'
