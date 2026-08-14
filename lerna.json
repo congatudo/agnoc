@@ -10,6 +10,5 @@
   },
   "npmClient": "yarn",
   "packages": ["packages/*"],
-  "useWorkspaces": true,
   "version": "0.17.3"
 }
