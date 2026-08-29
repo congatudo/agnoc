@@ -18,6 +18,7 @@ The library has been tested against the following models:
 - Conga 3090
 - Conga 3490
 - Conga 4090
+- Conga 5090
 
 ## CLI
 
